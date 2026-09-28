@@ -63,6 +63,7 @@
     }
   },
   "dealAction": "ดีลใกล้หมดอายุ",
+  "dealActionFor": "ดีลใกล้หมดอายุของ {{name}}",
   "deals": {
     "title_one": "กำลังลดราคา ({{count}})",
     "title_other": "กำลังลดราคา ({{count}})",

@@ -63,6 +63,7 @@
     }
   },
   "dealAction": "Giảm giá sắp hết hạn",
+  "dealActionFor": "Giảm giá sắp hết hạn cho {{name}}",
   "deals": {
     "title_one": "Đang giảm giá ({{count}})",
     "title_other": "Đang giảm giá ({{count}})",

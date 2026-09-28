@@ -9,6 +9,7 @@
   },
   "clear": "Filter zurücksetzen",
   "noun": "Angebote",
+  "results": "Angebote, die Sie noch bestellen können",
   "empty": {
     "title": "Heute keine Angebote",
     "text": "Ein Stand postet ein Angebot, wenn eine Charge über die Hälfte ihrer Haltbarkeit hinaus ist. Schauen Sie morgen wieder vorbei, oder durchstöbern Sie alle Produkte.",

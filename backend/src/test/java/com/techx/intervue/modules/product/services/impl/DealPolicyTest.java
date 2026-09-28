@@ -9,7 +9,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 /**
  * FR-124 (spec §4.5.1–4.5.2). The same rows run in frontend/src/lib/deals.test.ts, so the dialog
- * and the server always agree. Rows 1–2 are the spec's examples (tomato, eggs).
+ * and the server always agree. Rows 1–2 are the spec's examples (tomato, eggs); for N = 7 the rows
+ * with L = 4 and L = 5 pin the upper bound ⌈N/2⌉ = 4 exactly.
  */
 class DealPolicyTest {
 
@@ -32,6 +33,7 @@ class DealPolicyTest {
         "3,  2026-10-03, 2026-10-03, 2026-10-03, 2026-10-05,  3, FRESH,                  0",
         "7,  2026-10-01, 2026-10-03, 2026-09-30, 2026-10-07,  5, PACKED_IN_FUTURE,       0",
         "7,  2026-10-02, 2026-10-03, 2026-10-02, 2026-10-08,  6, NOT_NEAR_EXPIRY,        0",
+        "7,  2026-09-29, 2026-10-01, 2026-09-30, 2026-10-05,  5, NOT_NEAR_EXPIRY,        0",
     })
     void checksABatchForAPickupDay(
             int shelfLife,

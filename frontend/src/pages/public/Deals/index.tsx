@@ -102,6 +102,8 @@ const DealsPage = () => {
         <LoadError noun={t('noun')} onRetry={retry} />
       ) : items.length ? (
         <>
+          {/* Each card's name is an h3; this hidden h2 keeps the outline h1 → h2 → h3 */}
+          <h2 className="sr-only">{t('results')}</h2>
           <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((d) => (
               <DealCard key={`${d.productId}@${d.stockDate}`} deal={d} />

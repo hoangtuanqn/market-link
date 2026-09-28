@@ -63,6 +63,7 @@
     }
   },
   "dealAction": "临期优惠",
+  "dealActionFor": "{{name}}的临期优惠",
   "deals": {
     "title_one": "特价中 ({{count}})",
     "title_other": "特价中 ({{count}})",

@@ -63,6 +63,7 @@
     }
   },
   "dealAction": "유통기한 임박 할인",
+  "dealActionFor": "{{name}} 유통기한 임박 할인",
   "deals": {
     "title_one": "할인 중 ({{count}})",
     "title_other": "할인 중 ({{count}})",

@@ -63,6 +63,7 @@
     }
   },
   "dealAction": "Promo date proche",
+  "dealActionFor": "Promo date proche pour {{name}}",
   "deals": {
     "title_one": "En promo ({{count}})",
     "title_other": "En promo ({{count}})",

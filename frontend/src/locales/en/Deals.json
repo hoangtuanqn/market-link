@@ -9,6 +9,7 @@
   },
   "clear": "Clear filters",
   "noun": "deals",
+  "results": "Deals you can still order",
   "empty": {
     "title": "No deals today",
     "text": "Stalls post a deal when a batch is past half its shelf life. Check again tomorrow, or browse all products.",

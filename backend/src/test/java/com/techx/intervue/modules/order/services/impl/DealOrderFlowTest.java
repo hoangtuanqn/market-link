@@ -5,9 +5,14 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.techx.intervue.modules.order.requests.CartLine;
 import com.techx.intervue.modules.order.requests.OrderGroupInput;
+import com.techx.intervue.modules.order.requests.PickupDateInput;
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
+import com.techx.intervue.modules.order.requests.PreviewRequest;
+import com.techx.intervue.modules.order.resources.OrderItemResource;
+import com.techx.intervue.modules.order.resources.PreviewItemResource;
 import com.techx.intervue.modules.product.exceptions.DateNotOrderableException;
 import com.techx.intervue.modules.product.requests.DealRequest;
+import com.techx.intervue.modules.product.services.impl.DealPolicy;
 import com.techx.intervue.modules.product.services.interfaces.FarmerDealServiceInterface;
 import com.techx.intervue.modules.report.services.impl.ReportFixture;
 import jakarta.persistence.EntityManager;
@@ -24,9 +29,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * FR-124 on real MySQL (spec §8, §9): posting a deal, then placing orders for that day through the
- * real locking path. The product keeps 7 days and sells at $2.00; a batch packed today is past half
- * of its shelf life on PICKUP (4 of 7 days left). Rolled back after each test.
+ * FR-124 on real MySQL (spec §8, §9): posting a deal, then previewing the cart and placing orders
+ * for that day through the real locking path. The product keeps 7 days and sells at $2.00; a batch
+ * packed today is past half of its shelf life on PICKUP (4 of 7 days left). Rolled back after each
+ * test.
  */
 @SpringBootTest
 @Transactional
@@ -85,6 +91,37 @@ class DealOrderFlowTest {
         assertThat((BigDecimal) line.get("list_price")).isEqualByComparingTo("2.00");
         assertThat(line.get("best_before").toString()).isEqualTo(TODAY.plusDays(6).toString());
         assertThat(quantityOn(PICKUP)).isEqualTo(3);
+    }
+
+    /**
+     * One price, one row (spec §4.5.5): the cart previewed for the deal day shows exactly what
+     * placing the order for that day then charges and copies onto its line.
+     */
+    @Test
+    void thePreviewForTheDealDayShowsWhatThePlacedLineCopies() {
+        deals.post(farmerUser, product, PICKUP, new DealRequest(5, TODAY, 40));
+
+        PreviewItemResource previewed =
+                orders.preview(
+                                customer,
+                                new PreviewRequest(
+                                        List.of(new CartLine(product, 2)),
+                                        List.of(new PickupDateInput(stall, PICKUP))))
+                        .getFirst()
+                        .items()
+                        .getFirst();
+        long orderId = orders.place(customer, order(2)).getFirst().orderId();
+        entityManager.flush();
+        OrderItemResource placed = orders.detail(customer, orderId).items().getFirst();
+
+        assertThat(previewed.discountPercent()).isEqualTo(40);
+        assertThat(previewed.unitPrice()).isEqualByComparingTo(placed.unitPrice());
+        assertThat(previewed.listPrice()).isEqualByComparingTo(placed.listPrice());
+        assertThat(previewed.bestBefore()).isEqualTo(placed.bestBefore());
+        // order_items keeps no percent: the placed list price at the previewed percent must give
+        // back the placed price
+        assertThat(DealPolicy.dealPrice(placed.listPrice(), previewed.discountPercent()))
+                .isEqualByComparingTo(placed.unitPrice());
     }
 
     /** Spec §8: an order placed before the deal keeps its price; the next one pays the deal. */

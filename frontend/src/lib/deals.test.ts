@@ -3,7 +3,8 @@ import { checkDeal, dealPrice, isValidDiscount, suggestedDiscount, todayYmd, typ
 
 /**
  * The same rows as backend DealPolicyTest (spec §4.5.1–4.5.2), so the dialog and the server always agree: shelf life N,
- * packed on H, pickup P, today → best-before B, days left L, problem (null = may go on a deal), suggested %.
+ * packed on H, pickup P, today → best-before B, days left L, problem (null = may go on a deal), suggested %. For N = 7
+ * the rows with L = 4 and L = 5 pin the upper bound ⌈N/2⌉ = 4 exactly.
  */
 const CASES: [number, string, string, string, string, number, DealProblem | null, number][] = [
   [7, '2026-09-29', '2026-10-03', '2026-09-30', '2026-10-05', 3, null, 20],
@@ -20,6 +21,7 @@ const CASES: [number, string, string, string, string, number, DealProblem | null
   [3, '2026-10-03', '2026-10-03', '2026-10-03', '2026-10-05', 3, 'fresh', 0],
   [7, '2026-10-01', '2026-10-03', '2026-09-30', '2026-10-07', 5, 'packedInFuture', 0],
   [7, '2026-10-02', '2026-10-03', '2026-10-02', '2026-10-08', 6, 'notNearExpiry', 0],
+  [7, '2026-09-29', '2026-10-01', '2026-09-30', '2026-10-05', 5, 'notNearExpiry', 0],
 ];
 
 describe('checkDeal', () => {

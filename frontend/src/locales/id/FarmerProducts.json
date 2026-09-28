@@ -63,6 +63,7 @@
     }
   },
   "dealAction": "Diskon hampir kedaluwarsa",
+  "dealActionFor": "Diskon hampir kedaluwarsa untuk {{name}}",
   "deals": {
     "title_one": "Sedang diskon ({{count}})",
     "title_other": "Sedang diskon ({{count}})",

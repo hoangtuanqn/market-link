@@ -63,6 +63,7 @@
     }
   },
   "dealAction": "賞味期限間近セール",
+  "dealActionFor": "{{name}} の賞味期限間近セール",
   "deals": {
     "title_one": "セール中 ({{count}})",
     "title_other": "セール中 ({{count}})",

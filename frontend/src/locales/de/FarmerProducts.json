@@ -63,6 +63,7 @@
     }
   },
   "dealAction": "Angebot: kurze Haltbarkeit",
+  "dealActionFor": "Angebot: kurze Haltbarkeit für {{name}}",
   "deals": {
     "title_one": "Im Angebot ({{count}})",
     "title_other": "Im Angebot ({{count}})",

@@ -70,6 +70,16 @@ describe('DealsPage', () => {
     expect(screen.getByText('Nông trại Hoa Đà Lạt · Chợ Bà Chiểu')).toBeInTheDocument();
   });
 
+  /** The cards' names are h3, so a hidden h2 sits between them and the page's h1. */
+  it('keeps the heading levels in order', async () => {
+    vi.mocked(DealApi.list).mockResolvedValue(page([tomato]));
+    renderPage();
+
+    expect(await screen.findByRole('heading', { level: 3, name: 'Cà chua bi' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 1, name: 'Near-expiry deals' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { level: 2, name: 'Deals you can still order' })).toBeInTheDocument();
+  });
+
   it('adds a deal to the cart for its pickup day', async () => {
     vi.mocked(DealApi.list).mockResolvedValue(page([tomato]));
     renderPage();

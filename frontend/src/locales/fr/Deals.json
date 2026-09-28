@@ -9,6 +9,7 @@
   },
   "clear": "Effacer les filtres",
   "noun": "promos",
+  "results": "Promos que vous pouvez encore commander",
   "empty": {
     "title": "Aucune promo aujourd'hui",
     "text": "Un stand publie une promo quand un lot a dépassé la moitié de sa durée de conservation. Revenez demain, ou parcourez tous les produits.",

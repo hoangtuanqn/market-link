@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { useAssistantCart } from '@/components/assistant/assistantContext';
 import AskAssistant from '@/components/assistant/AskAssistant';
 import OrderApi, { type OrderGroupPreviewDto } from '@/api-requests/order.requests';
-import StallApi, { toSlotOption } from '@/api-requests/stall.requests';
+import StallApi, { toSlotOption, type SlotDto } from '@/api-requests/stall.requests';
 import CartGroup, { type CartLineType } from '@/components/CartGroup';
 import DayChips from '@/components/DayChips';
 import SlotPicker from '@/components/SlotPicker';
@@ -16,14 +16,15 @@ import { DataState, LoadError } from '@/components/ui/data-state';
 import { SelectField } from '@/components/ui/input';
 import useRequest from '@/hooks/useRequest';
 import useSession from '@/hooks/useSession';
-import { Cart, useCart } from '@/lib/cart';
+import { Cart, useCart, type CartLine } from '@/lib/cart';
 import { dayName, formatClock, formatDayMonth, money } from '@/lib/format';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import DealNote from './DealNote';
+import { NO_CHOICE, pickupOf, todayInHcmc, type Choice, type Pickup } from './pickup';
 
-/** Per stall: chosen market (when the stall sells at several), pickup date, slot, note. */
-type Choice = { marketId: number | null; date: string | null; slotId: string | null; note: string };
+/** One stall's slots at every market it sells at, as the page loaded them. */
+type StallSlots = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; slots: SlotDto[] };
 
 /** `group.problems` values (order.requests.ts `OrderGroupPreviewDto`) — kept as a union so `t()` accepts the key. */
 type ProblemCode = 'out_of_stock' | 'sold_out' | 'unavailable' | 'stall_suspended';
@@ -36,28 +37,30 @@ const localDay = (ymd: string) => {
 
 type StallPickupProps = {
   group: OrderGroupPreviewDto;
+  slots: StallSlots;
+  /** Worked out by the page from `slots`; null until they are in. */
+  pickup: Pickup | null;
   choice: Choice;
-  /** FR-125: the day a line of this stall was added for from /deals, if any. */
-  dealDay: string | null;
+  onRetry: () => void;
   onChange: (patch: Partial<Choice>) => void;
 };
 
-/** Pickup market/day/slot for one stall's group (FR-032): its own slot request, so groups load independently. */
-const StallPickup = ({ group, choice, dealDay, onChange }: StallPickupProps) => {
+/**
+ * Pickup market/day/slot for one stall's group (FR-032). The page loads the stall's slots at every market it sells at
+ * and works out `pickup`, so the day shown selected is the day the stall is priced for (FR-125).
+ */
+const StallPickup = ({ group, slots, pickup, choice, onRetry, onChange }: StallPickupProps) => {
   const { t } = useTranslation('CustomerCart');
   const { t: tc } = useTranslation();
-  const { state, retry } = useRequest(`slots:${group.farmerId}:${choice.marketId}`, () =>
-    choice.marketId ? StallApi.slots(group.farmerId, { marketId: choice.marketId }) : Promise.resolve([]),
-  );
-  const slots = state.kind === 'ready' ? state.data : [];
-  const dates = [...new Set(slots.map((s) => s.slotDate))];
-  // FR-125: start on the deal day while it can still be booked, else on the first bookable day
-  const date = choice.date ?? (dealDay && dates.includes(dealDay) ? dealDay : dates[0]) ?? null;
-  const dayOptions = dates.map((d) => {
+  const marketId = pickup?.marketId ?? group.marketId ?? group.markets[0]?.marketId ?? null;
+  const date = pickup?.shownDay ?? null;
+  const dayOptions = (pickup?.days ?? []).map((d) => {
     const x = localDay(d);
     return { value: d, label: dayName(x.getDay(), 'long'), date: formatDayMonth(x) };
   });
-  const daySlots = slots.filter((s) => s.slotDate === date);
+  const daySlots = (slots.kind === 'ready' ? slots.slots : [])
+    .filter((s) => s.marketId === marketId && s.slotDate === date)
+    .sort((a, b) => a.startTime.localeCompare(b.startTime));
   const slotOptions = daySlots
     .map(toSlotOption)
     .map((o) => ({ ...o, time: o.time.split('–').map(formatClock).join('–') }));
@@ -71,36 +74,45 @@ const StallPickup = ({ group, choice, dealDay, onChange }: StallPickupProps) => 
           id={`market-${group.farmerId}`}
           label={t('market')}
           options={group.markets.map((m) => ({ value: String(m.marketId), label: m.marketName }))}
-          value={choice.marketId != null ? String(choice.marketId) : ''}
-          onChange={(e) => onChange({ marketId: Number(e.target.value), date: null, slotId: null })}
+          value={marketId != null ? String(marketId) : ''}
+          onChange={(e) => onChange({ marketId: Number(e.target.value), date: null, shown: null, slotId: null })}
         />
       )}
-      {state.kind === 'loading' ? (
+      {slots.kind === 'loading' ? (
         <p role="status" className="text-ink-muted text-small">
           {tc('notify.list.loading')}
         </p>
-      ) : state.kind === 'error' ? (
-        <LoadError noun={t('slotsNoun')} onRetry={retry} />
-      ) : slots.length === 0 ? (
+      ) : slots.kind === 'error' ? (
+        <LoadError noun={t('slotsNoun')} onRetry={onRetry} />
+      ) : !pickup || pickup.days.length === 0 ? (
         <DataState title={t('noSlots.title')} text={t('noSlots.text')} />
       ) : (
         <>
-          {dealDay && !dates.includes(dealDay) && (
-            <p className="text-small text-warning-ink">{t('deal.dayGone', { day: stockDay(dealDay) ?? dealDay })}</p>
-          )}
+          {pickup.goneDealDays.map((d) => (
+            <p key={d} className="text-small text-warning-ink">
+              {t('deal.dayGone', { day: stockDay(d) ?? d })}
+            </p>
+          ))}
           <DayChips
             name={`day-${group.farmerId}`}
             legend={t('pickupDayAt', { stall: group.stallName })}
             options={dayOptions}
             value={date ?? ''}
-            onChange={(v) => onChange({ date: v, slotId: null })}
+            // A fully booked day shows its full times but is never priced: the stall stays on its last bookable day
+            onChange={(v) =>
+              onChange(
+                pickup.bookable.has(v)
+                  ? { marketId, date: v, shown: v, slotId: null }
+                  : { marketId, shown: v, slotId: null },
+              )
+            }
           />
           <SlotPicker
             name={`slot-${group.farmerId}`}
             slots={slotOptions}
             value={choice.slotId}
-            // The day shown selected may be the default (first) one that was never clicked: keep it with the time
-            onChange={(v) => onChange({ date, slotId: v })}
+            // The day shown selected may be the default one that was never clicked: keep it with the time
+            onChange={(v) => onChange({ marketId, date, shown: date, slotId: v })}
             legend={t('pickupTime', {
               day: date ? dayName(localDay(date).getDay(), 'long') : '',
               date: date ? formatDayMonth(localDay(date)) : '',
@@ -128,46 +140,86 @@ const CustomerCartPage = () => {
   const navigate = useNavigate();
   const { user } = useSession();
   const [choices, setChoices] = useState<Record<number, Choice>>({});
-  // FR-125: the day a line was added for from /deals, per stall
-  const dealDayOf = (farmerId: number) =>
-    lines.find((l) => l.farmerId === farmerId && l.pickupDate)?.pickupDate ?? null;
-  // Each stall is priced for the day it will be picked up: the one chosen, else its deal day; a stall with neither is
-  // not sent and gets its nearest orderable day, as before
-  const pickupDates = [...new Set(lines.map((l) => l.farmerId))].flatMap((farmerId) => {
-    const date = choices[farmerId]?.date ?? dealDayOf(farmerId);
+  const choiceOf = (farmerId: number) => choices[farmerId] ?? NO_CHOICE;
+  const setChoice = (farmerId: number, patch: Partial<Choice>) =>
+    setChoices((prev) => ({ ...prev, [farmerId]: { ...(prev[farmerId] ?? NO_CHOICE), ...patch } }));
+
+  // FR-125: the day a line was added for from /deals. One before today, the market's day, counts as none.
+  const today = todayInHcmc();
+  const dealDayOfLine = (l: CartLine) => (l.pickupDate && l.pickupDate >= today ? l.pickupDate : null);
+  const stalls = [...new Set(lines.map((l) => l.farmerId))];
+  const dealDaysOf = (farmerId: number) => [
+    ...new Set(lines.flatMap((l) => (l.farmerId === farmerId ? (dealDayOfLine(l) ?? []) : []))),
+  ];
+
+  // FR-032: each stall's slots at every market it sells at, loaded once for the whole cart, so a stall can start on a
+  // market that still has its deal day
+  const stallKey = [...stalls].sort((a, b) => a - b).join(',');
+  const { state: slotsLoad, retry: retrySlots } = useRequest(`cart-slots:${stallKey}`, () =>
+    Promise.all(
+      stalls.map((farmerId) =>
+        StallApi.slots(farmerId).then(
+          (slots): StallSlots => ({ kind: 'ready', slots }),
+          (): StallSlots => ({ kind: 'error' }),
+        ),
+      ),
+    ).then((all) => new Map(stalls.map((farmerId, i) => [farmerId, all[i]]))),
+  );
+  // A stall added or removed loads them again; keep the last ones on screen meanwhile
+  const [lastSlots, setLastSlots] = useState<Map<number, StallSlots> | null>(null);
+  if (slotsLoad.kind === 'ready' && slotsLoad.data !== lastSlots) setLastSlots(slotsLoad.data);
+  const slotsMap = slotsLoad.kind === 'ready' ? slotsLoad.data : lastSlots;
+  const slotsOf = (farmerId: number): StallSlots => {
+    const known = slotsMap?.get(farmerId);
+    if (known?.kind === 'ready') return known;
+    return slotsLoad.kind === 'loading' ? { kind: 'loading' } : (known ?? { kind: 'error' });
+  };
+  const pickups = new Map(
+    stalls.map((farmerId) => {
+      const s = slotsOf(farmerId);
+      return [farmerId, s.kind === 'ready' ? pickupOf(s.slots, choiceOf(farmerId), dealDaysOf(farmerId)) : null];
+    }),
+  );
+
+  // FR-125: each stall is priced for the one day its picker shows, never a day without a free time at its market (the
+  // server would answer that day as out of stock). A stall whose slots are not in is not sent: it gets its nearest
+  // orderable day, as before.
+  const pickupDates = stalls.flatMap((farmerId) => {
+    const date = pickups.get(farmerId)?.pricedDay;
     return date ? [{ farmerId, date }] : [];
   });
+  // The first preview waits for the slots, so the first screen is already priced for the days it shows
+  const slotsIn = slotsMap !== null || slotsLoad.kind === 'error';
   const previewKey = `${lines.map((l) => `${l.productId}:${l.qty}`).join(',')}|${pickupDates
     .map((d) => `${d.farmerId}@${d.date}`)
     .join(',')}`;
-  const { state: previewLoad, retry } = useRequest(`cart-preview:${previewKey}`, () =>
-    lines.length && user
-      ? OrderApi.preview(
-          lines.map((l) => ({ productId: l.productId, quantity: l.qty })),
-          pickupDates,
-        )
-      : Promise.resolve([]),
+  const { state: previewLoad, retry } = useRequest(`cart-preview:${slotsIn ? previewKey : 'waiting'}`, () =>
+    !lines.length || !user
+      ? Promise.resolve([])
+      : slotsIn
+        ? OrderApi.preview(
+            lines.map((l) => ({ productId: l.productId, quantity: l.qty })),
+            pickupDates,
+          )
+        : Promise.resolve(null),
   );
   // A quantity change re-runs the preview. Keep the last answer on screen meanwhile: swapping the whole page for
-  // "loading" made it flash and remounted every stall's pickup picker (re-fetching its slots) on each +/- tap.
+  // "loading" made it flash and remounted every stall's pickup picker on each +/- tap.
+  const answer = previewLoad.kind === 'ready' ? previewLoad.data : null;
   const [lastPreview, setLastPreview] = useState<OrderGroupPreviewDto[] | null>(null);
-  if (previewLoad.kind === 'ready' && previewLoad.data !== lastPreview) setLastPreview(previewLoad.data);
-  const refreshing = previewLoad.kind === 'loading' && lastPreview !== null;
-  const groups = previewLoad.kind === 'ready' ? previewLoad.data : (lastPreview ?? []);
+  if (answer && answer !== lastPreview) setLastPreview(answer);
+  const pending = answer === null && previewLoad.kind !== 'error';
+  const refreshing = pending && lastPreview !== null;
+  const groups = answer ?? lastPreview ?? [];
   // Quantities follow the cart right away; the server's figures catch up when the preview answers
   const qtyOf = (productId: number, fallback: number) => lines.find((l) => l.productId === productId)?.qty ?? fallback;
-  const choice = (g: OrderGroupPreviewDto): Choice =>
-    choices[g.farmerId] ?? {
-      marketId: g.marketId ?? g.markets[0]?.marketId ?? null,
-      date: null,
-      slotId: null,
-      note: '',
-    };
-  const setChoice = (farmerId: number, patch: Partial<Choice>) =>
-    setChoices((prev) => ({
-      ...prev,
-      [farmerId]: { ...choice(groups.find((g) => g.farmerId === farmerId)!), ...prev[farmerId], ...patch },
-    }));
+  // A stall can be ordered once a time is picked on the day it is priced for
+  const canPlace = (g: OrderGroupPreviewDto) => {
+    const c = choiceOf(g.farmerId);
+    return (
+      c.slotId != null && c.date != null && c.date === pickups.get(g.farmerId)?.pricedDay && g.problems.length === 0
+    );
+  };
 
   const [note, setNote] = useState('');
   const [placing, setPlacing] = useState(false);
@@ -176,7 +228,7 @@ const CustomerCartPage = () => {
     try {
       const orders = await OrderApi.place(
         groups.map((g) => {
-          const c = choice(g);
+          const c = choiceOf(g.farmerId);
           return {
             farmerId: g.farmerId,
             marketId: c.marketId!,
@@ -208,7 +260,7 @@ const CustomerCartPage = () => {
     );
   }
 
-  if (previewLoad.kind === 'loading' && lastPreview === null) {
+  if (pending && lastPreview === null) {
     return (
       <p role="status" className="text-ink-muted">
         {tc('notify.list.loading')}
@@ -256,23 +308,16 @@ const CustomerCartPage = () => {
   }
 
   const total = groups.reduce((s, g) => s + g.subtotal, 0);
-  const ready =
-    lines.length > 0 &&
-    groups.length > 0 &&
-    groups.every((g) => {
-      const c = choice(g);
-      return c.slotId != null && c.date != null && g.problems.length === 0;
-    });
-  const blocked = groups.find((g) => {
-    const c = choice(g);
-    return g.problems.length > 0 || c.slotId == null || c.date == null;
-  });
+  const ready = lines.length > 0 && groups.length > 0 && groups.every(canPlace);
+  const blocked = groups.find((g) => !canPlace(g));
 
-  const marketNameOf = (g: OrderGroupPreviewDto, c: Choice) =>
-    g.marketName ?? g.markets.find((m) => m.marketId === c.marketId)?.marketName ?? '';
+  const marketNameOf = (g: OrderGroupPreviewDto) => {
+    const marketId = pickups.get(g.farmerId)?.marketId ?? g.marketId ?? g.markets[0]?.marketId;
+    return g.markets.find((m) => m.marketId === marketId)?.marketName ?? g.marketName ?? '';
+  };
   const whereOf = (g: OrderGroupPreviewDto) => {
-    const c = choice(g);
-    const market = marketNameOf(g, c);
+    const c = choiceOf(g.farmerId);
+    const market = marketNameOf(g);
     if (!c.date) return market;
     const d = localDay(c.date);
     return market
@@ -298,7 +343,13 @@ const CustomerCartPage = () => {
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div className="flex flex-col gap-8">
           {groups.map((g, i) => {
-            const c = choice(g);
+            const pickup = pickups.get(g.farmerId) ?? null;
+            // A deal day no market can take any more is said once, above the stall's day picker
+            const dealDayOf = (productId: number) => {
+              const line = lines.find((l) => l.productId === productId);
+              const day = line ? dealDayOfLine(line) : null;
+              return day && !pickup?.goneDealDays.includes(day) ? day : undefined;
+            };
             return (
               <section key={g.farmerId} className="flex flex-col gap-3">
                 {g.problems.map((p) => (
@@ -322,23 +373,21 @@ const CustomerCartPage = () => {
                       qty: qtyOf(it.productId, it.quantity),
                       listPrice: it.listPrice,
                       note: (
-                        <DealNote
-                          item={it}
-                          dealDay={lines.find((l) => l.productId === it.productId)?.pickupDate}
-                          chosenDay={c.date}
-                        />
+                        <DealNote item={it} dealDay={dealDayOf(it.productId)} pricedDay={pickup?.pricedDay ?? null} />
                       ),
                     }))}
                   onQtyChange={(id, qty) => Cart.setQty(id, qty)}
                   onRemove={(id) => Cart.remove(id)}
                 />
                 {/* Always the same open picker: collapsing it after a pick (or swapping its wrapper) moved the page
-                    under the cursor and remounted the slot request. Picking now only highlights the choice. */}
+                    under the cursor. Picking now only highlights the choice. */}
                 <Card className="flex flex-col gap-4 p-4">
                   <StallPickup
                     group={g}
-                    choice={c}
-                    dealDay={dealDayOf(g.farmerId)}
+                    slots={slotsOf(g.farmerId)}
+                    pickup={pickup}
+                    choice={choiceOf(g.farmerId)}
+                    onRetry={retrySlots}
                     onChange={(patch) => setChoice(g.farmerId, patch)}
                   />
                 </Card>

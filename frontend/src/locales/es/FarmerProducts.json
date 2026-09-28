@@ -63,6 +63,7 @@
     }
   },
   "dealAction": "Oferta por vencer",
+  "dealActionFor": "Oferta por vencer de {{name}}",
   "deals": {
     "title_one": "En oferta ({{count}})",
     "title_other": "En oferta ({{count}})",

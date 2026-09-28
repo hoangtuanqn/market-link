@@ -81,15 +81,30 @@ describe('FarmerProductsPage — near-expiry deals', () => {
     renderPage();
 
     await screen.findByRole('link', { name: 'Trứng gà ác' });
-    expect(screen.getAllByRole('button', { name: 'Near-expiry deal' })).toHaveLength(1);
+    expect(screen.getAllByRole('button', { name: /^Near-expiry deal/ })).toHaveLength(1);
+    expect(screen.getByRole('button', { name: 'Near-expiry deal for Trứng vịt' })).toHaveTextContent(
+      'Near-expiry deal',
+    );
     // Non-regression (drift D7): dev's FR-063 per-date Adjust button must survive the new column.
     expect(screen.getAllByRole('button', { name: 'Adjust' })).toHaveLength(1);
+  });
+
+  /** Every row has its own deal button, so each one needs a name that says which product it is for. */
+  it('names each deal button after its product', async () => {
+    vi.mocked(ProductApi.mine).mockResolvedValue([
+      product(1, 'Trứng vịt', '2026-10-03'),
+      product(3, 'Trứng cút', '2026-10-03'),
+    ]);
+    renderPage();
+
+    expect(await screen.findByRole('button', { name: 'Near-expiry deal for Trứng vịt' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Near-expiry deal for Trứng cút' })).toBeInTheDocument();
   });
 
   it('opens the deal dialog for that product', async () => {
     renderPage();
 
-    await userEvent.click(await screen.findByRole('button', { name: 'Near-expiry deal' }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Near-expiry deal for Trứng vịt' }));
 
     expect(await screen.findByRole('dialog', { name: 'Near-expiry deal · Trứng vịt' })).toBeInTheDocument();
   });

@@ -9,6 +9,7 @@
   },
   "clear": "Hapus filter",
   "noun": "diskon",
+  "results": "Diskon yang masih bisa dipesan",
   "empty": {
     "title": "Tidak ada diskon hari ini",
     "text": "Lapak memasang diskon saat satu batch sudah melewati setengah masa simpannya. Cek lagi besok, atau jelajahi semua produk.",

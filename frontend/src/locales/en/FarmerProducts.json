@@ -63,6 +63,7 @@
     "text": "Add your first product and it appears on your stall page right away."
   },
   "dealAction": "Near-expiry deal",
+  "dealActionFor": "Near-expiry deal for {{name}}",
   "deals": {
     "title_one": "On sale ({{count}})",
     "title_other": "On sale ({{count}})",

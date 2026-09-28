@@ -197,24 +197,34 @@ const FarmerProductsPage = () => {
       key: 'a',
       label: '',
       align: 'actions',
+      // FR-124: the deal button sits on a line of its own under the other three, so the column is no wider than
+      // before and the table still fits its card at 1440 px
       render: (p) => (
-        <div className="flex justify-end gap-2">
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex justify-end gap-2">
+            {p.nextDate && (
+              <Button variant="secondary" size="sm" onClick={() => openAdjust(p)} disabled={busyId === p.id}>
+                {t('adjust')}
+              </Button>
+            )}
+            <ButtonLink variant="secondary" size="sm" to={`/farmer/products/${p.id}/edit`}>
+              {t('edit')}
+            </ButtonLink>
+            <Button variant="danger" size="sm" onClick={() => setDeleteTarget(p)} disabled={busyId === p.id}>
+              {t('delete')}
+            </Button>
+          </div>
           {p.status === 'available' && !p.hidden && p.nextDate && (
-            <Button variant="secondary" size="sm" onClick={() => setDealTarget(p)} disabled={busyId === p.id}>
+            <Button
+              variant="secondary"
+              size="sm"
+              aria-label={t('dealActionFor', { name: p.name })}
+              onClick={() => setDealTarget(p)}
+              disabled={busyId === p.id}
+            >
               {t('dealAction')}
             </Button>
           )}
-          {p.nextDate && (
-            <Button variant="secondary" size="sm" onClick={() => openAdjust(p)} disabled={busyId === p.id}>
-              {t('adjust')}
-            </Button>
-          )}
-          <ButtonLink variant="secondary" size="sm" to={`/farmer/products/${p.id}/edit`}>
-            {t('edit')}
-          </ButtonLink>
-          <Button variant="danger" size="sm" onClick={() => setDeleteTarget(p)} disabled={busyId === p.id}>
-            {t('delete')}
-          </Button>
         </div>
       ),
     },
