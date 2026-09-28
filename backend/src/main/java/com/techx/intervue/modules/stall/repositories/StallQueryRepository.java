@@ -42,14 +42,19 @@ public class StallQueryRepository {
 
     /**
      * One row per Farmer, even when they sell at several markets; when filtering by market the
-     * booth and hours are those of that market.
+     * booth and hours are those of that market. The booth code and pin come from one and the same
+     * farmer_markets row (the lowest id that matches) — taking MIN of each column on its own mixed
+     * one market's code with another's latitude and a third value's longitude, a pin at neither
+     * market (FR-011).
      */
     public static final String SEARCH_STALLS =
             """
             SELECT f.id, f.stall_name, f.contact_person, f.logo_url, f.rating_avg, f.rating_count,
-                   MIN(fm.stall_code) AS stall_code,
-                   MIN(fm.stall_latitude) AS stall_latitude,
-                   MIN(fm.stall_longitude) AS stall_longitude,
+                   (SELECT p.stall_code FROM farmer_markets p WHERE p.id = MIN(fm.id)) AS stall_code,
+                   (SELECT p.stall_latitude FROM farmer_markets p
+                     WHERE p.id = MIN(fm.id)) AS stall_latitude,
+                   (SELECT p.stall_longitude FROM farmer_markets p
+                     WHERE p.id = MIN(fm.id)) AS stall_longitude,
                    (SELECT GROUP_CONCAT(DISTINCT d.day_of_week ORDER BY d.day_of_week)
                       FROM farmer_operating_days d
                       JOIN farmer_markets fm2 ON fm2.id = d.farmer_market_id AND fm2.is_active = TRUE
