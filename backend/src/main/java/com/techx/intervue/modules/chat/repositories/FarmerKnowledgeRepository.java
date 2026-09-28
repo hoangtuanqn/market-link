@@ -44,7 +44,7 @@ public class FarmerKnowledgeRepository {
             WHERE o.farmer_id = :farmerId
               AND (:status IS NULL OR o.status = :status)
               AND (:pickupDate IS NULL OR o.pickup_date = :pickupDate)
-            GROUP BY o.id, o.order_code, u.name, m.market_name, o.pickup_date, o.pickup_start,
+            GROUP BY o.id, o.order_code, u.full_name, m.market_name, o.pickup_date, o.pickup_start,
                      o.pickup_end, o.cutoff_at, o.total_amount, o.status
             ORDER BY o.pickup_date, o.pickup_start, o.order_code
             LIMIT :limit
@@ -63,7 +63,7 @@ public class FarmerKnowledgeRepository {
             WHERE o.farmer_id = :farmerId
               AND o.status = 'placed'
               AND o.cutoff_at <= DATE_ADD(NOW(), INTERVAL :hours HOUR)
-            GROUP BY o.id, o.order_code, u.name, m.market_name, o.pickup_date, o.pickup_start,
+            GROUP BY o.id, o.order_code, u.full_name, m.market_name, o.pickup_date, o.pickup_start,
                      o.pickup_end, o.cutoff_at, o.total_amount, o.status
             ORDER BY o.cutoff_at
             LIMIT :limit
