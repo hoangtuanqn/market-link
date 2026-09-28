@@ -23,6 +23,7 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import LiveClock from './LiveClock';
 import ShelfLifeStrikes from './ShelfLifeStrikes';
+import { stockNow } from './stockNow';
 
 const TABS = [
   { id: 'new', label: 'tabs.new', status: 'placed' as OrderStatus },
@@ -175,8 +176,7 @@ const FarmerOverviewPage = () => {
   const dashboard = kpiLoad.kind === 'ready' ? kpiLoad.data : null;
   const briefing = briefingLoad.kind === 'ready' ? briefingLoad.data : null;
   const orders = ordersLoad.kind === 'ready' ? ordersLoad.data.items : [];
-  const stock =
-    stockLoad.kind === 'ready' ? [...stockLoad.data].sort((a, b) => a.stock - b.stock).slice(0, STOCK_ROWS) : [];
+  const stock = stockLoad.kind === 'ready' ? stockNow(stockLoad.data, STOCK_ROWS) : [];
   const best = bestLoad.kind === 'ready' ? bestLoad.data : [];
 
   return (
@@ -300,7 +300,7 @@ const FarmerOverviewPage = () => {
           ) : stockLoad.kind === 'error' ? (
             <LoadError noun={t('stock.noun')} onRetry={retryStock} />
           ) : stock.length ? (
-            <BarList rows={stock.map((p) => ({ label: p.name, value: p.stock }))} />
+            <BarList rows={stock} />
           ) : (
             <DataState title={t('stock.empty.title')} text={t('stock.empty.text')} />
           )}
