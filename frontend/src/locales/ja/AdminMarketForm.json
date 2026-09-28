@@ -16,7 +16,6 @@
     "lat": "緯度",
     "lng": "経度",
     "lngHint": "ピンをドラッグしても構いません。地図データは OpenStreetMap です。",
-    "notes": "店舗向けのメモ",
     "images": "写真"
   },
   "images": {

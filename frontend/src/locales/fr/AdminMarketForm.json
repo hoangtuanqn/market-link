@@ -16,7 +16,6 @@
     "lat": "Latitude",
     "lng": "Longitude",
     "lngHint": "Ou déplacez le repère. Les données cartographiques viennent d'OpenStreetMap.",
-    "notes": "Notes pour les étals",
     "images": "Photos"
   },
   "images": {

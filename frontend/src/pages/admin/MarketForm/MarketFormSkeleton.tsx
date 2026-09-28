@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
  * - Breadcrumbs & header
  * - Two-column form layout:
  *
- *   - Left: Name, Address fields, Operating days & hours, notes, image uploaders
+ *   - Left: Name, Address fields, Operating days & hours, image uploaders
  *   - Right: Location coordinates/map preview, closures card, action buttons
  */
 const MarketFormSkeleton = () => {
