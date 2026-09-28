@@ -1,4 +1,4 @@
-import { useRef, useState, type SubmitEvent } from 'react';
+import { useEffect, useRef, useState, type SubmitEvent } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { Link, Navigate, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
@@ -37,6 +37,11 @@ const VerifyEmailPage = () => {
   const [isResending, setIsResending] = useState(false);
   const now = useClock(1000).getTime();
 
+  // After a wrong code, hand focus back once the boxes are enabled again (a disabled input cannot take focus)
+  useEffect(() => {
+    if (status.kind === 'wrong') codeRef.current?.focus();
+  }, [status]);
+
   if (!pending) return <Navigate to={REGISTER_PATH} replace />;
 
   const codeLeft = secondsUntil(pending.codeExpiresAt, now);
@@ -65,7 +70,6 @@ const VerifyEmailPage = () => {
         case 'SIGNUP_CODE_INVALID': {
           const left = Number(Helper.getFieldErrors(error).attemptsLeft ?? 0);
           setStatus(left > 0 ? { kind: 'wrong', attemptsLeft: left } : { kind: 'usedUp' });
-          codeRef.current?.focus();
           break;
         }
         case 'SIGNUP_CODE_EXPIRED':

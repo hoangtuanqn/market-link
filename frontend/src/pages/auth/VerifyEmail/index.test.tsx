@@ -81,16 +81,32 @@ describe('VerifyEmail', () => {
 
   it('a wrong code says how many tries are left and clears the boxes', async () => {
     park();
-    vi.mocked(AuthApi.verifySignup).mockRejectedValue(
-      apiError(400, 'SIGNUP_CODE_INVALID', [{ field: 'attemptsLeft', message: '3' }]),
+    // Answer after a moment, like a real request: the boxes are disabled while it is on its way
+    vi.mocked(AuthApi.verifySignup).mockImplementation(
+      () =>
+        new Promise((_, reject) =>
+          setTimeout(() => reject(apiError(400, 'SIGNUP_CODE_INVALID', [{ field: 'attemptsLeft', message: '3' }])), 50),
+        ),
     );
     renderAt();
+    const input = screen.getByLabelText('Six-digit code');
 
-    await userEvent.type(screen.getByLabelText('Six-digit code'), '111111');
+    await userEvent.type(input, '111111');
+    // jsdom lets a disabled input take focus; a browser does not. Record whether each focus() lands on an enabled box.
+    const focusedEnabled: boolean[] = [];
+    const focus = vi.spyOn(HTMLElement.prototype, 'focus').mockImplementation(function (this: HTMLElement) {
+      focusedEnabled.push(!(this as HTMLInputElement).disabled);
+    });
 
-    expect(await screen.findByText('That code is not right')).toBeInTheDocument();
-    expect(screen.getByText(/3 tries left/)).toBeInTheDocument();
-    expect(screen.getByLabelText('Six-digit code')).toHaveValue('');
+    try {
+      expect(await screen.findByText('That code is not right')).toBeInTheDocument();
+      expect(screen.getByText(/3 tries left/)).toBeInTheDocument();
+      expect(input).toHaveValue('');
+      // The boxes are ready for the next try without another click
+      expect(focusedEnabled).toContain(true);
+    } finally {
+      focus.mockRestore();
+    }
   });
 
   it('a used-up code locks the boxes until a new code is sent', async () => {
