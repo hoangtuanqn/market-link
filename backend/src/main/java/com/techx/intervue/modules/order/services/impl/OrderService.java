@@ -770,6 +770,8 @@ public class OrderService implements OrderServiceInterface {
             orderRepository.save(order);
             orderRepository.flush();
         }
+        // D-07: the Farmer must look at the order again — an accepted one is back to placed
+        notifyFarmer(order, NotificationKind.ORDER_CHANGED, Map.of());
         return detail(userId, orderId);
     }
 

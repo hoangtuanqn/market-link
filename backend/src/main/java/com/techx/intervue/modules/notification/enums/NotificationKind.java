@@ -27,6 +27,11 @@ public enum NotificationKind {
     ORDER_READY(NotificationCategory.ORDERS, true),
     ORDER_CANCELLED(NotificationCategory.ORDERS, true),
     /**
+     * FR-035/D-07: the customer changed quantities before the cutoff — to the stall, which must
+     * accept the order again.
+     */
+    ORDER_CHANGED(NotificationCategory.ORDERS, true),
+    /**
      * FR-072: an admin permanently deactivated the customer — distinct wording from ORDER_CANCELLED
      * so the Farmer is not told the customer cancelled it themselves.
      */
