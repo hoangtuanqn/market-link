@@ -6,7 +6,14 @@ import AdminFarmerDetailPage from './index';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
 
 vi.mock('@/api-requests/admin-farmer.requests', () => ({
-  default: { detail: vi.fn(), suspend: vi.fn(), approve: vi.fn(), reject: vi.fn(), reinstate: vi.fn() },
+  default: {
+    detail: vi.fn(),
+    suspend: vi.fn(),
+    approve: vi.fn(),
+    reject: vi.fn(),
+    reinstate: vi.fn(),
+    statusHistory: vi.fn(),
+  },
 }));
 
 const farmer = (patch: Record<string, unknown> = {}) => ({
@@ -63,6 +70,7 @@ beforeEach(() => {
   vi.mocked(AdminFarmerApi.suspend)
     .mockReset()
     .mockResolvedValue(ok(farmer({ approvalStatus: 'suspended' })));
+  vi.mocked(AdminFarmerApi.statusHistory).mockReset().mockResolvedValue({ items: [], page: 1, pageSize: 20, total: 0 });
 });
 
 describe('AdminFarmerDetailPage — shelf-life strikes (FR-123)', () => {
@@ -83,7 +91,7 @@ describe('AdminFarmerDetailPage — shelf-life strikes (FR-123)', () => {
     );
     await userEvent.click(within(dialog).getByRole('button', { name: 'Suspend stall' }));
 
-    expect(AdminFarmerApi.suspend).toHaveBeenCalledWith(15, 'Shelf-life violations');
+    expect(AdminFarmerApi.suspend).toHaveBeenCalledWith(15, 'Shelf-life violations', null);
   });
 
   it('drops the suspend trigger from the address once it has opened the dialog', async () => {
