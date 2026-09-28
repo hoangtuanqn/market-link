@@ -22,4 +22,10 @@ class QualityControllerAccessTest {
         assertThat(rule(QualityReportPhotoController.class))
                 .isEqualTo("hasAnyRole('CUSTOMER','FARMER')");
     }
+
+    @Test
+    void onlyBuyersReportSpoiledProduce() {
+        assertThat(rule(QualityReportController.class))
+                .isEqualTo("hasAnyRole('CUSTOMER','FARMER')");
+    }
 }

@@ -3,9 +3,18 @@ package com.techx.intervue.modules.quality.controllers;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeException;
+import com.techx.intervue.modules.order.exceptions.OrderNotFoundException;
+import com.techx.intervue.modules.order.exceptions.OrderNotYoursException;
+import com.techx.intervue.modules.quality.exceptions.ItemAlreadyReportedException;
+import com.techx.intervue.modules.quality.exceptions.ReportNeedsCompletedOrderException;
+import com.techx.intervue.modules.quality.exceptions.ReportWindowClosedException;
+import com.techx.intervue.modules.quality.exceptions.ReportedItemNotFoundException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.ApiResource;
+import java.sql.SQLException;
+import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.multipart.MultipartException;
@@ -75,5 +84,44 @@ class QualityExceptionHandlerTest {
     @Test
     void theWrongRoleIs403() {
         assertError(handler.forbidden(new AccessDeniedException("x")), 403, "FORBIDDEN");
+    }
+
+    @Test
+    void stateConflictsOfAReportAre409() {
+        assertError(
+                handler.notCompleted(new ReportNeedsCompletedOrderException()),
+                409,
+                "ORDER_NOT_COMPLETED");
+        assertError(
+                handler.windowClosed(ReportWindowClosedException.closed(LocalDate.of(2026, 10, 7))),
+                409,
+                "REPORT_WINDOW_CLOSED");
+        assertError(
+                handler.alreadyReported(new ItemAlreadyReportedException()),
+                409,
+                "ALREADY_REPORTED");
+    }
+
+    @Test
+    void someoneElsesOrderIs403AndAMissingOneIs404() {
+        assertError(handler.notYours(new OrderNotYoursException()), 403, "FORBIDDEN");
+        assertError(handler.notFound(new OrderNotFoundException(9L)), 404, "NOT_FOUND");
+        assertError(handler.notFound(new ReportedItemNotFoundException()), 404, "NOT_FOUND");
+    }
+
+    /** Review Focus #3: two sends at the same moment — the UNIQUE key answers 409, not 500. */
+    @Test
+    void aDuplicateReportRaceIs409() {
+        assertError(
+                handler.dataIntegrity(
+                        violation(
+                                "Duplicate entry '501' for key"
+                                        + " 'quality_reports.uq_quality_report_item'")),
+                409,
+                "ALREADY_REPORTED");
+    }
+
+    private static DataIntegrityViolationException violation(String message) {
+        return new DataIntegrityViolationException("x", new SQLException(message));
     }
 }

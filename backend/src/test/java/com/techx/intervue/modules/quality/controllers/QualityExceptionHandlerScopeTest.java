@@ -18,6 +18,7 @@ class QualityExceptionHandlerScopeTest {
                 QualityExceptionHandler.class.getAnnotation(RestControllerAdvice.class);
 
         assertThat(Arrays.asList(advice.assignableTypes()))
-                .containsExactlyInAnyOrder(QualityReportPhotoController.class);
+                .containsExactlyInAnyOrder(
+                        QualityReportPhotoController.class, QualityReportController.class);
     }
 }
