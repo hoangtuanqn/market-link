@@ -753,5 +753,12 @@
     "whatNow": "Anda tetap bisa menjelajahi pasar dan produk sebagai pengunjung, tetapi tidak bisa masuk atau memesan selama masa ini.",
     "contactIntro": "Jika Anda merasa ini keliru, hubungi kami di",
     "acknowledge": "Saya mengerti"
+  },
+  "stallSuspended": {
+    "title": "Your stall is suspended",
+    "generic": "An administrator suspended this stall, so it is hidden from customers for now.",
+    "whatNow": "Orders customers already placed still run to the end — please complete them. You cannot list produce, change stock or take new orders until the suspension is lifted.",
+    "contactIntro": "If you believe this is a mistake, contact us at",
+    "acknowledge": "I understand"
   }
 }

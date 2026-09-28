@@ -753,5 +753,12 @@
     "whatNow": "방문자로 시장과 농산물을 둘러볼 수는 있지만, 이 기간에는 로그인하거나 주문할 수 없습니다.",
     "contactIntro": "착오라고 생각되시면 다음으로 연락 주세요:",
     "acknowledge": "확인했습니다"
+  },
+  "stallSuspended": {
+    "title": "Your stall is suspended",
+    "generic": "An administrator suspended this stall, so it is hidden from customers for now.",
+    "whatNow": "Orders customers already placed still run to the end — please complete them. You cannot list produce, change stock or take new orders until the suspension is lifted.",
+    "contactIntro": "If you believe this is a mistake, contact us at",
+    "acknowledge": "I understand"
   }
 }

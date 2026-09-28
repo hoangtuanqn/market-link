@@ -753,5 +753,12 @@
     "whatNow": "您仍可以访客身份浏览市集和农产品，但在此期间无法登录或下单。",
     "contactIntro": "如果您认为这是误判，请联系",
     "acknowledge": "我知道了"
+  },
+  "stallSuspended": {
+    "title": "Your stall is suspended",
+    "generic": "An administrator suspended this stall, so it is hidden from customers for now.",
+    "whatNow": "Orders customers already placed still run to the end — please complete them. You cannot list produce, change stock or take new orders until the suspension is lifted.",
+    "contactIntro": "If you believe this is a mistake, contact us at",
+    "acknowledge": "I understand"
   }
 }
