@@ -25,7 +25,7 @@ const FreshProducts = ({ products, loading = false }: FreshProductsProps) => {
         </Link>
       </div>
 
-      <div className="grid items-start gap-x-5 gap-y-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-x-5 gap-y-6 md:grid-cols-2 lg:grid-cols-3">
         {loading ? (
           <MarketCardSkeleton count={3} />
         ) : products.length > 0 ? (
