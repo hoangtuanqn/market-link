@@ -6,6 +6,7 @@ export type NavItem = { label: keyof (typeof common)['nav']; to: string };
 export const GUEST_NAV: NavItem[] = [
   { label: 'markets', to: '/markets' },
   { label: 'products', to: '/products' },
+  { label: 'deals', to: '/deals' },
   { label: 'map', to: '/map' },
   { label: 'aboutUs', to: '/about' },
 ];
@@ -14,6 +15,7 @@ export const GUEST_NAV: NavItem[] = [
 export const CUSTOMER_NAV: NavItem[] = [
   { label: 'markets', to: '/markets' },
   { label: 'products', to: '/products' },
+  { label: 'deals', to: '/deals' },
   { label: 'map', to: '/map' },
   { label: 'myOrders', to: '/orders' },
   { label: 'favorites', to: '/favorites' },

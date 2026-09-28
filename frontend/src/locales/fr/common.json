@@ -172,6 +172,7 @@
     "shop": "Acheter",
     "marketsNearYou": "Marchés près de chez vous",
     "inSeason": "De saison",
+    "deals": "Promos date proche",
     "marketMap": "Carte des marchés",
     "favoriteStalls": "Stands favoris",
     "sell": "Vendre",
@@ -249,6 +250,7 @@
   "nav": {
     "markets": "Marchés",
     "products": "Produits",
+    "deals": "Promos",
     "map": "Carte",
     "aboutUs": "À propos",
     "myOrders": "Mes commandes",
@@ -307,6 +309,14 @@
   },
   "price": {
     "was": "Avant"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "Retrait {{day}} · bon jusqu'à la fin de {{until}} · {{qty}} restant(s)",
+    "added": {
+      "title": "Ajouté au panier",
+      "text": "{{name}} au prix promo, à retirer le {{day}}."
+    }
   },
   "product": {
     "notThisWeek": "Pas cette semaine",

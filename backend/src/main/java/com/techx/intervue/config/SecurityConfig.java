@@ -143,6 +143,10 @@ public class SecurityConfig {
                                         // 2. Public API
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()
+                                        // FR-125: near-expiry deals can be browsed before signing
+                                        // in, like the product list
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/deals")
+                                        .permitAll()
                                         // FR-020…023, FR-011: a stall's products and stock can be
                                         // viewed
                                         // before signing in

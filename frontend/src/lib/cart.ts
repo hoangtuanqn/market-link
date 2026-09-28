@@ -10,6 +10,8 @@ export type CartLine = {
   qty: number;
   farmerId: number;
   stallName: string;
+  /** "yyyy-MM-dd": the pickup day of the near-expiry deal this line was added from (FR-125), if any. */
+  pickupDate?: string;
 };
 
 const KEY = 'ml.cart';

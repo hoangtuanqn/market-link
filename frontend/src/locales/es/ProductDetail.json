@@ -19,6 +19,13 @@
   },
   "addToCart": "Añadir al carrito",
   "payNote": "El stock queda reservado cuando haces el pedido. Pagas {{price}} en el puesto al recoger.",
+  "deals": {
+    "title": "En oferta para estos días de recogida",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, antes {{was}} · bueno hasta el final de {{until}} · quedan {{qty}}",
+    "add": "Añadir para el {{day}}",
+    "noun": "ofertas"
+  },
   "fromStall": "Del puesto",
   "stats": {
     "reviews_one": "{{count}} reseña",

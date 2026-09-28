@@ -65,16 +65,15 @@ public class FarmerDailyStockService implements FarmerDailyStockServiceInterface
         boolean wasOrderable = restock.isOrderable(product);
         row.setQuantityAvailable(request.quantityAvailable());
         if (request.unitPrice() != null) {
+            // An explicit price for the day replaces its near-expiry deal (FR-124): the deal's
+            // percent would no longer match the price customers pay
+            row.endDeal();
             row.setUnitPrice(request.unitPrice());
         }
         ProductDailyStock saved = dailyStock.save(row);
         restock.afterChange(product, wasOrderable, restock.isOrderable(product));
 
-        return new DailyStockResource(
-                saved.getProductId(),
-                saved.getStockDate(),
-                saved.getQuantityAvailable(),
-                saved.getUnitPrice());
+        return DailyStockResource.of(saved);
     }
 
     private FarmerProfile mine(long userId) {

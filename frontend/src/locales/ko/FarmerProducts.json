@@ -69,12 +69,67 @@
     "title": "{{day}} 재고 조정",
     "quantity": "이용 가능한 수량",
     "price": "해당 날짜 가격(선택 사항)",
-    "priceHint": "비워두면 현재 가격이 유지됩니다.",
+    "priceHint": "비워두면 현재 가격이 유지됩니다. 여기에 가격을 입력하면 해당 날짜의 유통기한 임박 할인도 종료됩니다.",
     "cancel": "취소",
     "confirm": "저장",
     "error": {
       "quantity": "0 이상의 정수를 입력하세요.",
       "price": "0 이상의 가격을 입력하세요."
+    }
+  },
+  "dealAction": "유통기한 임박 할인",
+  "dealActionFor": "{{name}} 유통기한 임박 할인",
+  "deals": {
+    "title_one": "할인 중 ({{count}})",
+    "title_other": "할인 중 ({{count}})",
+    "loading": "내 할인을 불러오는 중…",
+    "col": {
+      "product": "상품",
+      "day": "픽업일",
+      "discount": "할인율",
+      "left": "남음",
+      "until": "유통기한"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}, 원래 가격 {{was}}",
+    "until_one": "{{day}} 마감 ({{count}}일)",
+    "until_other": "{{day}} 마감 ({{count}}일)",
+    "remove": "할인 취소",
+    "removed": "할인을 취소했어요",
+    "removedText": "{{name}}이(가) {{day}}에 원래 가격으로 돌아가요.",
+    "noun": "내 할인"
+  },
+  "dealDialog": {
+    "title": "유통기한 임박 할인 · {{name}}",
+    "day": "픽업일",
+    "qty": "가져올 수량 ({{unit}})",
+    "onSale": "그날 현재 {{qty}} 할인 중",
+    "packedOn": "수확 또는 포장일",
+    "result_one": "{{until}} 마감까지 신선 · 고객에게 {{count}}일 남음 (유통기한 {{shelfLife}}일)",
+    "result_other": "{{until}} 마감까지 신선 · 고객에게 {{count}}일 남음 (유통기한 {{shelfLife}}일)",
+    "discount": "할인율",
+    "less": "할인 낮추기",
+    "more": "할인 높이기",
+    "suggested": "추천 {{percent}}%",
+    "price": "가격",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "할인 등록",
+    "posting": "등록 중…",
+    "posted": "할인이 등록되었어요",
+    "postedText": "{{name}}이(가) {{day}}에 {{percent}}% 할인돼요.",
+    "loadingDays": "픽업일을 불러오는 중…",
+    "daysNoun": "픽업일",
+    "noDays": {
+      "title": "열려 있는 픽업일이 없어요",
+      "text": "앞으로 14일 동안 고객이 이 상품을 주문할 수 없어요. 주간 재고와 픽업 슬롯을 확인하세요."
+    },
+    "why": {
+      "packedOn": "수확 또는 포장일을 입력하세요.",
+      "qty": "최소 1개 이상 가져오세요.",
+      "packedInFuture": "수확 또는 포장일은 오늘보다 이후일 수 없어요.",
+      "fresh": "픽업일에 수확한 것은 신선한 것으로 간주되어 할인이 필요 없어요.",
+      "notNearExpiry": "그날 기준으로 {{shelfLife}}일 유통기한의 절반 이상이 남아 있어요. 할인은 유통기한의 절반이 지난 상품에만 적용돼요.",
+      "expiredBeforePickup": "이 상품은 그날 더 이상 신선하지 않아 판매할 수 없어요."
     }
   }
 }

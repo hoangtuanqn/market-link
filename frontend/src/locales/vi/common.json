@@ -172,6 +172,7 @@
     "shop": "Mua",
     "marketsNearYou": "Chợ gần bạn",
     "inSeason": "Đang vào mùa",
+    "deals": "Giảm giá sắp hết hạn",
     "marketMap": "Bản đồ chợ",
     "favoriteStalls": "Sạp yêu thích",
     "sell": "Bán",
@@ -249,6 +250,7 @@
   "nav": {
     "markets": "Chợ",
     "products": "Sản phẩm",
+    "deals": "Giảm giá",
     "map": "Bản đồ",
     "aboutUs": "Về chúng tôi",
     "myOrders": "Đơn của tôi",
@@ -307,6 +309,14 @@
   },
   "price": {
     "was": "Giá cũ"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "Nhận {{day}} · dùng tốt đến hết {{until}} · còn {{qty}}",
+    "added": {
+      "title": "Đã thêm vào giỏ",
+      "text": "{{name}} với giá giảm, nhận ngày {{day}}."
+    }
   },
   "product": {
     "notThisWeek": "Tuần này không bán",

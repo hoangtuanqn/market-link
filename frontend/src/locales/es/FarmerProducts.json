@@ -69,12 +69,67 @@
     "title": "Ajustar existencias para {{day}}",
     "quantity": "Unidades disponibles",
     "price": "Precio para este día (opcional)",
-    "priceHint": "Déjelo en blanco para mantener el precio actual.",
+    "priceHint": "Déjelo en blanco para mantener el precio actual. Poner un precio aquí también termina una oferta por vencer de este día.",
     "cancel": "Cancelar",
     "confirm": "Guardar",
     "error": {
       "quantity": "Ingrese un número entero de 0 o más.",
       "price": "Ingrese un precio de 0 o más."
+    }
+  },
+  "dealAction": "Oferta por vencer",
+  "dealActionFor": "Oferta por vencer de {{name}}",
+  "deals": {
+    "title_one": "En oferta ({{count}})",
+    "title_other": "En oferta ({{count}})",
+    "loading": "Cargando tus ofertas…",
+    "col": {
+      "product": "Producto",
+      "day": "Día de recogida",
+      "discount": "Descuento",
+      "left": "Quedan",
+      "until": "Bueno hasta"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}, antes {{was}}",
+    "until_one": "Fin de {{day}} ({{count}} día)",
+    "until_other": "Fin de {{day}} ({{count}} días)",
+    "remove": "Quitar oferta",
+    "removed": "Oferta quitada",
+    "removedText": "{{name}} vuelve a su precio habitual para {{day}}.",
+    "noun": "tus ofertas"
+  },
+  "dealDialog": {
+    "title": "Oferta por vencer · {{name}}",
+    "day": "Día de recogida",
+    "qty": "Cantidad que traes ({{unit}})",
+    "onSale": "{{qty}} ya en oferta para ese día",
+    "packedOn": "Cosechado o envasado el",
+    "result_one": "Bueno hasta el final de {{until}} · al cliente le quedan {{count}} día (vida útil de {{shelfLife}} días)",
+    "result_other": "Bueno hasta el final de {{until}} · al cliente le quedan {{count}} días (vida útil de {{shelfLife}} días)",
+    "discount": "Descuento",
+    "less": "Bajar el descuento",
+    "more": "Subir el descuento",
+    "suggested": "Sugerido {{percent}}%",
+    "price": "Precio",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "Publicar oferta",
+    "posting": "Publicando…",
+    "posted": "Oferta publicada",
+    "postedText": "{{name}} tiene {{percent}}% de descuento para {{day}}.",
+    "loadingDays": "Cargando días de recogida…",
+    "daysNoun": "días de recogida",
+    "noDays": {
+      "title": "No hay ningún día de recogida disponible",
+      "text": "Los clientes no pueden pedir este producto en ninguno de los próximos 14 días. Revisa tu existencia semanal y tus franjas de recogida."
+    },
+    "why": {
+      "packedOn": "Ingresa la fecha de cosecha o envasado.",
+      "qty": "Trae al menos 1.",
+      "packedInFuture": "La fecha de cosecha o envasado no puede ser posterior a hoy.",
+      "fresh": "Lo cosechado el día de recogida se considera fresco, así que no necesita oferta.",
+      "notNearExpiry": "Ese día todavía queda más de la mitad de su vida útil de {{shelfLife}} días. Las ofertas son solo para productos que ya pasaron la mitad de su vida útil.",
+      "expiredBeforePickup": "Este lote ya no está en buen estado ese día, así que no se puede vender para esa fecha."
     }
   }
 }

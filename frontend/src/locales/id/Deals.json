@@ -1,0 +1,27 @@
+{
+  "title": "Diskon hampir kedaluwarsa",
+  "intro": "Produk yang sudah melewati setengah masa simpannya, dijual lebih murah oleh lapak. Setiap diskon berlaku untuk satu hari pengambilan, dan setiap kartu menyebutkan sampai kapan produk masih baik.",
+  "filters": {
+    "category": "Kategori",
+    "allCategories": "Semua",
+    "market": "Pasar",
+    "allMarkets": "Semua pasar"
+  },
+  "clear": "Hapus filter",
+  "noun": "diskon",
+  "results": "Diskon yang masih bisa dipesan",
+  "empty": {
+    "title": "Tidak ada diskon hari ini",
+    "text": "Lapak memasang diskon saat satu batch sudah melewati setengah masa simpannya. Cek lagi besok, atau jelajahi semua produk.",
+    "browse": "Lihat produk"
+  },
+  "emptyFiltered": {
+    "title": "Tidak ada diskon yang cocok dengan filter ini",
+    "text": "Coba kategori atau pasar lain."
+  },
+  "pager": {
+    "showing": "Menampilkan {{from}}–{{to}} dari {{total}}",
+    "count_one": "{{count}} diskon",
+    "count_other": "{{count}} diskon"
+  }
+}

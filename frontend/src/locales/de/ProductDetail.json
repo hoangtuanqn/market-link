@@ -19,6 +19,13 @@
   },
   "addToCart": "In den Warenkorb",
   "payNote": "Die Ware wird bei der Bestellung für Sie zurückgelegt. Sie zahlen {{price}} bei der Abholung am Stand.",
+  "deals": {
+    "title": "Im Angebot für diese Abholtage",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, statt {{was}} · gut bis Ende {{until}} · {{qty}} übrig",
+    "add": "Für {{day}} hinzufügen",
+    "noun": "Angebote"
+  },
   "fromStall": "Vom Stand",
   "stats": {
     "reviews_one": "{{count}} Bewertung",

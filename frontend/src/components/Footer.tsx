@@ -20,6 +20,7 @@ const COLUMNS: { title: FooterKey; links: FooterLink[] }[] = [
     links: [
       { label: 'marketsNearYou', to: '/markets' },
       { label: 'inSeason', to: '/products' },
+      { label: 'deals', to: '/deals' },
       { label: 'marketMap', to: '/map' },
       { label: 'favoriteStalls', to: '/favorites' },
     ],

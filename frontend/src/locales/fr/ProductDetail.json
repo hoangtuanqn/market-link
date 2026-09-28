@@ -19,6 +19,13 @@
   },
   "addToCart": "Ajouter au panier",
   "payNote": "Le stock vous est réservé dès la commande. Vous payez {{price}} au stand au moment du retrait.",
+  "deals": {
+    "title": "En promo pour ces jours de retrait",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, avant {{was}} · bon jusqu'à la fin de {{until}} · {{qty}} restant(s)",
+    "add": "Ajouter pour {{day}}",
+    "noun": "promos"
+  },
   "fromStall": "Du stand",
   "stats": {
     "reviews_one": "{{count}} avis",

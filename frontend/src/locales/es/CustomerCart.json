@@ -50,5 +50,10 @@
     "title": "Productos en tu carrito",
     "text": "Si un producto ya no está a la venta, quítalo aquí y el carrito se volverá a cargar.",
     "clear": "Vaciar el carrito"
+  },
+  "deal": {
+    "badge": "−{{percent}}% oferta por vencer",
+    "onlyOn": "La oferta solo aplica para {{day}}.",
+    "dayGone": "El día de la oferta {{day}} ya no se puede elegir. Elige un día para ver su precio."
   }
 }

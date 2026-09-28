@@ -112,3 +112,13 @@ Dữ liệu dựng sẵn cho vài kịch bản:
 - **Xác thực hai bước.** Seed không tạo sẵn 2FA cho tài khoản nào, nhưng admin vẫn **bị bắt cài ở lần đăng nhập
   đầu** (FR-008) — xem [mục hướng dẫn](#đăng-nhập-admin-lần-đầu--bắt-buộc-cài-2fa). Cài xong rồi thì `make seed`
   không tắt được; muốn tắt thì vào `/admin/security`, muốn xoá hẳn thì xoá dòng trong bảng `admin_mfa`.
+
+## Giảm giá sắp hết hạn (FR-124, FR-125)
+
+`make seed` đưa 2 ngày giảm giá vào sạp "Trứng gà Khánh Hòa" (`farmer8@marketlink.vn`), luôn ở các ngày còn đặt được:
+
+- "Trứng vịt" giảm 20% vào ngày nhận đầu tiên từ hôm nay + 2, "Trứng cút" giảm 40% vào ngày nhận đầu tiên từ hôm nay + 3.
+  Hạn của lô tính từ hạn dùng của sản phẩm, nên thẻ ở `/deals` ghi rõ còn dùng tốt tới ngày nào.
+- Đăng nhập `farmer8@` → Products: khối "On sale (2)", nút "Near-expiry deal" ở từng sản phẩm để đăng thêm.
+- Khách (`customer@marketlink.vn`) thêm một món từ `/deals`: giỏ chọn sẵn đúng ngày giảm giá và tính giá của ngày đó.
+- Chạy lại `make seed` thì 2 ngày giảm giá dời về các ngày gần nhất và giảm giá cũ của hai sản phẩm này kết thúc.

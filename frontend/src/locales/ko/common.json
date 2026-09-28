@@ -172,6 +172,7 @@
     "shop": "사기",
     "marketsNearYou": "가까운 시장",
     "inSeason": "제철 상품",
+    "deals": "유통기한 임박 할인",
     "marketMap": "시장 지도",
     "favoriteStalls": "즐겨찾는 매대",
     "sell": "팔기",
@@ -249,6 +250,7 @@
   "nav": {
     "markets": "시장",
     "products": "상품",
+    "deals": "할인",
     "map": "지도",
     "aboutUs": "소개",
     "myOrders": "내 주문",
@@ -307,6 +309,14 @@
   },
   "price": {
     "was": "이전 가격"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "{{day}} 픽업 · {{until}}까지 신선 · {{qty}} 남음",
+    "added": {
+      "title": "장바구니에 담았어요",
+      "text": "{{name}}이(가) 할인가로, {{day}}에 픽업이에요."
+    }
   },
   "product": {
     "notThisWeek": "이번 주에는 없어요",

@@ -19,6 +19,13 @@
   },
   "addToCart": "Add to cart",
   "payNote": "Stock is held for you when you place the order. You pay {{price}} at the stall on pickup.",
+  "deals": {
+    "title": "On sale for these pickup days",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, was {{was}} · good until end of {{until}} · {{qty}} left",
+    "add": "Add for {{day}}",
+    "noun": "deals"
+  },
   "fromStall": "From the stall",
   "stats": {
     "reviews_one": "{{count}} review",

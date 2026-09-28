@@ -40,6 +40,24 @@ describe('Cart', () => {
     const placed = Promise.reject(new Error('409 OUT_OF_STOCK'));
     return placed.catch(() => undefined).then(() => expect(Cart.count()).toBe(2));
   });
+
+  /** FR-125: a line added from /deals remembers its pickup day, so the cart can start on it. */
+  it('remembers the deal day a line was added for', () => {
+    Cart.add({ ...tomato, pickupDate: '2026-10-03' }, 1);
+    expect(Cart.lines()[0].pickupDate).toBe('2026-10-03');
+  });
+
+  it('keeps the deal day when the same product is added again from its own page', () => {
+    Cart.add({ ...tomato, pickupDate: '2026-10-03' }, 1);
+    Cart.add(tomato, 1);
+    expect(Cart.lines()[0]).toMatchObject({ qty: 2, pickupDate: '2026-10-03' });
+  });
+
+  it('moves to the other day when it is added again from another deal day', () => {
+    Cart.add({ ...tomato, pickupDate: '2026-10-03' }, 1);
+    Cart.add({ ...tomato, pickupDate: '2026-10-04' }, 1);
+    expect(Cart.lines()[0].pickupDate).toBe('2026-10-04');
+  });
 });
 
 /** Reading a stored cart needs a fresh module: lib/cart caches what it read first. */

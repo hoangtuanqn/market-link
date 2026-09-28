@@ -172,6 +172,7 @@
     "shop": "Einkaufen",
     "marketsNearYou": "Märkte in Ihrer Nähe",
     "inSeason": "Saisonal",
+    "deals": "Angebote: kurze Haltbarkeit",
     "marketMap": "Marktkarte",
     "favoriteStalls": "Lieblingsstände",
     "sell": "Verkaufen",
@@ -249,6 +250,7 @@
   "nav": {
     "markets": "Märkte",
     "products": "Produkte",
+    "deals": "Angebote",
     "map": "Karte",
     "aboutUs": "Über uns",
     "myOrders": "Meine Bestellungen",
@@ -307,6 +309,14 @@
   },
   "price": {
     "was": "Vorher"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "Abholung {{day}} · gut bis Ende {{until}} · {{qty}} übrig",
+    "added": {
+      "title": "In den Warenkorb gelegt",
+      "text": "{{name}} zum Angebotspreis, Abholung am {{day}}."
+    }
   },
   "product": {
     "notThisWeek": "Diese Woche nicht",

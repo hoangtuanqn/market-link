@@ -186,6 +186,7 @@
     "shop": "Shop",
     "marketsNearYou": "Markets near you",
     "inSeason": "In season",
+    "deals": "Near-expiry deals",
     "marketMap": "Market map",
     "favoriteStalls": "Favorite stalls",
     "sell": "Sell",
@@ -263,6 +264,7 @@
   "nav": {
     "markets": "Markets",
     "products": "Products",
+    "deals": "Deals",
     "map": "Map",
     "aboutUs": "About us",
     "myOrders": "My orders",
@@ -321,6 +323,14 @@
   },
   "price": {
     "was": "Was"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "Pick up {{day}} · good until end of {{until}} · {{qty}} left",
+    "added": {
+      "title": "Added to cart",
+      "text": "{{name}} at the deal price, for pickup on {{day}}."
+    }
   },
   "product": {
     "notThisWeek": "Not this week",

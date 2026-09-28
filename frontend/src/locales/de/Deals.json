@@ -1,0 +1,27 @@
+{
+  "title": "Angebote: kurze Haltbarkeit",
+  "intro": "Ware, die schon über die Hälfte ihrer Haltbarkeit hinaus ist, verkauft der Stand günstiger. Jedes Angebot gilt für einen Abholtag, und jede Karte nennt, bis wann die Ware noch gut bleibt.",
+  "filters": {
+    "category": "Kategorie",
+    "allCategories": "Alle",
+    "market": "Markt",
+    "allMarkets": "Alle Märkte"
+  },
+  "clear": "Filter zurücksetzen",
+  "noun": "Angebote",
+  "results": "Angebote, die Sie noch bestellen können",
+  "empty": {
+    "title": "Heute keine Angebote",
+    "text": "Ein Stand postet ein Angebot, wenn eine Charge über die Hälfte ihrer Haltbarkeit hinaus ist. Schauen Sie morgen wieder vorbei, oder durchstöbern Sie alle Produkte.",
+    "browse": "Produkte ansehen"
+  },
+  "emptyFiltered": {
+    "title": "Keine Angebote passen zu diesen Filtern",
+    "text": "Versuchen Sie eine andere Kategorie oder einen anderen Markt."
+  },
+  "pager": {
+    "showing": "{{from}}–{{to}} von {{total}}",
+    "count_one": "{{count}} Angebot",
+    "count_other": "{{count}} Angebote"
+  }
+}

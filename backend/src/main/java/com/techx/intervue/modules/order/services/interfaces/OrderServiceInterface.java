@@ -18,7 +18,11 @@ import java.util.List;
  */
 public interface OrderServiceInterface {
 
-    /** Read-only: no locking, changes nothing. Each group's issues live in {@code problems}. */
+    /**
+     * Read-only: no locking, changes nothing. Each group's issues live in {@code problems}. A stall
+     * listed in {@code request.pickupDates()} is priced for that day (FR-125), the others for their
+     * nearest orderable day.
+     */
     List<OrderGroupPreviewResource> preview(Long userIdOrNull, PreviewRequest request);
 
     /**

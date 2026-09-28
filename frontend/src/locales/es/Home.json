@@ -48,6 +48,11 @@
     "filterLink": "Filtrar por precio y categoría →",
     "empty": "No hay productos frescos disponibles en este momento."
   },
+  "deals": {
+    "title": "Ofertas por vencer",
+    "note": "Más baratos porque ya pasaron la mitad de su vida útil. Cada tarjeta indica hasta cuándo se mantienen buenos.",
+    "all": "Todas las ofertas"
+  },
   "how": {
     "title": "Cómo funcionan las reservas",
     "steps": {

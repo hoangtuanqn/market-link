@@ -36,6 +36,7 @@ import com.techx.intervue.modules.order.repositories.OrderRepository;
 import com.techx.intervue.modules.order.repositories.OrderStatusHistoryRepository;
 import com.techx.intervue.modules.order.requests.CartLine;
 import com.techx.intervue.modules.order.requests.OrderGroupInput;
+import com.techx.intervue.modules.order.requests.PickupDateInput;
 import com.techx.intervue.modules.order.requests.PlaceOrderRequest;
 import com.techx.intervue.modules.order.requests.PreviewRequest;
 import com.techx.intervue.modules.order.resources.OrderGroupPreviewResource;
@@ -85,6 +86,7 @@ class OrderServiceTest {
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
     private static final LocalDate TODAY = LocalDate.of(2026, 9, 26);
     private static final LocalDate PICKUP = LocalDate.of(2026, 9, 29);
+    private static final LocalDate SATURDAY = LocalDate.of(2026, 10, 3);
 
     private static final long CUSTOMER_ID = 7L;
     private static final long ADMIN_ID = 1L;
@@ -372,7 +374,7 @@ class OrderServiceTest {
     }
 
     private static PreviewRequest cart(CartLine... lines) {
-        return new PreviewRequest(List.of(lines));
+        return new PreviewRequest(List.of(lines), null);
     }
 
     private static OrderGroupInput group(long farmerId, long slotId, CartLine... lines) {
@@ -538,6 +540,150 @@ class OrderServiceTest {
 
         assertThatThrownBy(() -> service.preview(ADMIN_ID, cart(line(RAU_MUONG, 1))))
                 .isInstanceOf(AccessDeniedException.class);
+    }
+
+    /**
+     * FR-125 (spec §4.5.5): a stall with a picked day is priced for exactly that day — price,
+     * stock, deal and best-before — the other stall for its nearest orderable day, as before.
+     */
+    @Test
+    void previewPricesAStallForTheDayItWillBePickedUp() {
+        doReturn(
+                        Map.of(
+                                RAU_MUONG,
+                                new ProductAvailabilityResolver.Availability(
+                                        SATURDAY,
+                                        12,
+                                        new BigDecimal("7200"),
+                                        new ProductAvailabilityResolver.Deal(
+                                                new BigDecimal("12000"),
+                                                40,
+                                                LocalDate.of(2026, 9, 30),
+                                                LocalDate.of(2026, 10, 4)))))
+                .when(availability)
+                .onDate(eq(FARMER_A), any(), eq(SATURDAY));
+
+        List<OrderGroupPreviewResource> groups =
+                service.preview(
+                        CUSTOMER_ID,
+                        new PreviewRequest(
+                                List.of(line(RAU_MUONG, 2), line(BANH_CHUOI, 1)),
+                                List.of(new PickupDateInput(FARMER_A, SATURDAY))));
+
+        PreviewItemResource item = groupOf(groups, FARMER_A).items().getFirst();
+        assertThat(item.unitPrice()).isEqualByComparingTo("7200");
+        assertThat(item.stockQuantity()).isEqualTo(12);
+        assertThat(item.listPrice()).isEqualByComparingTo("12000");
+        assertThat(item.discountPercent()).isEqualTo(40);
+        assertThat(item.bestBefore()).isEqualTo("2026-10-04");
+        assertThat(groupOf(groups, FARMER_A).subtotal()).isEqualByComparingTo("14400");
+        assertThat(groupOf(groups, FARMER_B).items().getFirst().unitPrice())
+                .isEqualByComparingTo("35000");
+        verify(availability).resolve(Map.of(BANH_CHUOI, new BigDecimal("35000")));
+    }
+
+    /** The picked day has nothing of this product: 0 left, out of stock, base price. */
+    @Test
+    void previewFlagsAProductNotSoldOnThePickedDay() {
+        doReturn(Map.of()).when(availability).onDate(eq(FARMER_A), any(), eq(SATURDAY));
+
+        List<OrderGroupPreviewResource> groups =
+                service.preview(
+                        CUSTOMER_ID,
+                        new PreviewRequest(
+                                List.of(line(RAU_MUONG, 1)),
+                                List.of(new PickupDateInput(FARMER_A, SATURDAY))));
+
+        PreviewItemResource item = groups.getFirst().items().getFirst();
+        assertThat(item.stockQuantity()).isZero();
+        assertThat(item.unitPrice()).isEqualByComparingTo("12000");
+        assertThat(item.listPrice()).isNull();
+        assertThat(item.bestBefore()).isNull();
+        assertThat(groups.getFirst().problems()).containsExactly("out_of_stock");
+    }
+
+    /** A day without a deal: the fresh batch's promise, pickup day + shelf life − 1. */
+    @Test
+    void previewGivesTheFreshBestBeforeOnADayWithoutADeal() {
+        products.get(RAU_MUONG).setShelfLifeDays(3);
+        doReturn(
+                        Map.of(
+                                RAU_MUONG,
+                                new ProductAvailabilityResolver.Availability(
+                                        SATURDAY, 40, new BigDecimal("12000"))))
+                .when(availability)
+                .onDate(eq(FARMER_A), any(), eq(SATURDAY));
+
+        PreviewItemResource item =
+                service.preview(
+                                CUSTOMER_ID,
+                                new PreviewRequest(
+                                        List.of(line(RAU_MUONG, 1)),
+                                        List.of(new PickupDateInput(FARMER_A, SATURDAY))))
+                        .getFirst()
+                        .items()
+                        .getFirst();
+
+        assertThat(item.bestBefore()).isEqualTo("2026-10-05");
+        assertThat(item.listPrice()).isNull();
+        assertThat(item.discountPercent()).isNull();
+        assertThat(item.storageMode()).isEqualTo("room");
+    }
+
+    /** Without pickupDates the preview is what it always was, plus the day's best-before. */
+    @Test
+    void previewWithoutPickupDatesKeepsTheNearestDay() {
+        products.get(RAU_MUONG).setShelfLifeDays(3);
+
+        PreviewItemResource item =
+                service.preview(CUSTOMER_ID, cart(line(RAU_MUONG, 1)))
+                        .getFirst()
+                        .items()
+                        .getFirst();
+
+        assertThat(item.unitPrice()).isEqualByComparingTo("12000");
+        assertThat(item.listPrice()).isNull();
+        assertThat(item.bestBefore()).isEqualTo(PICKUP.plusDays(2).toString());
+        verify(availability, never()).onDate(anyLong(), any(), any());
+    }
+
+    /** A day for a stall that is not in the cart changes nothing. */
+    @Test
+    void previewIgnoresADayForAStallNotInTheCart() {
+        service.preview(
+                CUSTOMER_ID,
+                new PreviewRequest(
+                        List.of(line(RAU_MUONG, 1)),
+                        List.of(new PickupDateInput(FARMER_B, SATURDAY))));
+
+        verify(availability, never()).onDate(anyLong(), any(), any());
+    }
+
+    /**
+     * FR-125 fix round 1: the picked day itself cannot be booked (full, closed, past cutoff, or
+     * outside the lookahead — {@link ProductAvailabilityResolver#onDate} decides that; see
+     * ProductAvailabilityResolverTest). The resolver reports it the same way it reports "nothing of
+     * this product that day": an empty map. previewGroup must not invent a price for it — same "not
+     * available" problem as previewFlagsAProductNotSoldOnThePickedDay, never a silent price.
+     */
+    @Test
+    void previewFlagsALineWhosePickedDayIsNotOrderable() {
+        doReturn(Map.of()).when(availability).onDate(eq(FARMER_A), any(), eq(SATURDAY));
+
+        List<OrderGroupPreviewResource> groups =
+                service.preview(
+                        CUSTOMER_ID,
+                        new PreviewRequest(
+                                List.of(line(RAU_MUONG, 1)),
+                                List.of(new PickupDateInput(FARMER_A, SATURDAY))));
+
+        PreviewItemResource item = groups.getFirst().items().getFirst();
+        assertThat(item.stockQuantity()).isZero();
+        assertThat(item.unitPrice()).isEqualByComparingTo("12000");
+        assertThat(item.listPrice()).isNull();
+        assertThat(item.discountPercent()).isNull();
+        assertThat(item.bestBefore()).isNull();
+        assertThat(groups.getFirst().problems()).containsExactly("out_of_stock");
     }
 
     // ---------- place ----------
@@ -724,6 +870,30 @@ class OrderServiceTest {
         assertThat(line.isShelfLifeExtended()).isTrue();
         assertThat(line.getExtendedByDays()).isEqualTo(2);
         assertThat(line.getListPrice()).isNull();
+    }
+
+    /**
+     * FR-124 (spec §4.3, §4.5.5): a line bought on a deal day pays the deal price and keeps the
+     * price it replaced and that batch's own best-before, which is earlier than a fresh batch's.
+     */
+    @Test
+    void placeOnADealDayKeepsTheListPriceAndTheBatchBestBefore() {
+        products.get(RAU_MUONG).setShelfLifeDays(3);
+        dailyStock
+                .get(RAU_MUONG + "@" + PICKUP)
+                .startDeal(
+                        new BigDecimal("7200"),
+                        40,
+                        LocalDate.of(2026, 9, 26),
+                        LocalDate.of(2026, 9, 30));
+
+        service.place(CUSTOMER_ID, aValidRequest());
+
+        OrderItem line = items.getFirst();
+        assertThat(line.getUnitPrice()).isEqualByComparingTo("7200");
+        assertThat(line.getListPrice()).isEqualByComparingTo("12000");
+        assertThat(line.getBestBefore()).isEqualTo(LocalDate.of(2026, 9, 30));
+        assertThat(orders.getFirst().getTotalAmount()).isEqualByComparingTo("14400");
     }
 
     /** D-13 — hiding the button is not a control. The admin role must be blocked on the server. */

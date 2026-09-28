@@ -1,7 +1,10 @@
 package com.techx.intervue.modules.product.repositories;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.techx.intervue.modules.product.entities.ProductDailyStock;
+import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.LocalDate;
@@ -11,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -138,6 +142,52 @@ class ProductDailyStockRepositoryTest {
                                 .orElseThrow()
                                 .getQuantityAvailable())
                 .isEqualTo(3);
+    }
+
+    /** V20260928015: a deal day round-trips with its four columns. */
+    @Test
+    void aDealDayIsStoredWithItsFourColumns() {
+        repository.saveAndFlush(dealDay(20));
+
+        ProductDailyStock saved =
+                repository.findByProductIdAndStockDate(productId, MONDAY).orElseThrow();
+        assertThat(saved.getListPrice()).isEqualByComparingTo("0.60");
+        assertThat(saved.getUnitPrice()).isEqualByComparingTo("0.48");
+        assertThat(saved.getDiscountPercent()).isEqualTo(20);
+        assertThat(saved.getPackedOn()).isEqualTo(MONDAY.minusDays(4));
+        assertThat(saved.getBestBefore()).isEqualTo(MONDAY.plusDays(2));
+    }
+
+    /** ck_pds_deal_all_or_none: a deal is never half set, even by a bug. */
+    @Test
+    void theDatabaseRefusesAHalfSetDeal() {
+        ProductDailyStock row = plainDay();
+        row.setListPrice(new BigDecimal("0.60"));
+
+        assertThatThrownBy(() -> repository.saveAndFlush(row))
+                .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    /** ck_pds_deal_percent: 5–70 only. */
+    @Test
+    void theDatabaseRefusesADiscountAbove70() {
+        assertThatThrownBy(() -> repository.saveAndFlush(dealDay(80)))
+                .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    private ProductDailyStock plainDay() {
+        ProductDailyStock row = new ProductDailyStock();
+        row.setProductId(productId);
+        row.setStockDate(MONDAY);
+        row.setQuantityAvailable(12);
+        row.setUnitPrice(new BigDecimal("0.60"));
+        return row;
+    }
+
+    private ProductDailyStock dealDay(int percent) {
+        ProductDailyStock row = plainDay();
+        row.startDeal(new BigDecimal("0.48"), percent, MONDAY.minusDays(4), MONDAY.plusDays(2));
+        return row;
     }
 
     private long insert(String sql, Object... args) {

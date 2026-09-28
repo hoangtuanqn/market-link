@@ -50,5 +50,10 @@
     "title": "Artikel im Warenkorb",
     "text": "Wird ein Produkt nicht mehr verkauft, entferne es hier, dann lädt der Warenkorb neu.",
     "clear": "Warenkorb leeren"
+  },
+  "deal": {
+    "badge": "−{{percent}}% Angebot: kurze Haltbarkeit",
+    "onlyOn": "Das Angebot gilt nur für {{day}}.",
+    "dayGone": "Der Angebotstag {{day}} kann nicht mehr gewählt werden. Wählen Sie einen Tag, um den Preis zu sehen."
   }
 }

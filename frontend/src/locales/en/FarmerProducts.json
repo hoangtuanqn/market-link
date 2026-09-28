@@ -61,7 +61,7 @@
     "title": "Adjust stock for {{day}}",
     "quantity": "Units available",
     "price": "Price for this day (optional)",
-    "priceHint": "Leave blank to keep the current price.",
+    "priceHint": "Leave blank to keep the current price. A price here also ends a near-expiry deal on this day.",
     "cancel": "Cancel",
     "confirm": "Save",
     "error": {
@@ -76,5 +76,60 @@
   "empty": {
     "title": "No products yet",
     "text": "Add your first product and it appears on your stall page right away."
+  },
+  "dealAction": "Near-expiry deal",
+  "dealActionFor": "Near-expiry deal for {{name}}",
+  "deals": {
+    "title_one": "On sale ({{count}})",
+    "title_other": "On sale ({{count}})",
+    "loading": "Loading your deals",
+    "col": {
+      "product": "Product",
+      "day": "Pickup day",
+      "discount": "Discount",
+      "left": "Left",
+      "until": "Good until"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}, was {{was}}",
+    "until_one": "End of {{day}} ({{count}} day)",
+    "until_other": "End of {{day}} ({{count}} days)",
+    "remove": "Remove deal",
+    "removed": "Deal removed",
+    "removedText": "{{name}} is back to its usual price for {{day}}.",
+    "noun": "your deals"
+  },
+  "dealDialog": {
+    "title": "Near-expiry deal · {{name}}",
+    "day": "Pickup day",
+    "qty": "Quantity you bring ({{unit}})",
+    "onSale": "{{qty}} on sale for that day now",
+    "packedOn": "Harvested or packed on",
+    "result_one": "Good until end of {{until}} · the customer has {{count}} day (shelf life {{shelfLife}} days)",
+    "result_other": "Good until end of {{until}} · the customer has {{count}} days (shelf life {{shelfLife}} days)",
+    "discount": "Discount",
+    "less": "Lower the discount",
+    "more": "Raise the discount",
+    "suggested": "Suggested {{percent}}%",
+    "price": "Price",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "Post deal",
+    "posting": "Posting…",
+    "posted": "Deal posted",
+    "postedText": "{{name}} is {{percent}}% off for {{day}}.",
+    "loadingDays": "Loading pickup days…",
+    "daysNoun": "pickup days",
+    "noDays": {
+      "title": "No pickup day open",
+      "text": "Customers cannot order this product for any of the next 14 days. Check your weekly stock and pickup slots."
+    },
+    "why": {
+      "packedOn": "Enter the harvest or packing date.",
+      "qty": "Bring at least 1.",
+      "packedInFuture": "The harvest or packing date cannot be after today.",
+      "fresh": "Picked on the pickup day counts as fresh, so it needs no deal.",
+      "notNearExpiry": "More than half of its {{shelfLife}}-day shelf life is left on that day. Deals are only for produce past half its shelf life.",
+      "expiredBeforePickup": "This batch is no longer good on that day, so it cannot be sold for it."
+    }
   }
 }

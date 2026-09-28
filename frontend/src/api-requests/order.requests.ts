@@ -8,6 +8,9 @@ import { privateApi } from '@/utils/axiosInstance';
 /** One cart line sent to the server: preview, place or edit an order (contract §7). */
 export type CartLineInput = { productId: number; quantity: number };
 
+/** FR-125: price this stall's lines for this pickup day ("yyyy-MM-dd"). */
+export type PickupDateInput = { farmerId: number; date: string };
+
 /** One order in a place call: one stall, one market, one slot (D-01). */
 export type OrderGroupInput = {
   farmerId: number;
@@ -32,6 +35,12 @@ export type PreviewItemDto = {
   subtotal: number;
   stockQuantity: number;
   status: ProductStatus;
+  /** FR-125: the price before a near-expiry discount; set only when the priced day is on a deal. */
+  listPrice?: number | null;
+  discountPercent?: number | null;
+  /** The last good day of what the line would get ("yyyy-MM-dd"); null when no day applies. */
+  bestBefore?: string | null;
+  storageMode?: StorageMode | null;
 };
 
 /**
@@ -196,12 +205,14 @@ export const toOrder = (dto: OrderDetailDto): OrderType => ({
  */
 class OrderApi {
   /**
-   * Which orders the cart will be split into; each order's issues live in `problems`, nothing is thrown. 400
+   * Which orders the cart will be split into; each order's issues live in `problems`, nothing is thrown. A stall listed
+   * in `pickupDates` is priced for that day, the others for their nearest orderable day (FR-125). 400
    * `VALIDATION_ERROR` when a `productId` does not exist.
    */
-  static preview = async (items: CartLineInput[]) => {
+  static preview = async (items: CartLineInput[], pickupDates: PickupDateInput[] = []) => {
     const response = await privateApi.post<ApiResponse<{ groups: OrderGroupPreviewDto[] }>>('/orders/preview', {
       items,
+      ...(pickupDates.length ? { pickupDates } : {}),
     });
     return response.data.data.groups;
   };

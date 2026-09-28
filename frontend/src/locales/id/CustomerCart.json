@@ -50,5 +50,10 @@
     "title": "Isi keranjang",
     "text": "Jika ada produk yang sudah tidak dijual, hapus di sini dan keranjang akan dimuat ulang.",
     "clear": "Kosongkan keranjang"
+  },
+  "deal": {
+    "badge": "−{{percent}}% diskon hampir kedaluwarsa",
+    "onlyOn": "Diskon ini hanya berlaku untuk {{day}}.",
+    "dayGone": "Hari diskon {{day}} sudah tidak bisa dipilih lagi. Pilih hari untuk melihat harganya."
   }
 }

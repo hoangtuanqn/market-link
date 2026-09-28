@@ -50,5 +50,10 @@
     "title": "Articles du panier",
     "text": "Si un produit n'est plus en vente, retirez-le ici et le panier se recharge.",
     "clear": "Vider le panier"
+  },
+  "deal": {
+    "badge": "−{{percent}}% promo date proche",
+    "onlyOn": "La promo ne s'applique qu'au {{day}}.",
+    "dayGone": "Le jour de la promo {{day}} ne peut plus être choisi. Choisissez un jour pour voir son prix."
   }
 }

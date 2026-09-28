@@ -28,6 +28,7 @@ import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import ProductDeals from './ProductDeals';
 import ShelfLifeDetails from './ShelfLifeDetails';
 
 const NO_MARKETS: MarketType[] = [];
@@ -231,6 +232,8 @@ const ProductDetailPage = () => {
             )}
             <p className="text-small text-ink-muted">{t('payNote', { price: perUnit(Number(p.price), p.unit) })}</p>
           </Card>
+
+          <ProductDeals productId={p.id} />
         </div>
       </div>
 

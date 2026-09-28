@@ -29,12 +29,20 @@ export type ProductDto = {
 
 export type ReviewSummaryDto = { ratingAvg: number; ratingCount: number; histogram: number[] };
 
-/** PATCH /farmer/products/{id}/daily-stock/{date} response — one product_daily_stock row (FR-063). */
+/**
+ * One product_daily_stock row: the response of PATCH /farmer/products/{id}/daily-stock/{date} (FR-063), GET
+ * /farmer/products/{id}/daily-stock and PUT .../daily-stock/{date}/deal (FR-124). The four deal fields are null when
+ * that day carries no deal.
+ */
 export type DailyStockDto = {
   productId: number;
   stockDate: string;
   quantityAvailable: number;
   unitPrice: number;
+  listPrice: number | null;
+  discountPercent: number | null;
+  packedOn: string | null;
+  bestBefore: string | null;
 };
 
 /** GET /products/{id}: a product with its stall and review summary (real numbers from C8). */

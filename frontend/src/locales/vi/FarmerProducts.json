@@ -69,12 +69,67 @@
     "title": "Điều chỉnh tồn kho cho {{day}}",
     "quantity": "Số lượng còn lại",
     "price": "Giá cho ngày này (không bắt buộc)",
-    "priceHint": "Để trống để giữ nguyên giá hiện tại.",
+    "priceHint": "Để trống thì giữ giá hiện tại. Nhập giá ở đây cũng kết thúc giảm giá sắp hết hạn của ngày này.",
     "cancel": "Hủy",
     "confirm": "Lưu",
     "error": {
       "quantity": "Nhập số nguyên từ 0 trở lên.",
       "price": "Nhập giá từ 0 trở lên."
+    }
+  },
+  "dealAction": "Giảm giá sắp hết hạn",
+  "dealActionFor": "Giảm giá sắp hết hạn cho {{name}}",
+  "deals": {
+    "title_one": "Đang giảm giá ({{count}})",
+    "title_other": "Đang giảm giá ({{count}})",
+    "loading": "Đang tải hàng đang giảm giá",
+    "col": {
+      "product": "Sản phẩm",
+      "day": "Ngày nhận",
+      "discount": "Mức giảm",
+      "left": "Còn lại",
+      "until": "Dùng tốt đến"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}, giá gốc {{was}}",
+    "until_one": "Hết {{day}} ({{count}} ngày)",
+    "until_other": "Hết {{day}} ({{count}} ngày)",
+    "remove": "Bỏ giảm giá",
+    "removed": "Đã bỏ giảm giá",
+    "removedText": "{{name}} về lại giá thường cho {{day}}.",
+    "noun": "các mục giảm giá của bạn"
+  },
+  "dealDialog": {
+    "title": "Giảm giá sắp hết hạn · {{name}}",
+    "day": "Ngày nhận",
+    "qty": "Số lượng mang tới ({{unit}})",
+    "onSale": "hiện đang mở bán {{qty}}",
+    "packedOn": "Thu hoạch hoặc đóng gói ngày",
+    "result_one": "Dùng tốt đến hết {{until}} · khách còn {{count}} ngày (hạn {{shelfLife}} ngày)",
+    "result_other": "Dùng tốt đến hết {{until}} · khách còn {{count}} ngày (hạn {{shelfLife}} ngày)",
+    "discount": "Giảm",
+    "less": "Giảm bớt mức giảm",
+    "more": "Tăng mức giảm",
+    "suggested": "gợi ý {{percent}}%",
+    "price": "Giá",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "Đăng giảm giá",
+    "posting": "Đang đăng…",
+    "posted": "Đã đăng giảm giá",
+    "postedText": "{{name}} giảm {{percent}}% cho {{day}}.",
+    "loadingDays": "Đang tải các ngày nhận…",
+    "daysNoun": "các ngày nhận",
+    "noDays": {
+      "title": "Chưa có ngày nhận nào mở",
+      "text": "Trong 14 ngày tới khách chưa đặt được sản phẩm này cho ngày nào. Hãy xem lại lịch tồn kho tuần và các khung giờ nhận."
+    },
+    "why": {
+      "packedOn": "Nhập ngày thu hoạch hoặc đóng gói.",
+      "qty": "Mang tới ít nhất 1.",
+      "packedInFuture": "Ngày thu hoạch hoặc đóng gói không được sau hôm nay.",
+      "fresh": "Hàng hái đúng ngày nhận là hàng tươi, không cần giảm giá.",
+      "notNearExpiry": "Tới ngày đó hàng vẫn còn hơn nửa hạn dùng {{shelfLife}} ngày. Mục này chỉ dành cho hàng đã qua nửa hạn.",
+      "expiredBeforePickup": "Hàng hết hạn trước ngày nhận, nên không bán được cho ngày đó."
     }
   }
 }

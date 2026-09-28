@@ -1288,7 +1288,9 @@ public class AssistantTools {
                         new PreviewRequest(
                                 lines.stream()
                                         .map(l -> new CartLine(l.productId(), l.quantity()))
-                                        .toList()));
+                                        .toList(),
+                                // FR-125: the assistant's context carries no per-stall pickup day
+                                null));
 
         List<Map<String, Object>> out = new ArrayList<>();
         BigDecimal total = BigDecimal.ZERO;
