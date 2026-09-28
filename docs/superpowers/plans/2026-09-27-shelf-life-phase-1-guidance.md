@@ -55,9 +55,9 @@
 
 | File | Trách nhiệm |
 |---|---|
-| `backend/src/main/resources/db/migration/V20260927003__create_shelf_life_guides.sql` | Bảng `shelf_life_guides` |
-| `…/db/migration/V20260927004__product_storage_and_extension.sql` | 5 cột mới của `products` |
-| `…/db/migration/V20260927005__order_item_shelf_life_snapshot.sql` | 6 cột mới của `order_items` |
+| `backend/src/main/resources/db/migration/V20260928003__create_shelf_life_guides.sql` | Bảng `shelf_life_guides` |
+| `…/db/migration/V20260928004__product_storage_and_extension.sql` | 5 cột mới của `products` |
+| `…/db/migration/V20260928005__order_item_shelf_life_snapshot.sql` | 6 cột mới của `order_items` |
 | `catalog/enums/StorageMode.java` | `ROOM`/`CHILLED` + converter |
 | `catalog/entities/ShelfLifeGuide.java` | Entity của bảng mới |
 | `catalog/repositories/ShelfLifeGuideRepository.java` | JPA repository |
@@ -83,9 +83,9 @@
 ### Task 1: Migration, `StorageMode`, entity và repository của nhóm bảo quản (FR-120)
 
 **Files:**
-- Create: `backend/src/main/resources/db/migration/V20260927003__create_shelf_life_guides.sql`
-- Create: `backend/src/main/resources/db/migration/V20260927004__product_storage_and_extension.sql`
-- Create: `backend/src/main/resources/db/migration/V20260927005__order_item_shelf_life_snapshot.sql`
+- Create: `backend/src/main/resources/db/migration/V20260928003__create_shelf_life_guides.sql`
+- Create: `backend/src/main/resources/db/migration/V20260928004__product_storage_and_extension.sql`
+- Create: `backend/src/main/resources/db/migration/V20260928005__order_item_shelf_life_snapshot.sql`
 - Create: `backend/src/main/java/com/techx/intervue/modules/catalog/enums/StorageMode.java`
 - Create: `backend/src/main/java/com/techx/intervue/modules/catalog/entities/ShelfLifeGuide.java`
 - Create: `backend/src/main/java/com/techx/intervue/modules/catalog/repositories/ShelfLifeGuideRepository.java`
@@ -97,7 +97,7 @@
 - [ ] **Step 1: Kiểm số migration còn trống**
 
 Run: `ls backend/src/main/resources/db/migration | tail -3`
-Expected: dòng cuối là `V20260927002__add_structured_address_columns.sql`. Nếu đã có `V20260927003` trở lên, dùng 3 số trống kế tiếp và giữ phần mô tả sau `__`.
+Expected: dòng cuối là `V20260928002__create_platform_status_table.sql`. Nếu đã có `V20260928003` trở lên, dùng 3 số trống kế tiếp và giữ phần mô tả sau `__`.
 
 - [ ] **Step 2: Viết test repository (sẽ fail vì chưa có bảng và class)**
 
@@ -196,7 +196,7 @@ Expected: FAIL lúc biên dịch, `cannot find symbol` cho `ShelfLifeGuide` và 
 
 - [ ] **Step 4: Viết 3 migration**
 
-`V20260927003__create_shelf_life_guides.sql`:
+`V20260928003__create_shelf_life_guides.sql`:
 
 ```sql
 -- FR-120 (proposed, not yet in .ai/REQUIREMENTS.md): shelf-life guides. One row is a group of
@@ -217,7 +217,7 @@ CREATE TABLE shelf_life_guides (
 );
 ```
 
-`V20260927004__product_storage_and_extension.sql`:
+`V20260928004__product_storage_and_extension.sql`:
 
 ```sql
 -- FR-121 (proposed): how a product is kept, the suggestion its shelf life was compared with when it
@@ -234,7 +234,7 @@ ALTER TABLE products
         FOREIGN KEY (shelf_life_guide_id) REFERENCES shelf_life_guides (id);
 ```
 
-`V20260927005__order_item_shelf_life_snapshot.sql`:
+`V20260928005__order_item_shelf_life_snapshot.sql`:
 
 ```sql
 -- FR-121 (proposed): the shelf-life promise copied onto each order line when the order is placed,
@@ -311,7 +311,7 @@ import lombok.Setter;
 
 /**
  * FR-120: one group of products inside a category, kept one way, with the shelf life the app
- * suggests. Master data managed by the admin. Table `shelf_life_guides` (V20260927003).
+ * suggests. Master data managed by the admin. Table `shelf_life_guides` (V20260928003).
  */
 @Entity
 @Getter
@@ -376,9 +376,9 @@ Expected: `Tests run: 2, Failures: 0, Errors: 0`.
 
 ```bash
 docker compose exec -T -e MAVEN_OPTS=-Xmx256m backend ./mvnw -B -q spotless:apply
-git add backend/src/main/resources/db/migration/V20260927003__create_shelf_life_guides.sql \
-  backend/src/main/resources/db/migration/V20260927004__product_storage_and_extension.sql \
-  backend/src/main/resources/db/migration/V20260927005__order_item_shelf_life_snapshot.sql \
+git add backend/src/main/resources/db/migration/V20260928003__create_shelf_life_guides.sql \
+  backend/src/main/resources/db/migration/V20260928004__product_storage_and_extension.sql \
+  backend/src/main/resources/db/migration/V20260928005__order_item_shelf_life_snapshot.sql \
   backend/src/main/java/com/techx/intervue/modules/catalog/enums/StorageMode.java \
   backend/src/main/java/com/techx/intervue/modules/catalog/entities/ShelfLifeGuide.java \
   backend/src/main/java/com/techx/intervue/modules/catalog/repositories/ShelfLifeGuideRepository.java \

@@ -14,7 +14,7 @@ import lombok.Setter;
 
 /**
  * FR-120: one group of products inside a category, kept one way, with the shelf life the app
- * suggests. Master data managed by the admin. Table `shelf_life_guides` (V20260927003).
+ * suggests. Master data managed by the admin. Table `shelf_life_guides` (V20260928003).
  */
 @Entity
 @Getter

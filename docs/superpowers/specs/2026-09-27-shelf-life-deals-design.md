@@ -443,10 +443,10 @@ nhóm `FARMER_APPLICATIONS`.
 Số thứ tự dưới đây tính từ migration mới nhất trên `dev` hôm nay (`V20260927002`). Lúc làm, nếu `dev` đã có
 migration mới hơn thì lấy số kế tiếp.
 
-1. `V20260927003__create_shelf_life_guides.sql`: bảng ở §4.1 và 12 nhóm mặc định.
-2. `V20260927004__product_storage_and_extension.sql`: 5 cột ở §4.2. Sản phẩm cũ nhận `storage_mode = 'room'`,
+1. `V20260928003__create_shelf_life_guides.sql`: bảng ở §4.1 và 12 nhóm mặc định.
+2. `V20260928004__product_storage_and_extension.sql`: 5 cột ở §4.2. Sản phẩm cũ nhận `storage_mode = 'room'`,
    `suggested_shelf_life_days = NULL`, `shelf_life_extended = FALSE`. Không truy lỗi ngược về trước.
-3. `V20260927005__order_item_shelf_life_snapshot.sql`: 6 cột ở §4.3.
+3. `V20260928005__order_item_shelf_life_snapshot.sql`: 6 cột ở §4.3.
 4. `V20260927006__create_quality_reports_and_violations.sql`: 2 bảng ở §4.4.
 5. `V20260927007__daily_stock_deals.sql`: 4 cột ở §4.5.3, kèm CHECK "cùng NULL hoặc cùng có giá trị" và
    `discount_percent BETWEEN 5 AND 70`.

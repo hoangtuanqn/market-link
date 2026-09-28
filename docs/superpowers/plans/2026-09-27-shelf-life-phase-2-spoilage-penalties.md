@@ -130,7 +130,7 @@ Thứ tự task: 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 (backe
 - [ ] **Step 1: Kiểm số migration còn trống**
 
 Run: `ls backend/src/main/resources/db/migration | tail -3`
-Expected: dòng cuối là `V20260927005__order_item_shelf_life_snapshot.sql` (của giai đoạn 1). Nếu đã có `V20260927006` trở lên (ví dụ giai đoạn 3 vào trước), dùng số trống kế tiếp và giữ phần `__create_quality_reports_and_violations.sql`.
+Expected: dòng cuối là `V20260928005__order_item_shelf_life_snapshot.sql` (của giai đoạn 1). Nếu đã có `V20260927006` trở lên (ví dụ giai đoạn 3 vào trước), dùng số trống kế tiếp và giữ phần `__create_quality_reports_and_violations.sql`.
 
 - [ ] **Step 2: Viết fixture dùng chung cho test MySQL**
 
