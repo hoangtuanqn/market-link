@@ -111,6 +111,14 @@ const refreshAccessToken = (staleToken: string | null) => {
   return refreshPromise;
 };
 
+/**
+ * Whether a failed /auth/refresh means the session is really over: 401/403 (the cookie is missing, revoked or reused,
+ * or the account is off). A network drop, a timeout or a 5xx is not — the backend answers 503 when Redis is down
+ * precisely so the FE does not sign the user out — and the next request simply tries again.
+ */
+export const isRefreshRejected = (error: unknown) =>
+  error instanceof AxiosError && (error.response?.status === 401 || error.response?.status === 403);
+
 privateApi.interceptors.response.use(
   (res) => res,
   async (error) => {
@@ -129,7 +137,7 @@ privateApi.interceptors.response.use(
       await refreshAccessToken(staleToken);
       return privateApi(origin); // the request interceptor attaches the new token from Session
     } catch (err) {
-      Session.clear();
+      if (isRefreshRejected(err)) Session.clear();
       return Promise.reject(err);
     }
   },

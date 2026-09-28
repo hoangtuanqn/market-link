@@ -1,6 +1,7 @@
-import { AxiosError } from 'axios';
+import { AxiosError, AxiosHeaders, type InternalAxiosRequestConfig } from 'axios';
 import { describe, expect, it, vi, afterEach } from 'vitest';
-import { watchForAccountDeactivated, watchForStallSuspended } from './axiosInstance';
+import AuthApi from '@/api-requests/auth.requests';
+import { privateApi, watchForAccountDeactivated, watchForStallSuspended } from './axiosInstance';
 import Session from './session';
 import BlockedNotice from './blockedNotice';
 
@@ -110,5 +111,59 @@ describe('watchForStallSuspended', () => {
     await expect(watchForStallSuspended(error)).rejects.toBe(error);
 
     expect(BlockedNotice.peek()).toBeNull();
+  });
+});
+
+/** The refresh a 401 triggers: only a real rejection of /auth/refresh ends the session (FR-003). */
+describe('refresh after a 401', () => {
+  const originalAdapter = privateApi.defaults.adapter;
+
+  afterEach(() => {
+    privateApi.defaults.adapter = originalAdapter;
+    vi.restoreAllMocks();
+    Session.clear();
+    sessionStorage.clear();
+  });
+
+  /** The original request always answers 401, so the interceptor goes through /auth/refresh. */
+  const expiredAccessToken = () => {
+    privateApi.defaults.adapter = (config: InternalAxiosRequestConfig) =>
+      Promise.reject(
+        new AxiosError('Unauthorized', '401', config, undefined, {
+          status: 401,
+          statusText: 'Unauthorized',
+          headers: {},
+          config: { headers: new AxiosHeaders() },
+          data: { success: false, message: 'Your session has expired.', error: { code: 'UNAUTHORIZED' } },
+        }),
+      );
+  };
+
+  const refreshFailsWith = (status: number | undefined) => {
+    const error = new AxiosError(status ? 'failed' : 'Network Error', status ? String(status) : 'ERR_NETWORK');
+    if (status) {
+      error.response = { status, statusText: '', headers: {}, config: {} as never, data: {} };
+    }
+    vi.spyOn(AuthApi, 'refreshToken').mockRejectedValue(error);
+  };
+
+  it.each([401, 403])('signs out when the refresh itself is refused (%i)', async (status) => {
+    Session.save({ accessToken: 'stale-token', user: { id: 1 } as never }, false);
+    expiredAccessToken();
+    refreshFailsWith(status);
+
+    await expect(privateApi.get('/orders')).rejects.toBeInstanceOf(AxiosError);
+
+    expect(Session.getAccessToken()).toBeNull();
+  });
+
+  it.each([undefined, 500, 503])('keeps the session when the refresh could not be checked (%s)', async (status) => {
+    Session.save({ accessToken: 'stale-token', user: { id: 1 } as never }, false);
+    expiredAccessToken();
+    refreshFailsWith(status);
+
+    await expect(privateApi.get('/orders')).rejects.toBeInstanceOf(AxiosError);
+
+    expect(Session.getAccessToken()).toBe('stale-token');
   });
 });
