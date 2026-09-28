@@ -18,7 +18,7 @@ import lombok.Setter;
  * weekly_stock_templates} the first time it's needed (order/preview/browse); a Farmer never creates
  * one by hand. Table {@code product_daily_stock}.
  *
- * <p>FR-124: a day can be on a near-expiry deal (V20260928007). Its four deal columns are set and
+ * <p>FR-124: a day can be on a near-expiry deal (V20260928015). Its four deal columns are set and
  * cleared together (ck_pds_deal_all_or_none); {@code unitPrice} is then the deal price.
  */
 @Entity

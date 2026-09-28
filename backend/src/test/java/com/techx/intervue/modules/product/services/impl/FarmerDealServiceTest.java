@@ -27,6 +27,7 @@ import com.techx.intervue.modules.product.requests.DealRequest;
 import com.techx.intervue.modules.product.resources.DailyStockResource;
 import com.techx.intervue.modules.product.resources.FarmerDealResource;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
+import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import com.techx.intervue.modules.stall.repositories.SlotQueryRepository;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import java.math.BigDecimal;
@@ -148,15 +149,35 @@ class FarmerDealServiceTest {
         assertThat(again.unitPrice()).isEqualByComparingTo("0.36");
     }
 
-    /** D-09, spec §8: a suspended stall cannot post a deal. */
+    /** D-09, spec §8: a suspended stall cannot post a deal, and is told it is suspended. */
     @Test
-    void postRefusesAStallThatIsNotApproved() {
+    void postRefusesASuspendedStall() {
         when(farmers.findByUserId(USER_ID))
                 .thenReturn(Optional.of(stall(ApprovalStatus.SUSPENDED)));
 
         assertThatThrownBy(() -> service.post(USER_ID, PRODUCT_ID, PICKUP, request(20)))
+                .isInstanceOf(StallSuspendedException.class);
+        verify(dailyStock, never()).lockByProductIdAndStockDate(any(), any());
+    }
+
+    /** D-09: a stall still waiting for approval cannot post a deal either. */
+    @Test
+    void postRefusesAStallThatIsNotApproved() {
+        when(farmers.findByUserId(USER_ID)).thenReturn(Optional.of(stall(ApprovalStatus.PENDING)));
+
+        assertThatThrownBy(() -> service.post(USER_ID, PRODUCT_ID, PICKUP, request(20)))
                 .isInstanceOf(StallNotApprovedException.class);
         verify(dailyStock, never()).lockByProductIdAndStockDate(any(), any());
+    }
+
+    /** D-09: a suspended stall cannot remove a deal. */
+    @Test
+    void removeRefusesASuspendedStall() {
+        when(farmers.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.SUSPENDED)));
+
+        assertThatThrownBy(() -> service.remove(USER_ID, PRODUCT_ID, PICKUP))
+                .isInstanceOf(StallSuspendedException.class);
     }
 
     /** R-06: another stall's product → 403, even though the id is real. */

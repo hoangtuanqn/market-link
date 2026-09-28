@@ -879,7 +879,7 @@ WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = x.message);
 
 -- ---- Near-expiry deals (FR-124, FR-125, proposed): two deal days for /deals and the Farmer's "On sale" ----
 -- A deal is the product_daily_stock row of one pickup day with list_price, discount_percent, packed_on and
--- best_before set (V20260928007); unit_price is then the deal price. Both deals belong to 'Trứng gà Khánh Hòa'
+-- best_before set (V20260928015); unit_price is then the deal price. Both deals belong to 'Trứng gà Khánh Hòa'
 -- (farmer8@), a stall that is at a market every day, so a slot with room exists from today+2 whatever day the seed
 -- runs; neither product is in a seeded order, so no order's reserved units are touched. The batch is dated from the
 -- product's own shelf life N, so the rules FarmerDealService enforces hold: 'Trứng vịt' keeps ⌈N/2⌉ − 1 days on

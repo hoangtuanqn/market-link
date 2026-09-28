@@ -144,7 +144,7 @@ class ProductDailyStockRepositoryTest {
                 .isEqualTo(3);
     }
 
-    /** V20260928007: a deal day round-trips with its four columns. */
+    /** V20260928015: a deal day round-trips with its four columns. */
     @Test
     void aDealDayIsStoredWithItsFourColumns() {
         repository.saveAndFlush(dealDay(20));

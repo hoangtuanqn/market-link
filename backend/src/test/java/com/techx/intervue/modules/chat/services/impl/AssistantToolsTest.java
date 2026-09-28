@@ -737,7 +737,11 @@ class AssistantToolsTest {
                                                         2,
                                                         new BigDecimal("1.00"),
                                                         25,
-                                                        "available")),
+                                                        "available",
+                                                        null,
+                                                        null,
+                                                        null,
+                                                        null)),
                                         new BigDecimal("1.00"),
                                         List.of(),
                                         List.of())));

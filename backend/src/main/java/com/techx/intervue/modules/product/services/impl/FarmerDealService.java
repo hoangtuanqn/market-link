@@ -1,9 +1,9 @@
 package com.techx.intervue.modules.product.services.impl;
 
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
-import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.farmer.services.impl.StallSuspensionMessage;
 import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.entities.ProductDailyStock;
@@ -19,7 +19,6 @@ import com.techx.intervue.modules.product.requests.DealRequest;
 import com.techx.intervue.modules.product.resources.DailyStockResource;
 import com.techx.intervue.modules.product.resources.FarmerDealResource;
 import com.techx.intervue.modules.product.services.interfaces.FarmerDealServiceInterface;
-import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.stall.repositories.SlotQueryRepository;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import java.time.Clock;
@@ -56,7 +55,7 @@ public class FarmerDealService implements FarmerDealServiceInterface {
     public DailyStockResource post(
             long userId, long productId, LocalDate date, DealRequest request) {
         FarmerProfile profile = profileOf(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
         Product product = owned(profile, productId);
 
         int percent = request.discountPercent();
@@ -108,7 +107,7 @@ public class FarmerDealService implements FarmerDealServiceInterface {
     @Transactional
     public void remove(long userId, long productId, LocalDate date) {
         FarmerProfile profile = profileOf(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
         owned(profile, productId);
         dailyStock
                 .lockByProductIdAndStockDate(productId, date)
@@ -170,12 +169,6 @@ public class FarmerDealService implements FarmerDealServiceInterface {
     /** R-06: the profile always comes from the token's user, never from the request. */
     private FarmerProfile profileOf(long userId) {
         return farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
-    }
-
-    private static void requireApproved(FarmerProfile profile) {
-        if (profile.getApprovalStatus() != ApprovalStatus.APPROVED) {
-            throw new StallNotApprovedException();
-        }
     }
 
     /** Missing or deleted → 404; another stall's product → 403 (R-06). */

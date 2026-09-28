@@ -9,7 +9,17 @@ import type { ProductType } from '@/types/product.types';
 
 vi.mock('@/api-requests/product.requests', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/api-requests/product.requests')>();
-  return { ...real, default: { mine: vi.fn(), setStatus: vi.fn(), remove: vi.fn(), overrideDailyStock: vi.fn() } };
+  return {
+    ...real,
+    default: {
+      mine: vi.fn(),
+      setStatus: vi.fn(),
+      remove: vi.fn(),
+      overrideDailyStock: vi.fn(),
+      mineDeleted: vi.fn(),
+      restore: vi.fn(),
+    },
+  };
 });
 vi.mock('@/api-requests/deal.requests', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/api-requests/deal.requests')>();
@@ -61,6 +71,7 @@ beforeEach(() => {
     this.open = false;
   });
   vi.mocked(ProductApi.mine).mockResolvedValue([product(1, 'Trứng vịt', '2026-10-03'), product(2, 'Trứng gà ác')]);
+  vi.mocked(ProductApi.mineDeleted).mockResolvedValue([]);
   vi.mocked(DealApi.mine).mockResolvedValue([onSale]);
   vi.mocked(DealApi.remove).mockResolvedValue(undefined);
   vi.mocked(DealApi.pickupDays).mockResolvedValue([]);
