@@ -169,7 +169,33 @@ class ImageProbeTest {
 
         assertThatThrownBy(() -> ImageProbe.probe(bomb))
                 .isInstanceOf(InvalidFieldException.class)
-                .hasMessageContaining("4096");
+                .hasMessageContaining("30000");
+    }
+
+    /** FR-115 Review Focus #3: a big phone photo is scaled down, not refused. */
+    @Test
+    void downscalesALargePhotoWithoutRefusingIt() throws Exception {
+        byte[] big = jpeg(5000, 2500);
+
+        ImageProbe.Probed probed = ImageProbe.probe(big);
+        BufferedImage stored =
+                ImageIO.read(new ByteArrayInputStream(ImageProbe.normalize(big, probed.mime())));
+
+        assertThat(probed.width()).isEqualTo(5000);
+        assertThat(stored.getWidth()).isEqualTo(4096);
+        assertThat(stored.getHeight()).isEqualTo(2048);
+    }
+
+    @Test
+    void aPngOverTheOldLimitIsAcceptedToo() {
+        assertThat(ImageProbe.probe(pngHeaderOnly(6000, 4000)).width()).isEqualTo(6000);
+    }
+
+    private static byte[] jpeg(int w, int h) throws Exception {
+        BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        ImageIO.write(image, "jpeg", out);
+        return out.toByteArray();
     }
 
     /** RIFF….WEBP + a "VP8L" chunk: signature 0x2f then 14 bits (w-1) and 14 bits (h-1). */

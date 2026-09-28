@@ -4,6 +4,7 @@ import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeEx
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -12,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Iterator;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
 import javax.imageio.ImageWriteParam;
 import javax.imageio.ImageWriter;
@@ -41,6 +43,18 @@ public final class ImageProbe {
      */
     static final int MAX_SIDE = 4096;
 
+    /**
+     * FR-115: JPEG/PNG larger than MAX_SIDE are scaled down instead of refused; only an absurd
+     * header is refused before decoding.
+     */
+    static final int MAX_DECODE_SIDE = 30_000;
+
+    /**
+     * Pixels decoded at most (about 96 MB for a 3-byte JPEG raster): a larger photo is read with
+     * subsampling, so a 48 MP phone photo decodes at 12 MP.
+     */
+    static final long DECODE_PIXEL_BUDGET = 24_000_000L;
+
     static final String JPEG = "image/jpeg";
     static final String PNG = "image/png";
     static final String WEBP = "image/webp";
@@ -54,19 +68,24 @@ public final class ImageProbe {
     public static Probed probe(byte[] bytes) {
         String mime = sniff(bytes);
         Probed probed = WEBP.equals(mime) ? probeWebp(bytes) : probeWithImageIo(bytes, mime);
-        if (probed.width() > MAX_SIDE || probed.height() > MAX_SIDE) {
+        // WebP is stored as is, so its size is capped; JPEG/PNG are decoded and scaled down later
+        int limit = WEBP.equals(mime) ? MAX_SIDE : MAX_DECODE_SIDE;
+        if (probed.width() > limit || probed.height() > limit) {
             throw new InvalidFieldException(
-                    "file", "The photo must be at most " + MAX_SIDE + " pixels on each side.");
+                    "file", "The photo must be at most " + limit + " pixels on each side.");
         }
         return probed;
     }
 
-    /** JPEG/PNG → re-encoded JPEG. WebP → as is (the JDK has no encoder for it). */
+    /**
+     * JPEG/PNG → re-encoded JPEG, at most MAX_SIDE on the long side. WebP → as is (the JDK has no
+     * encoder for it).
+     */
     public static byte[] normalize(byte[] bytes, String mime) {
         if (WEBP.equals(mime)) {
             return bytes;
         }
-        return encodeJpeg(decode(bytes));
+        return encodeJpeg(fitWithin(decode(bytes), MAX_SIDE));
     }
 
     private static String sniff(byte[] b) {
@@ -192,16 +211,63 @@ public final class ImageProbe {
         }
     }
 
+    /** Decodes with subsampling when the photo has more pixels than DECODE_PIXEL_BUDGET. */
     private static BufferedImage decode(byte[] bytes) {
-        try {
-            BufferedImage image = ImageIO.read(new ByteArrayInputStream(bytes));
-            if (image == null) {
+        try (ImageInputStream in =
+                ImageIO.createImageInputStream(new ByteArrayInputStream(bytes))) {
+            Iterator<ImageReader> readers = in == null ? null : ImageIO.getImageReaders(in);
+            if (readers == null || !readers.hasNext()) {
                 throw new UnsupportedImageTypeException();
             }
-            return image;
+            ImageReader reader = readers.next();
+            try {
+                reader.setInput(in, true, true);
+                long width = reader.getWidth(0);
+                long height = reader.getHeight(0);
+                int step = 1;
+                while ((width / step) * (height / step) > DECODE_PIXEL_BUDGET) {
+                    step++;
+                }
+                ImageReadParam param = reader.getDefaultReadParam();
+                if (step > 1) {
+                    param.setSourceSubsampling(step, step, 0, 0);
+                }
+                BufferedImage image = reader.read(0, param);
+                if (image == null) {
+                    throw new UnsupportedImageTypeException();
+                }
+                return image;
+            } finally {
+                reader.dispose();
+            }
         } catch (IOException e) {
             throw new UnsupportedImageTypeException();
         }
+    }
+
+    private static BufferedImage fitWithin(BufferedImage source, int maxSide) {
+        int width = source.getWidth();
+        int height = source.getHeight();
+        if (width <= maxSide && height <= maxSide) {
+            return source;
+        }
+        double scale = (double) maxSide / Math.max(width, height);
+        int targetWidth = Math.max(1, (int) Math.round(width * scale));
+        int targetHeight = Math.max(1, (int) Math.round(height * scale));
+        BufferedImage scaled =
+                new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = scaled.createGraphics();
+        try {
+            g.setRenderingHint(
+                    RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+            g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+            g.setColor(Color.WHITE);
+            g.fillRect(0, 0, targetWidth, targetHeight);
+            g.drawImage(source, 0, 0, targetWidth, targetHeight, null);
+        } finally {
+            g.dispose();
+        }
+        return scaled;
     }
 
     /** JPEG has no alpha channel: the transparent part of a PNG becomes a white background. */
