@@ -7,8 +7,10 @@ import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.exceptions.CustomerNotFoundException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.AdminCustomerQueryRepository;
+import com.techx.intervue.modules.user.repositories.AdminCustomerStatusHistoryQueryRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.resources.AdminCustomerResource;
+import com.techx.intervue.modules.user.resources.AdminCustomerStatusHistoryResource;
 import com.techx.intervue.modules.user.services.interfaces.AdminCustomerServiceInterface;
 import com.techx.intervue.resources.PageResource;
 import com.techx.intervue.services.interfaces.JobQueueInterface;
@@ -45,6 +47,7 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
     private final JobQueueInterface jobQueue;
     private final Clock clock;
     private final OrderServiceInterface orders;
+    private final AdminCustomerStatusHistoryQueryRepository statusHistoryQueries;
 
     @Override
     @Transactional(readOnly = true)
@@ -123,6 +126,16 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
     @Transactional(readOnly = true)
     public AdminCustomerResource detail(long userId) {
         return queries.findOne(userId).orElseThrow(CustomerNotFoundException::new);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public PageResource<AdminCustomerStatusHistoryResource> statusHistory(
+            long userId, int page, int pageSize) {
+        detail(userId); // 404s for a missing or non-customer id, same rule as every other endpoint
+        // here
+        return statusHistoryQueries.search(
+                userId, Math.max(1, page), Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize)));
     }
 
     /** Only the two values of contract §10; {@code suspended} is not an admin action here. */

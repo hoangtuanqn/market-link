@@ -3,6 +3,7 @@ package com.techx.intervue.modules.user.controllers;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.user.requests.CustomerStatusRequest;
 import com.techx.intervue.modules.user.resources.AdminCustomerResource;
+import com.techx.intervue.modules.user.resources.AdminCustomerStatusHistoryResource;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.modules.user.services.interfaces.AdminCustomerServiceInterface;
 import com.techx.intervue.resources.ApiResource;
@@ -43,6 +44,15 @@ public class AdminCustomerController extends BaseController {
     @GetMapping("/{id}")
     public ResponseEntity<ApiResource<AdminCustomerResource>> detail(@PathVariable long id) {
         return ok(customers.detail(id), "Customer loaded.");
+    }
+
+    @GetMapping("/{id}/status-history")
+    public ResponseEntity<ApiResource<PageResource<AdminCustomerStatusHistoryResource>>>
+            statusHistory(
+                    @PathVariable long id,
+                    @RequestParam(defaultValue = "1") int page,
+                    @RequestParam(defaultValue = "20") int pageSize) {
+        return ok(customers.statusHistory(id, page, pageSize), "Account history loaded.");
     }
 
     @PatchMapping("/{id}/status")

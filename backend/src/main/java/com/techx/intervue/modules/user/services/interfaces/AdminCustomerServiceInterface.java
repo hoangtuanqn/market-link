@@ -1,6 +1,7 @@
 package com.techx.intervue.modules.user.services.interfaces;
 
 import com.techx.intervue.modules.user.resources.AdminCustomerResource;
+import com.techx.intervue.modules.user.resources.AdminCustomerStatusHistoryResource;
 import com.techx.intervue.resources.PageResource;
 import java.time.Instant;
 
@@ -21,4 +22,10 @@ public interface AdminCustomerServiceInterface {
 
     /** {@code GET /admin/customers/{id}} — 404 when the id is not a customer account. */
     AdminCustomerResource detail(long userId);
+
+    /**
+     * {@code GET /admin/customers/{id}/status-history} — 404 when the id is not a customer account.
+     */
+    PageResource<AdminCustomerStatusHistoryResource> statusHistory(
+            long userId, int page, int pageSize);
 }

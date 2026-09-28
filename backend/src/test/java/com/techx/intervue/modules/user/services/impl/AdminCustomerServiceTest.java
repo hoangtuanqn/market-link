@@ -9,6 +9,7 @@ import com.techx.intervue.modules.user.exceptions.CustomerNotFoundException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AdminCustomerResource;
+import com.techx.intervue.modules.user.resources.AdminCustomerStatusHistoryResource;
 import com.techx.intervue.modules.user.services.interfaces.AdminCustomerServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.UserServiceInterface;
 import com.techx.intervue.resources.PageResource;
@@ -292,5 +293,26 @@ class AdminCustomerServiceTest {
                                 customers.setStatus(
                                         customerId, "suspended", "No-shows", null, adminUserId))
                 .isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @Test
+    void statusHistoryListsEveryChangeNewestFirstWithTheActorName() {
+        customers.setStatus(customerId, "inactive", "No-shows", null, adminUserId);
+        customers.setStatus(customerId, "active", null, null, adminUserId);
+
+        PageResource<AdminCustomerStatusHistoryResource> page =
+                customers.statusHistory(customerId, 1, 20);
+
+        assertThat(page.items()).hasSize(2);
+        assertThat(page.items().get(0).toStatus()).isEqualTo("active");
+        assertThat(page.items().get(0).changedByName()).isEqualTo("Admin " + fx.tag);
+        assertThat(page.items().get(1).toStatus()).isEqualTo("inactive");
+        assertThat(page.items().get(1).reason()).isEqualTo("No-shows");
+    }
+
+    @Test
+    void statusHistoryRefusesANonCustomerAccount() {
+        assertThatThrownBy(() -> customers.statusHistory(farmerUserId, 1, 20))
+                .isInstanceOf(CustomerNotFoundException.class);
     }
 }
