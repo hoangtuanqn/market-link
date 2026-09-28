@@ -12,7 +12,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.catalog.entities.Category;
+import com.techx.intervue.modules.catalog.entities.ShelfLifeGuide;
+import com.techx.intervue.modules.catalog.enums.StorageMode;
 import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
+import com.techx.intervue.modules.catalog.repositories.ShelfLifeGuideRepository;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
@@ -28,10 +31,15 @@ import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 class ProductServiceTest {
 
@@ -40,12 +48,17 @@ class ProductServiceTest {
     private static final long OTHER_FARMER_ID = 2L;
     private static final long PRODUCT_ID = 100L;
 
+    /** 10:00 on 27/09/2026 in Ho Chi Minh City. */
+    private static final Clock CLOCK =
+            Clock.fixed(Instant.parse("2026-09-27T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
+
     private ProductRepository products;
     private FarmerProfileRepository farmers;
     private CategoryRepository categories;
     private ProductQueryRepository query;
     private ProductService service;
     private RestockNotifier restock;
+    private ShelfLifeGuideRepository shelfLifeGuides;
 
     @BeforeEach
     void setUp() {
@@ -54,6 +67,7 @@ class ProductServiceTest {
         categories = mock(CategoryRepository.class);
         query = mock(ProductQueryRepository.class);
         restock = mock(RestockNotifier.class);
+        shelfLifeGuides = mock(ShelfLifeGuideRepository.class);
         service =
                 new ProductService(
                         products,
@@ -61,7 +75,9 @@ class ProductServiceTest {
                         categories,
                         query,
                         restock,
-                        mock(ProductAvailabilityResolver.class));
+                        mock(ProductAvailabilityResolver.class),
+                        shelfLifeGuides,
+                        CLOCK);
         when(products.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
     }
 
@@ -81,6 +97,8 @@ class ProductServiceTest {
         c.setName("Leafy greens");
         c.setSlug("leafy-greens");
         c.setActive(true);
+        c.setMinShelfLifeDays(1);
+        c.setMaxShelfLifeDays(7);
         return c;
     }
 
@@ -99,7 +117,43 @@ class ProductServiceTest {
 
     private static ProductRequest request() {
         return new ProductRequest(
-                1L, "Rau muống", "Cắt sáng", new BigDecimal("12000"), "bó", 40, null, 4);
+                1L,
+                "Rau muống",
+                "Cắt sáng",
+                new BigDecimal("12000"),
+                "bó",
+                40,
+                null,
+                4,
+                null,
+                null,
+                null);
+    }
+
+    private static ProductRequest shelf(Long guideId, String mode, int days, Boolean ack) {
+        return new ProductRequest(
+                1L,
+                "Rau muống",
+                "Cắt sáng",
+                new BigDecimal("0.50"),
+                "bunch",
+                40,
+                null,
+                days,
+                guideId,
+                mode,
+                ack);
+    }
+
+    private static ShelfLifeGuide chilledLeafy(long categoryId, boolean active) {
+        ShelfLifeGuide g = new ShelfLifeGuide();
+        g.setId(7L);
+        g.setCategoryId(categoryId);
+        g.setGroupName("Leafy greens");
+        g.setStorageMode(StorageMode.CHILLED);
+        g.setSuggestedDays(3);
+        g.setActive(active);
+        return g;
     }
 
     private void approvedStall() {
@@ -367,5 +421,138 @@ class ProductServiceTest {
         service.adminUnhide(PRODUCT_ID);
 
         verify(restock).afterChange(p, false, true);
+    }
+
+    // ---------- shelf life (FR-121) ----------
+
+    @Test
+    void createTakesTheSuggestionFromTheChosenGroup() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(1L, true)));
+
+        FarmerProductResource saved = service.create(USER_ID, shelf(7L, "chilled", 3, null));
+
+        ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
+        verify(products).save(captor.capture());
+        Product p = captor.getValue();
+        assertThat(p.getShelfLifeGuideId()).isEqualTo(7L);
+        assertThat(p.getStorageMode()).isEqualTo(StorageMode.CHILLED);
+        assertThat(p.getSuggestedShelfLifeDays()).isEqualTo(3);
+        assertThat(p.isShelfLifeExtended()).isFalse();
+        assertThat(p.getShelfLifeAckAt()).isNull();
+        assertThat(saved.shelfLife().groupName()).isEqualTo("Leafy greens");
+        assertThat(saved.shelfLife().storageMode()).isEqualTo("chilled");
+    }
+
+    @Test
+    void createAllowsShorterThanSuggestedWithoutAPromise() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(1L, true)));
+
+        FarmerProductResource saved = service.create(USER_ID, shelf(7L, "chilled", 2, null));
+
+        assertThat(saved.shelfLife().days()).isEqualTo(2);
+        assertThat(saved.shelfLife().extended()).isFalse();
+    }
+
+    @Test
+    void createRefusesLongerThanSuggestedWithoutThePromise() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(1L, true)));
+
+        assertThatThrownBy(() -> service.create(USER_ID, shelf(7L, "chilled", 5, false)))
+                .isInstanceOf(InvalidFieldException.class)
+                .extracting("field")
+                .isEqualTo("acknowledgeLongerShelfLife");
+    }
+
+    @Test
+    void createKeepsTheTimeOfThePromiseForLonger() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(1L, true)));
+
+        FarmerProductResource saved = service.create(USER_ID, shelf(7L, "chilled", 5, true));
+
+        ArgumentCaptor<Product> captor = ArgumentCaptor.forClass(Product.class);
+        verify(products).save(captor.capture());
+        assertThat(captor.getValue().isShelfLifeExtended()).isTrue();
+        assertThat(captor.getValue().getShelfLifeAckAt())
+                .isEqualTo(LocalDateTime.of(2026, 9, 27, 10, 0));
+        assertThat(saved.shelfLife().extended()).isTrue();
+        assertThat(saved.shelfLife().suggestedDays()).isEqualTo(3);
+    }
+
+    @Test
+    void createRefusesMoreThanTwiceTheSuggestion() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(1L, true)));
+
+        assertThatThrownBy(() -> service.create(USER_ID, shelf(7L, "chilled", 7, true)))
+                .isInstanceOf(InvalidFieldException.class)
+                .hasMessage("At most 6 days for this group.")
+                .extracting("field")
+                .isEqualTo("shelfLifeDays");
+    }
+
+    @Test
+    void createRefusesAGroupOfAnotherCategory() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(2L, true)));
+
+        assertThatThrownBy(() -> service.create(USER_ID, shelf(7L, "chilled", 3, null)))
+                .isInstanceOf(InvalidFieldException.class)
+                .extracting("field")
+                .isEqualTo("shelfLifeGuideId");
+    }
+
+    @Test
+    void createRefusesATurnedOffGroup() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(1L, false)));
+
+        assertThatThrownBy(() -> service.create(USER_ID, shelf(7L, "chilled", 3, null)))
+                .isInstanceOf(InvalidFieldException.class)
+                .extracting("field")
+                .isEqualTo("shelfLifeGuideId");
+    }
+
+    @Test
+    void createRefusesAWayOfKeepingTheGroupDoesNotHave() {
+        approvedStall();
+        when(shelfLifeGuides.findById(7L)).thenReturn(Optional.of(chilledLeafy(1L, true)));
+
+        assertThatThrownBy(() -> service.create(USER_ID, shelf(7L, "room", 3, null)))
+                .isInstanceOf(InvalidFieldException.class)
+                .extracting("field")
+                .isEqualTo("storageMode");
+    }
+
+    /** Ruling 5: once a category has groups, a product must pick one. */
+    @Test
+    void createNeedsAGroupWhenTheCategoryHasGroups() {
+        approvedStall();
+        when(shelfLifeGuides.findByCategoryIdAndActiveTrueOrderByGroupNameAscStorageModeAsc(1L))
+                .thenReturn(List.of(chilledLeafy(1L, true)));
+
+        assertThatThrownBy(() -> service.create(USER_ID, shelf(null, "chilled", 3, null)))
+                .isInstanceOf(InvalidFieldException.class)
+                .extracting("field")
+                .isEqualTo("shelfLifeGuideId");
+    }
+
+    /** Spec §4.1 fallback: no groups yet → the category's upper bound is the suggestion. */
+    @Test
+    void createWithoutGroupsUsesTheCategoryRange() {
+        approvedStall();
+
+        FarmerProductResource atMax = service.create(USER_ID, shelf(null, "room", 7, null));
+        assertThat(atMax.shelfLife().suggestedDays()).isEqualTo(7);
+        assertThat(atMax.shelfLife().extended()).isFalse();
+        assertThat(atMax.shelfLife().groupName()).isNull();
+
+        assertThatThrownBy(() -> service.create(USER_ID, shelf(null, "room", 8, null)))
+                .isInstanceOf(InvalidFieldException.class)
+                .extracting("field")
+                .isEqualTo("acknowledgeLongerShelfLife");
     }
 }
