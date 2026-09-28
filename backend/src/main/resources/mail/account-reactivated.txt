@@ -1,0 +1,14 @@
+{{title}}
+
+{{greeting}}
+{{intro}}
+
+{{signInLabel}}: {{signInUrl}}
+
+{{whatNow}}
+
+{{contact}}
+
+--
+{{tagline}}
+{{footerNote}}

@@ -6,6 +6,7 @@
   "caption": "{{count}} feedback messages",
   "filterLabel": "Filter feedback",
   "filter": {
+    "all": "All",
     "new": "New",
     "reviewed": "Reviewed",
     "resolved": "Resolved",

@@ -61,6 +61,12 @@ public class User {
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
+    @Column(name = "deactivated_until")
+    private Instant deactivatedUntil;
+
+    @Column(name = "deactivation_reason", length = 255)
+    private String deactivationReason;
+
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 

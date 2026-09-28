@@ -18,6 +18,7 @@ class NotificationTextRendererTest {
     private static final List<NotificationKind> RENDERED =
             List.of(
                     NotificationKind.FARMER_APPLICATION,
+                    NotificationKind.FEEDBACK,
                     NotificationKind.FARMER_APPROVED,
                     NotificationKind.FARMER_REJECTED,
                     NotificationKind.FARMER_SUSPENDED,
@@ -94,7 +95,8 @@ class NotificationTextRendererTest {
             for (NotificationKind k : RENDERED) {
                 RenderedText t =
                         renderer.render(
-                                NotificationEvent.of(k, "/", Map.of("stall", "S", "reason", "R")),
+                                NotificationEvent.of(
+                                        k, "/", Map.of("stall", "S", "reason", "R", "sender", "S")),
                                 lang);
                 assertThat(t.title())
                         .as(lang + " " + k)

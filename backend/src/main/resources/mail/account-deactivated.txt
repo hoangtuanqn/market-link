@@ -1,0 +1,16 @@
+{{title}}
+
+{{greeting}}
+{{intro}}
+
+{{detailsTitle}}
+{{reasonLabel}}: {{reason}}
+{{durationLabel}}: {{duration}}
+
+{{whatNow}}
+
+{{contact}}
+
+--
+{{tagline}}
+{{footerNote}}

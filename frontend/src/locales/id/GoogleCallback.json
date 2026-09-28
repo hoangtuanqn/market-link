@@ -17,5 +17,8 @@
     "google": "Google tidak dapat memasukkan Anda. Silakan coba lagi.",
     "invalidState": "Upaya masuk ini tidak valid. Mulai lagi dari halaman masuk.",
     "failed": "Masuk dengan Google gagal. Silakan coba lagi."
+  },
+  "deactivated": {
+    "browseAsVisitor": "Jelajahi sebagai pengunjung"
   }
 }

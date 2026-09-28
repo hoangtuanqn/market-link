@@ -8,7 +8,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.enums.UserStatus;
+import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache.SessionData;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
@@ -16,6 +19,7 @@ import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
 import jakarta.servlet.FilterChain;
 import java.time.Instant;
+import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,6 +37,7 @@ class JwtAuthFilterTest {
     private JwtServiceInterface jwtService;
     private UserSessionCache sessionCache;
     private MfaServiceInterface mfaService;
+    private UserRepository userRepository;
     private FilterChain chain;
     private JwtAuthFilter filter;
     private MockHttpServletRequest request;
@@ -43,6 +48,7 @@ class JwtAuthFilterTest {
         jwtService = mock(JwtServiceInterface.class);
         sessionCache = mock(UserSessionCache.class);
         mfaService = mock(MfaServiceInterface.class);
+        userRepository = mock(UserRepository.class);
         chain = mock(FilterChain.class);
         filter =
                 new JwtAuthFilter(
@@ -50,7 +56,8 @@ class JwtAuthFilterTest {
                         mock(BlacklistServiceInterface.class),
                         new ObjectMapper().findAndRegisterModules(),
                         sessionCache,
-                        mfaService);
+                        mfaService,
+                        userRepository);
         request = new MockHttpServletRequest("GET", "/api/v1/auth/me");
         request.addHeader("Authorization", "Bearer " + TOKEN);
         response = new MockHttpServletResponse();
@@ -78,10 +85,33 @@ class JwtAuthFilterTest {
     void tokenIssuedBeforeRevokeAllIsRejected() throws Exception {
         when(sessionCache.get(1L)).thenReturn(new SessionData("a@b.c", Set.of(RoleType.CUSTOMER)));
         when(sessionCache.isRevoked(1L, ISSUED_AT)).thenReturn(true);
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         filter.doFilter(request, response, chain);
 
         assertThat(response.getStatus()).isEqualTo(401);
+        assertThat(response.getContentAsString()).contains("\"code\":\"UNAUTHORIZED\"");
+        verify(chain, never()).doFilter(any(), any());
+    }
+
+    @Test
+    void tokenIssuedBeforeRevokeAllReturnsAccountDeactivatedWhenTheUserIsBanned() throws Exception {
+        when(sessionCache.get(1L)).thenReturn(new SessionData("a@b.c", Set.of(RoleType.CUSTOMER)));
+        when(sessionCache.isRevoked(1L, ISSUED_AT)).thenReturn(true);
+        User banned =
+                User.builder()
+                        .id(1L)
+                        .status(UserStatus.INACTIVE)
+                        .deactivationReason("No-shows")
+                        .build();
+        when(userRepository.findById(1L)).thenReturn(Optional.of(banned));
+
+        filter.doFilter(request, response, chain);
+
+        assertThat(response.getStatus()).isEqualTo(401);
+        assertThat(response.getContentAsString())
+                .contains("\"code\":\"ACCOUNT_DEACTIVATED\"")
+                .contains("No-shows");
         verify(chain, never()).doFilter(any(), any());
     }
 

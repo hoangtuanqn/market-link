@@ -6,6 +6,7 @@
   "caption": "{{count}} feedback messages",
   "filterLabel": "フィードバックを絞り込む",
   "filter": {
+    "all": "すべて",
     "new": "New",
     "reviewed": "Reviewed",
     "resolved": "Resolved",

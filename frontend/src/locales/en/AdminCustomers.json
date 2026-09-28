@@ -35,9 +35,9 @@
   },
   "deactivate": {
     "title": "Deactivate {{name}}?",
-    "text": "They are signed out everywhere and cannot sign in or place orders. Orders already placed stay with the stalls.",
-    "reason": "Reason (kept in this toast only, not saved on the account)",
-    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
+    "text": "They are signed out everywhere right away and cannot sign in or place orders. A temporary ban leaves their orders alone; a permanent one also cancels any order still placed or accepted and returns the stock.",
+    "reason": "Reason",
+    "reasonRequired": "Choose at least one reason or add a note.",
     "keep": "Keep active",
     "confirm": "Deactivate account"
   },

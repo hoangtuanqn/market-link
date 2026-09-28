@@ -43,13 +43,13 @@
   },
   "whatItDoes": {
     "title": "Vô hiệu hoá làm gì",
-    "text": "Họ không thể đăng nhập hay đặt đơn mới. Đơn đã đặt vẫn được giữ nguyên, nên sạp vẫn giao đúng phần đã chuẩn bị và không ai mất nông sản đã được chọn sẵn."
+    "text": "Họ không thể đăng nhập hay đặt đơn mới, và bị đăng xuất ở mọi nơi ngay lập tức. Vô hiệu hoá tạm thời không đụng đến đơn đã đặt; vô hiệu hoá vĩnh viễn còn huỷ mọi đơn đang chờ hoặc đã nhận và hoàn lại tồn kho."
   },
   "deactivate": {
     "title": "Vô hiệu hoá {{name}}?",
-    "text": "Họ không thể đăng nhập hay đặt đơn cho tới khi admin kích hoạt lại. Đơn đã đặt vẫn tiếp tục tới cùng, nên không sạp nào bị giữ lại nông sản mà không ai nhận.",
-    "reason": "Lý do (chỉ hiện trong thông báo này, chưa lưu vào tài khoản)",
-    "reasonHint": "Máy chủ chưa lưu lý do — nội dung này không được gửi kèm yêu cầu.",
+    "text": "Họ bị đăng xuất ở mọi nơi ngay lập tức và không thể đăng nhập hay đặt hàng. Vô hiệu hoá tạm thời không đụng đến đơn đã đặt; vô hiệu hoá vĩnh viễn còn huỷ mọi đơn đang chờ hoặc đã nhận và hoàn lại tồn kho.",
+    "reason": "Lý do",
+    "reasonRequired": "Chọn ít nhất một lý do hoặc thêm ghi chú.",
     "keep": "Chưa vội",
     "confirm": "Vô hiệu hoá"
   },
@@ -71,5 +71,25 @@
     "items": "Món",
     "total": "Tổng",
     "status": "Trạng thái"
+  },
+  "history": {
+    "title": "Lịch sử tài khoản",
+    "noun": "lịch sử tài khoản",
+    "system": "Hệ thống (tự động)",
+    "col": {
+      "when": "Thời gian",
+      "action": "Hành động",
+      "reason": "Lý do",
+      "until": "Đến khi",
+      "by": "Thực hiện bởi"
+    },
+    "action": {
+      "active": "Đã kích hoạt lại",
+      "inactive": "Đã vô hiệu hoá"
+    },
+    "empty": {
+      "title": "Chưa có lịch sử",
+      "text": "Mọi lần vô hiệu hoá hoặc kích hoạt lại tài khoản này sẽ hiện ở đây."
+    }
   }
 }

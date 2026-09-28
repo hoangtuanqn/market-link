@@ -738,5 +738,20 @@
     "text": "サインイン状態の維持とカートの動作に必要な Cookie のみを使用しています。広告や解析用の Cookie はありません。<a>プライバシーポリシー</a>。",
     "decline": "拒否",
     "accept": "同意する"
+  },
+  "banDuration": {
+    "label": "期間",
+    "permanent": "永久",
+    "temporary": "一時的",
+    "days_one": "{{count}}日",
+    "days_other": "{{count}}日",
+    "specificTime": "または正確な終了時刻を選ぶ"
+  },
+  "accountDeactivated": {
+    "title": "アカウントが停止されました",
+    "generic": "管理者がこのアカウントを停止したため、ログアウトされました。",
+    "whatNow": "ゲストとして市場や農産物の閲覧は可能ですが、この間はログインや注文はできません。",
+    "contactIntro": "心当たりがない場合はこちらまでご連絡ください:",
+    "acknowledge": "了解しました"
   }
 }

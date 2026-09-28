@@ -17,5 +17,8 @@
     "google": "Google でログインできませんでした。もう一度お試しください。",
     "invalidState": "このログインは無効です。ログインページからやり直してください。",
     "failed": "Google ログインに失敗しました。もう一度お試しください。"
+  },
+  "deactivated": {
+    "browseAsVisitor": "ゲストとして閲覧する"
   }
 }

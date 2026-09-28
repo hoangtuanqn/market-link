@@ -1,6 +1,7 @@
 import axios, { AxiosError, type InternalAxiosRequestConfig } from 'axios';
 import AuthApi from '@/api-requests/auth.requests';
 import PlatformStatus from '@/lib/platformStatus';
+import AccountDeactivatedNotice from './accountDeactivatedNotice';
 import Session from './session';
 
 const options = {
@@ -29,6 +30,28 @@ const watchForMaintenanceMode = (error: unknown) => {
 
 publicApi.interceptors.response.use((res) => res, watchForMaintenanceMode);
 privateApi.interceptors.response.use((res) => res, watchForMaintenanceMode);
+
+/**
+ * FR-072: an already-open session gets 401'd the moment an admin deactivates that account (JwtAuthFilter rejects the
+ * token right away, see ACCOUNT_DEACTIVATED). Unlike every other 401 — which retries through /auth/refresh and, if that
+ * also fails, lets RequireAuth send the page to /login — this one is final: no retry will ever succeed, so go straight
+ * to Home with the server's own reason in a toast.
+ */
+export const watchForAccountDeactivated = (error: unknown) => {
+  if (error instanceof AxiosError && error.response?.data?.error?.code === 'ACCOUNT_DEACTIVATED') {
+    Session.clear();
+    // The reason sits on the envelope root (`message`); ErrorResource only carries `code` +
+    // `details`. An empty stash means the screen falls back to its own generic wording rather than
+    // showing the word "undefined" to someone who has just been locked out.
+    const reason = error.response.data?.message;
+    AccountDeactivatedNotice.stash(typeof reason === 'string' ? reason : '');
+    window.location.assign('/');
+  }
+  return Promise.reject(error);
+};
+
+publicApi.interceptors.response.use((res) => res, watchForAccountDeactivated);
+privateApi.interceptors.response.use((res) => res, watchForAccountDeactivated);
 
 privateApi.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {

@@ -101,6 +101,9 @@ app:
       redirect-uri: ${GOOGLE_REDIRECT_URI:http://localhost:3000/auth/google/callback}
   mail:
     from-name: MarketLink
+    # FR-072 account status emails: where "Sign in" points, and the address a locked-out customer writes to.
+    sign-in-url: ${SIGN_IN_URL:http://localhost:3000/login}
+    support-email: ${SUPPORT_EMAIL:admin@marketlink.vn}
   # Stores Farmer application images/videos on the local disk (FarmerUploadService) — for test/demo only.
   uploads:
     dir: ${UPLOAD_DIR:uploads}

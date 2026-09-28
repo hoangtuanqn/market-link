@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import AskAssistant from '@/components/assistant/AskAssistant';
 import { CheckIcon, ClockIcon } from '@/components/icons';
@@ -12,9 +12,10 @@ import useRequest from '@/hooks/useRequest';
 import { formatDate } from '@/lib/format';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import FeedbackTableSkeleton from './FeedbackTableSkeleton';
 
 /** Statuses filter server-side via `status`; the three types filter client-side over the fetched page. */
-const FILTERS = ['new', 'reviewed', 'resolved', 'bug', 'suggestion', 'query'] as const;
+const FILTERS = ['all', 'new', 'reviewed', 'resolved', 'bug', 'suggestion', 'query'] as const;
 type Filter = (typeof FILTERS)[number];
 const STATUS_FILTERS: FeedbackStatus[] = ['new', 'reviewed', 'resolved'];
 
@@ -36,9 +37,17 @@ const AdminFeedbackPage = () => {
   const { t } = useTranslation('AdminFeedback');
   const { t: tAssistant } = useTranslation('common');
   const { t: tc } = useTranslation();
-  const [filter, setFilter] = useState<Filter>('new');
+  const [filter, setFilter] = useState<Filter>('all');
   const [open, setOpen] = useState<FeedbackDto | null>(null);
   const [busy, setBusy] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const {
     state: load,
@@ -48,7 +57,9 @@ const AdminFeedbackPage = () => {
     FeedbackApi.list({ status: isStatusFilter(filter) ? filter : undefined, pageSize: 50 }).then((r) => r.items),
   );
   const all = load.kind === 'ready' ? load.data : NO_ROWS;
-  const rows = isStatusFilter(filter) ? all : all.filter((f) => f.type === filter);
+  const rows = filter === 'all' ? all : isStatusFilter(filter) ? all : all.filter((f) => f.type === filter);
+
+  const showSkeleton = load.kind === 'loading' || initialLoading;
 
   const setStatus = async (id: number, status: Exclude<FeedbackStatus, 'new'>) => {
     setBusy(true);
@@ -73,7 +84,7 @@ const AdminFeedbackPage = () => {
         <button
           type="button"
           onClick={() => setOpen(f)}
-          className="text-brand text-small cursor-pointer bg-transparent text-left underline"
+          className="text-brand text-small line-clamp-2 cursor-pointer bg-transparent text-left underline"
         >
           {f.message}
         </button>
@@ -120,13 +131,13 @@ const AdminFeedbackPage = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-3">
           <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <AskAssistant question={tAssistant('assistant.ask.feedback')} />
         </div>
-        <p className="text-body max-w-160">{t('intro')}</p>
+        <p className="text-body text-ink-muted max-w-160">{t('intro')}</p>
       </div>
 
       <div role="group" aria-label={t('filterLabel')} className="flex flex-wrap gap-2">
@@ -137,16 +148,22 @@ const AdminFeedbackPage = () => {
         ))}
       </div>
 
-      {load.kind === 'loading' ? (
-        <p role="status" className="text-ink-muted">
-          {tc('notify.list.loading')}
-        </p>
+      {showSkeleton ? (
+        <FeedbackTableSkeleton />
       ) : load.kind === 'error' ? (
         <LoadError noun={t('noun')} onRetry={retry} />
       ) : rows.length ? (
-        <Table caption={t('caption', { count: rows.length })} columns={columns} rows={rows} />
+        <div className="flex flex-1 flex-col gap-4">
+          <Table caption={t('caption', { count: rows.length })} columns={columns} rows={rows} className="w-full" />
+        </div>
       ) : (
-        <DataState fill title={t('empty.title')} text={t('empty.text')} />
+        <DataState
+          fill
+          center
+          title={t('empty.title')}
+          text={t('empty.text')}
+          className="min-h-[380px] w-full flex-1"
+        />
       )}
 
       <Dialog

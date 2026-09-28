@@ -6,12 +6,13 @@ import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import { formatDate, formatTime } from '@/lib/format';
 import { NotificationStore } from '@/lib/notifications/store';
 import type { NotificationItem, NotificationKindCode } from '@/types/notification.types';
-import { MegaphoneIcon, ReceiptIcon, StoreIcon } from '@/components/icons';
+import { ChatIcon, MegaphoneIcon, ReceiptIcon, StoreIcon } from '@/components/icons';
 import Helper from '@/utils/helper';
 
 const iconOf = (kind: NotificationKindCode) => {
   if (kind === 'announcement') return { Icon: MegaphoneIcon, className: 'bg-highlight text-ink' };
   if (kind.startsWith('farmer_')) return { Icon: StoreIcon, className: 'bg-brand-tint text-ink' };
+  if (kind === 'feedback') return { Icon: ChatIcon, className: 'bg-status-accepted-bg text-ink' };
   return { Icon: ReceiptIcon, className: 'bg-surface-sunken text-ink' };
 };
 

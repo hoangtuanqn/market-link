@@ -738,5 +738,20 @@
     "text": "Kami hanya menggunakan cookie esensial agar Anda tetap masuk dan keranjang belanja berfungsi. Tidak ada cookie iklan atau analitik. <a>Kebijakan privasi</a>.",
     "decline": "Tolak",
     "accept": "Terima"
+  },
+  "banDuration": {
+    "label": "Durasi",
+    "permanent": "Permanen",
+    "temporary": "Sementara",
+    "days_one": "{{count}} hari",
+    "days_other": "{{count}} hari",
+    "specificTime": "Atau pilih waktu berakhir yang pasti"
+  },
+  "accountDeactivated": {
+    "title": "Akun Anda telah dinonaktifkan",
+    "generic": "Administrator telah menonaktifkan akun ini, sehingga Anda telah keluar.",
+    "whatNow": "Anda tetap bisa menjelajahi pasar dan produk sebagai pengunjung, tetapi tidak bisa masuk atau memesan selama masa ini.",
+    "contactIntro": "Jika Anda merasa ini keliru, hubungi kami di",
+    "acknowledge": "Saya mengerti"
   }
 }

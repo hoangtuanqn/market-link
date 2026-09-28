@@ -738,5 +738,20 @@
     "text": "Usamos solo cookies esenciales para mantener tu sesión iniciada y tu carrito funcionando. No usamos cookies de publicidad ni de análisis. <a>Política de privacidad</a>.",
     "decline": "Rechazar",
     "accept": "Aceptar"
+  },
+  "banDuration": {
+    "label": "Duración",
+    "permanent": "Permanente",
+    "temporary": "Temporal",
+    "days_one": "{{count}} día",
+    "days_other": "{{count}} días",
+    "specificTime": "O elegir una hora de fin exacta"
+  },
+  "accountDeactivated": {
+    "title": "Tu cuenta ha sido desactivada",
+    "generic": "Un administrador ha desactivado esta cuenta, por eso se ha cerrado tu sesión.",
+    "whatNow": "Puedes seguir viendo los mercados y los productos como visitante, pero no podrás iniciar sesión ni hacer pedidos mientras tanto.",
+    "contactIntro": "Si crees que es un error, escríbenos a",
+    "acknowledge": "Entendido"
   }
 }
