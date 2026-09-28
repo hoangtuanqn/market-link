@@ -8,6 +8,8 @@ export const NO_MARKETS: MarketType[] = [];
 /** D-05: the server accepts 1…72 hours; the same rule here so nobody waits on a round trip to learn it. */
 export const CUTOFF_MIN = 1;
 export const CUTOFF_MAX = 72;
+/** The server's cap on farmer_markets.stall_code (UpdateStallMarketRequest). */
+export const STALL_CODE_MAX = 30;
 
 export type StallForm = { stallName: string; person: string; about: string; cutoffHours: number };
 export type FormErrors = Partial<Record<'stall' | 'person' | 'cut', string>>;
