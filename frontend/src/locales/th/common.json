@@ -473,6 +473,10 @@
         "farmerApplications": {
           "title": "ใบสมัคร Farmer",
           "note": "เมื่อมีคนสมัครขายบน MarketLink"
+        },
+        "qualityReports": {
+          "title": "รายงานสินค้าเสีย",
+          "note": "เมื่อสินค้าที่ขยายอายุการเก็บรักษาถูกรายงานว่าเสียก่อนวันที่กำหนด"
         }
       },
       "sound": "เล่นเสียง",
@@ -759,5 +763,25 @@
   },
   "bestBefore": {
     "line": "ใช้ได้ดีจนถึงสิ้นสุด {{day}} · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "ช้ำหรือบุบ",
+      "mold": "ขึ้นรา",
+      "smell": "มีกลิ่นผิดปกติ",
+      "wilted": "เหี่ยวหรือแห้ง",
+      "other": "อื่นๆ"
+    },
+    "problemWithNote": "{{problem}} · “{{note}}”",
+    "status": {
+      "open": "รอการตัดสิน",
+      "confirmed": "แอดมินยืนยันแล้ว",
+      "dismissed": "ไม่ใช่ความผิดของแผง"
+    },
+    "extended_one": "ขยาย +{{count}} วัน",
+    "extended_other": "ขยาย +{{count}} วัน",
+    "beforePromise": "ก่อนวันที่กำหนด",
+    "afterPromise": "หลังวันที่กำหนด",
+    "strikes": "การละเมิดอายุการเก็บรักษา: {{count}}/{{limit}} ภายใน {{days}} วัน"
   }
 }

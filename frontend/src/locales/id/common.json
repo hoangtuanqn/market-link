@@ -473,6 +473,10 @@
         "farmerApplications": {
           "title": "Pendaftaran Farmer",
           "note": "Saat seseorang mendaftar berjualan di MarketLink"
+        },
+        "qualityReports": {
+          "title": "Laporan produk rusak",
+          "note": "Saat produk dengan masa simpan yang diperpanjang dilaporkan rusak sebelum tanggalnya"
         }
       },
       "sound": "Putar suara",
@@ -759,5 +763,25 @@
   },
   "bestBefore": {
     "line": "Baik hingga akhir {{day}} · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "Memar atau hancur",
+      "mold": "Berjamur",
+      "smell": "Baunya tidak enak",
+      "wilted": "Layu atau kering",
+      "other": "Lainnya"
+    },
+    "problemWithNote": "{{problem}} · “{{note}}”",
+    "status": {
+      "open": "Menunggu keputusan",
+      "confirmed": "Dikonfirmasi oleh admin",
+      "dismissed": "Bukan kesalahan lapak"
+    },
+    "extended_one": "Diperpanjang +{{count}} hari",
+    "extended_other": "Diperpanjang +{{count}} hari",
+    "beforePromise": "sebelum tanggalnya",
+    "afterPromise": "setelah tanggalnya",
+    "strikes": "Pelanggaran masa simpan: {{count}}/{{limit}} dalam {{days}} hari"
   }
 }

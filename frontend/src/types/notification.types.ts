@@ -6,6 +6,11 @@ export type NotificationKindCode =
   | 'farmer_rejected'
   | 'farmer_suspended'
   | 'farmer_reinstated'
+  | 'quality_reported'
+  | 'quality_escalated'
+  | 'quality_decided'
+  | 'shelf_life_violation'
+  | 'shelf_life_locked'
   | 'message'
   | 'test';
 
@@ -35,7 +40,8 @@ export type NotificationFrame = {
   conversationId: number | null;
 };
 
-export type NotificationCategoryCode = 'messages' | 'announcements' | 'account' | 'farmerApplications';
+export type NotificationCategoryCode =
+  'messages' | 'announcements' | 'account' | 'farmerApplications' | 'qualityReports';
 
 export type NotificationCategoryPreference = {
   category: NotificationCategoryCode;
