@@ -1,16 +1,7 @@
 import { useState, type ComponentType, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, NavLink, Outlet, useLocation } from 'react-router';
-import {
-  FoldIcon,
-  HandWaveIcon,
-  LogOutIcon,
-  LogoMark,
-  MenuIcon,
-  SearchIcon,
-  SwapIcon,
-  type IconProps,
-} from '@/components/icons';
+import { FoldIcon, HandWaveIcon, LogOutIcon, LogoMark, MenuIcon, type IconProps } from '@/components/icons';
 import Helper from '@/utils/helper';
 import { useGreetingPeriod } from './greeting';
 
@@ -32,8 +23,6 @@ type DashboardShellProps = {
   /** Real sign-out (admin); without it the link just goes to `signOutTo`. */
   onSignOut?: () => void;
   signOutTo?: string;
-  searchId: string;
-  searchPlaceholder: string;
   accountTo: string;
   /** Extra header buttons before the avatar (e.g. the Farmer's notifications bell). */
   headerActions?: ReactNode;
@@ -57,8 +46,6 @@ const DashboardShell = ({
   user,
   onSignOut,
   signOutTo = '/login',
-  searchId,
-  searchPlaceholder,
   accountTo,
   headerActions,
   className,
@@ -169,8 +156,8 @@ const DashboardShell = ({
           className={Helper.cn(
             'bg-brand-strong shrink-0 rounded-md shadow-[inset_0_0_0_1.5px_var(--accent)] transition-all duration-300 ease-in-out',
             folded
-              ? 'grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-3 p-3 lg:flex lg:items-center lg:justify-center lg:p-2'
-              : 'grid grid-cols-[36px_minmax(0,1fr)_auto] items-center gap-3 p-3',
+              ? 'grid grid-cols-[36px_minmax(0,1fr)] items-center gap-3 p-3 lg:flex lg:items-center lg:justify-center lg:p-2'
+              : 'grid grid-cols-[36px_minmax(0,1fr)] items-center gap-3 p-3',
           )}
         >
           <span
@@ -183,16 +170,6 @@ const DashboardShell = ({
             <b className="font-hand block truncate text-[21px] leading-tight font-normal">{context.name}</b>
             <span className="text-board-muted block text-[12px]">{context.sub}</span>
           </span>
-          <button
-            type="button"
-            aria-label={t('farmerNav.changeMarket')}
-            className={Helper.cn(
-              'text-on-board hover:bg-board grid size-11 place-items-center rounded-sm',
-              folded && 'lg:hidden',
-            )}
-          >
-            <SwapIcon />
-          </button>
         </div>
 
         <nav
@@ -308,21 +285,6 @@ const DashboardShell = ({
             </div>
           </div>
           <div className="ml-auto flex items-center gap-2">
-            <div className="border-line-strong bg-surface-raised text-ink-muted focus-within:outline-focus hidden min-h-10 items-center gap-2 rounded-sm border-[1.5px] px-3 focus-within:outline-2 focus-within:outline-offset-1 sm:flex">
-              <SearchIcon />
-              <label htmlFor={searchId} className="sr-only">
-                {t('header.search')}
-              </label>
-              <input
-                id={searchId}
-                type="search"
-                placeholder={searchPlaceholder}
-                className="text-ink w-47.5 bg-transparent text-[14px] outline-none"
-              />
-              <kbd className="bg-surface-sunken text-ink-muted rounded-[4px] px-1.5 py-0.5 text-[11px] font-bold">
-                ⌘K
-              </kbd>
-            </div>
             {headerActions}
             <Link
               to={accountTo}

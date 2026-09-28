@@ -142,10 +142,8 @@
     "collapse": "收起侧边栏",
     "approvedMarkets_one": "已通过审核 · {{count}} 个市集",
     "approvedMarkets_other": "已通过审核 · {{count}} 个市集",
-    "changeMarket": "切换正在查看的市集",
     "roleStall": "农户 · {{stall}}",
     "openNavigation": "打开导航",
-    "searchPlaceholder": "订单号或顾客",
     "yourAccount": "你的账户",
     "today": "今天",
     "overview": "概览",
@@ -405,8 +403,7 @@
     "navigation": "管理导航",
     "home": "MarketLink — 管理概览",
     "contextSub": "平台 · 整个市场",
-    "userLine": "管理员 · 整个平台",
-    "searchPlaceholder": "摊位、顾客或市场"
+    "userLine": "管理员 · 整个平台"
   },
   "geo": {
     "denied": "你已为本站关闭位置权限。请在浏览器的网站设置中更改，或改用地址。",

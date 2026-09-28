@@ -142,10 +142,8 @@
     "collapse": "Thu gọn thanh bên",
     "approvedMarkets_one": "Đã duyệt · {{count}} chợ",
     "approvedMarkets_other": "Đã duyệt · {{count}} chợ",
-    "changeMarket": "Đổi chợ đang xem",
     "roleStall": "Nhà vườn · {{stall}}",
     "openNavigation": "Mở điều hướng",
-    "searchPlaceholder": "Mã đơn hoặc tên khách",
     "yourAccount": "Tài khoản của bạn",
     "today": "Hôm nay",
     "overview": "Tổng quan",
@@ -405,8 +403,7 @@
     "navigation": "Điều hướng quản trị",
     "home": "MarketLink — Tổng quan quản trị",
     "contextSub": "Nền tảng · toàn bộ chợ",
-    "userLine": "Quản trị viên · toàn nền tảng",
-    "searchPlaceholder": "Sạp, khách hàng hoặc chợ"
+    "userLine": "Quản trị viên · toàn nền tảng"
   },
   "geo": {
     "denied": "Bạn đã tắt vị trí cho trang này. Hãy bật lại trong cài đặt trang web của trình duyệt, hoặc dùng một địa chỉ.",

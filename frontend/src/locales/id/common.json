@@ -142,10 +142,8 @@
     "collapse": "Ciutkan bilah samping",
     "approvedMarkets_one": "Disetujui · {{count}} pasar",
     "approvedMarkets_other": "Disetujui · {{count}} pasar",
-    "changeMarket": "Ganti pasar yang sedang dilihat",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Buka navigasi",
-    "searchPlaceholder": "Kode pesanan atau pelanggan",
     "yourAccount": "Akun Anda",
     "today": "Hari ini",
     "overview": "Ringkasan",
@@ -405,8 +403,7 @@
     "navigation": "Navigasi admin",
     "home": "MarketLink — Ringkasan admin",
     "contextSub": "Platform · seluruh pasar",
-    "userLine": "Admin · seluruh platform",
-    "searchPlaceholder": "Lapak, pelanggan, atau pasar"
+    "userLine": "Admin · seluruh platform"
   },
   "geo": {
     "denied": "Anda mematikan lokasi untuk situs ini. Ubah di pengaturan situs browser Anda, atau gunakan alamat.",

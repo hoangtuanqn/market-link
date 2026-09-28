@@ -158,8 +158,6 @@ const FarmerLayout = () => {
           line: t('farmerNav.roleStall', { stall: stallName }),
           name: user?.fullName,
         }}
-        searchId="farmer-appq"
-        searchPlaceholder={t('farmerNav.searchPlaceholder')}
         accountTo="/account"
         onSignOut={logout}
         headerActions={<NotificationBell to="/farmer/notifications" />}

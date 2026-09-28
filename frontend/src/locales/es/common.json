@@ -142,10 +142,8 @@
     "collapse": "Contraer la barra lateral",
     "approvedMarkets_one": "Aprobado · {{count}} mercado",
     "approvedMarkets_other": "Aprobado · {{count}} mercados",
-    "changeMarket": "Cambiar el mercado que estás viendo",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Abrir navegación",
-    "searchPlaceholder": "Código de pedido o cliente",
     "yourAccount": "Tu cuenta",
     "today": "Hoy",
     "overview": "Resumen",
@@ -405,8 +403,7 @@
     "navigation": "Navegación de administración",
     "home": "MarketLink — Resumen de administración",
     "contextSub": "Plataforma · todo el mercado",
-    "userLine": "Admin · toda la plataforma",
-    "searchPlaceholder": "Puesto, cliente o mercado"
+    "userLine": "Admin · toda la plataforma"
   },
   "geo": {
     "denied": "Desactivaste la ubicación para este sitio. Cámbialo en la configuración del sitio de tu navegador o usa una dirección.",

@@ -160,8 +160,6 @@ const AdminLayout = () => {
           name: user.fullName,
         }}
         onSignOut={logout}
-        searchId="admin-appq"
-        searchPlaceholder={t('adminNav.searchPlaceholder')}
         accountTo={ADMIN_ACCOUNT_PATH}
         headerActions={<NotificationBell to={ADMIN_NOTIFICATIONS_PATH} />}
         className="bg-surface-quiet"

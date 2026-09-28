@@ -142,10 +142,8 @@
     "collapse": "Seitenleiste einklappen",
     "approvedMarkets_one": "Freigegeben · {{count}} Markt",
     "approvedMarkets_other": "Freigegeben · {{count}} Märkte",
-    "changeMarket": "Angezeigten Markt wechseln",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Navigation öffnen",
-    "searchPlaceholder": "Bestellnummer oder Kunde",
     "yourAccount": "Ihr Konto",
     "today": "Heute",
     "overview": "Übersicht",
@@ -405,8 +403,7 @@
     "navigation": "Admin-Navigation",
     "home": "MarketLink — Admin-Übersicht",
     "contextSub": "Plattform · gesamter Marktplatz",
-    "userLine": "Admin · gesamte Plattform",
-    "searchPlaceholder": "Stand, Kunde oder Markt"
+    "userLine": "Admin · gesamte Plattform"
   },
   "geo": {
     "denied": "Sie haben den Standort für diese Website deaktiviert. Ändern Sie das in den Website-Einstellungen Ihres Browsers oder nutzen Sie eine Adresse.",

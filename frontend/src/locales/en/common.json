@@ -156,10 +156,8 @@
     "collapse": "Collapse the sidebar",
     "approvedMarkets_one": "Approved · {{count}} market",
     "approvedMarkets_other": "Approved · {{count}} markets",
-    "changeMarket": "Change which market you are looking at",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Open navigation",
-    "searchPlaceholder": "Order code or customer",
     "yourAccount": "Your account",
     "today": "Today",
     "overview": "Overview",
@@ -419,8 +417,7 @@
     "navigation": "Admin navigation",
     "home": "MarketLink — Admin overview",
     "contextSub": "Platform · whole marketplace",
-    "userLine": "Admin · whole platform",
-    "searchPlaceholder": "Stall, customer or market"
+    "userLine": "Admin · whole platform"
   },
   "geo": {
     "denied": "You turned location off for this site. Change it in your browser’s site settings, or use an address instead.",

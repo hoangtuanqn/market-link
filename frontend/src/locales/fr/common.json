@@ -142,10 +142,8 @@
     "collapse": "Replier la barre latérale",
     "approvedMarkets_one": "Validé · {{count}} marché",
     "approvedMarkets_other": "Validé · {{count}} marchés",
-    "changeMarket": "Changer de marché affiché",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Ouvrir la navigation",
-    "searchPlaceholder": "N° de commande ou client",
     "yourAccount": "Votre compte",
     "today": "Aujourd’hui",
     "overview": "Vue d’ensemble",
@@ -405,8 +403,7 @@
     "navigation": "Navigation admin",
     "home": "MarketLink — Vue d’ensemble admin",
     "contextSub": "Plateforme · tout le marché",
-    "userLine": "Admin · toute la plateforme",
-    "searchPlaceholder": "Étal, client ou marché"
+    "userLine": "Admin · toute la plateforme"
   },
   "geo": {
     "denied": "Vous avez désactivé la localisation pour ce site. Modifiez-la dans les paramètres du site de votre navigateur, ou utilisez une adresse.",

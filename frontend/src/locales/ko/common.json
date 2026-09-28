@@ -142,10 +142,8 @@
     "collapse": "사이드바 접기",
     "approvedMarkets_one": "승인됨 · 시장 {{count}}곳",
     "approvedMarkets_other": "승인됨 · 시장 {{count}}곳",
-    "changeMarket": "보고 있는 시장 바꾸기",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "메뉴 열기",
-    "searchPlaceholder": "주문 번호 또는 고객",
     "yourAccount": "내 계정",
     "today": "오늘",
     "overview": "개요",
@@ -405,8 +403,7 @@
     "navigation": "관리자 탐색",
     "home": "MarketLink — 관리자 개요",
     "contextSub": "플랫폼 · 전체 마켓",
-    "userLine": "관리자 · 전체 플랫폼",
-    "searchPlaceholder": "매장, 고객 또는 시장"
+    "userLine": "관리자 · 전체 플랫폼"
   },
   "geo": {
     "denied": "이 사이트의 위치 권한을 껐습니다. 브라우저의 사이트 설정에서 변경하거나 주소를 대신 사용하세요.",

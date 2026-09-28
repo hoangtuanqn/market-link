@@ -142,10 +142,8 @@
     "collapse": "ย่อแถบด้านข้าง",
     "approvedMarkets_one": "อนุมัติแล้ว · {{count}} ตลาด",
     "approvedMarkets_other": "อนุมัติแล้ว · {{count}} ตลาด",
-    "changeMarket": "เปลี่ยนตลาดที่กำลังดู",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "เปิดเมนู",
-    "searchPlaceholder": "รหัสคำสั่งซื้อหรือลูกค้า",
     "yourAccount": "บัญชีของคุณ",
     "today": "วันนี้",
     "overview": "ภาพรวม",
@@ -405,8 +403,7 @@
     "navigation": "การนำทางผู้ดูแล",
     "home": "MarketLink — ภาพรวมผู้ดูแล",
     "contextSub": "แพลตฟอร์ม · ทั้งตลาด",
-    "userLine": "ผู้ดูแล · ทั้งแพลตฟอร์ม",
-    "searchPlaceholder": "แผง ลูกค้า หรือตลาด"
+    "userLine": "ผู้ดูแล · ทั้งแพลตฟอร์ม"
   },
   "geo": {
     "denied": "คุณปิดตำแหน่งสำหรับเว็บไซต์นี้ไว้ เปลี่ยนได้ในการตั้งค่าเว็บไซต์ของเบราว์เซอร์ หรือใช้ที่อยู่แทน",
