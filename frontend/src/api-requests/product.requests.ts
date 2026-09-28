@@ -1,3 +1,4 @@
+import type { ShelfLifeDto, StorageMode } from '@/api-requests/shelf-life.requests';
 import type { StallSummaryDto } from '@/api-requests/stall.requests';
 import type { ApiResponse, PageType } from '@/types/api.types';
 import type { ProductStatus, ProductType } from '@/types/product.types';
@@ -34,6 +35,8 @@ export type ProductDetailDto = {
   description?: string | null;
   farmer: StallSummaryDto;
   reviewsSummary: ReviewSummaryDto;
+  /** FR-121: how it is kept and the stall's promise. */
+  shelfLife?: ShelfLifeDto | null;
 };
 
 /** A product as seen by the owning Farmer: adds the description and the admin's hide flag with its reason (FR-074). */
@@ -48,6 +51,8 @@ export type FarmerProductDto = {
   nextDateAvailable?: number | null;
   /** Units placed / accepted / ready orders hold for `nextDate`. */
   nextDateReserved?: number | null;
+  /** One-product endpoints only: the stored shelf-life block for the edit form. */
+  shelfLife?: ShelfLifeDto | null;
 };
 
 export type ProductInput = {
@@ -59,6 +64,11 @@ export type ProductInput = {
   stockQuantity: number;
   imageUrl?: string;
   shelfLifeDays: number;
+  /** The chosen storage group (required once the category has groups). */
+  shelfLifeGuideId?: number;
+  storageMode?: StorageMode;
+  /** Must be true when shelfLifeDays is longer than the suggestion (FR-121). */
+  acknowledgeLongerShelfLife?: boolean;
 };
 
 export type ProductListParams = {
@@ -100,6 +110,7 @@ export const toFarmerProduct = (dto: FarmerProductDto): ProductType => ({
   nextDate: dto.nextDate ?? undefined,
   nextLeft: dto.nextDateAvailable ?? undefined,
   nextReserved: dto.nextDateReserved ?? undefined,
+  shelfLife: dto.shelfLife ?? undefined,
 });
 
 /** FR-020…023, FR-062, FR-064, FR-074 — products (docs/api-contract.md §5, §10). */

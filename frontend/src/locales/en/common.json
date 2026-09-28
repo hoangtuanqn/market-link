@@ -778,5 +778,12 @@
       "fakeReviews": "Fake reviews",
       "ownerRequest": "At the account owner’s request"
     }
+  },
+  "storageMode": {
+    "room": "Room temperature",
+    "chilled": "Fridge 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Good until end of {{day}} · {{storage}}"
   }
 }

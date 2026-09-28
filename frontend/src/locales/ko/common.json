@@ -778,5 +778,12 @@
       "fakeReviews": "조작된 리뷰",
       "ownerRequest": "계정 소유자의 요청"
     }
+  },
+  "storageMode": {
+    "room": "실온",
+    "chilled": "냉장 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "{{day}}까지 신선 · {{storage}}"
   }
 }

@@ -778,5 +778,12 @@
       "fakeReviews": "Đánh giá gian lận",
       "ownerRequest": "Theo yêu cầu của chủ tài khoản"
     }
+  },
+  "storageMode": {
+    "room": "Nhiệt độ thường",
+    "chilled": "Ngăn mát 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Dùng tốt đến hết {{day}} · {{storage}}"
   }
 }

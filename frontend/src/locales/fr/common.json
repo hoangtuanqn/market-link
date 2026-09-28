@@ -778,5 +778,12 @@
       "fakeReviews": "Faux avis",
       "ownerRequest": "À la demande du titulaire du compte"
     }
+  },
+  "storageMode": {
+    "room": "Température ambiante",
+    "chilled": "Réfrigérateur 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Bon jusqu’à la fin de {{day}} · {{storage}}"
   }
 }

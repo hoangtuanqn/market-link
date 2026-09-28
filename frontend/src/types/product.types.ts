@@ -1,3 +1,4 @@
+import type { ShelfLifeDto } from '@/api-requests/shelf-life.requests';
 import type { PRODUCT_STATUS } from '@/constants/enums';
 
 export type ProductStatus = (typeof PRODUCT_STATUS)[keyof typeof PRODUCT_STATUS];
@@ -35,4 +36,6 @@ export type ProductType = {
   nextLeft?: number;
   /** Farmer's own list: units that placed, accepted and ready orders hold for `nextDate`. */
   nextReserved?: number;
+  /** The Farmer's edit form: the stored shelf-life block (FR-121). */
+  shelfLife?: ShelfLifeDto;
 };

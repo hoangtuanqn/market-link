@@ -778,5 +778,12 @@
       "fakeReviews": "不正なレビュー",
       "ownerRequest": "アカウント所有者本人の希望による"
     }
+  },
+  "storageMode": {
+    "room": "常温",
+    "chilled": "冷蔵 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "賞味期限は{{day}}まで · {{storage}}"
   }
 }

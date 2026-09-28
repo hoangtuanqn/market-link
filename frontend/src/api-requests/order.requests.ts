@@ -1,3 +1,4 @@
+import type { StorageMode } from '@/api-requests/shelf-life.requests';
 import type { ApiResponse, PageType } from '@/types/api.types';
 import type { OrderHistoryEntry, OrderStatus, OrderType } from '@/types/order.types';
 import type { ProductStatus } from '@/types/product.types';
@@ -89,6 +90,11 @@ export type OrderItemDto = {
   unitPrice: number;
   quantity: number;
   subtotal: number;
+  /** FR-121: the last good day ("yyyy-MM-dd"); null on lines placed before the promise existed. */
+  bestBefore?: string | null;
+  storageMode?: StorageMode | null;
+  /** FR-124: the price before a near-expiry discount; null when there was none. */
+  listPrice?: number | null;
 };
 
 /**

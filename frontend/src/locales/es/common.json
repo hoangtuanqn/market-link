@@ -778,5 +778,12 @@
       "fakeReviews": "Reseñas falsas",
       "ownerRequest": "A petición del titular de la cuenta"
     }
+  },
+  "storageMode": {
+    "room": "Temperatura ambiente",
+    "chilled": "Refrigerado 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Bueno hasta el final de {{day}} · {{storage}}"
   }
 }

@@ -778,5 +778,12 @@
       "fakeReviews": "虚假评价",
       "ownerRequest": "应账户持有人要求"
     }
+  },
+  "storageMode": {
+    "room": "常温",
+    "chilled": "冷藏 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "最佳食用期至 {{day}} 结束 · {{storage}}"
   }
 }

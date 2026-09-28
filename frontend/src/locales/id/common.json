@@ -778,5 +778,12 @@
       "fakeReviews": "Ulasan palsu",
       "ownerRequest": "Atas permintaan pemilik akun"
     }
+  },
+  "storageMode": {
+    "room": "Suhu ruang",
+    "chilled": "Kulkas 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Baik hingga akhir {{day}} · {{storage}}"
   }
 }

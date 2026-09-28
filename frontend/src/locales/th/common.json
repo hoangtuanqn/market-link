@@ -778,5 +778,12 @@
       "fakeReviews": "รีวิวปลอม",
       "ownerRequest": "ตามคำขอของเจ้าของบัญชี"
     }
+  },
+  "storageMode": {
+    "room": "อุณหภูมิห้อง",
+    "chilled": "แช่เย็น 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "ใช้ได้ดีจนถึงสิ้นสุด {{day}} · {{storage}}"
   }
 }
