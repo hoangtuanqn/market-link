@@ -6,6 +6,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyCollection;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.catalog.entities.ShelfLifeGuide;
@@ -18,6 +20,9 @@ import com.techx.intervue.modules.catalog.repositories.ShelfLifePeerQueryReposit
 import com.techx.intervue.modules.catalog.requests.ShelfLifeGuideRequest;
 import com.techx.intervue.modules.catalog.resources.ShelfLifeGuideGroupResource;
 import com.techx.intervue.modules.catalog.resources.ShelfLifeGuideResource;
+import com.techx.intervue.modules.farmer.entities.FarmerProfile;
+import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -26,9 +31,16 @@ import org.junit.jupiter.api.Test;
 
 class ShelfLifeGuideServiceTest {
 
+    /** The signed-in Farmer, who owns stall 10. */
+    private static final long FARMER_USER = 1L;
+
+    /** An admin, who has no stall. */
+    private static final long ADMIN_USER = 2L;
+
     private ShelfLifeGuideRepository guides;
     private ShelfLifePeerQueryRepository peers;
     private CategoryRepository categories;
+    private FarmerProfileRepository farmers;
     private ShelfLifeGuideService service;
 
     @BeforeEach
@@ -36,7 +48,12 @@ class ShelfLifeGuideServiceTest {
         guides = mock(ShelfLifeGuideRepository.class);
         peers = mock(ShelfLifePeerQueryRepository.class);
         categories = mock(CategoryRepository.class);
-        service = new ShelfLifeGuideService(guides, peers, categories);
+        farmers = mock(FarmerProfileRepository.class);
+        service = new ShelfLifeGuideService(guides, peers, categories, farmers);
+        when(farmers.findByUserId(FARMER_USER))
+                .thenReturn(
+                        Optional.of(FarmerProfile.builder().id(10L).userId(FARMER_USER).build()));
+        when(farmers.findByUserId(ADMIN_USER)).thenReturn(Optional.empty());
     }
 
     static ShelfLifeGuide guide(long id, String group, StorageMode mode, int days) {
@@ -61,7 +78,7 @@ class ShelfLifeGuideServiceTest {
                                 guide(3L, "Roots and bulbs", StorageMode.ROOM, 14)));
         when(peers.daysByGuide(anyCollection(), eq(10L))).thenReturn(Map.of());
 
-        List<ShelfLifeGuideGroupResource> groups = service.listForCategory(1L, 10L);
+        List<ShelfLifeGuideGroupResource> groups = service.listForCategory(1L, FARMER_USER);
 
         assertThat(groups)
                 .extracting(ShelfLifeGuideGroupResource::groupName)
@@ -83,7 +100,7 @@ class ShelfLifeGuideServiceTest {
         when(peers.daysByGuide(anyCollection(), eq(null)))
                 .thenReturn(Map.of(1L, List.of(1, 2), 2L, List.of(3, 5, 4)));
 
-        var modes = service.listForCategory(1L, null).getFirst().modes();
+        var modes = service.listForCategory(1L, ADMIN_USER).getFirst().modes();
 
         assertThat(modes.get(0).peerMedianDays()).isNull();
         assertThat(modes.get(0).peerCount()).isEqualTo(2);
@@ -97,7 +114,32 @@ class ShelfLifeGuideServiceTest {
                 .thenReturn(List.of());
         when(peers.daysByGuide(anyCollection(), eq(null))).thenReturn(Map.of());
 
-        assertThat(service.listForCategory(1L, null)).isEmpty();
+        assertThat(service.listForCategory(1L, ADMIN_USER)).isEmpty();
+    }
+
+    /** Spec §4.1: the asking stall is found from the signed-in user and left out of the numbers. */
+    @Test
+    void leavesTheSignedInFarmersOwnStallOutOfTheNumbers() {
+        when(guides.findByCategoryIdAndActiveTrueOrderByGroupNameAscStorageModeAsc(1L))
+                .thenReturn(List.of(guide(2L, "Leafy greens", StorageMode.CHILLED, 3)));
+        when(peers.daysByGuide(anyCollection(), eq(10L))).thenReturn(Map.of(2L, List.of(3, 4, 5)));
+        when(peers.daysByGuide(anyCollection(), eq(null)))
+                .thenReturn(Map.of(2L, List.of(3, 4, 5, 9)));
+
+        assertThat(
+                        service.listForCategory(1L, FARMER_USER)
+                                .getFirst()
+                                .modes()
+                                .getFirst()
+                                .peerCount())
+                .isEqualTo(3);
+        assertThat(
+                        service.listForCategory(1L, ADMIN_USER)
+                                .getFirst()
+                                .modes()
+                                .getFirst()
+                                .peerCount())
+                .isEqualTo(4);
     }
 
     private static ShelfLifeGuideRequest request(Boolean active) {
@@ -125,6 +167,25 @@ class ShelfLifeGuideServiceTest {
         assertThat(created.isActive()).isTrue();
     }
 
+    /**
+     * The product form groups rows by their exact name, so a second way of keeping typed as "leafy
+     * Greens" joins the existing "Leafy greens" instead of starting a second group.
+     */
+    @Test
+    void createsWithTheSpellingOfAGroupTheCategoryAlreadyHas() {
+        when(categories.existsById(1L)).thenReturn(true);
+        when(guides.findFirstByCategoryIdAndGroupNameOrderByIdAsc(1L, "leafy Greens"))
+                .thenReturn(Optional.of(guide(2L, "Leafy greens", StorageMode.CHILLED, 3)));
+        when(guides.saveAndFlush(any(ShelfLifeGuide.class))).thenAnswer(i -> i.getArgument(0));
+
+        ShelfLifeGuideResource created =
+                service.create(
+                        new ShelfLifeGuideRequest(1L, " leafy Greens ", "", "room", 1, null));
+
+        assertThat(created.groupName()).isEqualTo("Leafy greens");
+        assertThat(created.storageMode()).isEqualTo("room");
+    }
+
     @Test
     void refusesAnUnknownCategory() {
         when(categories.existsById(1L)).thenReturn(false);
@@ -135,9 +196,8 @@ class ShelfLifeGuideServiceTest {
 
     @Test
     void updatesAndCanTurnAGroupBackOn() {
-        ShelfLifeGuide existing = guide(5L, "Old", StorageMode.ROOM, 1);
+        ShelfLifeGuide existing = guide(5L, "Old", StorageMode.CHILLED, 1);
         existing.setActive(false);
-        when(categories.existsById(1L)).thenReturn(true);
         when(guides.findById(5L)).thenReturn(Optional.of(existing));
         when(guides.saveAndFlush(any(ShelfLifeGuide.class))).thenAnswer(i -> i.getArgument(0));
 
@@ -146,6 +206,39 @@ class ShelfLifeGuideServiceTest {
         assertThat(saved.groupName()).isEqualTo("Leafy greens");
         assertThat(saved.suggestedDays()).isEqualTo(3);
         assertThat(saved.isActive()).isTrue();
+    }
+
+    /**
+     * A group never moves: its products would point at another category's group, or keep a way of
+     * keeping the group no longer has. The admin screen always sends the stored values, so only a
+     * direct API call meets this.
+     */
+    @Test
+    void refusesToMoveAGroupToAnotherCategoryOrWayOfKeeping() {
+        ShelfLifeGuide existing = guide(5L, "Leafy greens", StorageMode.CHILLED, 3);
+        when(guides.findById(5L)).thenReturn(Optional.of(existing));
+
+        assertThatThrownBy(
+                        () ->
+                                service.update(
+                                        5L,
+                                        new ShelfLifeGuideRequest(
+                                                2L, "Leafy greens", "", "chilled", 3, null)))
+                .isInstanceOf(InvalidFieldException.class)
+                .extracting("field")
+                .isEqualTo("categoryId");
+        assertThatThrownBy(
+                        () ->
+                                service.update(
+                                        5L,
+                                        new ShelfLifeGuideRequest(
+                                                1L, "Leafy greens", "", "room", 3, null)))
+                .isInstanceOf(InvalidFieldException.class)
+                .extracting("field")
+                .isEqualTo("storageMode");
+        assertThat(existing.getCategoryId()).isEqualTo(1L);
+        assertThat(existing.getStorageMode()).isEqualTo(StorageMode.CHILLED);
+        verify(guides, never()).saveAndFlush(any(ShelfLifeGuide.class));
     }
 
     @Test

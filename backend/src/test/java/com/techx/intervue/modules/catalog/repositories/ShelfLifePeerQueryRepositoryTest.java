@@ -19,7 +19,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
 /**
- * FR-120: "what other stalls set" counts only visible products of approved stalls, never the asking
+ * FR-120: "what other stalls set" counts only products on sale at approved stalls, never the asking
  * stall's own products (spec §4.1).
  */
 @SpringBootTest
@@ -53,12 +53,14 @@ class ShelfLifePeerQueryRepositoryTest {
         ownStall = stall("approved");
         long other = stall("approved");
         long suspended = stall("suspended");
-        product(ownStall, category, "own", 9, false, false);
-        product(other, category, "a", 3, false, false);
-        product(other, category, "b", 4, false, false);
-        product(other, category, "hidden", 7, true, false);
-        product(other, category, "deleted", 8, false, true);
-        product(suspended, category, "suspended", 5, false, false);
+        product(ownStall, category, "own", 9, false, false, true);
+        product(other, category, "a", 3, false, false, true);
+        product(other, category, "b", 4, false, false, true);
+        product(other, category, "hidden", 7, true, false, true);
+        product(other, category, "deleted", 8, false, true, true);
+        product(suspended, category, "suspended", 5, false, false, true);
+        // A paused listing: its only weekly template day is turned off, so no date can be ordered
+        product(other, category, "paused", 6, false, false, false);
     }
 
     @AfterEach
@@ -70,7 +72,7 @@ class ShelfLifePeerQueryRepositoryTest {
     }
 
     @Test
-    void countsOtherApprovedStallsVisibleProductsOnly() {
+    void countsOtherApprovedStallsProductsOnSaleOnly() {
         Map<Long, List<Integer>> days = peers.daysByGuide(List.of(guideId), ownStall);
 
         assertThat(days.get(guideId)).containsExactlyInAnyOrder(3, 4);
@@ -108,22 +110,40 @@ class ShelfLifePeerQueryRepositoryTest {
                         status));
     }
 
+    /**
+     * {@code onSale}: the product's one weekly stock template day is active, as the visibility
+     * filter of ProductQueryRepository asks; false turns that day off. The FK cascade removes the
+     * template with the product.
+     */
     private void product(
-            long farmer, long category, String name, int days, boolean hidden, boolean deleted) {
-        track(
-                "products",
-                insert(
-                        "INSERT INTO products (farmer_id, category_id, name, price, unit,"
-                                + " stock_quantity, shelf_life_days, shelf_life_guide_id,"
-                                + " storage_mode, is_hidden, is_deleted) VALUES (?, ?, ?, 1,"
-                                + " 'kg', 5, ?, ?, 'chilled', ?, ?)",
-                        farmer,
-                        category,
-                        name + " " + tag,
-                        days,
-                        guideId,
-                        hidden,
-                        deleted));
+            long farmer,
+            long category,
+            String name,
+            int days,
+            boolean hidden,
+            boolean deleted,
+            boolean onSale) {
+        long product =
+                track(
+                        "products",
+                        insert(
+                                "INSERT INTO products (farmer_id, category_id, name, price, unit,"
+                                        + " stock_quantity, shelf_life_days, shelf_life_guide_id,"
+                                        + " storage_mode, is_hidden, is_deleted) VALUES (?, ?, ?,"
+                                        + " 1, 'kg', 5, ?, ?, 'chilled', ?, ?)",
+                                farmer,
+                                category,
+                                name + " " + tag,
+                                days,
+                                guideId,
+                                hidden,
+                                deleted));
+        insert(
+                "INSERT INTO weekly_stock_templates (farmer_id, product_id, day_of_week,"
+                        + " default_quantity, is_active) VALUES (?, ?, 6, 5, ?)",
+                farmer,
+                product,
+                onSale);
     }
 
     private long track(String table, long id) {

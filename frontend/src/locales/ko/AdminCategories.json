@@ -77,14 +77,11 @@
     "category": "분류",
     "col": {
       "group": "그룹",
-      "examples": "예시",
       "storage": "보관",
-      "days": "권장 일수",
-      "daysFor": "{{group}}의 일수 ({{storage}})",
-      "status": "상태"
+      "days": "일수",
+      "daysFor": "{{group}}의 일수 ({{storage}})"
     },
     "status": {
-      "on": "켜짐",
       "off": "꺼짐"
     },
     "action": {

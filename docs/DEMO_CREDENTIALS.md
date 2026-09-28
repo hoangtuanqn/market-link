@@ -22,8 +22,54 @@ docker compose exec -T mysql sh -c 'mysql -u"$MYSQL_USER" -p"$MYSQL_PASSWORD" "$
 
 Customer demo: Nguyễn Văn An · `0900000002`.
 
-Tài khoản admin **không** bật xác thực hai bước: `admin@marketlink.vn` chỉ cần mật khẩu. MFA là tuỳ chọn, bật trong
-Settings → Security.
+> ⚠️ **Tài khoản admin bắt buộc cài xác thực hai bước ở lần đăng nhập đầu tiên.** Mật khẩu thôi là chưa đủ —
+> xem [Đăng nhập admin lần đầu](#đăng-nhập-admin-lần-đầu--bắt-buộc-cài-2fa) ngay dưới đây trước khi bắt đầu.
+> Hai tài khoản Customer và Farmer chỉ cần mật khẩu, không vướng gì.
+
+## Đăng nhập admin lần đầu — bắt buộc cài 2FA
+
+FR-008: admin nào chưa từng cài xác thực hai bước thì ngay sau khi nhập đúng mật khẩu sẽ bị đưa tới
+`/admin/setup-2fa`. Màn đó **không có nút bỏ qua** — chưa cài xong thì không vào được `/admin`.
+
+**Cần chuẩn bị:** một ứng dụng sinh mã trên điện thoại. Google Authenticator, Microsoft Authenticator, Authy hay
+1Password đều được. Không có điện thoại thì dùng tiện ích TOTP trên trình duyệt cũng chạy.
+
+### Các bước
+
+1. Vào `/admin/login`, nhập `admin@marketlink.vn` / `Demo@1234`, bấm **Sign in**.
+2. Trang **Set up two-step verification** hiện ra, có mã QR.
+   - **Có điện thoại:** mở app xác thực → thêm tài khoản → quét mã QR.
+   - **Không quét được:** bấm **Copy key**, rồi trong app chọn nhập khoá bằng tay và dán vào.
+   - Khoá này **sinh riêng cho từng database**, nên nó không nằm sẵn trong tài liệu này. Mỗi lần dựng DB mới
+     là một khoá mới.
+3. App hiện một mã 6 chữ số, đổi mỗi 30 giây. Gõ mã đó vào ô **Six-digit code** rồi bấm **Confirm**.
+4. Màn hiện **Save your recovery codes** — 10 mã khôi phục, mỗi mã dùng được một lần.
+   **Chép hoặc tải về ngay**, vì chúng chỉ hiện đúng một lần. Mất điện thoại thì đây là đường vào duy nhất.
+5. Bấm **I have saved them** → vào thẳng dashboard admin.
+
+Từ lần đăng nhập sau, admin nhập mật khẩu rồi nhập thêm mã 6 số. Không có điện thoại trong tay thì dùng một
+mã khôi phục thay cho mã 6 số.
+
+### Tắt 2FA sau khi đã cài
+
+Nếu thấy vướng khi demo hay khi quay video: vào `/admin/security` → **Turn off two-step verification**.
+Tắt rồi thì hệ thống **không bắt cài lại nữa** — lần sau chỉ cần mật khẩu. Đây là cách gọn nhất để quay
+phần admin một mạch.
+
+### Khi máy khác cần cài lại từ đầu
+
+`make seed` **không** đụng tới 2FA — nạp lại seed không tắt được nó. Muốn đưa admin về trạng thái chưa cài
+(để diễn lại luồng này, hoặc khi mất cả điện thoại lẫn mã khôi phục):
+
+```bash
+make mysql
+```
+
+```sql
+DELETE FROM admin_mfa WHERE user_id = (SELECT id FROM users WHERE email = 'admin@marketlink.vn');
+```
+
+Lần đăng nhập kế tiếp sẽ quay lại bước 1.
 
 ## Dữ liệu demo đi kèm (FR-100, FR-101)
 
@@ -59,5 +105,6 @@ Dữ liệu dựng sẵn cho vài kịch bản:
 - **Mật khẩu admin.** Backend tự tạo `admin@marketlink.vn` với mật khẩu `Admin@123` khi khởi động lần đầu
   (`AdminSeeder`, profile `dev`/`local`). `make seed` ghi đè thành `Demo@1234` cho khớp bảng này. Chưa chạy seed thì
   vẫn là `Admin@123`.
-- **Xác thực hai bước.** Seed không bật 2FA cho tài khoản nào. Nếu ai đó đã bật 2FA cho admin trên máy của mình thì
-  vẫn phải nhập mã; nạp lại seed không tắt 2FA.
+- **Xác thực hai bước.** Seed không tạo sẵn 2FA cho tài khoản nào, nhưng admin vẫn **bị bắt cài ở lần đăng nhập
+  đầu** (FR-008) — xem [mục hướng dẫn](#đăng-nhập-admin-lần-đầu--bắt-buộc-cài-2fa). Cài xong rồi thì `make seed`
+  không tắt được; muốn tắt thì vào `/admin/security`, muốn xoá hẳn thì xoá dòng trong bảng `admin_mfa`.

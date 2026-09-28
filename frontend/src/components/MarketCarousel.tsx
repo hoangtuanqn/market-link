@@ -116,7 +116,7 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
               goToPrev();
             }}
             aria-label={t('common.prev', { defaultValue: 'Previous photo' })}
-            className="border-line-strong bg-surface-raised/90 text-ink hover:bg-surface-raised absolute top-1/2 left-3 z-20 flex size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-[1.5px] shadow-md backdrop-blur-sm transition-transform hover:scale-105 active:scale-95"
+            className="border-line-strong bg-surface-raised/90 text-ink hover:bg-surface-raised absolute top-1/2 left-3 z-20 flex size-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-[1.5px] shadow-md backdrop-blur-sm transition-transform hover:scale-105 active:scale-95"
           >
             <ChevronLeftIcon size={18} />
           </button>
@@ -127,7 +127,7 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
               goToNext();
             }}
             aria-label={t('common.next', { defaultValue: 'Next photo' })}
-            className="border-line-strong bg-surface-raised/90 text-ink hover:bg-surface-raised absolute top-1/2 right-3 z-20 flex size-10 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-[1.5px] shadow-md backdrop-blur-sm transition-transform hover:scale-105 active:scale-95"
+            className="border-line-strong bg-surface-raised/90 text-ink hover:bg-surface-raised absolute top-1/2 right-3 z-20 flex size-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full border-[1.5px] shadow-md backdrop-blur-sm transition-transform hover:scale-105 active:scale-95"
           >
             <ChevronRightIcon size={18} />
           </button>
@@ -148,8 +148,10 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
               type="button"
               onClick={() => goToIndex(idx)}
               aria-label={`Go to slide ${idx + 1}`}
+              // The visible dot stays 10px; py-4 + background-clip gives it a 44px box to tap
+              // (Apple HIG, WCAG 2.5.5) without changing how it looks.
               className={Helper.cn(
-                'h-2.5 rounded-full transition-all duration-300',
+                'box-content h-2.5 rounded-full bg-clip-content py-4 transition-all duration-300',
                 idx === currentIndex ? 'bg-brand w-7 shadow-sm' : 'bg-surface-raised/75 hover:bg-surface-raised w-2.5',
               )}
             />

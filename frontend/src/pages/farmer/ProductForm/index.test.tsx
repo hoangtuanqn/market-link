@@ -147,6 +147,15 @@ describe('FarmerProductFormPage', () => {
     );
   });
 
+  /** A one-day suggestion reads "1 day", not "1 days". */
+  it('names a one-day suggestion in the singular', async () => {
+    renderNew();
+    await userEvent.click(await screen.findByLabelText(/Room temperature · suggested 1 day/));
+    await userEvent.click(screen.getByRole('button', { name: 'One day more' }));
+
+    expect(screen.getByText('1 day longer than suggested (1 day, Room temperature)')).toBeInTheDocument();
+  });
+
   it('stops at twice the suggestion', async () => {
     renderNew();
     await userEvent.click(await screen.findByLabelText(/Room temperature · suggested 1 day/));
@@ -218,6 +227,10 @@ describe('FarmerProductFormPage', () => {
     );
   });
 
+  /**
+   * Spec §8: once the saved group is turned off, the Farmer picks the next one. Nothing is picked for them, and the
+   * saved promise never carries over to a group they did not choose.
+   */
   it('asks for another group when the saved one is gone', async () => {
     vi.mocked(ProductApi.getMine).mockResolvedValue({
       id: 5,
@@ -230,10 +243,68 @@ describe('FarmerProductFormPage', () => {
       shelfLife: {
         guideId: 99,
         groupName: 'Old group',
+        storageMode: 'chilled',
+        days: 5,
+        suggestedDays: 3,
+        extended: true,
+      },
+    } as never);
+    vi.mocked(ProductApi.update).mockResolvedValue({ id: 5, name: 'Rau muống', status: 'available' } as never);
+    renderEdit();
+
+    expect(
+      await screen.findByText('The group this product used is no longer offered. Pick another.'),
+    ).toBeInTheDocument();
+    expect(screen.getByLabelText(/^Storage group/)).toHaveValue('');
+    expect(screen.queryByLabelText(/I promise/)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save product' })).toBeDisabled();
+    expect(screen.getByText('Pick a storage group above to save.')).toBeInTheDocument();
+
+    // The group the name matches can be picked too: the select starts empty
+    await userEvent.selectOptions(screen.getByLabelText(/^Storage group/), 'Leafy greens');
+
+    expect(screen.getByRole('status', { name: /shelf life/i })).toHaveTextContent('1 day');
+    expect(screen.getByRole('button', { name: 'Save product' })).toBeEnabled();
+    await userEvent.click(screen.getByRole('button', { name: 'One day more' }));
+    expect(screen.getByLabelText(/I promise this still keeps well for 2 days/)).not.toBeChecked();
+    await userEvent.click(screen.getByRole('button', { name: 'One day less' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Save product' }));
+
+    expect(ProductApi.update).toHaveBeenCalledWith(
+      5,
+      expect.objectContaining({
+        shelfLifeGuideId: 11,
         storageMode: 'room',
-        days: 2,
-        suggestedDays: 2,
-        extended: false,
+        shelfLifeDays: 1,
+        acknowledgeLongerShelfLife: false,
+      }),
+    );
+  });
+
+  /** The group is still offered, but not the way of keeping the product was saved with: that row is gone too. */
+  it('asks for a group again when only the saved way of keeping is turned off', async () => {
+    vi.mocked(ShelfLifeApi.forCategory).mockResolvedValue([
+      {
+        groupName: 'Leafy greens',
+        examples: 'rau muống, lettuce',
+        modes: [{ guideId: 11, storageMode: 'room', suggestedDays: 1, peerMedianDays: null, peerCount: 0 }],
+      },
+    ] as never);
+    vi.mocked(ProductApi.getMine).mockResolvedValue({
+      id: 5,
+      name: 'Rau muống',
+      categoryId: 1,
+      unit: 'bunch',
+      price: 0.5,
+      stock: 10,
+      status: 'available',
+      shelfLife: {
+        guideId: 12,
+        groupName: 'Leafy greens',
+        storageMode: 'chilled',
+        days: 5,
+        suggestedDays: 3,
+        extended: true,
       },
     } as never);
     renderEdit();
@@ -241,6 +312,68 @@ describe('FarmerProductFormPage', () => {
     expect(
       await screen.findByText('The group this product used is no longer offered. Pick another.'),
     ).toBeInTheDocument();
+    expect(screen.queryByLabelText(/I promise/)).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Save product' })).toBeDisabled();
+
+    await userEvent.selectOptions(screen.getByLabelText(/^Storage group/), 'Leafy greens');
+
+    expect(screen.getByLabelText(/Room temperature · suggested 1 day/)).toBeChecked();
+    expect(screen.getByRole('status', { name: /shelf life/i })).toHaveTextContent('1 day');
+    expect(screen.getByRole('button', { name: 'Save product' })).toBeEnabled();
+  });
+
+  /** Spec §9: going over the cap shows the error, and nothing is sent. */
+  it('refuses to save a product whose saved days are now above the cap', async () => {
+    vi.mocked(ProductApi.update).mockClear();
+    vi.mocked(ProductApi.getMine).mockResolvedValue({
+      id: 5,
+      name: 'Rau muống',
+      categoryId: 1,
+      unit: 'bunch',
+      price: 0.5,
+      stock: 10,
+      status: 'available',
+      // Saved at 7 days against 4; the group now suggests 3, so the cap is 6
+      shelfLife: {
+        guideId: 12,
+        groupName: 'Leafy greens',
+        storageMode: 'chilled',
+        days: 7,
+        suggestedDays: 4,
+        extended: true,
+      },
+    } as never);
+    renderEdit();
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Save product' }));
+
+    expect(screen.getByText('At most 6 days for this group.')).toBeInTheDocument();
+    expect(ProductApi.update).not.toHaveBeenCalled();
+  });
+
+  /** Without the storage groups the server would refuse the save on a field this screen cannot show. */
+  it('keeps Save off, and says why, when the storage groups do not load', async () => {
+    vi.mocked(ShelfLifeApi.forCategory).mockRejectedValue(new Error('network'));
+    renderNew();
+
+    expect(await screen.findByText('Reload the storage groups above to save.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Add product/ })).toBeDisabled();
+  });
+
+  /** A promise ticked for one number of days does not cover another. */
+  it('asks for the promise again when the days change after it was ticked', async () => {
+    renderNew();
+    await userEvent.click(await screen.findByLabelText(/Fridge 0–5 °C · suggested 3 days/));
+    const more = screen.getByRole('button', { name: 'One day more' });
+    await userEvent.click(more);
+    await userEvent.click(screen.getByLabelText(/I promise this still keeps well for 4 days/));
+    expect(screen.getByLabelText(/I promise this still keeps well for 4 days/)).toBeChecked();
+
+    await userEvent.click(more);
+
+    expect(screen.getByLabelText(/I promise this still keeps well for 5 days/)).not.toBeChecked();
+    expect(screen.getByRole('button', { name: /Add product/ })).toBeDisabled();
+    expect(screen.getByText('Tick the promise above to save.')).toBeInTheDocument();
   });
 
   /**

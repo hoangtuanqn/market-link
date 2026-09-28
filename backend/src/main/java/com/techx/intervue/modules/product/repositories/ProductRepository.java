@@ -19,9 +19,17 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     /** FR-076 admin category list: how many live products still point at this category. */
     long countByCategoryIdAndDeletedFalse(Long categoryId);
 
-    /** FR-076 admin "move products to another category" before deactivating the old one. */
+    /**
+     * FR-076 admin "move products to another category" before deactivating the old one. FR-120: a
+     * product's storage group belongs to its category, so the old category's group is cleared; the
+     * product's next save takes a group of the new category, if it has any. The shelf-life numbers
+     * stay as they were saved (way of keeping, days, suggestion, promise and its time): they are
+     * the snapshot the Farmer agreed to, and order lines carry their own copy.
+     */
     @Modifying
-    @Query("update Product p set p.categoryId = :newCategoryId where p.categoryId = :oldCategoryId")
+    @Query(
+            "update Product p set p.categoryId = :newCategoryId, p.shelfLifeGuideId = null"
+                    + " where p.categoryId = :oldCategoryId")
     void reassignCategory(
             @Param("oldCategoryId") long oldCategoryId, @Param("newCategoryId") long newCategoryId);
 

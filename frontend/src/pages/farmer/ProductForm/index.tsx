@@ -176,7 +176,10 @@ const FarmerProductFormPage = () => {
     savedGroup ??
     matchGuideGroup(form.name, guideGroups) ??
     guideGroups[0];
-  const groupGone = untouched && saved?.guideId != null && guideGroups.length > 0 && savedGroup === undefined;
+  // Spec §8: the saved group is gone when its own row (group and way of keeping) is no longer offered, even while
+  // another way of keeping of that group still is. The Farmer then picks a group before saving.
+  const savedLive = saved?.guideId != null && guideGroups.some((g) => g.modes.some((m) => m.guideId === saved.guideId));
+  const groupGone = untouched && saved?.guideId != null && guideGroups.length > 0 && !savedLive;
   const mode =
     group?.modes.find((m) => m.storageMode === form.storageMode) ??
     (untouched ? group?.modes.find((m) => m.storageMode === saved?.storageMode) : undefined) ??
@@ -187,8 +190,25 @@ const FarmerProductFormPage = () => {
     ? mode.storageMode
     : (form.storageMode ?? (untouched ? saved?.storageMode : undefined) ?? 'room');
   const days = form.shelfLife !== '' ? form.shelfLife : untouched && saved ? saved.days : suggestedDays;
-  const acknowledged = form.ackLonger || (untouched && saved?.extended === true);
+  // The saved promise stays ticked only while it is the same promise: same group row, way of keeping and days.
+  const acknowledged =
+    form.ackLonger ||
+    (untouched &&
+      saved?.extended === true &&
+      !groupGone &&
+      (mode?.guideId ?? null) === saved.guideId &&
+      storageMode === saved.storageMode &&
+      days === saved.days);
   const needsAck = extendedBy(days, suggestedDays) > 0 && !acknowledged;
+  // Why Save is off, shown next to it. The group comes first: picking one resets the days. Without the groups the
+  // server would refuse the save on a field this screen cannot show.
+  const saveBlocked = groupGone
+    ? t('shelfLife.saveNeedsGroup')
+    : guidesLoad.kind === 'error'
+      ? t('shelfLife.saveNeedsGroups')
+      : needsAck
+        ? t('shelfLife.saveBlocked')
+        : null;
 
   const validate = (): FormErrors => {
     const next: FormErrors = {};
@@ -196,6 +216,7 @@ const FarmerProductFormPage = () => {
     if (categoryId == null) next.cat = t('errors.required');
     if (!Number.isFinite(price) || price <= 0) next.price = t('errors.price');
     if (!Number.isInteger(qty) || qty < 0) next.qty = t('qty.error');
+    if (groupGone) next.shelfGroup = t('shelfLife.groupGone');
     if (days > maxShelfLifeDays(suggestedDays)) {
       next.shelfLife = t('shelfLife.tooLong', { count: maxShelfLifeDays(suggestedDays) });
     }
@@ -416,7 +437,10 @@ const FarmerProductFormPage = () => {
             onMode={(m, suggested) =>
               setForm({ shelfGroup: group?.groupName ?? null, storageMode: m, shelfLife: suggested, ackLonger: false })
             }
-            onDays={(n) => setForm({ shelfGroup: group?.groupName ?? null, storageMode, shelfLife: n })}
+            onDays={(n) =>
+              // Other days make another promise, so a tick given for the old number does not carry over
+              setForm({ shelfGroup: group?.groupName ?? null, storageMode, shelfLife: n, ackLonger: false })
+            }
             onAcknowledge={(value) => setForm({ ackLonger: value })}
           />
 
@@ -506,14 +530,14 @@ const FarmerProductFormPage = () => {
         <div className="border-line-strong flex flex-wrap items-center gap-2 border-t-[1.5px] pt-4">
           <Button
             type="submit"
-            disabled={saving || needsAck || guidesLoad.kind === 'loading'}
-            aria-describedby={needsAck ? 'save-blocked' : undefined}
+            disabled={saving || saveBlocked != null || guidesLoad.kind !== 'ready'}
+            aria-describedby={saveBlocked ? 'save-blocked' : undefined}
           >
             {editing ? t('save') : t('add')}
           </Button>
-          {needsAck && (
+          {saveBlocked && (
             <span id="save-blocked" className="text-ink-muted text-[13px]">
-              {t('shelfLife.saveBlocked')}
+              {saveBlocked}
             </span>
           )}
           <ButtonLink variant="secondary" to="/farmer/products">

@@ -3,8 +3,6 @@ package com.techx.intervue.modules.catalog.controllers;
 import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.catalog.resources.ShelfLifeGuideGroupResource;
 import com.techx.intervue.modules.catalog.services.interfaces.ShelfLifeGuideServiceInterface;
-import com.techx.intervue.modules.farmer.entities.FarmerProfile;
-import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
 import com.techx.intervue.resources.ApiResource;
 import java.util.List;
@@ -25,13 +23,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ShelfLifeGuideController extends BaseController {
 
     private final ShelfLifeGuideServiceInterface guides;
-    private final FarmerProfileRepository farmers;
 
     @GetMapping
     public ResponseEntity<ApiResource<List<ShelfLifeGuideGroupResource>>> list(
             @RequestParam long categoryId, @AuthenticationPrincipal CustomUserDetails user) {
-        // The asking stall's own products never count as "other stalls" (spec §4.1)
-        Long ownStall = farmers.findByUserId(user.getId()).map(FarmerProfile::getId).orElse(null);
-        return ok(guides.listForCategory(categoryId, ownStall), "");
+        return ok(guides.listForCategory(categoryId, user.getId()), "");
     }
 }

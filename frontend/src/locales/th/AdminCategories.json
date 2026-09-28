@@ -77,14 +77,11 @@
     "category": "หมวดหมู่",
     "col": {
       "group": "กลุ่ม",
-      "examples": "ตัวอย่าง",
       "storage": "การเก็บรักษา",
-      "days": "จำนวนวันที่แนะนำ",
-      "daysFor": "จำนวนวันสำหรับ {{group}} ({{storage}})",
-      "status": "สถานะ"
+      "days": "จำนวนวัน",
+      "daysFor": "จำนวนวันสำหรับ {{group}} ({{storage}})"
     },
     "status": {
-      "on": "เปิดใช้งาน",
       "off": "ปิดใช้งาน"
     },
     "action": {

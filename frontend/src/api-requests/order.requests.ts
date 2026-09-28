@@ -174,6 +174,8 @@ export const toOrder = (dto: OrderDetailDto): OrderType => ({
     name: i.productName,
     unit: i.unit,
     price: i.unitPrice,
+    bestBefore: i.bestBefore,
+    storageMode: i.storageMode,
   })),
   itemCount: dto.summary.itemCount,
   total: dto.summary.totalAmount,

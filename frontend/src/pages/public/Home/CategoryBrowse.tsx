@@ -36,7 +36,7 @@ const CategoryBrowse = ({ categories = [], loading = false }: CategoryBrowseProp
           <h2 className="text-h2 mt-1">{t('categories.title')}</h2>
           <p className="text-ink-muted text-small mt-0.5">{t('categories.desc')}</p>
         </div>
-        <Link to="/products" className="text-brand font-semibold hover:underline">
+        <Link to="/products" className="text-brand inline-flex min-h-11 items-center font-semibold hover:underline">
           {t('categories.all')}
         </Link>
       </div>

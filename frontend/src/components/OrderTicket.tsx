@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Link, useNavigate } from 'react-router';
 import OrderApi, { toOrder } from '@/api-requests/order.requests';
 import ProductApi from '@/api-requests/product.requests';
+import BestBeforeLine from '@/components/BestBeforeLine';
 import { CircleSlashIcon, ClockIcon, CloseIcon, LockIcon } from '@/components/icons';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import { Button, ButtonLink } from '@/components/ui/button';
@@ -110,9 +111,11 @@ const OrderTicket = ({ order, fluid, hideActions, onChanged }: OrderTicketProps)
               key={line.productId}
               className="border-line-strong flex justify-between gap-3 border-b border-dotted py-1.5 last:border-b-0"
             >
-              <span>
+              <span className="min-w-0">
                 <span className="text-ink-muted mr-1.5 tabular-nums">{line.qty}×</span>
                 {line.name}
+                {/* FR-121 (spec §4.3): the promise under each line, as on both order detail pages */}
+                <BestBeforeLine bestBefore={line.bestBefore} storageMode={line.storageMode} />
               </span>
               <span className="whitespace-nowrap tabular-nums">{money(line.qty * (line.price ?? 0))}</span>
             </li>

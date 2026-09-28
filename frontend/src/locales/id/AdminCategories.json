@@ -77,14 +77,11 @@
     "category": "Kategori",
     "col": {
       "group": "Kelompok",
-      "examples": "Contoh",
       "storage": "Penyimpanan",
-      "days": "Hari yang disarankan",
-      "daysFor": "Hari untuk {{group}} ({{storage}})",
-      "status": "Status"
+      "days": "Hari",
+      "daysFor": "Hari untuk {{group}} ({{storage}})"
     },
     "status": {
-      "on": "Aktif",
       "off": "Nonaktif"
     },
     "action": {

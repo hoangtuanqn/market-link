@@ -32,6 +32,17 @@ describe('shelf-life helpers', () => {
     expect(matchGuideGroup('Cà rốt Đà Lạt', vegetables)?.groupName).toBe('Roots and bulbs');
   });
 
+  /** M-5: the name hint asks for English names, and English names of produce are usually plural. */
+  it('matches the English plural of an example', () => {
+    const fruits = [group('Soft fruit', 'chuối, banana, mango'), group('Thick-skinned fruit', 'cam, orange, pomelo')];
+    expect(matchGuideGroup('Carrots', vegetables)?.groupName).toBe('Roots and bulbs');
+    expect(matchGuideGroup('Oranges', fruits)?.groupName).toBe('Thick-skinned fruit');
+    expect(matchGuideGroup('Sweet potatoes', [group('Roots and bulbs', 'sweet potato')])?.groupName).toBe(
+      'Roots and bulbs',
+    );
+    expect(matchGuideGroup('Carrotcake', vegetables)).toBeUndefined();
+  });
+
   it('prefers the longest matching example', () => {
     const fruit = [group('Tomatoes', 'cà chua'), group('Everything', 'cà')];
     expect(matchGuideGroup('Cà chua bi', fruit)?.groupName).toBe('Tomatoes');

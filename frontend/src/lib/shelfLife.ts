@@ -16,7 +16,9 @@ const words = (text: string) =>
 
 /**
  * FR-120: the storage group whose example words appear in the product name, as whole words, ignoring case and accents.
- * The longest matching example wins ("cà chua" beats "cà"); undefined when nothing matches.
+ * An English plural of an example counts too ("Carrots", "Sweet potatoes"): English names of produce are usually
+ * plural, and a Vietnamese syllable never ends in "s", so no Vietnamese name gains a false match. The longest matching
+ * example wins ("cà chua" beats "cà"); undefined when nothing matches.
  */
 export function matchGuideGroup(productName: string, groups: ShelfLifeGroupDto[]): ShelfLifeGroupDto | undefined {
   const name = words(productName);
@@ -25,7 +27,8 @@ export function matchGuideGroup(productName: string, groups: ShelfLifeGroupDto[]
   for (const group of groups) {
     for (const raw of group.examples.split(',')) {
       const example = words(raw).trim();
-      if (example && name.includes(` ${example} `) && (!best || example.length > best.length)) {
+      const found = example && [example, `${example}s`, `${example}es`].some((w) => name.includes(` ${w} `));
+      if (found && (!best || example.length > best.length)) {
         best = { group, length: example.length };
       }
     }

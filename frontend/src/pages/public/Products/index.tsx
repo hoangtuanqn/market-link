@@ -105,7 +105,7 @@ const ProductsPage = () => {
           <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
             <legend className="text-small mb-2 p-0 font-bold">{t('filters.day')}</legend>
             {week.map(({ dow: d }) => (
-              <label key={d} className="flex items-center gap-2 text-[15px]">
+              <label key={d} className="flex min-h-11 items-center gap-2 text-[15px]">
                 <input
                   type="radio"
                   name="day"
