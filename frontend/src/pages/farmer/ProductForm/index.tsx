@@ -19,6 +19,9 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 const STATUS_OPTIONS: ProductStatus[] = ['available', 'sold_out', 'unavailable'];
+/** Matches ProductImageUploadService's IMAGE_TYPES/MAX_BYTES. */
+const ALLOWED_IMAGE_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const MAX_IMAGE_BYTES = 8 * 1024 * 1024;
 
 type FormState = {
   name: string;
@@ -156,6 +159,17 @@ const FarmerProductFormPage = () => {
     const file = e.target.files?.[0];
     e.target.value = '';
     if (!file) return;
+    // Same limits as ProductImageUploadService — reject before spending an upload on a file the
+    // server would refuse anyway.
+    if (!ALLOWED_IMAGE_TYPES.has(file.type)) {
+      setErrors((current) => ({ ...current, image: t('photo.error.type') }));
+      return;
+    }
+    if (file.size > MAX_IMAGE_BYTES) {
+      setErrors((current) => ({ ...current, image: t('photo.error.tooLarge') }));
+      return;
+    }
+    setErrors((current) => ({ ...current, image: undefined }));
     setUploadingImage(true);
     try {
       const url = await ProductApi.uploadProductImage(file);

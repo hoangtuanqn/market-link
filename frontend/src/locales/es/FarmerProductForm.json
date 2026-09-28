@@ -62,7 +62,11 @@
     "uploading": "Subiendo",
     "uploadInProgress": "Espera a que termine de subirse la foto antes de guardar.",
     "alt": "Foto del producto",
-    "hint": "JPEG, PNG o WEBP, hasta 8 MB. De cerca, con luz natural, sobre madera o papel."
+    "hint": "JPEG, PNG o WEBP, hasta 8 MB. De cerca, con luz natural, sobre madera o papel.",
+    "error": {
+      "tooLarge": "La foto debe ser de 8 MB o menos.",
+      "type": "Las fotos deben ser JPEG, PNG o WEBP."
+    }
   },
   "save": "Guardar producto",
   "add": "Añadir producto",

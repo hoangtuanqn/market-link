@@ -62,7 +62,11 @@
     "uploading": "アップロード中",
     "uploadInProgress": "写真のアップロードが終わってから保存してください。",
     "alt": "商品の写真",
-    "hint": "JPEG、PNG または WEBP、8 MB まで。寄りで、自然光で、木や紙の上で。"
+    "hint": "JPEG、PNG または WEBP、8 MB まで。寄りで、自然光で、木や紙の上で。",
+    "error": {
+      "tooLarge": "写真は8MB以下にしてください。",
+      "type": "写真はJPEG、PNG、WEBPのいずれかにしてください。"
+    }
   },
   "save": "商品を保存",
   "add": "商品を追加",
