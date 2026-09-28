@@ -1,0 +1,109 @@
+package com.techx.intervue.modules.quality.entities;
+
+import com.techx.intervue.modules.quality.enums.QualityProblem;
+import com.techx.intervue.modules.quality.enums.QualityReportStatus;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import java.time.Instant;
+import java.time.LocalDate;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+/**
+ * FR-122: a customer's report of spoiled produce on one line of a completed order (table {@code
+ * quality_reports}, V20260928006). The promise is copied from the order line when the report is
+ * made, so a later edit of the product never changes how the report is judged. Reports are never
+ * deleted: they are the trail behind every shelf-life strike.
+ */
+@Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@Table(name = "quality_reports")
+public class QualityReport {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "order_item_id", nullable = false, updatable = false)
+    private Long orderItemId;
+
+    @Column(name = "order_id", nullable = false, updatable = false)
+    private Long orderId;
+
+    /** users.id of the buyer. */
+    @Column(name = "customer_id", nullable = false, updatable = false)
+    private Long customerId;
+
+    /** farmer_profiles.id, not users.id. */
+    @Column(name = "farmer_id", nullable = false, updatable = false)
+    private Long farmerId;
+
+    @Column(name = "product_id", nullable = false, updatable = false)
+    private Long productId;
+
+    @Column(name = "spoiled_on", nullable = false, updatable = false)
+    private LocalDate spoiledOn;
+
+    @Convert(converter = QualityProblem.DbConverter.class)
+    @Column(nullable = false, updatable = false)
+    private QualityProblem problem;
+
+    @Column(length = 500, updatable = false)
+    private String note;
+
+    @Column(name = "photo_url", length = 255, updatable = false)
+    private String photoUrl;
+
+    /** Spoiled on or before the line's best_before. */
+    @Column(name = "before_promise", nullable = false, updatable = false)
+    private boolean beforePromise;
+
+    @Column(name = "shelf_life_extended", nullable = false, updatable = false)
+    private boolean shelfLifeExtended;
+
+    @Column(name = "extended_by_days", nullable = false, updatable = false)
+    private int extendedByDays;
+
+    @Convert(converter = QualityReportStatus.DbConverter.class)
+    @Column(nullable = false)
+    private QualityReportStatus status = QualityReportStatus.OPEN;
+
+    @Column(name = "farmer_response", length = 500)
+    private String farmerResponse;
+
+    @Column(name = "farmer_responded_at")
+    private Instant farmerRespondedAt;
+
+    @Column(name = "decided_by")
+    private Long decidedBy;
+
+    @Column(name = "decided_at")
+    private Instant decidedAt;
+
+    @Column(name = "decision_note", length = 255)
+    private String decisionNote;
+
+    /** Set from the application Clock so the response can echo it at once. */
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private Instant createdAt;
+
+    public boolean isOpen() {
+        return status == QualityReportStatus.OPEN;
+    }
+
+    /** FR-123: the admin's decision. Callers check {@link #isOpen()} first. */
+    public void decide(QualityReportStatus outcome, Long adminId, String note, Instant at) {
+        this.status = outcome;
+        this.decidedBy = adminId;
+        this.decisionNote = note;
+        this.decidedAt = at;
+    }
+}
