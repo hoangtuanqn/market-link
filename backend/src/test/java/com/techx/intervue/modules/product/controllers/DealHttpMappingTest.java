@@ -72,4 +72,17 @@ class DealHttpMappingTest {
         assertThat(FarmerDealController.class.getAnnotation(PreAuthorize.class).value())
                 .isEqualTo("hasRole('FARMER')");
     }
+
+    /** The public controller: covered by the module's handler, and no role rule. */
+    @Test
+    void theDealsControllerIsCoveredAndPublic() {
+        List<Class<?>> covered =
+                Arrays.asList(
+                        ProductExceptionHandler.class
+                                .getAnnotation(RestControllerAdvice.class)
+                                .assignableTypes());
+
+        assertThat(covered).contains(DealController.class);
+        assertThat(DealController.class.getAnnotation(PreAuthorize.class)).isNull();
+    }
 }

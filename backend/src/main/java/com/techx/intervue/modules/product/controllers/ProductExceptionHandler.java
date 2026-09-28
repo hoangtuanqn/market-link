@@ -36,6 +36,7 @@ import org.springframework.web.multipart.MultipartException;
             FarmerProductImageController.class,
             FarmerStockTemplateController.class,
             FarmerDealController.class,
+            DealController.class,
             AdminProductController.class
         })
 public class ProductExceptionHandler {
