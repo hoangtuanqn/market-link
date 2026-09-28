@@ -741,7 +741,8 @@
       "notAsDescribed": "Produits non conformes à l’annonce",
       "missedPickups": "Stand absent à l’heure du retrait",
       "rulesBroken": "Règles de la plateforme non respectées",
-      "ownerRequest": "À la demande du responsable du stand"
+      "ownerRequest": "À la demande du responsable du stand",
+      "shelfLifeViolations": "Infractions de conservation"
     },
     "deactivate": {
       "noShows": "Commandes répétées jamais retirées",

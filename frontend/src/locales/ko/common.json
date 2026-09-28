@@ -741,7 +741,8 @@
       "notAsDescribed": "상품이 설명과 달랐습니다",
       "missedPickups": "수령 시간에 가판이 없었습니다",
       "rulesBroken": "플랫폼 규정을 위반했습니다",
-      "ownerRequest": "가판 운영자의 요청"
+      "ownerRequest": "가판 운영자의 요청",
+      "shelfLifeViolations": "유통기한 위반"
     },
     "deactivate": {
       "noShows": "주문 후 수령하지 않은 일이 반복되었습니다",

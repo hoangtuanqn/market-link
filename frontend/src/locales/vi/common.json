@@ -741,7 +741,8 @@
       "notAsDescribed": "Hàng không đúng như mô tả",
       "missedPickups": "Sạp vắng mặt khi khách đến nhận hàng",
       "rulesBroken": "Vi phạm quy định của nền tảng",
-      "ownerRequest": "Theo yêu cầu của chủ sạp"
+      "ownerRequest": "Theo yêu cầu của chủ sạp",
+      "shelfLifeViolations": "Vi phạm hạn dùng"
     },
     "deactivate": {
       "noShows": "Đặt hàng nhiều lần nhưng không đến nhận",

@@ -741,7 +741,8 @@
       "notAsDescribed": "สินค้าไม่ตรงตามที่ลงไว้",
       "missedPickups": "ร้านไม่อยู่ในเวลารับสินค้า",
       "rulesBroken": "ละเมิดกฎของแพลตฟอร์ม",
-      "ownerRequest": "ตามคำขอของเจ้าของร้าน"
+      "ownerRequest": "ตามคำขอของเจ้าของร้าน",
+      "shelfLifeViolations": "การละเมิดอายุการเก็บรักษา"
     },
     "deactivate": {
       "noShows": "สั่งซื้อซ้ำแต่ไม่มารับ",

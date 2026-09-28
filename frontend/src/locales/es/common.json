@@ -741,7 +741,8 @@
       "notAsDescribed": "El producto no coincidía con el anuncio",
       "missedPickups": "El puesto no estaba a la hora de recogida",
       "rulesBroken": "Se incumplieron las normas de la plataforma",
-      "ownerRequest": "A petición del responsable del puesto"
+      "ownerRequest": "A petición del responsable del puesto",
+      "shelfLifeViolations": "Infracciones de vida útil"
     },
     "deactivate": {
       "noShows": "Pidió varias veces y no recogió",

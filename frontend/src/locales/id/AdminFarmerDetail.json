@@ -54,5 +54,12 @@
   "attempts": {
     "title": "Riwayat lamaran",
     "text": "Setiap kali akun ini melamar, beserta isinya dan jawabannya."
+  },
+  "strikes": {
+    "title": "Pelanggaran masa simpan",
+    "count": "{{count}}/{{limit}} dalam {{days}} hari terakhir",
+    "locked": "Masa simpan yang lebih lama dikunci hingga {{date}}.",
+    "clear": "Lapak masih dapat menetapkan masa simpan yang lebih lama dengan sebuah janji.",
+    "text": "Pelanggaran dicatat saat admin mengonfirmasi laporan kerusakan pada masa simpan yang diperpanjang."
   }
 }

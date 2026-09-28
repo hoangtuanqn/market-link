@@ -741,7 +741,8 @@
       "notAsDescribed": "Barang tidak sesuai deskripsi",
       "missedPickups": "Lapak tidak ada saat waktu pengambilan",
       "rulesBroken": "Melanggar aturan platform",
-      "ownerRequest": "Atas permintaan pemilik lapak"
+      "ownerRequest": "Atas permintaan pemilik lapak",
+      "shelfLifeViolations": "Pelanggaran masa simpan"
     },
     "deactivate": {
       "noShows": "Berulang kali memesan tanpa mengambil",

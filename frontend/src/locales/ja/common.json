@@ -741,7 +741,8 @@
       "notAsDescribed": "商品が掲載内容と違いました",
       "missedPickups": "受け取り時間に出店がいませんでした",
       "rulesBroken": "プラットフォームの規約違反",
-      "ownerRequest": "出店者本人の希望による"
+      "ownerRequest": "出店者本人の希望による",
+      "shelfLifeViolations": "賞味期限違反"
     },
     "deactivate": {
       "noShows": "注文して受け取らないことが続いています",

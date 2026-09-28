@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router';
+import { Link, useParams, useSearchParams } from 'react-router';
 import AskAssistant from '@/components/assistant/AskAssistant';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
 import { Banner } from '@/components/ui/banner';
@@ -12,7 +12,8 @@ import { ApplicationHistory } from '@/components/ApplicationHistory';
 import { ReasonField } from '@/components/ReasonField';
 import { VideoThumb } from '@/components/VideoThumb';
 import { APPROVAL_STATUS_META, REASON_MAX } from '@/constants/approvalStatus';
-import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
+import { composeReason, emptyReason, isReasonCode, type ReasonValue } from '@/lib/reasons';
+import { STRIKE_WINDOW_DAYS, STRIKES_TO_LOCK } from '@/lib/spoilage';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import { ADMIN_FARMERS_PATH } from '@/constants/nav';
 import { formatDate } from '@/lib/format';
@@ -45,11 +46,23 @@ const AdminFarmerDetailPage = () => {
   /** One reason used for both reject and suspend — only one dialog can be open at a time. */
   const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [reasonError, setReasonError] = useState<string>();
+  const [searchParams] = useSearchParams();
+  // FR-123: the spoiled-report queue links here with ?suspend=<reason> to open the suspend dialog pre-filled, once
+  const presetSuspend = useRef(searchParams.get('suspend'));
 
   // only setState in a promise callback (the initial state is already loading)
   const fetchDetail = useCallback(() => {
     AdminFarmerApi.detail(Number(id))
-      .then((response) => setStatus({ kind: 'ready', data: response.data }))
+      .then((response) => {
+        setStatus({ kind: 'ready', data: response.data });
+        const code = presetSuspend.current;
+        presetSuspend.current = null;
+        if (code && isReasonCode('suspend', code) && response.data.approvalStatus === 'approved') {
+          setReason({ codes: [code], note: '' });
+          setReasonError(undefined);
+          setDialog('suspend');
+        }
+      })
       .catch(() => setStatus({ kind: 'error' }));
   }, [id]);
 
@@ -304,6 +317,23 @@ const AdminFarmerDetailPage = () => {
                       <dt className="text-ink-muted">{t('applicant.status')}</dt>
                       <dd className="m-0">{t(`accountStatus.${f.accountStatus}`)}</dd>
                     </dl>
+                  </Card>
+
+                  <Card className="flex flex-col gap-2 p-6">
+                    <h2 className="text-h3">{t('strikes.title')}</h2>
+                    <p className="text-[15px] font-bold">
+                      {t('strikes.count', {
+                        count: f.activeViolations,
+                        limit: STRIKES_TO_LOCK,
+                        days: STRIKE_WINDOW_DAYS,
+                      })}
+                    </p>
+                    <p className="text-small">
+                      {f.extensionLockedUntil
+                        ? t('strikes.locked', { date: formatDate(new Date(f.extensionLockedUntil)) })
+                        : t('strikes.clear')}
+                    </p>
+                    <p className="text-small text-ink-muted">{t('strikes.text')}</p>
                   </Card>
 
                   <Card className="flex flex-col gap-2 p-6">

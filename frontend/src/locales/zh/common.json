@@ -741,7 +741,8 @@
       "notAsDescribed": "商品与描述不符",
       "missedPickups": "取货时摊位不在",
       "rulesBroken": "违反平台规定",
-      "ownerRequest": "应摊主要求"
+      "ownerRequest": "应摊主要求",
+      "shelfLifeViolations": "保鲜期违规"
     },
     "deactivate": {
       "noShows": "多次下单却未取货",

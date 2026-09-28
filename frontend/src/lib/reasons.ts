@@ -7,7 +7,7 @@ import i18n from '@/i18n';
  */
 export const REASON_CODES = {
   reject: ['incompleteInfo', 'unclearPhotos', 'unreachable', 'notFarmProduce', 'duplicate'],
-  suspend: ['complaints', 'notAsDescribed', 'missedPickups', 'rulesBroken', 'ownerRequest'],
+  suspend: ['complaints', 'notAsDescribed', 'missedPickups', 'rulesBroken', 'ownerRequest', 'shelfLifeViolations'],
   deactivate: ['noShows', 'abusiveMessages', 'fakeAccount', 'fakeReviews', 'ownerRequest'],
 } as const;
 
@@ -26,6 +26,10 @@ export const toggleReason = (value: ReasonValue, code: string): ReasonValue => (
   ...value,
   codes: value.codes.includes(code) ? value.codes.filter((c) => c !== code) : [...value.codes, code],
 });
+
+/** Whether `code` is one of the reasons of `kind` — for links that preselect one (FR-123 "Suspend stall"). */
+export const isReasonCode = (kind: ReasonKind, code: string): boolean =>
+  (REASON_CODES[kind] as readonly string[]).includes(code);
 
 /** The label of one reason, in the admin's language — it is what the recipient reads. */
 export const reasonLabel = (kind: ReasonKind, code: string) => i18n.t(`reasons.${kind}.${code}` as never);

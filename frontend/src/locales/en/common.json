@@ -741,7 +741,8 @@
       "notAsDescribed": "Produce did not match its listing",
       "missedPickups": "The stall was not there at pickup time",
       "rulesBroken": "The platform rules were broken",
-      "ownerRequest": "At the stall owner’s request"
+      "ownerRequest": "At the stall owner’s request",
+      "shelfLifeViolations": "Shelf-life violations"
     },
     "deactivate": {
       "noShows": "Repeatedly ordered and did not collect",

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { REASON_CODES, composeReason, emptyReason, toggleReason } from './reasons';
+import { REASON_CODES, composeReason, emptyReason, isReasonCode, toggleReason } from './reasons';
 
 describe('composeReason (FR-071, FR-072)', () => {
   it('joins the chosen reasons in the order of the list, not the order they were clicked', () => {
@@ -43,5 +43,17 @@ describe('toggleReason', () => {
     const once = toggleReason(emptyReason(), 'duplicate');
     expect(once.codes).toEqual(['duplicate']);
     expect(toggleReason(once, 'duplicate').codes).toEqual([]);
+  });
+});
+
+describe('the shelf-life reason (FR-123)', () => {
+  it('is one of the suspend reasons, for links that preselect it', () => {
+    expect(isReasonCode('suspend', 'shelfLifeViolations')).toBe(true);
+    expect(isReasonCode('suspend', 'duplicate')).toBe(false);
+    expect(isReasonCode('reject', 'shelfLifeViolations')).toBe(false);
+  });
+
+  it('reads as the Farmer sees it', () => {
+    expect(composeReason('suspend', { codes: ['shelfLifeViolations'], note: '' })).toBe('Shelf-life violations');
   });
 });
