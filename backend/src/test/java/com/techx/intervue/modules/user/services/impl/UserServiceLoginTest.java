@@ -19,6 +19,7 @@ import com.techx.intervue.modules.user.repositories.SocialAccountRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
+import com.techx.intervue.modules.user.services.interfaces.EmailVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
@@ -67,7 +68,8 @@ class UserServiceLoginTest {
                         jobQueue,
                         // FR-008: nobody has 2FA on → sign in as before
                         mock(MfaServiceInterface.class),
-                        mock(AddressServiceInterface.class));
+                        mock(AddressServiceInterface.class),
+                        mock(EmailVerificationServiceInterface.class));
         when(authConfig.getExpirationTime()).thenReturn(900_000L);
         when(passwordEncoder.matches(PASSWORD, "hash")).thenReturn(true);
         when(jwtService.generateToken(anyLong())).thenReturn("access");

@@ -44,5 +44,22 @@ class Helper {
     const details = (error.response?.data as Partial<ApiResponse<unknown>> | undefined)?.error?.details ?? [];
     return Object.fromEntries(details.filter((d) => d.field).map((d) => [d.field, d.message]));
   }
+
+  /** The Retry-After header of a 429, in seconds (exposed by the backend's CORS config). */
+  static getRetryAfterSeconds(error: unknown): number | undefined {
+    if (!(error instanceof AxiosError)) return undefined;
+    const seconds = Number(error.response?.headers?.['retry-after']);
+    return Number.isFinite(seconds) && seconds > 0 ? seconds : undefined;
+  }
+
+  /** Resolves an uploaded media path with the backend API origin if it is relative. */
+  static mediaUrl(path?: string | null): string {
+    if (!path) return '';
+    if (path.startsWith('http://') || path.startsWith('https://') || path.startsWith('data:')) {
+      return path;
+    }
+    const base = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
+    return `${base}${path.startsWith('/') ? '' : '/'}${path}`;
+  }
 }
 export default Helper;

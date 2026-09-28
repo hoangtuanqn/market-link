@@ -12,7 +12,8 @@ export type ChatIntent =
   | 'PICKUP_WINDOW'
   | 'UNKNOWN';
 export type ChatResultDto = {
-  type: 'product' | 'market' | 'farmer';
+  /** `order` comes from the Farmer tools (get_my_orders, get_cutoff_status) and links to the farmer order page. */
+  type: 'product' | 'market' | 'farmer' | 'order';
   id: number;
   title: string;
   subtitle: string | null;
@@ -62,7 +63,8 @@ const api = () => (Session.getRawUser() ? privateApi : publicApi);
  * server rejects anything else, because this is the one part of the prompt the client fills in.
  */
 export type PageContextDto = {
-  page: string;
+  /** The route pattern; left out on the home page, whose pattern is empty. */
+  page?: string;
   recordType?: string;
   recordRef?: string;
   /** The cart as it stands in the browser. There is no cart table, so this is the only way the assistant can see it. */

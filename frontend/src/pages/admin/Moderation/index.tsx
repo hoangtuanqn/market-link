@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams } from 'react-router';
 import ProductApi from '@/api-requests/product.requests';
 import ReviewApi, { toReviewCard } from '@/api-requests/review.requests';
-import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import ReviewCard from '@/components/ReviewCard';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
@@ -18,6 +17,7 @@ import { money } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import { ReviewCardSkeleton, ProductModerationTableSkeleton } from './ModerationSkeleton';
 import QualityReports from './QualityReports';
 import ReportedMessages from './ReportedMessages';
 
@@ -67,6 +67,15 @@ const AdminModerationPage = () => {
   const [query, setQuery] = useState('');
   const [hiding, setHiding] = useState<HideTarget>(null);
   const [reason, setReason] = useState('');
+  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
+
+  useEffect(() => {
+    if (import.meta.env.MODE === 'test') return;
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [tab, reviewFilter]);
 
   // The 'hidden' tab is its own filter value, independent of the chips above (FR-074 moderation queue).
   const effectiveFilter: ReviewFilter = tab === 'hidden' ? 'hidden' : reviewFilter;
@@ -239,8 +248,8 @@ const AdminModerationPage = () => {
           <h2 id="hidden-listings" className="text-h3">
             {t('hiddenQueue.listings')}
           </h2>
-          {hiddenListingsLoad.kind === 'loading' ? (
-            <MarketCardSkeleton count={2} />
+          {hiddenListingsLoad.kind === 'loading' || initialLoading ? (
+            <ProductModerationTableSkeleton />
           ) : hiddenListingsLoad.kind === 'error' ? (
             <LoadError noun={t('error.noun')} onRetry={retryHiddenListings} />
           ) : hiddenListingsLoad.data.length ? (
@@ -264,8 +273,12 @@ const AdminModerationPage = () => {
             </div>
           )}
 
-          {reviewsLoad.kind === 'loading' ? (
-            <MarketCardSkeleton count={2} />
+          {reviewsLoad.kind === 'loading' || initialLoading ? (
+            <div className="flex flex-col gap-4">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <ReviewCardSkeleton key={i} />
+              ))}
+            </div>
           ) : reviewsLoad.kind === 'error' ? (
             <LoadError noun={t('error.reviewsNoun')} onRetry={retryReviews} />
           ) : reviewItems.length ? (
@@ -335,8 +348,8 @@ const AdminModerationPage = () => {
             />
             <Button type="submit">{t('search.submit')}</Button>
           </form>
-          {listedLoad.kind === 'loading' ? (
-            <MarketCardSkeleton count={3} />
+          {listedLoad.kind === 'loading' || initialLoading ? (
+            <ProductModerationTableSkeleton />
           ) : listedLoad.kind === 'error' ? (
             <LoadError noun={t('error.noun')} onRetry={retryListed} />
           ) : listed.length ? (

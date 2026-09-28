@@ -8,12 +8,17 @@
   },
   "tabsLabel": "按状态查看农户",
   "status": {
+    "all": "全部",
     "pending": "待审核",
     "approved": "已通过",
     "suspended": "已暂停",
     "rejected": "已拒绝"
   },
   "empty": {
+    "all": {
+      "title": "暂无农户",
+      "text": "农户注册申请将在此处显示。"
+    },
     "pending": {
       "title": "没有待审核的申请",
       "text": "新的农户申请会先到这里审核，通过后才能上架商品。"

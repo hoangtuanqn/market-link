@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
@@ -14,6 +14,7 @@ import type { OrderListItemDto } from '@/api-requests/order.requests';
 import useRequest from '@/hooks/useRequest';
 import { pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
+import OrderTableSkeleton from './OrderTableSkeleton';
 
 const FILTERS = ['all', 'placed', 'accepted', 'ready', 'completed', 'declined', 'cancelled'] as const;
 type Filter = (typeof FILTERS)[number];
@@ -39,10 +40,18 @@ const NO_ROWS: OrderListItemDto[] = [];
  */
 const AdminOrdersPage = () => {
   const { t } = useTranslation('AdminOrders');
-  const { t: tc } = useTranslation();
   const [filter, setFilter] = useState<Filter>('all');
   const [market, setMarket] = useState<number | ''>('');
   const [page, setPage] = useState(1);
+  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
+
+  useEffect(() => {
+    if (import.meta.env.MODE === 'test') return;
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const { state: load, retry } = useRequest(`admin-orders:${filter}:${market}:${page}`, () =>
     AdminReportApi.orders({ status: FILTER_STATUS[filter], marketId: market || undefined, page, pageSize: PAGE_SIZE }),
@@ -69,6 +78,7 @@ const AdminOrdersPage = () => {
 
   const rows = load.kind === 'ready' ? load.data.items : NO_ROWS;
   const total = load.kind === 'ready' ? load.data.total : 0;
+  const showSkeleton = load.kind === 'loading' || initialLoading;
 
   const changeFilter = (f: Filter) => {
     if (f === filter) return;
@@ -139,10 +149,8 @@ const AdminOrdersPage = () => {
           />
         </div>
 
-        {load.kind === 'loading' ? (
-          <p role="status" className="text-ink-muted">
-            {tc('notify.list.loading')}
-          </p>
+        {showSkeleton ? (
+          <OrderTableSkeleton />
         ) : load.kind === 'error' ? (
           <LoadError noun={t('noun')} onRetry={retry} />
         ) : rows.length ? (

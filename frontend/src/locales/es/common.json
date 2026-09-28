@@ -51,6 +51,12 @@
     "intent": "Intención: {{intent}}",
     "photoUnavailable": "Esta foto no está disponible.",
     "photoFrom": "Foto de {{name}}",
+    "videoFrom": "Video de {{name}}",
+    "playVideo": "Reproducir video",
+    "loadingVideo": "Cargando el video…",
+    "videoUnavailable": "Este video no está disponible.",
+    "videoCantPlay": "Este navegador no puede reproducir este video.",
+    "downloadVideo": "Descargar el video",
     "seen": "Visto",
     "loadingThreads": "Cargando conversaciones…",
     "threadsErrorTitle": "No pudimos cargar tus conversaciones",
@@ -61,8 +67,8 @@
     "unreadCount_one": "{{count}} mensaje sin leer",
     "unreadCount_other": "{{count}} mensajes sin leer",
     "sendFailed": "Tu mensaje no se envió. Inténtalo de nuevo.",
-    "photoFailed": "La foto no se envió. Elige un JPEG, PNG o WebP de menos de 5 MB.",
-    "attachPhoto": "Añadir una foto",
+    "mediaFailed": "El archivo no se envió. Elige una foto o un video de menos de 50 MB.",
+    "attachMedia": "Añadir foto o video",
     "draftLabel": "Escribe un mensaje",
     "draftPlaceholder": "Escribe un mensaje",
     "send": "Enviar",
@@ -90,8 +96,14 @@
     "unpin": "Quitar",
     "productGone": "Este producto ya no está a la venta.",
     "tooFast": "Estás enviando demasiado rápido. Espera un momento e inténtalo de nuevo.",
-    "photoTooBig": "La foto supera los 5 MB. Elige una más pequeña.",
-    "photoType": "Elige una foto JPEG, PNG o WebP.",
+    "mediaTooBig": "Ese archivo supera los 50 MB. Elige uno más pequeño.",
+    "mediaTooBigForServer": "Ese archivo supera el tamaño que el servidor acepta ahora. Elige uno más pequeño.",
+    "mediaType": "Elige una foto (JPEG, PNG, WebP, GIF, AVIF o HEIC) o un video (MP4, MOV o WebM).",
+    "converting": "Convirtiendo la foto…",
+    "convertFailed": "No se pudo convertir esta foto. Guárdala como JPEG e inténtalo de nuevo.",
+    "uploading": "Enviando… {{percent}} %",
+    "uploadProgress": "Progreso de la subida",
+    "cancelUpload": "Cancelar",
     "moreThreads": "Cargar más conversaciones",
     "reportTitle": "Denunciar este mensaje",
     "reportWhy": "¿Por qué lo denuncias?",
@@ -533,7 +545,8 @@
     "result": {
       "product": "Producto",
       "market": "Mercado",
-      "farmer": "Puesto"
+      "farmer": "Puesto",
+      "order": "Pedido"
     },
     "suggest": {
       "find": "¿Dónde compro tomates este fin de semana?",
@@ -757,6 +770,28 @@
     "text": "Usamos solo cookies esenciales para mantener tu sesión iniciada y tu carrito funcionando. No usamos cookies de publicidad ni de análisis. <a>Política de privacidad</a>.",
     "decline": "Rechazar",
     "accept": "Aceptar"
+  },
+  "banDuration": {
+    "label": "Duración",
+    "permanent": "Permanente",
+    "temporary": "Temporal",
+    "days_one": "{{count}} día",
+    "days_other": "{{count}} días",
+    "specificTime": "O elegir una hora de fin exacta"
+  },
+  "accountDeactivated": {
+    "title": "Tu cuenta ha sido desactivada",
+    "generic": "Un administrador ha desactivado esta cuenta, por eso se ha cerrado tu sesión.",
+    "whatNow": "Puedes seguir viendo los mercados y los productos como visitante, pero no podrás iniciar sesión ni hacer pedidos mientras tanto.",
+    "contactIntro": "Si crees que es un error, escríbenos a",
+    "acknowledge": "Entendido"
+  },
+  "stallSuspended": {
+    "title": "Tu puesto está suspendido",
+    "generic": "Un administrador ha suspendido este puesto, por lo que ahora mismo no aparece ante los clientes.",
+    "whatNow": "Los pedidos que los clientes ya hicieron deben completarse igualmente — termínalos, por favor. No podrás publicar productos, cambiar tu stock ni aceptar pedidos nuevos hasta que se levante la suspensión.",
+    "contactIntro": "Si crees que es un error, escríbenos a",
+    "acknowledge": "Entendido"
   },
   "storageMode": {
     "room": "Temperatura ambiente",

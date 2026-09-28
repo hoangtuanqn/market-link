@@ -333,6 +333,57 @@ class ModerationServiceTest {
                 .satisfies(m -> assertThat(m.attachmentId()).isEqualTo(5L));
     }
 
+    @Test
+    void aReportedVideoShowsHasVideo() {
+        when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
+        when(messages.findById(101L))
+                .thenReturn(
+                        Optional.of(
+                                Message.builder()
+                                        .id(101L)
+                                        .conversationId(42L)
+                                        .senderId(3L)
+                                        .kind(MessageKind.VIDEO)
+                                        .createdAt(NOW)
+                                        .build()));
+        when(messages.findByConversationIdAndIdLessThanOrderByIdDesc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of());
+        when(messages.findByConversationIdAndIdGreaterThanOrderByIdAsc(eq(42L), eq(101L), any()))
+                .thenReturn(List.of());
+        when(attachments.findByMessageIdIn(List.of(101L)))
+                .thenReturn(List.of(MessageAttachment.builder().id(6L).messageId(101L).build()));
+
+        assertThat(service.detail(9L).context())
+                .filteredOn(m -> m.id().equals(101L))
+                .singleElement()
+                .satisfies(
+                        m -> {
+                            assertThat(m.hasVideo()).isTrue();
+                            assertThat(m.hasPhoto()).isFalse();
+                            assertThat(m.attachmentId()).isEqualTo(6L);
+                        });
+    }
+
+    @Test
+    void aVideoMessageShowsAWordInTheQueue() {
+        when(messages.findById(101L))
+                .thenReturn(
+                        Optional.of(
+                                Message.builder()
+                                        .id(101L)
+                                        .conversationId(42L)
+                                        .senderId(3L)
+                                        .kind(MessageKind.VIDEO)
+                                        .createdAt(NOW)
+                                        .build()));
+        when(reports.findByStatusOrderByCreatedAtDesc(any(), any(Pageable.class)))
+                .thenReturn(onePage(report(ReportStatus.NEW)));
+
+        assertThat(service.list(ReportStatus.NEW, 1, 20).items())
+                .singleElement()
+                .satisfies(item -> assertThat(item.preview()).isEqualTo("Video"));
+    }
+
     /**
      * An admin sees a hidden message (unlike an ordinary user), with a flag so the UI shows it
      * differently.

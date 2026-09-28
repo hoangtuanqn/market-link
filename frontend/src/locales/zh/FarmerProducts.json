@@ -3,10 +3,12 @@
   "intro": "你可以上架的所有商品。集市当天卖完时标记为售罄，不当季时暂停。",
   "add": "添加商品",
   "filterAll": "全部",
+  "filterDeleted": "已删除",
   "status": {
     "available": "在售",
     "sold_out": "售罄",
-    "unavailable": "已暂停"
+    "unavailable": "已暂停",
+    "deleted": "已删除"
   },
   "caption_one": "{{count}} 件商品",
   "caption_other": "{{count}} 件商品",
@@ -22,6 +24,7 @@
   "statusOf": "{{name}}的状态",
   "edit": "编辑",
   "delete": "删除",
+  "restore": "恢复",
   "footNote": "删除商品会将其从商品目录中移除；历史订单保留原有条目。照片：4:3，自然光，放在木板或纸上拍摄。",
   "toast": {
     "statusSaved": "状态已保存",
@@ -32,6 +35,8 @@
     },
     "deleted": "已删除",
     "deletedText": "已删除 {{name}}。",
+    "restored": "已恢复",
+    "restoredText": "已将 {{name}} 恢复到已暂停列表。",
     "stockAdjusted": "已更新 {{day}} 的库存。"
   },
   "dialog": {
@@ -41,6 +46,12 @@
     "text": "它会从商品目录和你的模板中消失。已包含它的订单不会改变。",
     "pauseHint": "如果只是暂时不卖，请改选“已暂停”。"
   },
+  "restoreDialog": {
+    "title": "恢复 {{name}}？",
+    "cancel": "留在回收站",
+    "confirm": "恢复商品",
+    "text": "商品将以“已暂停”状态恢复，以便您在重新上架前查看其库存和价格。"
+  },
   "error": {
     "noun": "您的商品"
   },
@@ -48,6 +59,10 @@
   "empty": {
     "title": "还没有商品",
     "text": "添加第一件商品后，它会立刻出现在您的摊位页面。"
+  },
+  "emptyDeleted": {
+    "title": "回收站为空",
+    "text": "没有已删除的商品。"
   },
   "adjust": "调整",
   "adjustDialog": {

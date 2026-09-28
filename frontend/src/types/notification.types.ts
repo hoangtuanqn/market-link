@@ -6,6 +6,7 @@ export type NotificationKindCode =
   | 'farmer_rejected'
   | 'farmer_suspended'
   | 'farmer_reinstated'
+  | 'feedback'
   | 'quality_reported'
   | 'quality_escalated'
   | 'quality_decided'

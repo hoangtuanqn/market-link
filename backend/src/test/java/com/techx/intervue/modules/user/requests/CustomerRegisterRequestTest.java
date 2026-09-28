@@ -42,7 +42,10 @@ class CustomerRegisterRequestTest {
                         email,
                         new AddressPartsRequest("VN", "79", "26743", "Le Loi", "12", null, null),
                         "secret123",
-                        "secret123");
+                        "secret123",
+                        null,
+                        null,
+                        null);
         return validator.validate(request).stream()
                 .map(ConstraintViolation::getPropertyPath)
                 .map(Object::toString)
@@ -71,7 +74,10 @@ class CustomerRegisterRequestTest {
                         "an@example.com",
                         null,
                         "secret123",
-                        "secret123");
+                        "secret123",
+                        null,
+                        null,
+                        null);
 
         assertThat(validator.validate(request))
                 .extracting(v -> v.getPropertyPath().toString())
@@ -88,7 +94,10 @@ class CustomerRegisterRequestTest {
                         new AddressPartsRequest(
                                 "VN", "79", "26743", "x".repeat(101), "12", null, null),
                         "secret123",
-                        "secret123");
+                        "secret123",
+                        null,
+                        null,
+                        null);
 
         assertThat(validator.validate(request))
                 .extracting(v -> v.getPropertyPath().toString())

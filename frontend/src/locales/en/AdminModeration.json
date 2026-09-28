@@ -74,6 +74,7 @@
     "emptyTitle": "No reported messages",
     "emptyText": "When a customer or a stall reports a message, it waits here for you.",
     "photo": "Photo",
+    "video": "Video",
     "reason": {
       "spam": "Spam or advertising",
       "abuse": "Rude or abusive",

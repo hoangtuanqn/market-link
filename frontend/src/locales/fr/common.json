@@ -51,6 +51,12 @@
     "intent": "Intention : {{intent}}",
     "photoUnavailable": "Cette photo n’est pas disponible.",
     "photoFrom": "Photo de {{name}}",
+    "videoFrom": "Vidéo de {{name}}",
+    "playVideo": "Lire la vidéo",
+    "loadingVideo": "Chargement de la vidéo…",
+    "videoUnavailable": "Cette vidéo n’est pas disponible.",
+    "videoCantPlay": "Ce navigateur ne peut pas lire cette vidéo.",
+    "downloadVideo": "Télécharger la vidéo",
     "seen": "Vu",
     "loadingThreads": "Chargement des conversations…",
     "threadsErrorTitle": "Impossible de charger vos conversations",
@@ -61,8 +67,8 @@
     "unreadCount_one": "{{count}} message non lu",
     "unreadCount_other": "{{count}} messages non lus",
     "sendFailed": "Votre message n’a pas été envoyé. Réessayez.",
-    "photoFailed": "La photo n’a pas été envoyée. Choisissez un JPEG, PNG ou WebP de moins de 5 Mo.",
-    "attachPhoto": "Ajouter une photo",
+    "mediaFailed": "Le fichier n’a pas été envoyé. Choisissez une photo ou une vidéo de moins de 50 Mo.",
+    "attachMedia": "Ajouter une photo ou une vidéo",
     "draftLabel": "Écrire un message",
     "draftPlaceholder": "Écrire un message",
     "send": "Envoyer",
@@ -90,8 +96,14 @@
     "unpin": "Retirer",
     "productGone": "Ce produit n’est plus en vente.",
     "tooFast": "Vous envoyez trop vite. Attendez un instant et réessayez.",
-    "photoTooBig": "Cette photo dépasse 5 Mo. Choisissez-en une plus petite.",
-    "photoType": "Choisissez une photo JPEG, PNG ou WebP.",
+    "mediaTooBig": "Ce fichier dépasse 50 Mo. Choisissez-en un plus petit.",
+    "mediaTooBigForServer": "Ce fichier dépasse la taille que le serveur accepte actuellement. Choisissez-en un plus petit.",
+    "mediaType": "Choisissez une photo (JPEG, PNG, WebP, GIF, AVIF ou HEIC) ou une vidéo (MP4, MOV ou WebM).",
+    "converting": "Conversion de la photo…",
+    "convertFailed": "Impossible de convertir cette photo. Enregistrez-la en JPEG et réessayez.",
+    "uploading": "Envoi… {{percent}} %",
+    "uploadProgress": "Progression de l’envoi",
+    "cancelUpload": "Annuler",
     "moreThreads": "Charger plus de conversations",
     "reportTitle": "Signaler ce message",
     "reportWhy": "Pourquoi le signalez-vous ?",
@@ -533,7 +545,8 @@
     "result": {
       "product": "Produit",
       "market": "Marché",
-      "farmer": "Stand"
+      "farmer": "Stand",
+      "order": "Commande"
     },
     "suggest": {
       "find": "Où acheter des tomates ce week-end ?",
@@ -757,6 +770,28 @@
     "text": "Nous utilisons uniquement des cookies essentiels pour vous garder connecté et faire fonctionner votre panier. Aucun cookie publicitaire ou d'analyse. <a>Politique de confidentialité</a>.",
     "decline": "Refuser",
     "accept": "Accepter"
+  },
+  "banDuration": {
+    "label": "Durée",
+    "permanent": "Permanente",
+    "temporary": "Temporaire",
+    "days_one": "{{count}} jour",
+    "days_other": "{{count}} jours",
+    "specificTime": "Ou choisir une heure de fin précise"
+  },
+  "accountDeactivated": {
+    "title": "Votre compte a été désactivé",
+    "generic": "Un administrateur a désactivé ce compte, vous avez donc été déconnecté.",
+    "whatNow": "Vous pouvez toujours parcourir les marchés et les produits en tant que visiteur, mais vous ne pouvez ni vous connecter ni commander pendant ce temps.",
+    "contactIntro": "Si vous pensez qu'il s'agit d'une erreur, contactez-nous à",
+    "acknowledge": "J'ai compris"
+  },
+  "stallSuspended": {
+    "title": "Votre stand est suspendu",
+    "generic": "Un administrateur a suspendu ce stand, il n'apparaît donc plus aux clients pour le moment.",
+    "whatNow": "Les commandes déjà passées par des clients doivent tout de même être honorées — merci de les compléter. Vous ne pouvez pas ajouter de produits, modifier votre stock ni accepter de nouvelles commandes tant que la suspension n'est pas levée.",
+    "contactIntro": "Si vous pensez qu'il s'agit d'une erreur, contactez-nous à",
+    "acknowledge": "J'ai compris"
   },
   "storageMode": {
     "room": "Température ambiante",

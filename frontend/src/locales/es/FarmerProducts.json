@@ -3,10 +3,12 @@
   "intro": "Todo lo que puedes ofrecer. Marca un producto como agotado cuando se acabe el día de mercado, o páusalo cuando no sea temporada.",
   "add": "Añadir producto",
   "filterAll": "Todos",
+  "filterDeleted": "Eliminados",
   "status": {
     "available": "Disponible",
     "sold_out": "Agotado",
-    "unavailable": "En pausa"
+    "unavailable": "En pausa",
+    "deleted": "Eliminado"
   },
   "caption_one": "{{count}} producto",
   "caption_other": "{{count}} productos",
@@ -22,6 +24,7 @@
   "statusOf": "Estado de {{name}}",
   "edit": "Editar",
   "delete": "Eliminar",
+  "restore": "Restaurar",
   "footNote": "Eliminar un producto lo quita del catálogo; los pedidos anteriores conservan sus líneas. Fotos: 4:3, luz natural, sobre madera o papel.",
   "toast": {
     "statusSaved": "Estado guardado",
@@ -32,6 +35,8 @@
     },
     "deleted": "Eliminado",
     "deletedText": "{{name}} eliminado.",
+    "restored": "Restaurado",
+    "restoredText": "{{name}} restaurado a la lista de pausados.",
     "stockAdjusted": "Existencias actualizadas para {{day}}."
   },
   "dialog": {
@@ -41,6 +46,12 @@
     "text": "Desaparece del catálogo y de tu plantilla. Los pedidos que ya lo incluyen no cambian.",
     "pauseHint": "Para dejar de venderlo por un tiempo, elige En pausa."
   },
+  "restoreDialog": {
+    "title": "¿Restaurar {{name}}?",
+    "cancel": "Mantener en papelera",
+    "confirm": "Restaurar producto",
+    "text": "El producto se restaurará en estado “Pausado” para que puedas revisar su stock y precio antes de ponerlo a la venta."
+  },
   "error": {
     "noun": "tus productos"
   },
@@ -48,6 +59,10 @@
   "empty": {
     "title": "Todavía no hay productos",
     "text": "Añade tu primer producto y aparecerá de inmediato en la página de tu puesto."
+  },
+  "emptyDeleted": {
+    "title": "La papelera está vacía",
+    "text": "No hay productos eliminados."
   },
   "adjust": "Ajustar",
   "adjustDialog": {

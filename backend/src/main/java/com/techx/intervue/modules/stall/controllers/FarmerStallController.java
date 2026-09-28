@@ -4,6 +4,7 @@ import com.techx.intervue.controllers.BaseController;
 import com.techx.intervue.modules.stall.requests.JoinMarketRequest;
 import com.techx.intervue.modules.stall.requests.OperatingDaysRequest;
 import com.techx.intervue.modules.stall.requests.StallProfileRequest;
+import com.techx.intervue.modules.stall.requests.UpdateStallMarketRequest;
 import com.techx.intervue.modules.stall.resources.StallDetailResource;
 import com.techx.intervue.modules.stall.resources.StallMarketResource;
 import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
@@ -55,6 +56,16 @@ public class FarmerStallController extends BaseController {
             @Valid @RequestBody JoinMarketRequest request) {
         return created(
                 stallService.joinMarket(user.getId(), request), "Market added to your stall.");
+    }
+
+    @PutMapping("/markets/{farmerMarketId}")
+    public ResponseEntity<ApiResource<StallMarketResource>> updateMarket(
+            @AuthenticationPrincipal CustomUserDetails user,
+            @PathVariable long farmerMarketId,
+            @Valid @RequestBody UpdateStallMarketRequest request) {
+        return ok(
+                stallService.updateMarket(user.getId(), farmerMarketId, request),
+                "Market stall details saved.");
     }
 
     @DeleteMapping("/markets/{farmerMarketId}")

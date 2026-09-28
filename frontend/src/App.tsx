@@ -2,6 +2,8 @@ import { BrowserRouter, Navigate, Route, Routes, useLocation } from 'react-route
 import AppToaster from './components/AppToaster';
 import CookieConsentBar from './components/CookieConsentBar';
 import PlatformStatusSync from './components/PlatformStatusSync';
+import AccountDeactivatedDialog from './components/AccountDeactivatedDialog';
+import StallSuspendedDialog from './components/StallSuspendedDialog';
 import ScrollToTop from './components/ScrollToTop';
 import ChatUnreadCenter from './components/chat/ChatUnreadCenter';
 import { USER_ROLE } from './constants/enums';
@@ -24,6 +26,7 @@ import ForbiddenPage from './pages/public/Forbidden';
 import RemountOnParam from './components/RemountOnParam';
 import LoginPage from './pages/auth/Login';
 import RegisterCustomerPage from './pages/auth/RegisterCustomer';
+import VerifyEmailPage from './pages/auth/VerifyEmail';
 import ForgotPasswordPage from './pages/auth/ForgotPassword';
 import ResetPasswordPage from './pages/auth/ResetPassword';
 import GoogleCallbackPage from './pages/auth/GoogleCallback';
@@ -153,6 +156,8 @@ const AppRoutes = () => {
           <Route element={<AuthLayout />}>
             <Route path="login" element={<LoginPage />} />
             <Route path="register/customer" element={<RegisterCustomerPage />} />
+            {/* FR-009: the 6-digit code mailed at sign-up */}
+            <Route path="register/verify" element={<VerifyEmailPage />} />
             {/* FR-002: no separate stall sign-up — create a customer account first, then submit the Farmer application at /become-farmer */}
             <Route path="register/farmer" element={<Navigate to="/become-farmer" replace />} />
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
@@ -327,6 +332,8 @@ const AppRoutes = () => {
 const App = () => (
   <BrowserRouter>
     <PlatformStatusSync />
+    <AccountDeactivatedDialog />
+    <StallSuspendedDialog />
     <AppRoutes />
   </BrowserRouter>
 );

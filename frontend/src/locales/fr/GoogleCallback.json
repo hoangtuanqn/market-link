@@ -17,5 +17,8 @@
     "google": "Google n’a pas pu vous connecter. Veuillez réessayer.",
     "invalidState": "Cette tentative de connexion n’est pas valide. Recommencez depuis la page de connexion.",
     "failed": "La connexion Google a échoué. Veuillez réessayer."
+  },
+  "deactivated": {
+    "browseAsVisitor": "Parcourir en visiteur"
   }
 }

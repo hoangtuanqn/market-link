@@ -5,7 +5,7 @@
     "fullName": "Full name",
     "phone": "Phone number",
     "email": "Email",
-    "emailHint": "Used to sign in and for order notifications.",
+    "emailHint": "Used to sign in and for order notifications. We send a code to it to confirm it is yours.",
     "password": "Password",
     "passwordHint": "{{min}} to {{max}} characters.",
     "confirmPassword": "Repeat password"
@@ -19,8 +19,8 @@
   "haveAccount": "I already have an account",
   "acceptFirst": "Accept the terms to create your account.",
   "sharedAccount": "One account can be shared within a family; the system does not tell people apart inside an account.",
+  "honeypot": "Leave this field empty",
   "toast": {
-    "created": "Account created.",
     "failed": "Could not create your account. Please try again."
   },
   "errors": {
@@ -34,6 +34,8 @@
     "passwordRequired": "Enter your password.",
     "passwordLength": "Password must be {{min}} to {{max}} characters.",
     "confirmRequired": "Confirm your password.",
-    "confirmMismatch": "Passwords do not match."
+    "confirmMismatch": "Passwords do not match.",
+    "tooMany_one": "Too many codes asked for this address or network. Try again in {{count}} minute.",
+    "tooMany_other": "Too many codes asked for this address or network. Try again in {{count}} minutes."
   }
 }

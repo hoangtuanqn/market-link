@@ -95,7 +95,7 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
             )}
           >
             <img
-              src={src}
+              src={Helper.mediaUrl(src)}
               alt={`${marketName} - photo ${idx + 1}`}
               className="size-full object-cover"
               loading={idx === 0 ? 'eager' : 'lazy'}

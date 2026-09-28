@@ -184,6 +184,20 @@ class ProductApi {
     await privateApi.delete<ApiResponse<null>>(`/farmer/products/${id}`);
   };
 
+  /** Farmer — soft-deleted products in trash. */
+  static mineDeleted = async () => {
+    const response = await privateApi.get<ApiResponse<PageType<FarmerProductDto>>>('/farmer/products/deleted', {
+      params: { pageSize: 50 },
+    });
+    return response.data.data.items.map(toFarmerProduct);
+  };
+
+  /** Farmer — restore a soft-deleted product back to unavailable status. */
+  static restore = async (id: number) => {
+    const response = await privateApi.post<ApiResponse<FarmerProductDto>>(`/farmer/products/${id}/restore`);
+    return toFarmerProduct(response.data.data);
+  };
+
   /** FR-064: sold_out / unavailable does not touch stock. */
   static setStatus = async (id: number, status: ProductStatus) => {
     const response = await privateApi.patch<ApiResponse<FarmerProductDto>>(`/farmer/products/${id}/status`, {

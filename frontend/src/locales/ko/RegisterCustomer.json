@@ -5,7 +5,7 @@
     "fullName": "이름",
     "phone": "전화번호",
     "email": "이메일",
-    "emailHint": "로그인과 주문 알림에 쓰여요.",
+    "emailHint": "로그인과 주문 알림에 쓰여요. 본인의 주소인지 확인하려고 이 주소로 코드를 보내요.",
     "password": "비밀번호",
     "passwordHint": "{{min}}~{{max}}자.",
     "confirmPassword": "비밀번호 다시 입력"
@@ -19,8 +19,8 @@
   "haveAccount": "이미 계정이 있어요",
   "acceptFirst": "계정을 만들려면 약관에 동의해 주세요.",
   "sharedAccount": "한 계정을 가족이 함께 쓸 수 있어요. 시스템은 한 계정 안의 사람을 구분하지 않아요.",
+  "honeypot": "이 칸은 비워 두세요",
   "toast": {
-    "created": "계정을 만들었어요.",
     "failed": "계정을 만들지 못했어요. 다시 시도해 주세요."
   },
   "errors": {
@@ -34,6 +34,8 @@
     "passwordRequired": "비밀번호를 입력해 주세요.",
     "passwordLength": "비밀번호는 {{min}}~{{max}}자여야 해요.",
     "confirmRequired": "비밀번호를 한 번 더 입력해 주세요.",
-    "confirmMismatch": "비밀번호가 일치하지 않아요."
+    "confirmMismatch": "비밀번호가 일치하지 않아요.",
+    "tooMany_one": "이 주소나 네트워크에서 코드를 너무 많이 요청했어요. {{count}}분 후에 다시 시도해 주세요.",
+    "tooMany_other": "이 주소나 네트워크에서 코드를 너무 많이 요청했어요. {{count}}분 후에 다시 시도해 주세요."
   }
 }

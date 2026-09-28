@@ -3,10 +3,12 @@
   "intro": "Alles, was Sie anbieten können. Markieren Sie ein Produkt als ausverkauft, wenn es am Markttag aufgebraucht ist, oder pausieren Sie es außerhalb der Saison.",
   "add": "Produkt hinzufügen",
   "filterAll": "Alle",
+  "filterDeleted": "Gelöscht",
   "status": {
     "available": "Verfügbar",
     "sold_out": "Ausverkauft",
-    "unavailable": "Pausiert"
+    "unavailable": "Pausiert",
+    "deleted": "Gelöscht"
   },
   "caption_one": "{{count}} Produkt",
   "caption_other": "{{count}} Produkte",
@@ -22,6 +24,7 @@
   "statusOf": "Status von {{name}}",
   "edit": "Bearbeiten",
   "delete": "Löschen",
+  "restore": "Wiederherstellen",
   "footNote": "Wenn Sie ein Produkt löschen, verschwindet es aus dem Katalog; frühere Bestellungen behalten ihre Positionen. Fotos: 4:3, Tageslicht, auf Holz oder Papier.",
   "toast": {
     "statusSaved": "Status gespeichert",
@@ -32,6 +35,8 @@
     },
     "deleted": "Gelöscht",
     "deletedText": "{{name}} gelöscht.",
+    "restored": "Wiederhergestellt",
+    "restoredText": "{{name}} in die Liste „Pausiert“ wiederhergestellt.",
     "stockAdjusted": "Bestand für {{day}} aktualisiert."
   },
   "dialog": {
@@ -41,6 +46,12 @@
     "text": "Es verschwindet aus dem Katalog und aus Ihrer Vorlage. Bestellungen, die es bereits enthalten, bleiben unverändert.",
     "pauseHint": "Um es eine Weile nicht zu verkaufen, wählen Sie stattdessen Pausiert."
   },
+  "restoreDialog": {
+    "title": "{{name}} wiederherstellen?",
+    "cancel": "Im Papierkorb behalten",
+    "confirm": "Produkt wiederherstellen",
+    "text": "Das Produkt wird im Status „Pausiert“ wiederhergestellt, sodass Sie Bestand und Preis überprüfen können, bevor Sie es wieder zum Verkauf anbieten."
+  },
   "error": {
     "noun": "deine Produkte"
   },
@@ -48,6 +59,10 @@
   "empty": {
     "title": "Noch keine Produkte",
     "text": "Füge dein erstes Produkt hinzu — es erscheint sofort auf deiner Standseite."
+  },
+  "emptyDeleted": {
+    "title": "Papierkorb ist leer",
+    "text": "Keine gelöschten Produkte vorhanden."
   },
   "adjust": "Anpassen",
   "adjustDialog": {

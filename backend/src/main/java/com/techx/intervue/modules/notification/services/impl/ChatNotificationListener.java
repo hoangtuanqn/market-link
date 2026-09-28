@@ -20,14 +20,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 /**
  * A chat message → popup for the recipient, not stored (spec §3). A Farmer shows by stall name as
- * in chat. An image has no text: let the renderer translate "… sent a photo" into the recipient's
- * language.
+ * in chat. A photo or a video has no text: let the renderer translate "… sent a photo" / "… sent a
+ * video" into the recipient's language.
  */
 @Component
 @RequiredArgsConstructor
 public class ChatNotificationListener {
 
     private static final int PREVIEW = 120;
+
+    private static final String VIDEO_MESSAGE_KEY = "message.video";
 
     private final NotificationServiceInterface notifications;
     private final UserRepository users;
@@ -54,7 +56,8 @@ public class ChatNotificationListener {
                         : sender.getFullName();
         String base =
                 recipient.getRole() == RoleType.FARMER ? "/farmer/messages?c=" : "/messages?c=";
-        String text = e.message().kind() == MessageKind.TEXT ? preview(e.message().body()) : null;
+        MessageKind kind = e.message().kind();
+        String text = kind == MessageKind.TEXT ? preview(e.message().body()) : null;
         notifications.dispatch(
                 List.of(recipient.getId()),
                 new NotificationEvent(
@@ -63,7 +66,8 @@ public class ChatNotificationListener {
                         base + e.conversationId(),
                         e.conversationId(),
                         name,
-                        text));
+                        text,
+                        kind == MessageKind.VIDEO ? VIDEO_MESSAGE_KEY : null));
     }
 
     private static String preview(String body) {

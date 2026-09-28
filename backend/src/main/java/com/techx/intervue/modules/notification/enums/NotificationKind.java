@@ -13,6 +13,7 @@ import java.util.Locale;
 public enum NotificationKind {
     ANNOUNCEMENT(NotificationCategory.ANNOUNCEMENTS, true),
     FARMER_APPLICATION(NotificationCategory.FARMER_APPLICATIONS, true),
+    FEEDBACK(NotificationCategory.FARMER_APPLICATIONS, true),
     FARMER_APPROVED(NotificationCategory.ACCOUNT, true),
     FARMER_REJECTED(NotificationCategory.ACCOUNT, true),
     FARMER_SUSPENDED(NotificationCategory.ACCOUNT, true),
@@ -25,6 +26,11 @@ public enum NotificationKind {
     ORDER_DECLINED(NotificationCategory.ORDERS, true),
     ORDER_READY(NotificationCategory.ORDERS, true),
     ORDER_CANCELLED(NotificationCategory.ORDERS, true),
+    /**
+     * FR-072: an admin permanently deactivated the customer — distinct wording from ORDER_CANCELLED
+     * so the Farmer is not told the customer cancelled it themselves.
+     */
+    ORDER_CANCELLED_ACCOUNT_DEACTIVATED(NotificationCategory.ORDERS, true),
     /** FR-041: a favourite product went from no stock to some stock. */
     RESTOCK(NotificationCategory.FAVORITES, true),
     /** FR-122: a customer reported spoiled produce (spec §4.6) — to the stall. */

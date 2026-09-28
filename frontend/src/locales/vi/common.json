@@ -51,6 +51,12 @@
     "intent": "Ý định: {{intent}}",
     "photoUnavailable": "Không xem được ảnh này.",
     "photoFrom": "Ảnh của {{name}}",
+    "videoFrom": "Video của {{name}}",
+    "playVideo": "Phát video",
+    "loadingVideo": "Đang tải video…",
+    "videoUnavailable": "Video này không còn xem được.",
+    "videoCantPlay": "Trình duyệt này không phát được video này.",
+    "downloadVideo": "Tải video về",
     "seen": "Đã xem",
     "loadingThreads": "Đang tải cuộc trò chuyện…",
     "threadsErrorTitle": "Không tải được danh sách trò chuyện",
@@ -61,8 +67,8 @@
     "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "{{count}} tin chưa đọc",
     "sendFailed": "Tin nhắn chưa gửi được. Thử lại nhé.",
-    "photoFailed": "Ảnh chưa gửi được. Chọn ảnh JPEG, PNG hoặc WebP dưới 5 MB.",
-    "attachPhoto": "Thêm ảnh",
+    "mediaFailed": "Chưa gửi được tệp. Chọn ảnh hoặc video dưới 50 MB.",
+    "attachMedia": "Thêm ảnh hoặc video",
     "draftLabel": "Viết tin nhắn",
     "draftPlaceholder": "Viết tin nhắn",
     "send": "Gửi",
@@ -90,8 +96,14 @@
     "unpin": "Bỏ ghim",
     "productGone": "Sản phẩm này không còn được bán.",
     "tooFast": "Bạn gửi nhanh quá. Đợi một chút rồi thử lại.",
-    "photoTooBig": "Ảnh lớn hơn 5 MB. Chọn ảnh nhỏ hơn.",
-    "photoType": "Chọn ảnh JPEG, PNG hoặc WebP.",
+    "mediaTooBig": "Tệp này lớn hơn 50 MB. Chọn tệp nhỏ hơn.",
+    "mediaTooBigForServer": "Tệp này lớn hơn mức máy chủ đang cho phép. Chọn tệp nhỏ hơn.",
+    "mediaType": "Chọn ảnh (JPEG, PNG, WebP, GIF, AVIF hoặc HEIC) hoặc video (MP4, MOV hoặc WebM).",
+    "converting": "Đang chuyển đổi ảnh…",
+    "convertFailed": "Không chuyển đổi được ảnh này. Lưu lại dạng JPEG rồi thử lại.",
+    "uploading": "Đang gửi… {{percent}}%",
+    "uploadProgress": "Tiến độ tải lên",
+    "cancelUpload": "Huỷ",
     "moreThreads": "Xem thêm cuộc trò chuyện",
     "reportTitle": "Báo cáo tin nhắn này",
     "reportWhy": "Vì sao bạn báo cáo?",
@@ -533,7 +545,8 @@
     "result": {
       "product": "Sản phẩm",
       "market": "Chợ",
-      "farmer": "Gian hàng"
+      "farmer": "Gian hàng",
+      "order": "Đơn hàng"
     },
     "suggest": {
       "find": "Cuối tuần này mua cà chua ở đâu?",
@@ -757,6 +770,28 @@
     "text": "MarketLink dùng cookie thiết yếu để giữ bạn đăng nhập và giỏ hàng hoạt động. Không có cookie quảng cáo hay theo dõi nào. <a>Chính sách quyền riêng tư</a>.",
     "decline": "Từ chối",
     "accept": "Đồng ý"
+  },
+  "banDuration": {
+    "label": "Thời hạn",
+    "permanent": "Vĩnh viễn",
+    "temporary": "Tạm thời",
+    "days_one": "{{count}} ngày",
+    "days_other": "{{count}} ngày",
+    "specificTime": "Hoặc chọn một thời điểm cụ thể"
+  },
+  "accountDeactivated": {
+    "title": "Tài khoản của bạn đã bị vô hiệu hoá",
+    "generic": "Quản trị viên đã vô hiệu hoá tài khoản này, nên bạn đã bị đăng xuất.",
+    "whatNow": "Bạn vẫn có thể xem chợ và nông sản với tư cách khách, nhưng không thể đăng nhập hay đặt hàng trong thời gian này.",
+    "contactIntro": "Nếu bạn cho rằng đây là nhầm lẫn, hãy liên hệ",
+    "acknowledge": "Tôi đã hiểu"
+  },
+  "stallSuspended": {
+    "title": "Sạp của bạn đã bị tạm ngừng",
+    "generic": "Quản trị viên đã tạm ngừng sạp này, nên hiện khách hàng không nhìn thấy sạp nữa.",
+    "whatNow": "Những đơn khách đã đặt vẫn phải hoàn tất — vui lòng hoàn thành các đơn đó. Bạn không thể đăng sản phẩm, thay đổi tồn kho hay nhận đơn mới cho đến khi lệnh tạm ngừng được gỡ bỏ.",
+    "contactIntro": "Nếu bạn cho rằng đây là nhầm lẫn, hãy liên hệ",
+    "acknowledge": "Tôi đã hiểu"
   },
   "storageMode": {
     "room": "Nhiệt độ thường",

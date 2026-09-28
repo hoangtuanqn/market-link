@@ -43,13 +43,13 @@
   },
   "whatItDoes": {
     "title": "What deactivating does",
-    "text": "They cannot sign in or place a new order. Orders already placed are not touched, so a stall still hands over what it has set aside and nobody loses food that was picked for them."
+    "text": "They cannot sign in or place a new order, and are signed out everywhere right away. A temporary ban leaves their orders alone; a permanent one also cancels any order still placed or accepted and returns the stock."
   },
   "deactivate": {
     "title": "Deactivate {{name}}?",
-    "text": "They cannot sign in or order again until an admin reactivates them. Orders already placed run to the end, so no stall is left holding food nobody collects.",
-    "reason": "Reason (kept in this toast only, not saved on the account)",
-    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
+    "text": "They are signed out everywhere right away and cannot sign in or place orders. A temporary ban leaves their orders alone; a permanent one also cancels any order still placed or accepted and returns the stock.",
+    "reason": "Reason",
+    "reasonRequired": "Choose at least one reason or add a note.",
     "keep": "Not yet",
     "confirm": "Deactivate"
   },
@@ -71,5 +71,25 @@
     "items": "Items",
     "total": "Total",
     "status": "Status"
+  },
+  "history": {
+    "title": "Account history",
+    "noun": "account history",
+    "system": "System (auto)",
+    "col": {
+      "when": "When",
+      "action": "Action",
+      "reason": "Reason",
+      "until": "Until",
+      "by": "By"
+    },
+    "action": {
+      "active": "Reactivated",
+      "inactive": "Deactivated"
+    },
+    "empty": {
+      "title": "No history yet",
+      "text": "Every deactivate or reactivate on this account will show up here."
+    }
   }
 }

@@ -2,12 +2,14 @@ package com.techx.intervue.modules.chat.services.impl;
 
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.resources.ParsedMessage;
+import java.text.Normalizer;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
@@ -147,20 +149,89 @@ public class IntentClassifier {
                     "it",
                     "kg");
 
+    /**
+     * Phrases that contain a trigger word without being about it: "gia đình" (family) holds "gia"
+     * (price). They are taken out before the triggers are matched.
+     */
+    private static final List<String> NOT_A_PRICE =
+            List.of("gia dinh", "tham gia", "quoc gia", "chuyen gia", "gia nhap");
+
+    /**
+     * "open" and "close" are about a market only when the question is not about an account or an
+     * order: "how do I close my account" is not asking for opening hours.
+     */
+    private static final List<String> OPEN_CLOSE = List.of("open", "close");
+
+    private static final List<String> NOT_ABOUT_A_MARKET =
+            List.of("account", "accounts", "order", "orders", "password");
+
+    /** Letters only Vietnamese uses: ă đ ơ ư and the precomposed U+1EA0…U+1EF9 block (ạ ả ấ …). */
+    private static final Pattern VIETNAMESE_LETTER =
+            Pattern.compile("[ăđơưĂĐƠƯ\\x{1EA0}-\\x{1EF9}]");
+
+    /**
+     * Words common enough in a question to tell Vietnamese typed without diacritics ("ca chua gia
+     * bao nhieu") from English.
+     */
+    private static final List<String> VIETNAMESE_WORDS =
+            List.of(
+                    "gia",
+                    "bao nhieu",
+                    "tim",
+                    "mua",
+                    "ban",
+                    "o dau",
+                    "cho",
+                    "may gio",
+                    "mo cua",
+                    "dong cua",
+                    "hop",
+                    "hom nay",
+                    "ngay mai",
+                    "chu nhat",
+                    "thu hai",
+                    "thu ba",
+                    "thu tu",
+                    "thu nam",
+                    "thu sau",
+                    "thu bay",
+                    "xin chao",
+                    "chao",
+                    "giup",
+                    "huong dan",
+                    "khong",
+                    "nao",
+                    "toi",
+                    "minh",
+                    "lay hang",
+                    "nhan hang",
+                    "khung gio",
+                    "nong dan",
+                    "gian hang",
+                    "co mat",
+                    "con hang",
+                    "het hang");
+
     public ParsedMessage classify(String message, LocalDate today) {
         String normalized = TextNormalizer.normalize(message);
         String padded = " " + normalized + " ";
+        String matchable = removePhrases(padded, NOT_A_PRICE);
         Integer dayOfWeek = extractDay(padded, today);
+        boolean aboutAnAccount = containsAny(padded, NOT_ABOUT_A_MARKET);
 
         ChatIntent intent = null;
         for (Map.Entry<ChatIntent, List<String>> entry : DOMAIN_TRIGGERS.entrySet()) {
-            if (containsAny(padded, entry.getValue())) {
+            List<String> phrases = entry.getValue();
+            if (entry.getKey() == ChatIntent.MARKET_HOURS && aboutAnAccount) {
+                phrases = phrases.stream().filter(p -> !OPEN_CLOSE.contains(p)).toList();
+            }
+            if (containsAny(matchable, phrases)) {
                 intent = entry.getKey();
                 break;
             }
         }
 
-        String keyword = extractKeyword(padded);
+        String keyword = extractKeyword(matchable);
 
         if (intent == null) {
             if (keyword.isEmpty() && containsAny(padded, GREETING_TRIGGERS)) {
@@ -173,7 +244,20 @@ public class IntentClassifier {
                 intent = ChatIntent.UNKNOWN;
             }
         }
-        return new ParsedMessage(intent, normalized, keyword, dayOfWeek);
+        return new ParsedMessage(
+                intent, normalized, keyword, dayOfWeek, isVietnamese(message, padded));
+    }
+
+    /**
+     * A Vietnamese-only letter anywhere, or a common Vietnamese word once the diacritics are gone.
+     * French or Spanish accents (é, ñ) are not enough, so those questions get the English answer.
+     */
+    static boolean isVietnamese(String message, String padded) {
+        if (message == null) {
+            return false;
+        }
+        String composed = Normalizer.normalize(message, Normalizer.Form.NFC);
+        return VIETNAMESE_LETTER.matcher(composed).find() || containsAny(padded, VIETNAMESE_WORDS);
     }
 
     private static Integer extractDay(String padded, LocalDate today) {

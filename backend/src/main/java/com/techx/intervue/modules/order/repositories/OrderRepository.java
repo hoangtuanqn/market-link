@@ -4,6 +4,8 @@ import com.techx.intervue.modules.order.entities.Order;
 import com.techx.intervue.modules.order.enums.OrderStatus;
 import jakarta.persistence.LockModeType;
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
@@ -14,6 +16,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     /** C5-6: OrderCodeGenerator asks before inserting; UNIQUE(order_code) is the last backstop. */
     boolean existsByOrderCode(String orderCode);
+
+    /** FR-072: a customer's still-open orders, for cancelAllForDeactivatedCustomer. */
+    List<Order> findByCustomerIdAndStatusIn(Long customerId, Collection<OrderStatus> statuses);
 
     /**
      * C5-8 (Task 5.5): every status change / cancel / edit path loads the order through here first

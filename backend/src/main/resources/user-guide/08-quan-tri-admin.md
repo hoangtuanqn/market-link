@@ -88,7 +88,7 @@ Giọng của MarketLink, áp dụng cho mọi thông báo:
 5. **Viết thường theo câu**, không viết hoa toàn bộ, không emoji.
 6. Tiêu đề tối đa 150 ký tự, nội dung tối đa 1000 ký tự.
 
-Định dạng: tiền `25.000 ₫`, ngày `dd/MM/yyyy`, giờ 24h `06:00`, thứ viết tắt `T2…CN`.
+Định dạng: tiền đô la Mỹ `$1.50`, ngày `dd/MM/yyyy`, giờ 24h `06:00`, thứ viết tắt `T2…CN`.
 
 ## Thông báo cho người đọc nhiều ngôn ngữ
 
