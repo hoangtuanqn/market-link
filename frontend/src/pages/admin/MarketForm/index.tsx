@@ -45,7 +45,6 @@ type FormState = {
   close: string;
   lat: number;
   lng: number;
-  notes: string;
   /** URLs already uploaded via POST /admin/markets/images; the first one becomes the cover photo. */
   images: string[];
 };
@@ -65,7 +64,6 @@ const EMPTY: FormState = {
   close: '10:00',
   lat: 10.7769,
   lng: 106.7009,
-  notes: '',
   images: [],
 };
 
@@ -85,7 +83,7 @@ const SERVER_FIELDS: Record<string, keyof FormErrors> = {
   images: 'images',
 };
 
-const fromMarket = (m: MarketType, notes: string): FormState => ({
+const fromMarket = (m: MarketType): FormState => ({
   name: m.name,
   addressParts: m.addressParts ?? emptyAddress(),
   days: m.days,
@@ -93,7 +91,6 @@ const fromMarket = (m: MarketType, notes: string): FormState => ({
   close: m.close,
   lat: m.lat,
   lng: m.lng,
-  notes,
   images: m.images ?? [],
 });
 
@@ -122,8 +119,7 @@ const AdminMarketFormPage = () => {
   const existing = load.kind === 'ready' ? load.data : null;
 
   // The form mirrors the loaded market until something is typed, then it is its own state (no effect needed).
-  // Notes have no API yet (see marketAdmin removal in Task 12), so an edited market always starts with an empty note.
-  const loadedForm = existing ? fromMarket(existing, '') : EMPTY;
+  const loadedForm = existing ? fromMarket(existing) : EMPTY;
   const [edited, setEdited] = useState<FormState | null>(null);
   const form = edited ?? loadedForm;
   const setForm = (next: FormState | ((current: FormState) => FormState)) =>
@@ -544,18 +540,6 @@ const AdminMarketFormPage = () => {
               onBlur={() => onCoordBlur('lng')}
               error={errors.lng}
             />
-
-            <div className="flex flex-col gap-1.5 sm:col-span-2">
-              <label htmlFor="market-notes" className="text-small font-bold">
-                {t('field.notes')}
-              </label>
-              <textarea
-                id="market-notes"
-                value={form.notes}
-                onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                className="border-line-strong bg-surface-raised focus:outline-focus min-h-18 rounded-sm border-[1.5px] p-3 focus:outline-2"
-              />
-            </div>
 
             <div className="flex flex-col gap-2 sm:col-span-2">
               <span className="text-small font-bold">

@@ -108,7 +108,7 @@ describe('ConversationApi', () => {
 
     const url = await ConversationApi.photoBlob(55);
 
-    expect(privateApi.get).toHaveBeenCalledWith('/attachments/55', { responseType: 'blob' });
+    expect(privateApi.get).toHaveBeenCalledWith('/attachments/55', { responseType: 'blob', timeout: 0 });
     expect(globalThis.URL.createObjectURL).toHaveBeenCalledWith(blob);
     expect(url).toBe('blob:fake');
   });

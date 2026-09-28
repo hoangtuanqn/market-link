@@ -50,6 +50,8 @@
     "you": "Bạn",
     "intent": "Ý định: {{intent}}",
     "photoUnavailable": "Không xem được ảnh này.",
+    "previewPhoto": "Ảnh",
+    "previewVideo": "Video",
     "photoFrom": "Ảnh của {{name}}",
     "videoFrom": "Video của {{name}}",
     "playVideo": "Phát video",
@@ -495,6 +497,10 @@
         "farmerApplications": {
           "title": "Đơn đăng ký nhà vườn",
           "note": "Khi có người đăng ký bán hàng trên MarketLink"
+        },
+        "feedback": {
+          "title": "Góp ý",
+          "note": "Khi có người gửi báo lỗi, đề xuất hoặc câu hỏi"
         },
         "qualityReports": {
           "title": "Báo hàng hư",

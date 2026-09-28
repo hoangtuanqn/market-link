@@ -50,6 +50,8 @@
     "you": "Anda",
     "intent": "Maksud: {{intent}}",
     "photoUnavailable": "Foto ini tidak tersedia.",
+    "previewPhoto": "Foto",
+    "previewVideo": "Video",
     "photoFrom": "Foto dari {{name}}",
     "videoFrom": "Video dari {{name}}",
     "playVideo": "Putar video",
@@ -495,6 +497,10 @@
         "farmerApplications": {
           "title": "Pendaftaran Farmer",
           "note": "Saat seseorang mendaftar berjualan di MarketLink"
+        },
+        "feedback": {
+          "title": "Masukan",
+          "note": "Saat seseorang mengirim laporan bug, saran, atau pertanyaan"
         },
         "qualityReports": {
           "title": "Laporan produk rusak",

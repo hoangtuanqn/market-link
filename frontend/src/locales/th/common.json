@@ -50,6 +50,8 @@
     "you": "คุณ",
     "intent": "เจตนา: {{intent}}",
     "photoUnavailable": "ไม่สามารถดูรูปนี้ได้",
+    "previewPhoto": "รูป",
+    "previewVideo": "วิดีโอ",
     "photoFrom": "รูปจาก {{name}}",
     "videoFrom": "วิดีโอจาก {{name}}",
     "playVideo": "เล่นวิดีโอ",
@@ -495,6 +497,10 @@
         "farmerApplications": {
           "title": "ใบสมัคร Farmer",
           "note": "เมื่อมีคนสมัครขายบน MarketLink"
+        },
+        "feedback": {
+          "title": "ข้อเสนอแนะ",
+          "note": "เมื่อมีคนส่งรายงานข้อผิดพลาด ข้อเสนอแนะ หรือคำถาม"
         },
         "qualityReports": {
           "title": "รายงานสินค้าเสีย",

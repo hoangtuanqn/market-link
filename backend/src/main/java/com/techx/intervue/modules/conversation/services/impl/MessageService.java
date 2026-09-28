@@ -215,7 +215,8 @@ public class MessageService implements MessageServiceInterface {
         return kind == MessageKind.IMAGE || kind == MessageKind.VIDEO;
     }
 
-    private static String threadPreview(MessageKind kind, String body) {
+    /** Package-private: ModerationService recomputes the preview after hiding the last message. */
+    static String threadPreview(MessageKind kind, String body) {
         return switch (kind) {
             case IMAGE -> IMAGE_PREVIEW;
             case VIDEO -> VIDEO_PREVIEW;

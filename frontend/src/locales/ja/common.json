@@ -50,6 +50,8 @@
     "you": "あなた",
     "intent": "インテント：{{intent}}",
     "photoUnavailable": "この写真は表示できません。",
+    "previewPhoto": "写真",
+    "previewVideo": "動画",
     "photoFrom": "{{name}} さんの写真",
     "videoFrom": "{{name}} さんからの動画",
     "playVideo": "動画を再生",
@@ -495,6 +497,10 @@
         "farmerApplications": {
           "title": "Farmer の申請",
           "note": "誰かが MarketLink での販売を申請したとき"
+        },
+        "feedback": {
+          "title": "フィードバック",
+          "note": "誰かが不具合報告、ご提案、ご質問を送ったとき"
         },
         "qualityReports": {
           "title": "傷んだ商品の報告",

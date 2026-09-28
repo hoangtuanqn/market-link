@@ -50,6 +50,8 @@
     "you": "你",
     "intent": "意图：{{intent}}",
     "photoUnavailable": "无法查看此照片。",
+    "previewPhoto": "照片",
+    "previewVideo": "视频",
     "photoFrom": "{{name}} 的照片",
     "videoFrom": "来自 {{name}} 的视频",
     "playVideo": "播放视频",
@@ -495,6 +497,10 @@
         "farmerApplications": {
           "title": "农户申请",
           "note": "有人申请在 MarketLink 上销售时"
+        },
+        "feedback": {
+          "title": "反馈",
+          "note": "有人提交缺陷报告、建议或问题时"
         },
         "qualityReports": {
           "title": "变质商品报告",

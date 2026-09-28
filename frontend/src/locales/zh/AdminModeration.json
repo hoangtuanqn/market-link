@@ -17,13 +17,12 @@
   "recentlyListed": "最近上架的商品",
   "search": {
     "label": "搜索商品",
-    "placeholder": "商品或摊位",
+    "placeholder": "商品或分类",
     "submit": "搜索"
   },
   "col": {
     "product": "商品",
     "price": "价格",
-    "description": "描述",
     "item": "内容",
     "owner": "发布者",
     "reason": "原因",
@@ -82,6 +81,7 @@
       "other": "其他原因"
     },
     "reportedBy": "举报人：{{name}}",
+    "note": "举报人备注：{{note}}",
     "sentBy": "发送人：{{name}}",
     "review": "查看",
     "reviewLabel": "查看 {{name}} 的举报",

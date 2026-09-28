@@ -1,6 +1,7 @@
 import type { ApiResponse } from '@/types/api.types';
 import type { CountryOption, ProvinceOption, WardOption } from '@/types/address.types';
-import { publicApi } from '@/utils/axiosInstance';
+import { privateApi, publicApi } from '@/utils/axiosInstance';
+import Session from '@/utils/session';
 
 /**
  * The same lists open on the sign-up, profile and market forms, and they only change with a migration: keep each one
@@ -19,8 +20,14 @@ function remembered<T>(key: string, load: () => Promise<T>): Promise<T> {
   return pending;
 }
 
+/**
+ * FR-078: these reads are public, but an admin still browses them from the admin screens while maintenance mode is on,
+ * and MaintenanceModeFilter only lets an authenticated admin through. Signed in → `privateApi` (token + refresh).
+ */
+const readApi = () => (Session.getRawUser() ? privateApi : publicApi);
+
 const data = async <T>(path: string, params?: Record<string, string>) =>
-  (await publicApi.get<ApiResponse<T>>(path, { params })).data.data;
+  (await readApi().get<ApiResponse<T>>(path, { params })).data.data;
 
 /** FR-001, FR-073 — the lists behind the address fields (docs/api-contract.md §3a). All public. */
 class GeoApi {

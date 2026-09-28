@@ -27,6 +27,7 @@ import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -147,6 +148,7 @@ public class ModerationService implements ModerationServiceInterface {
                             .findById(message.getConversationId())
                             .orElseThrow(
                                     () -> new EntityNotFoundException("Conversation not found."));
+            refreshPreviewAfterHiding(thread, messageId);
             // Only publish once committed, like MessageService: do not publish a change that could
             // roll back
             TransactionHelper.afterCommit(() -> events.messageHidden(thread, messageId));
@@ -155,6 +157,32 @@ public class ModerationService implements ModerationServiceInterface {
                 .forEach(r -> r.markHandledBy(adminId, ReportStatus.ACTIONED, now));
 
         return toModerated(message, true);
+    }
+
+    /**
+     * The thread list and the chat header show the last message's preview. When the hidden message
+     * is the newest one still shown, fall back to the newest visible message before it, or to no
+     * preview when none is left, so the hidden text stops showing there.
+     */
+    private void refreshPreviewAfterHiding(Conversation thread, Long hiddenId) {
+        Message stillShown =
+                messages
+                        .findByConversationIdAndHiddenAtIsNullOrderByIdDesc(
+                                thread.getId(), PageRequest.of(0, 2))
+                        .stream()
+                        .filter(m -> !m.getId().equals(hiddenId))
+                        .findFirst()
+                        .orElse(null);
+        if (stillShown != null && stillShown.getId() > hiddenId) {
+            return;
+        }
+        thread.setLastMessageText(
+                stillShown == null
+                        ? null
+                        : MessageService.threadPreview(
+                                stillShown.getKind(),
+                                Objects.requireNonNullElse(stillShown.getBody(), "")));
+        conversations.save(thread);
     }
 
     @Override

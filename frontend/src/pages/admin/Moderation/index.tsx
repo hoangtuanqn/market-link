@@ -9,6 +9,7 @@ import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
 import { SelectField } from '@/components/ui/input';
+import { Pagination } from '@/components/ui/pagination';
 import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
 import { ADMIN_CUSTOMERS_PATH } from '@/constants/nav';
@@ -34,6 +35,9 @@ const REASONS = ['advertising', 'abusive', 'offTopic', 'claim', 'other'] as cons
 type HideTarget = { kind: 'review' | 'listing'; name: string; id: number } | null;
 const NO_PRODUCTS: ProductType[] = [];
 
+/** Both queues page on the server, so older listings and reviews stay reachable (FR-074). */
+const PAGE_SIZE = 20;
+
 /**
  * FR-074 — hide product listings or reviews that break the guidelines. Hidden items stay in the database; the review
  * hide endpoint carries no reason (unlike listings, which record one for the owner).
@@ -45,16 +49,18 @@ const AdminModerationPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const asked = searchParams.get('tab') as Tab | null;
   const tab: Tab = asked && TABS.includes(asked) ? asked : 'reviews';
-  const setTab = (next: Tab) => setSearchParams(next === 'reviews' ? {} : { tab: next }, { replace: true });
+  const [reviewPage, setReviewPage] = useState(1);
+  const setTab = (next: Tab) => {
+    setReviewPage(1);
+    setSearchParams(next === 'reviews' ? {} : { tab: next }, { replace: true });
+  };
   const [hidingBusy, setHidingBusy] = useState(false);
   const [unhidingId, setUnhidingId] = useState<number | null>(null);
-  // What customers currently see (contract §5, newest first); hiding removes a row from this list.
-  const {
-    state: listedLoad,
-    retry: retryListed,
-    mutate: mutateListed,
-  } = useRequest('moderation-products', () =>
-    ProductApi.list({ pageSize: 50, sort: 'newest' }).then((result) => result.items),
+  // What customers currently see (contract §5, newest first), searched and paged on the server; hiding refetches.
+  const [search, setSearch] = useState('');
+  const [productPage, setProductPage] = useState(1);
+  const { state: listedLoad, retry: retryListed } = useRequest(`moderation-products:${search}:${productPage}`, () =>
+    ProductApi.list({ q: search || undefined, sort: 'newest', page: productPage, pageSize: PAGE_SIZE }),
   );
   // Listings an admin has hidden; the 'hidden' tab lists them so each can be unhidden (FR-074).
   const {
@@ -83,21 +89,33 @@ const AdminModerationPage = () => {
     state: reviewsLoad,
     retry: retryReviews,
     mutate: mutateReviews,
-  } = useRequest(`admin-reviews:${effectiveFilter}`, () =>
-    ReviewApi.adminList(
-      effectiveFilter === 'lowRated'
-        ? { maxRating: 2, status: 'visible', pageSize: 50 }
+  } = useRequest(`admin-reviews:${effectiveFilter}:${reviewPage}`, () =>
+    ReviewApi.adminList({
+      ...(effectiveFilter === 'lowRated'
+        ? { maxRating: 2, status: 'visible' }
         : effectiveFilter === 'hidden'
-          ? { status: 'hidden', pageSize: 50 }
-          : { status: 'visible', pageSize: 50 },
-    ).then((r) => r.items),
+          ? { status: 'hidden' }
+          : { status: 'visible' }),
+      page: reviewPage,
+      pageSize: PAGE_SIZE,
+    }),
   );
-  const reviewItems = reviewsLoad.kind === 'ready' ? reviewsLoad.data : [];
+  const reviewItems = reviewsLoad.kind === 'ready' ? reviewsLoad.data.items : [];
+  const reviewTotal = reviewsLoad.kind === 'ready' ? reviewsLoad.data.total : 0;
+  /** A review left this queue (hidden or unhidden): drop it, or refetch when that emptied a page that has more. */
+  const dropReview = (id: number) => {
+    if (reviewItems.length > 1) {
+      mutateReviews((current) => ({
+        ...current,
+        items: current.items.filter((r) => r.id !== id),
+        total: current.total - 1,
+      }));
+    } else if (reviewPage > 1) setReviewPage(reviewPage - 1);
+    else retryReviews();
+  };
 
-  const needle = query.trim().toLowerCase();
-  const listed = (listedLoad.kind === 'ready' ? listedLoad.data : NO_PRODUCTS).filter(
-    (p) => !needle || `${p.name} ${p.stall}`.toLowerCase().includes(needle),
-  );
+  const listed = listedLoad.kind === 'ready' ? listedLoad.data.items : NO_PRODUCTS;
+  const listedTotal = listedLoad.kind === 'ready' ? listedLoad.data.total : 0;
 
   const confirmHide = async () => {
     if (!hiding) return;
@@ -105,11 +123,13 @@ const AdminModerationPage = () => {
     try {
       if (hiding.kind === 'listing') {
         await ProductApi.adminHide(hiding.id, reason || t(`reason.${REASONS[0]}`));
-        mutateListed((list) => list.filter((p) => p.id !== hiding.id));
+        // Refetch so the page fills back up from the next one; step back when it was the last row of the last page.
+        if (listed.length === 1 && productPage > 1) setProductPage(productPage - 1);
+        else retryListed();
         retryHiddenListings();
       } else {
         await ReviewApi.hide(hiding.id);
-        mutateReviews((list) => list.filter((r) => r.id !== hiding.id));
+        dropReview(hiding.id);
       }
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
@@ -126,7 +146,7 @@ const AdminModerationPage = () => {
     setUnhidingId(id);
     try {
       await ReviewApi.unhide(id);
-      mutateReviews((list) => list.filter((r) => r.id !== id));
+      dropReview(id);
       Notification.success({ text: t('action.unhidden') });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
@@ -205,7 +225,6 @@ const AdminModerationPage = () => {
         </>
       ),
     },
-    { key: 'desc', label: t('col.description'), render: (p) => <span className="text-small">{p.desc}</span> },
     {
       key: 'action',
       label: '',
@@ -266,7 +285,14 @@ const AdminModerationPage = () => {
           {tab === 'reviews' && (
             <div role="group" aria-label={t('reviewFilterLabel')} className="flex flex-wrap gap-2">
               {REVIEW_FILTERS.map((f) => (
-                <Chip key={f} pressed={reviewFilter === f} onClick={() => setReviewFilter(f)}>
+                <Chip
+                  key={f}
+                  pressed={reviewFilter === f}
+                  onClick={() => {
+                    setReviewFilter(f);
+                    setReviewPage(1);
+                  }}
+                >
                   {t(`reviewFilter.${f}`)}
                 </Chip>
               ))}
@@ -325,6 +351,9 @@ const AdminModerationPage = () => {
           ) : (
             <DataState title={t('empty.title')} text={t('empty.text')} />
           )}
+          {reviewsLoad.kind === 'ready' && reviewTotal > PAGE_SIZE && (
+            <Pagination page={reviewPage} pages={Math.ceil(reviewTotal / PAGE_SIZE)} onChange={setReviewPage} />
+          )}
         </div>
       )}
 
@@ -332,7 +361,11 @@ const AdminModerationPage = () => {
         <div className="flex flex-col gap-4">
           <form
             role="search"
-            onSubmit={(e) => e.preventDefault()}
+            onSubmit={(e) => {
+              e.preventDefault();
+              setSearch(query.trim());
+              setProductPage(1);
+            }}
             className="border-line-strong bg-surface-raised focus-within:outline-focus flex w-full max-w-105 items-stretch overflow-hidden rounded-sm border-[1.5px] focus-within:outline-2 focus-within:outline-offset-1 [&_button]:rounded-none"
           >
             <label htmlFor="moderation-q" className="sr-only">
@@ -342,7 +375,14 @@ const AdminModerationPage = () => {
               id="moderation-q"
               type="search"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                // Clearing the box (or its clear button) shows every listing again without another Search press.
+                if (!e.target.value) {
+                  setSearch('');
+                  setProductPage(1);
+                }
+              }}
               placeholder={t('search.placeholder')}
               className="text-body min-w-0 flex-1 bg-transparent px-3 outline-none"
             />
@@ -353,7 +393,12 @@ const AdminModerationPage = () => {
           ) : listedLoad.kind === 'error' ? (
             <LoadError noun={t('error.noun')} onRetry={retryListed} />
           ) : listed.length ? (
-            <Table caption={t('recentlyListed')} columns={productColumns} rows={listed} />
+            <>
+              <Table caption={t('recentlyListed')} columns={productColumns} rows={listed} />
+              {listedTotal > PAGE_SIZE && (
+                <Pagination page={productPage} pages={Math.ceil(listedTotal / PAGE_SIZE)} onChange={setProductPage} />
+              )}
+            </>
           ) : (
             <DataState title={t('empty.title')} text={t('empty.text')} />
           )}

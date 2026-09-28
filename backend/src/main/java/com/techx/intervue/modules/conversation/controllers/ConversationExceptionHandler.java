@@ -35,6 +35,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /**
  * HTTP codes per spec section 6.3, for the chat module's controllers. An oversized multipart error
@@ -86,6 +88,24 @@ public class ConversationExceptionHandler {
                 "VALIDATION_ERROR",
                 INVALID_MESSAGE,
                 List.of(FieldErrorResource.builder().message(INVALID_MESSAGE).build()));
+    }
+
+    /**
+     * FR-115: POST /attachments sent without a multipart body, or without its `file` part → 400 on
+     * the `file` field instead of a 500. An oversized file never reaches this: it fails while the
+     * body is read, before a controller is picked, and UploadExceptionHandler answers it (413).
+     */
+    @ExceptionHandler({MultipartException.class, MissingServletRequestPartException.class})
+    ResponseEntity<ApiResource<Void>> missingFile(Exception e) {
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                INVALID_MESSAGE,
+                List.of(
+                        FieldErrorResource.builder()
+                                .field("file")
+                                .message("Choose a photo or a video to upload.")
+                                .build()));
     }
 
     @ExceptionHandler({

@@ -117,6 +117,50 @@ describe('ReportedMessages', () => {
     expect(screen.queryByText('Chuyển khoản trước 500k')).not.toBeInTheDocument();
   });
 
+  /** The reporter's own words are part of the report: show them in the queue and in the report. */
+  it("shows the reporter's note in the row and in the report", async () => {
+    vi.mocked(ModerationApi.reports).mockResolvedValue(
+      ok({ items: [{ ...row, note: 'Asked me to pay first' }], page: 1, pageSize: 20, total: 1 }),
+    );
+    vi.mocked(ModerationApi.report).mockResolvedValue(ok({ ...detail, note: 'Asked me to pay first' }));
+    render(<ReportedMessages />);
+
+    expect(await screen.findByText("Reporter's note: Asked me to pay first")).toBeInTheDocument();
+    await userEvent.click(screen.getByRole('button', { name: /review/i }));
+    await screen.findByRole('list', { name: /messages around/i });
+    expect(screen.getAllByText("Reporter's note: Asked me to pay first")).toHaveLength(2);
+  });
+
+  it('drops every report of a hidden message, not only the one reviewed', async () => {
+    const second = { ...row, reportId: 10, reporterName: 'Bình' };
+    const other = { ...row, reportId: 11, messageId: 60, reporterName: 'Chi', preview: 'Another message' };
+    vi.mocked(ModerationApi.reports).mockResolvedValue(
+      ok({ items: [row, second, other], page: 1, pageSize: 20, total: 3 }),
+    );
+    render(<ReportedMessages />);
+    await userEvent.click(await screen.findByRole('button', { name: 'Review report from An' }));
+    await userEvent.click(await screen.findByRole('button', { name: /hide message/i }));
+    await userEvent.click(screen.getByRole('button', { name: /^hide$/i }));
+
+    expect(await screen.findByText('Another message')).toBeInTheDocument();
+    expect(screen.queryByText('Chuyển khoản trước 500k')).not.toBeInTheDocument();
+    expect(ModerationApi.reports).toHaveBeenCalledTimes(1);
+  });
+
+  it('fetches the next reports when handling one empties the page but more are waiting', async () => {
+    vi.mocked(ModerationApi.reports)
+      .mockResolvedValueOnce(ok({ items: [row], page: 1, pageSize: 20, total: 21 }))
+      .mockResolvedValueOnce(
+        ok({ items: [{ ...row, reportId: 30, preview: 'Next in line' }], page: 1, pageSize: 20, total: 20 }),
+      );
+    render(<ReportedMessages />);
+    await userEvent.click(await screen.findByRole('button', { name: /review/i }));
+    await userEvent.click(await screen.findByRole('button', { name: /dismiss/i }));
+
+    expect(await screen.findByText('Next in line')).toBeInTheDocument();
+    expect(ModerationApi.reports).toHaveBeenCalledTimes(2);
+  });
+
   it('dismisses the report without hiding anything', async () => {
     render(<ReportedMessages />);
     await userEvent.click(await screen.findByRole('button', { name: /review/i }));

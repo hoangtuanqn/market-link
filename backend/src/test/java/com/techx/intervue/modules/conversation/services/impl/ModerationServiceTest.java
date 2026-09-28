@@ -572,6 +572,77 @@ class ModerationServiceTest {
         verify(events).messageHidden(thread, 101L);
     }
 
+    /** The thread list must stop showing the hidden text when it was the last message. */
+    @Test
+    void hidingTheLastMessageShowsThePreviousOneInTheThreadList() {
+        Message message = textMessageWithId(101L, "Send me a deposit first");
+        thread.noteNewMessage("Send me a deposit first", NOW);
+        when(messages.findById(101L)).thenReturn(Optional.of(message));
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        when(messages.findByConversationIdAndHiddenAtIsNullOrderByIdDesc(
+                        eq(42L), any(Pageable.class)))
+                .thenReturn(List.of(textMessageWithId(100L, "Do you still have greens?")));
+
+        service.hide(55L, 101L);
+
+        assertThat(thread.getLastMessageText()).isEqualTo("Do you still have greens?");
+        verify(conversations).save(thread);
+    }
+
+    @Test
+    void hidingTheLastMessageOfAPhotoThreadShowsThePhotoWord() {
+        thread.noteNewMessage("Send me a deposit first", NOW);
+        when(messages.findById(101L))
+                .thenReturn(Optional.of(textMessageWithId(101L, "Send me a deposit first")));
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        when(messages.findByConversationIdAndHiddenAtIsNullOrderByIdDesc(
+                        eq(42L), any(Pageable.class)))
+                .thenReturn(
+                        List.of(
+                                Message.builder()
+                                        .id(99L)
+                                        .conversationId(42L)
+                                        .senderId(7L)
+                                        .kind(MessageKind.IMAGE)
+                                        .createdAt(NOW)
+                                        .build()));
+
+        service.hide(55L, 101L);
+
+        assertThat(thread.getLastMessageText()).isEqualTo("Photo");
+    }
+
+    @Test
+    void hidingTheOnlyMessageLeavesNoPreview() {
+        thread.noteNewMessage("Send me a deposit first", NOW);
+        when(messages.findById(101L))
+                .thenReturn(Optional.of(textMessageWithId(101L, "Send me a deposit first")));
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        when(messages.findByConversationIdAndHiddenAtIsNullOrderByIdDesc(
+                        eq(42L), any(Pageable.class)))
+                .thenReturn(List.of());
+
+        service.hide(55L, 101L);
+
+        assertThat(thread.getLastMessageText()).isNull();
+    }
+
+    @Test
+    void hidingAnOlderMessageKeepsTheCurrentPreview() {
+        thread.noteNewMessage("Thanks, see you Saturday", NOW);
+        when(messages.findById(101L))
+                .thenReturn(Optional.of(textMessageWithId(101L, "Send me a deposit first")));
+        when(reports.existsByMessageId(101L)).thenReturn(true);
+        when(messages.findByConversationIdAndHiddenAtIsNullOrderByIdDesc(
+                        eq(42L), any(Pageable.class)))
+                .thenReturn(List.of(textMessageWithId(120L, "Thanks, see you Saturday")));
+
+        service.hide(55L, 101L);
+
+        assertThat(thread.getLastMessageText()).isEqualTo("Thanks, see you Saturday");
+        verify(conversations, never()).save(any(Conversation.class));
+    }
+
     @Test
     void hidingAnAlreadyHiddenMessageDoesNotPublishAgain() {
         Message message = textMessageWithId(101L, "Send me a deposit first");

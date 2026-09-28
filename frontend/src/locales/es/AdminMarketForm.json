@@ -16,7 +16,6 @@
     "lat": "Latitud",
     "lng": "Longitud",
     "lngHint": "O arrastra la chincheta. Los datos del mapa vienen de OpenStreetMap.",
-    "notes": "Notas para los puestos",
     "images": "Fotos"
   },
   "images": {

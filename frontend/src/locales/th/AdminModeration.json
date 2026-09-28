@@ -17,13 +17,12 @@
   "recentlyListed": "สินค้าที่เพิ่งลงประกาศ",
   "search": {
     "label": "ค้นหาสินค้า",
-    "placeholder": "สินค้าหรือร้านค้า",
+    "placeholder": "สินค้าหรือหมวดหมู่",
     "submit": "ค้นหา"
   },
   "col": {
     "product": "สินค้า",
     "price": "ราคา",
-    "description": "รายละเอียด",
     "item": "รายการ",
     "owner": "เจ้าของ",
     "reason": "เหตุผล",
@@ -82,6 +81,7 @@
       "other": "เหตุผลอื่น"
     },
     "reportedBy": "รายงานโดย {{name}}",
+    "note": "หมายเหตุจากผู้รายงาน: {{note}}",
     "sentBy": "ส่งโดย {{name}}",
     "review": "ตรวจสอบ",
     "reviewLabel": "ตรวจสอบรายงานจาก {{name}}",

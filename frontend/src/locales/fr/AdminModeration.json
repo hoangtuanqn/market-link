@@ -17,13 +17,12 @@
   "recentlyListed": "Produits récemment mis en ligne",
   "search": {
     "label": "Rechercher un produit",
-    "placeholder": "Produit ou étal",
+    "placeholder": "Produit ou catégorie",
     "submit": "Rechercher"
   },
   "col": {
     "product": "Produit",
     "price": "Prix",
-    "description": "Description",
     "item": "Élément",
     "owner": "Auteur",
     "reason": "Motif",
@@ -82,6 +81,7 @@
       "other": "Autre chose"
     },
     "reportedBy": "Signalé par {{name}}",
+    "note": "Note du signalement : {{note}}",
     "sentBy": "Envoyé par {{name}}",
     "review": "Examiner",
     "reviewLabel": "Examiner le signalement de {{name}}",

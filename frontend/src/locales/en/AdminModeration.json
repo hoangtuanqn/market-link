@@ -17,13 +17,12 @@
   "recentlyListed": "Recently listed products",
   "search": {
     "label": "Search products",
-    "placeholder": "Product or stall",
+    "placeholder": "Product or category",
     "submit": "Search"
   },
   "col": {
     "product": "Product",
     "price": "Price",
-    "description": "Description",
     "item": "Item",
     "owner": "Owner",
     "reason": "Reason",
@@ -82,6 +81,7 @@
       "other": "Something else"
     },
     "reportedBy": "Reported by {{name}}",
+    "note": "Reporter's note: {{note}}",
     "sentBy": "Sent by {{name}}",
     "review": "Review",
     "reviewLabel": "Review report from {{name}}",

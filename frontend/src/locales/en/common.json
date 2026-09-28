@@ -50,6 +50,8 @@
     "you": "You",
     "intent": "Intent: {{intent}}",
     "photoUnavailable": "This photo is not available.",
+    "previewPhoto": "Photo",
+    "previewVideo": "Video",
     "photoFrom": "Photo from {{name}}",
     "videoFrom": "Video from {{name}}",
     "playVideo": "Play video",
@@ -509,6 +511,10 @@
         "farmerApplications": {
           "title": "Farmer applications",
           "note": "When someone applies to sell on MarketLink"
+        },
+        "feedback": {
+          "title": "Feedback",
+          "note": "When someone sends a bug report, a suggestion or a question"
         },
         "qualityReports": {
           "title": "Spoiled produce reports",

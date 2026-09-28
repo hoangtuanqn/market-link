@@ -50,6 +50,8 @@
     "you": "나",
     "intent": "의도: {{intent}}",
     "photoUnavailable": "이 사진을 볼 수 없습니다.",
+    "previewPhoto": "사진",
+    "previewVideo": "동영상",
     "photoFrom": "{{name}} 님의 사진",
     "videoFrom": "{{name}}님이 보낸 동영상",
     "playVideo": "동영상 재생",
@@ -495,6 +497,10 @@
         "farmerApplications": {
           "title": "Farmer 신청",
           "note": "누군가 MarketLink 판매를 신청했을 때"
+        },
+        "feedback": {
+          "title": "의견",
+          "note": "누군가 버그 신고, 제안, 문의를 보냈을 때"
         },
         "qualityReports": {
           "title": "상한 상품 신고",

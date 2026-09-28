@@ -17,13 +17,12 @@
   "recentlyListed": "Sản phẩm mới đăng gần đây",
   "search": {
     "label": "Tìm sản phẩm",
-    "placeholder": "Sản phẩm hoặc sạp",
+    "placeholder": "Sản phẩm hoặc danh mục",
     "submit": "Tìm"
   },
   "col": {
     "product": "Sản phẩm",
     "price": "Giá",
-    "description": "Mô tả",
     "item": "Nội dung",
     "owner": "Chủ nội dung",
     "reason": "Lý do",
@@ -82,6 +81,7 @@
       "other": "Lý do khác"
     },
     "reportedBy": "{{name}} báo cáo",
+    "note": "Ghi chú của người báo cáo: {{note}}",
     "sentBy": "{{name}} gửi",
     "review": "Xem xét",
     "reviewLabel": "Xem báo cáo của {{name}}",

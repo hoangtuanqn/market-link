@@ -55,6 +55,17 @@ class CategoryServiceTest {
         return c;
     }
 
+    /** Seeded row: its slug is not what slugify("Eggs & dairy") would give. */
+    private static Category eggsAndDairy() {
+        Category c = new Category();
+        c.setId(3L);
+        c.setName("Eggs & dairy");
+        c.setSlug("eggs_and_dairy");
+        c.setSortOrder(3);
+        c.setActive(true);
+        return c;
+    }
+
     @Test
     void createDerivesSlugFromName() {
         when(repository.findBySlug("leafy-greens")).thenReturn(Optional.empty());
@@ -100,6 +111,59 @@ class CategoryServiceTest {
         assertThat(restored.name()).isEqualTo("leafy Greens");
         assertThat(restored.sortOrder()).isEqualTo(4);
         verify(repository).save(removed);
+    }
+
+    /** A seeded slug is not what slugify gives, so the removed row is found by its name. */
+    @Test
+    void createRestoresARemovedCategoryFoundByNameAndKeepsItsSlug() {
+        Category removed = eggsAndDairy();
+        removed.setActive(false);
+        when(repository.findBySlug("eggs-dairy")).thenReturn(Optional.empty());
+        when(repository.findByName("Eggs & dairy")).thenReturn(Optional.of(removed));
+        when(repository.save(any(Category.class))).thenAnswer(i -> i.getArgument(0));
+
+        CategoryResource restored = service.create(new CategoryRequest("Eggs & dairy", 3, 1, 7));
+
+        assertThat(restored.id()).isEqualTo(3L);
+        assertThat(restored.isActive()).isTrue();
+        assertThat(restored.slug()).isEqualTo("eggs_and_dairy");
+        verify(repository).save(removed);
+    }
+
+    @Test
+    void createRejectsAnActiveCategoryFoundByName() {
+        when(repository.findBySlug("eggs-dairy")).thenReturn(Optional.empty());
+        when(repository.findByName("Eggs & dairy")).thenReturn(Optional.of(eggsAndDairy()));
+
+        assertThatThrownBy(() -> service.create(new CategoryRequest("Eggs & dairy", 3, 1, 7)))
+                .isInstanceOf(DuplicateCategoryException.class);
+        verify(repository, never()).save(any());
+    }
+
+    @Test
+    void updateWithTheSameNameKeepsTheSeededSlug() {
+        Category c = eggsAndDairy();
+        when(repository.findById(3L)).thenReturn(Optional.of(c));
+        when(repository.save(any(Category.class))).thenAnswer(i -> i.getArgument(0));
+
+        CategoryResource saved = service.update(3L, new CategoryRequest("Eggs & Dairy", 5, 2, 9));
+
+        assertThat(saved.slug()).isEqualTo("eggs_and_dairy");
+        assertThat(saved.name()).isEqualTo("Eggs & Dairy");
+        assertThat(saved.sortOrder()).isEqualTo(5);
+        verify(repository, never()).existsBySlug(any());
+    }
+
+    @Test
+    void updateWithANewNameDerivesANewSlug() {
+        Category c = eggsAndDairy();
+        when(repository.findById(3L)).thenReturn(Optional.of(c));
+        when(repository.existsBySlug("dairy")).thenReturn(false);
+        when(repository.save(any(Category.class))).thenAnswer(i -> i.getArgument(0));
+
+        CategoryResource saved = service.update(3L, new CategoryRequest("Dairy", 3, 1, 7));
+
+        assertThat(saved.slug()).isEqualTo("dairy");
     }
 
     @Test

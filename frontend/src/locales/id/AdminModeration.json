@@ -17,13 +17,12 @@
   "recentlyListed": "Produk yang baru dipasang",
   "search": {
     "label": "Cari produk",
-    "placeholder": "Produk atau lapak",
+    "placeholder": "Produk atau kategori",
     "submit": "Cari"
   },
   "col": {
     "product": "Produk",
     "price": "Harga",
-    "description": "Deskripsi",
     "item": "Butir",
     "owner": "Pemilik",
     "reason": "Alasan",
@@ -82,6 +81,7 @@
       "other": "Alasan lain"
     },
     "reportedBy": "Dilaporkan oleh {{name}}",
+    "note": "Catatan pelapor: {{note}}",
     "sentBy": "Dikirim oleh {{name}}",
     "review": "Tinjau",
     "reviewLabel": "Tinjau laporan dari {{name}}",
