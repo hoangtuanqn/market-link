@@ -29,7 +29,7 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
   const href = `/products/${product.id}`;
 
   return (
-    <Card as="article" className="relative flex flex-col overflow-hidden">
+    <Card as="article" className="relative flex h-full flex-col overflow-hidden">
       {/* punched hole */}
       <span
         aria-hidden="true"
@@ -71,53 +71,66 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
         />
       </div>
 
-      <div className="flex flex-col gap-2 p-4">
-        <h3 className={Helper.cn('text-[17px] leading-tight font-bold', soldOut && 'text-ink-muted')}>
-          {/* after:inset-0 stretches the hit area over the whole card (the Card is relative), so a
-              finger landing on the photo or the price opens the product too. The two buttons sit
-              above it with z-2 — wrapping the card in an <a> instead would nest them inside a link. */}
-          <Link
-            to={href}
-            className="text-inherit no-underline after:absolute after:inset-0 hover:underline hover:underline-offset-3"
-          >
-            {product.name}
-          </Link>
-        </h3>
-        <p className="text-small text-ink-muted">
-          {product.stall}
-          {showMarket && ` · ${product.marketName}`}
-        </p>
-        <div className="my-1 flex flex-wrap items-center justify-between gap-x-2 gap-y-1.5">
-          <PriceTag amount={product.price} unit={product.unit} was={product.was} />
-          <span
-            className={Helper.cn(
-              'ml-auto text-[13px] whitespace-nowrap',
-              low ? 'text-warning-ink font-bold' : 'text-ink-muted',
-            )}
-          >
-            {stock}
-          </span>
+      <div className="flex flex-1 flex-col justify-between gap-3 p-4">
+        <div>
+          <h3 className={Helper.cn('line-clamp-1 text-[17px] leading-tight font-bold', soldOut && 'text-ink-muted')}>
+            {/* after:inset-0 stretches the hit area over the whole card (the Card is relative), so a
+                finger landing on the photo or the price opens the product too. The two buttons sit
+                above it with z-2 — wrapping the card in an <a> instead would nest them inside a link. */}
+            <Link
+              to={href}
+              className="text-inherit no-underline after:absolute after:inset-0 hover:underline hover:underline-offset-3"
+            >
+              {product.name}
+            </Link>
+          </h3>
+          <p className="text-small text-ink-muted mt-1 line-clamp-1">
+            {product.stall}
+            {showMarket && ` · ${product.marketName}`}
+          </p>
         </div>
-        {/* Restock alerts go through Favorites (Task 5), not a notify-me button here. */}
-        {soldOut ? null : (
-          <Button
-            size="sm"
-            className="relative z-2"
-            onClick={() =>
-              Cart.add({
-                productId: product.id,
-                name: product.name,
-                unit: product.unit,
-                price: product.price,
-                max: product.stock,
-                farmerId: product.farmerId ?? 0,
-                stallName: product.stall,
-              })
-            }
-          >
-            {t('product.addToCart')}
-          </Button>
-        )}
+
+        <div className="mt-auto flex flex-col gap-2.5">
+          <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-1">
+            <PriceTag amount={product.price} unit={product.unit} was={product.was} />
+            <span
+              className={Helper.cn(
+                'ml-auto text-[13px] whitespace-nowrap',
+                low ? 'text-warning-ink font-bold' : 'text-ink-muted',
+              )}
+            >
+              {stock}
+            </span>
+          </div>
+          {soldOut ? (
+            <Button
+              size="sm"
+              variant="secondary"
+              disabled
+              className="relative z-2 w-full cursor-not-allowed opacity-60"
+            >
+              {paused ? t('product.paused') : t('product.soldOut')}
+            </Button>
+          ) : (
+            <Button
+              size="sm"
+              className="relative z-2 w-full"
+              onClick={() =>
+                Cart.add({
+                  productId: product.id,
+                  name: product.name,
+                  unit: product.unit,
+                  price: product.price,
+                  max: product.stock,
+                  farmerId: product.farmerId ?? 0,
+                  stallName: product.stall,
+                })
+              }
+            >
+              {t('product.addToCart')}
+            </Button>
+          )}
+        </div>
       </div>
     </Card>
   );
