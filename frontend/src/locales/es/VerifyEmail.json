@@ -12,6 +12,7 @@
   "resendIn_one": "Enviar un código nuevo en {{count}} segundo",
   "resendIn_other": "Enviar un código nuevo en {{count}} segundos",
   "resending": "Enviando…",
+  "resendReady": "Ya puedes pedir un código nuevo.",
   "changeEmail": "¿Correo equivocado? Cámbialo",
   "fillAgain": "Rellenar el formulario de nuevo",
   "haveAccount": "Ya tengo una cuenta",

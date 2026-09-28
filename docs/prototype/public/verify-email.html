@@ -42,9 +42,10 @@
     <div class="pt-col-2">
       <p class="pt-small ml-muted">Nothing after a minute? Look in spam, or send a new code.</p>
       <div class="pt-row-2">
-        <button type="button" class="ml-btn ml-btn-secondary" id="resend" aria-live="polite" disabled>Send a new code in 60 seconds</button>
+        <button type="button" class="ml-btn ml-btn-secondary" id="resend" disabled>Send a new code in 60 seconds</button>
         <a class="ml-btn ml-btn-ghost" href="../public/register-customer.html">Wrong email? Change it</a>
       </div>
+      <p class="ml-sr" id="ready" aria-live="polite"></p>
     </div>
 
     <a class="pt-small" href="../public/login.html">I already have an account</a>
@@ -118,6 +119,8 @@
     document.getElementById('left').textContent = Math.floor(codeLeft / 60) + ':' + String(codeLeft % 60).padStart(2, '0');
     if (codeLeft === 0 && !locked) lock('This code can no longer be used', 'This code has expired. Send a new one.');
     resend.disabled = resendLeft > 0;
+    /* Screen readers hear once that a new code can go, not every second of the countdown */
+    document.getElementById('ready').textContent = resendLeft === 0 ? 'You can send a new code now.' : '';
     resend.textContent = resendLeft > 0 ? 'Send a new code in ' + resendLeft + (resendLeft === 1 ? ' second' : ' seconds') : 'Send a new code';
   }, 1000);
 

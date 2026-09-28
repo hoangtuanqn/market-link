@@ -63,6 +63,19 @@ describe('VerifyEmail', () => {
     expect(screen.getByText('lan@example.com')).toBeInTheDocument();
   });
 
+  /** Final review: the countdown is not read out every second; screen readers hear once that a new code can go. */
+  it('announces once that a new code can be sent, not every second of the countdown', () => {
+    park(30_000);
+    const { unmount } = renderAt();
+    expect(screen.getByRole('button', { name: /Send a new code in/ })).not.toHaveAttribute('aria-live');
+    expect(screen.queryByText('You can send a new code now.')).not.toBeInTheDocument();
+    unmount();
+
+    park(-1);
+    renderAt();
+    expect(screen.getByText('You can send a new code now.')).toHaveAttribute('aria-live', 'polite');
+  });
+
   it('the right code signs in and goes home', async () => {
     park();
     vi.mocked(AuthApi.verifySignup).mockResolvedValue({

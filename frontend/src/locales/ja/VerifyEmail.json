@@ -12,6 +12,7 @@
   "resendIn_one": "{{count}} 秒後に新しいコードを送れます",
   "resendIn_other": "{{count}} 秒後に新しいコードを送れます",
   "resending": "送信中…",
+  "resendReady": "新しいコードを送れるようになりました。",
   "changeEmail": "メールアドレスが違う場合は変更",
   "fillAgain": "フォームを入力し直す",
   "haveAccount": "すでにアカウントを持っています",

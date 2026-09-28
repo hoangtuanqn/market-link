@@ -12,6 +12,7 @@
   "resendIn_one": "{{count}} 秒后可发送新的验证码",
   "resendIn_other": "{{count}} 秒后可发送新的验证码",
   "resending": "正在发送…",
+  "resendReady": "现在可以发送新的验证码了。",
   "changeEmail": "邮箱填错了？修改",
   "fillAgain": "重新填写表单",
   "haveAccount": "我已有账户",

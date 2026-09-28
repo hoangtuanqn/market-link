@@ -12,6 +12,7 @@
   "resendIn_one": "Kirim kode baru dalam {{count}} detik",
   "resendIn_other": "Kirim kode baru dalam {{count}} detik",
   "resending": "Mengirim…",
+  "resendReady": "Anda sekarang bisa meminta kode baru.",
   "changeEmail": "Email salah? Ubah",
   "fillAgain": "Isi formulir lagi",
   "haveAccount": "Saya sudah punya akun",

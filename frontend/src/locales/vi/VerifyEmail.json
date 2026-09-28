@@ -12,6 +12,7 @@
   "resendIn_one": "Gửi mã mới sau {{count}} giây",
   "resendIn_other": "Gửi mã mới sau {{count}} giây",
   "resending": "Đang gửi…",
+  "resendReady": "Bạn có thể gửi mã mới ngay bây giờ.",
   "changeEmail": "Sai email? Đổi email",
   "fillAgain": "Điền lại biểu mẫu",
   "haveAccount": "Tôi đã có tài khoản",

@@ -239,7 +239,8 @@ You got this email because someone signed up at MarketLink with lan@example.com.
 - Nhớ `{email, codeExpiresAt, resendAt}` trong sessionStorage (`ml.signup.pending`) để tải lại trang không mất.
   Mở trực tiếp khi không có → về `/register/customer`.
 - Nội dung: tiêu đề "Check your email", "We sent a 6-digit code to **{email}**.", `CodeInput`, đồng hồ "The code expires
-  in 9:41", nút chính "Verify and create account", nút phụ "Send a new code" (đếm ngược "Send a new code in 42s", `aria-live="polite"`), link "Wrong email?
+  in 9:41", nút chính "Verify and create account", nút phụ "Send a new code" (đếm ngược "Send a new code in 42s"; trình đọc màn hình chỉ được báo **một lần** khi
+  nút dùng được, qua một vùng `aria-live` ẩn, không đọc từng giây), link "Wrong email?
   Change it" quay về form với dữ liệu đã nhập.
 - Nhập đủ 6 số tự gửi. Trạng thái:
 

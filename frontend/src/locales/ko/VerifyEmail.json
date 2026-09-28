@@ -12,6 +12,7 @@
   "resendIn_one": "{{count}}초 후 새 코드 받기",
   "resendIn_other": "{{count}}초 후 새 코드 받기",
   "resending": "보내는 중…",
+  "resendReady": "이제 새 코드를 받을 수 있어요.",
   "changeEmail": "이메일이 틀렸나요? 변경하기",
   "fillAgain": "양식 다시 작성하기",
   "haveAccount": "이미 계정이 있어요",

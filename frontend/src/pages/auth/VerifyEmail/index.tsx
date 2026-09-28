@@ -185,8 +185,12 @@ const VerifyEmailPage = () => {
 
           <div className="flex flex-col gap-2">
             <p className="text-small text-ink-muted">{t('help')}</p>
+            {/* Read out once when the button becomes usable, not on every tick of its countdown */}
+            <p className="sr-only" aria-live="polite">
+              {resendLeft === 0 && !isResending ? t('resendReady') : ''}
+            </p>
             <div className="flex flex-wrap items-center gap-3">
-              <Button variant="secondary" disabled={isResending || resendLeft > 0} onClick={resend} aria-live="polite">
+              <Button variant="secondary" disabled={isResending || resendLeft > 0} onClick={resend}>
                 {isResending ? t('resending') : resendLeft > 0 ? t('resendIn', { count: resendLeft }) : t('resend')}
               </Button>
               <Button variant="ghost" onClick={() => backToForm(true)}>
