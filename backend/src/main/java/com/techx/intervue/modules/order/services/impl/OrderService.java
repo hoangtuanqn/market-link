@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.order.services.impl;
 
+import com.techx.intervue.modules.catalog.services.impl.ShelfLifePolicy;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
@@ -139,11 +140,22 @@ public class OrderService implements OrderServiceInterface {
                 farmerRepository.findAllById(byFarmer.keySet()).stream()
                         .collect(Collectors.toMap(FarmerProfile::getId, Function.identity()));
         Map<Long, List<MarketOption>> markets = checkoutQueries.marketsOf(byFarmer.keySet());
-        Map<Long, BigDecimal> basePrices =
-                products.values().stream()
-                        .collect(Collectors.toMap(Product::getId, Product::getPrice));
+        // FR-125: a stall the customer has picked a day for is priced for that day; the others
+        // for their nearest orderable day, as before
+        Map<Long, LocalDate> pickupDates = request.pickupDateByFarmer();
+        Map<Long, BigDecimal> undated = new HashMap<>();
+        Map<LocalDate, Map<Long, BigDecimal>> dated = new HashMap<>();
+        for (Product p : products.values()) {
+            LocalDate day = pickupDates.get(p.getFarmerId());
+            if (day == null) {
+                undated.put(p.getId(), p.getPrice());
+            } else {
+                dated.computeIfAbsent(day, d -> new HashMap<>()).put(p.getId(), p.getPrice());
+            }
+        }
         Map<Long, ProductAvailabilityResolver.Availability> resolved =
-                availability.resolve(basePrices);
+                new HashMap<>(availability.resolve(undated));
+        dated.forEach((day, prices) -> resolved.putAll(availability.onDate(prices, day)));
 
         List<OrderGroupPreviewResource> groups = new ArrayList<>();
         byFarmer.forEach(
@@ -183,6 +195,15 @@ public class OrderService implements OrderServiceInterface {
             }
             BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(qty));
             subtotal = subtotal.add(lineTotal);
+            ProductAvailabilityResolver.Deal deal = a == null ? null : a.deal();
+            // The promise placing the order will copy (FR-121, FR-124): the deal batch's own last
+            // good day, else the pickup day plus the shelf life
+            LocalDate bestBefore =
+                    a == null
+                            ? null
+                            : deal != null
+                                    ? deal.bestBefore()
+                                    : ShelfLifePolicy.bestBefore(a.date(), p.getShelfLifeDays());
             items.add(
                     new PreviewItemResource(
                             p.getId(),
@@ -192,7 +213,11 @@ public class OrderService implements OrderServiceInterface {
                             qty,
                             lineTotal,
                             available,
-                            listed(p) ? p.getStatus().value() : UNAVAILABLE));
+                            listed(p) ? p.getStatus().value() : UNAVAILABLE,
+                            deal == null ? null : deal.listPrice(),
+                            deal == null ? null : deal.discountPercent(),
+                            bestBefore == null ? null : bestBefore.toString(),
+                            p.getStorageMode().value()));
         }
         // C5-11: the pickup market is only pre-filled when the stall sells at exactly one market;
         // otherwise the cart lets the customer choose

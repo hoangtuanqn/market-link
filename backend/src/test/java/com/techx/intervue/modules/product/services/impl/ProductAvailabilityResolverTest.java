@@ -283,4 +283,58 @@ class ProductAvailabilityResolverTest {
                 .containsExactly(20, 30, 20);
         assertThat(days.getFirst().deal()).isNull();
     }
+
+    /** FR-125: the cart asks for the one day the customer picked, deal included. */
+    @Test
+    void onDateReadsTheRowOfThatDayWithItsDeal() {
+        LocalDate saturday = LocalDate.of(2026, 10, 3);
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(6, 30, null)));
+        ProductDailyStock onDeal = new ProductDailyStock();
+        onDeal.setQuantityAvailable(12);
+        onDeal.setUnitPrice(new BigDecimal("0.60"));
+        onDeal.startDeal(
+                new BigDecimal("0.36"), 40, LocalDate.of(2026, 9, 25), LocalDate.of(2026, 10, 4));
+        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, saturday))
+                .thenReturn(Optional.of(onDeal));
+
+        ProductAvailabilityResolver.Availability a =
+                resolver.onDate(Map.of(PRODUCT_ID, new BigDecimal("0.60")), saturday)
+                        .get(PRODUCT_ID);
+
+        assertThat(a.date()).isEqualTo(saturday);
+        assertThat(a.quantity()).isEqualTo(12);
+        assertThat(a.price()).isEqualByComparingTo("0.36");
+        assertThat(a.deal().discountPercent()).isEqualTo(40);
+    }
+
+    @Test
+    void onDateFallsBackToTheTemplateOfThatWeekday() {
+        LocalDate monday = LocalDate.of(2026, 9, 28);
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(1, 20, new BigDecimal("13000"))));
+        when(dailyStock.findByProductIdAndStockDate(any(), any())).thenReturn(Optional.empty());
+
+        ProductAvailabilityResolver.Availability a =
+                resolver.onDate(Map.of(PRODUCT_ID, new BigDecimal("12000")), monday)
+                        .get(PRODUCT_ID);
+
+        assertThat(a.quantity()).isEqualTo(20);
+        assertThat(a.price()).isEqualByComparingTo("13000");
+        assertThat(a.deal()).isNull();
+    }
+
+    /** Tuesday 29/09 has no row and no template: the product is not sold that day. */
+    @Test
+    void onDateLeavesOutAProductNotSoldThatDay() {
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(1, 20, null)));
+        when(dailyStock.findByProductIdAndStockDate(any(), any())).thenReturn(Optional.empty());
+
+        assertThat(
+                        resolver.onDate(
+                                Map.of(PRODUCT_ID, new BigDecimal("12000")),
+                                LocalDate.of(2026, 9, 29)))
+                .isEmpty();
+    }
 }

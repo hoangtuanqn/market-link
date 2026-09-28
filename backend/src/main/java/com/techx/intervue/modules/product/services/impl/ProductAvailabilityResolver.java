@@ -120,6 +120,25 @@ public class ProductAvailabilityResolver {
                 .toList();
     }
 
+    /**
+     * FR-125: one given pickup day's numbers for each product — what the cart previews once the
+     * customer has picked that day. Read-only like {@link #resolve}; a product not sold that day
+     * (no row, no active template for its weekday) is left out.
+     */
+    public Map<Long, Availability> onDate(
+            Map<Long, BigDecimal> basePriceByProductId, LocalDate date) {
+        Map<Long, Availability> result = new HashMap<>();
+        basePriceByProductId.forEach(
+                (productId, basePrice) ->
+                        lookup(
+                                        productId,
+                                        date,
+                                        templates.findByProductIdAndActiveTrue(productId),
+                                        basePrice)
+                                .ifPresent(a -> result.put(productId, a)));
+        return result;
+    }
+
     private Availability resolveOne(
             Long productId,
             LocalDate date,
