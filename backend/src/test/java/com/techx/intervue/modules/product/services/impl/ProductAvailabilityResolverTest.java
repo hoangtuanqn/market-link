@@ -75,6 +75,14 @@ class ProductAvailabilityResolverTest {
         return t;
     }
 
+    private static Product product() {
+        Product p = new Product();
+        p.setId(PRODUCT_ID);
+        p.setFarmerId(FARMER_ID);
+        p.setPrice(new BigDecimal("12000"));
+        return p;
+    }
+
     @Test
     void candidateDatesAreTheMatchingWeekdaysInsideTheLookaheadNearestFirst() {
         // TODAY (26/09) is a Saturday = 6; the template only sells on Monday = 1, 2 days away.
@@ -226,5 +234,53 @@ class ProductAvailabilityResolverTest {
                 .thenReturn(List.of(template(6, 30, null)));
 
         assertThat(resolver.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000")))).isEmpty();
+    }
+
+    /** FR-124: the nearest day on a near-expiry deal reports the deal price and the batch. */
+    @Test
+    void resolveCarriesTheDealOfTheDay() {
+        LocalDate monday = LocalDate.of(2026, 9, 28);
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(1, 40, null)));
+        ProductDailyStock onDeal = new ProductDailyStock();
+        onDeal.setQuantityAvailable(12);
+        onDeal.setUnitPrice(new BigDecimal("0.60"));
+        onDeal.startDeal(
+                new BigDecimal("0.48"), 20, LocalDate.of(2026, 9, 24), LocalDate.of(2026, 9, 30));
+        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, monday))
+                .thenReturn(Optional.of(onDeal));
+
+        ProductAvailabilityResolver.Availability a =
+                resolver.resolve(Map.of(PRODUCT_ID, new BigDecimal("0.60"))).get(PRODUCT_ID);
+
+        assertThat(a.price()).isEqualByComparingTo("0.48");
+        assertThat(a.deal().listPrice()).isEqualByComparingTo("0.60");
+        assertThat(a.deal().discountPercent()).isEqualTo(20);
+        assertThat(a.deal().packedOn()).isEqualTo(LocalDate.of(2026, 9, 24));
+        assertThat(a.deal().bestBefore()).isEqualTo(LocalDate.of(2026, 9, 30));
+    }
+
+    /**
+     * The days the deal dialog offers: every orderable day of the lookahead the product is sold on,
+     * nearest first, each with its own numbers.
+     */
+    @Test
+    void upcomingListsEveryOrderableDayNearestFirst() {
+        // TODAY (26/09) is a Saturday = 6; the product sells on Saturday (30) and Monday (20)
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(6, 30, null), template(1, 20, null)));
+        when(dailyStock.findByProductIdAndStockDate(any(), any())).thenReturn(Optional.empty());
+        // Today is past its cutoff; Mon 28/09, Sat 03/10 and Mon 05/10 still take orders
+        openDates(Set.of(TODAY.plusDays(2), TODAY.plusDays(7), TODAY.plusDays(9)));
+
+        List<ProductAvailabilityResolver.Availability> days = resolver.upcoming(product());
+
+        assertThat(days)
+                .extracting(ProductAvailabilityResolver.Availability::date)
+                .containsExactly(TODAY.plusDays(2), TODAY.plusDays(7), TODAY.plusDays(9));
+        assertThat(days)
+                .extracting(ProductAvailabilityResolver.Availability::quantity)
+                .containsExactly(20, 30, 20);
+        assertThat(days.getFirst().deal()).isNull();
     }
 }

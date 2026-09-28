@@ -38,7 +38,8 @@ import org.springframework.stereotype.Component;
 @AllArgsConstructor
 public class ProductAvailabilityResolver {
 
-    private static final int LOOKAHEAD_DAYS = 14;
+    /** Package-visible: the deal services use the same window. */
+    static final int LOOKAHEAD_DAYS = 14;
 
     private final WeeklyStockTemplateRepository templates;
     private final ProductDailyStockRepository dailyStock;
@@ -46,7 +47,17 @@ public class ProductAvailabilityResolver {
     private final SlotQueryRepository slots;
     private final Clock clock;
 
-    public record Availability(LocalDate date, int quantity, BigDecimal price) {}
+    /** A near-expiry deal on one pickup day (FR-124); see ProductDailyStock. */
+    public record Deal(
+            BigDecimal listPrice, int discountPercent, LocalDate packedOn, LocalDate bestBefore) {}
+
+    /** {@code deal} is null when the day sells at its normal price. */
+    public record Availability(LocalDate date, int quantity, BigDecimal price, Deal deal) {
+
+        public Availability(LocalDate date, int quantity, BigDecimal price) {
+            this(date, quantity, price, null);
+        }
+    }
 
     public Map<Long, Availability> resolve(Map<Long, BigDecimal> basePriceByProductId) {
         Map<Long, Availability> result = new HashMap<>();
@@ -89,7 +100,40 @@ public class ProductAvailabilityResolver {
         return result;
     }
 
+    /**
+     * FR-124: every day of the lookahead a customer can still order this product for, nearest
+     * first, with that day's numbers — the pickup days the near-expiry deal dialog offers.
+     */
+    public List<Availability> upcoming(Product product) {
+        LocalDate today = LocalDate.now(clock);
+        Set<LocalDate> open =
+                slots.orderableDates(
+                                Set.of(product.getFarmerId()),
+                                today,
+                                today.plusDays(LOOKAHEAD_DAYS - 1),
+                                LocalDateTime.now(clock))
+                        .getOrDefault(product.getFarmerId(), Set.of());
+        List<WeeklyStockTemplate> active = templates.findByProductIdAndActiveTrue(product.getId());
+        return candidateDates(today, active).stream()
+                .filter(open::contains)
+                .map(date -> resolveOne(product.getId(), date, active, product.getPrice()))
+                .toList();
+    }
+
     private Availability resolveOne(
+            Long productId,
+            LocalDate date,
+            List<WeeklyStockTemplate> active,
+            BigDecimal basePrice) {
+        // candidateDates only offers weekdays with an active template, so one always exists here
+        return lookup(productId, date, active, basePrice).orElseThrow();
+    }
+
+    /**
+     * One pickup day's numbers without creating its row: the row when it exists, else the active
+     * template of that weekday; empty when neither exists (the product is not sold that day).
+     */
+    private Optional<Availability> lookup(
             Long productId,
             LocalDate date,
             List<WeeklyStockTemplate> active,
@@ -97,18 +141,32 @@ public class ProductAvailabilityResolver {
         Optional<ProductDailyStock> existing =
                 dailyStock.findByProductIdAndStockDate(productId, date);
         if (existing.isPresent()) {
-            ProductDailyStock row = existing.get();
-            return new Availability(date, row.getQuantityAvailable(), row.getUnitPrice());
+            return Optional.of(fromRow(date, existing.get()));
         }
         int dayOfWeek = date.getDayOfWeek().getValue() % 7;
-        WeeklyStockTemplate template =
-                active.stream()
-                        .filter(t -> t.getDayOfWeek() == dayOfWeek)
-                        .findFirst()
-                        .orElseThrow();
-        BigDecimal price =
-                template.getDefaultPrice() != null ? template.getDefaultPrice() : basePrice;
-        return new Availability(date, template.getDefaultQuantity(), price);
+        return active.stream()
+                .filter(t -> t.getDayOfWeek() == dayOfWeek)
+                .findFirst()
+                .map(
+                        t ->
+                                new Availability(
+                                        date,
+                                        t.getDefaultQuantity(),
+                                        t.getDefaultPrice() != null
+                                                ? t.getDefaultPrice()
+                                                : basePrice));
+    }
+
+    private static Availability fromRow(LocalDate date, ProductDailyStock row) {
+        Deal deal =
+                row.hasDeal()
+                        ? new Deal(
+                                row.getListPrice(),
+                                row.getDiscountPercent(),
+                                row.getPackedOn(),
+                                row.getBestBefore())
+                        : null;
+        return new Availability(date, row.getQuantityAvailable(), row.getUnitPrice(), deal);
     }
 
     /**
