@@ -1,9 +1,5 @@
 import { useTranslation } from 'react-i18next';
 
-/**
- * CustomerDetailSkeleton provides a realistic, smooth loading state that exactly mirrors the CustomerDetail page
- * layout, preventing visual jumps and harsh solid blocks.
- */
 const CustomerDetailSkeleton = () => {
   const { t } = useTranslation();
 
@@ -11,14 +7,12 @@ const CustomerDetailSkeleton = () => {
     <div aria-busy="true" className="flex flex-1 animate-pulse flex-col gap-6">
       <span className="sr-only">{t('notify.list.loading')}</span>
 
-      {/* Breadcrumb */}
       <div className="flex items-center gap-2">
         <div className="bg-surface-sunken h-3.5 w-18 rounded-sm" />
         <span className="text-ink-muted text-xs">·</span>
         <div className="bg-surface-sunken h-3.5 w-36 rounded-sm" />
       </div>
 
-      {/* Profile Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-4">
           <div className="bg-surface-sunken size-16 shrink-0 rounded-full shadow-xs" />
@@ -33,24 +27,19 @@ const CustomerDetailSkeleton = () => {
         <div className="bg-surface-sunken h-10 w-36 rounded-md" />
       </div>
 
-      {/* Two columns */}
       <div className="grid flex-1 items-stretch gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-        {/* Left Column */}
         <div className="flex flex-1 flex-col gap-6">
-          {/* Orders Section Skeleton */}
           <div className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
               <div className="bg-surface-sunken h-5 w-24 rounded-sm" />
               <div className="bg-surface-sunken h-3.5 w-36 rounded-sm" />
             </div>
             <div className="border-line-strong bg-surface-raised overflow-hidden rounded-md border-[1.5px]">
-              {/* Table header */}
               <div className="bg-surface-sunken/60 border-line-strong flex items-center justify-between border-b-[1.5px] px-4 py-2.5">
                 {['w-20', 'w-32', 'w-24', 'w-12', 'w-16', 'w-18'].map((w, idx) => (
                   <div key={idx} className={`bg-surface-sunken h-3.5 rounded-sm ${w}`} />
                 ))}
               </div>
-              {/* 2 skeleton rows */}
               {[1, 2].map((i) => (
                 <div
                   key={i}
@@ -70,7 +59,6 @@ const CustomerDetailSkeleton = () => {
             </div>
           </div>
 
-          {/* Reviews Section Skeleton */}
           <div className="flex flex-1 flex-col gap-3">
             <div className="bg-surface-sunken h-5 w-36 rounded-sm" />
             <div className="border-line-strong bg-surface-raised flex min-h-[160px] flex-1 flex-col gap-3 rounded-md border-[1.5px] p-5">
@@ -90,9 +78,7 @@ const CustomerDetailSkeleton = () => {
           </div>
         </div>
 
-        {/* Right Column */}
         <div className="flex flex-1 flex-col gap-4">
-          {/* Contact Card */}
           <div className="border-line-strong bg-surface-raised flex shrink-0 flex-col gap-4 rounded-md border-[1.5px] p-6">
             <div className="bg-surface-sunken h-5 w-20 rounded-sm" />
             <div className="flex flex-col gap-3">
@@ -109,7 +95,6 @@ const CustomerDetailSkeleton = () => {
             </div>
           </div>
 
-          {/* Habits Card */}
           <div className="border-line-strong bg-surface-raised flex shrink-0 flex-col gap-4 rounded-md border-[1.5px] p-6">
             <div className="bg-surface-sunken h-5 w-28 rounded-sm" />
             <div className="flex flex-col gap-3">
@@ -125,7 +110,6 @@ const CustomerDetailSkeleton = () => {
             </div>
           </div>
 
-          {/* What it does Card */}
           <div className="bg-surface-sunken flex flex-1 flex-col justify-start gap-2.5 rounded-md p-5">
             <div className="bg-surface-sunken-strong/40 h-4 w-36 rounded-sm" />
             <div className="bg-surface-sunken-strong/25 h-3 w-full rounded-sm" />

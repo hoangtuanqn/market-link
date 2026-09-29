@@ -2,9 +2,7 @@ import type { Settings } from '@/lib/settings';
 import type { ApiResponse } from '@/types/api.types';
 import { privateApi } from '@/utils/axiosInstance';
 
-/** Settings of the signed-in user themself (proposal: docs/proposals/settings-api.md). */
 class SettingsApi {
-  /** `data` is null when the account never saved any settings. */
   static get = async () => {
     const response = await privateApi.get<ApiResponse<Settings | null>>('/auth/me/settings');
     return response.data;

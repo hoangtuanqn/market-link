@@ -4,10 +4,6 @@ import { ChartIcon, LogoMark, ShieldIcon, StoreIcon } from '@/components/icons';
 import Logo from '@/components/Logo';
 import Helper from '@/utils/helper';
 
-/**
- * A small kraft-paper tag on a string — the literal "Hang tag" brand idea (design system brand book), used purely as
- * decoration in the brand panel below the capability list.
- */
 function HangTag({ className, tone, small }: { className?: string; tone: 'accent' | 'cream'; small?: boolean }) {
   return (
     <div
@@ -24,10 +20,6 @@ function HangTag({ className, tone, small }: { className?: string; tone: 'accent
   );
 }
 
-/**
- * The shared brand panel of every admin sign-in screen (login, 2FA code entry, 2FA setup) — copy lives under the
- * AdminLogin namespace regardless of which page renders it, since it always says the same thing about the admin area.
- */
 function BrandPanel() {
   const { t } = useTranslation('AdminLogin');
   return (
@@ -69,10 +61,6 @@ function BrandPanel() {
   );
 }
 
-/**
- * The centered icon + eyebrow + heading (+ optional subheading/links) at the top of the right-hand card, the same shape
- * on every admin sign-in screen.
- */
 export function AdminAuthCardHeader({
   icon,
   eyebrow,
@@ -96,11 +84,6 @@ export function AdminAuthCardHeader({
   );
 }
 
-/**
- * FR-004 / FR-008 — the 60/40 split frame shared by every admin sign-in screen (password, 2FA code entry, 2FA setup): a
- * brand panel (left, board green) and a raised card (right, the actual form). Separate from the Customer/Farmer layout
- * and from AdminLayout (no session assumed — Setup2FA has one, but sits outside AdminLayout regardless).
- */
 const AdminAuthSplitShell = ({ children, cardClassName }: { children: ReactNode; cardClassName?: string }) => (
   <div className="flex min-h-screen flex-col md:flex-row">
     <BrandPanel />

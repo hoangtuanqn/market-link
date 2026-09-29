@@ -10,15 +10,6 @@ import javax.crypto.spec.SecretKeySpec;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-/**
- * FR-115 (spec 2026-09-28-chat-media-design §5): signs the short-lived link a video element plays
- * from. A video element cannot send the Authorization header, so the link itself carries who it was
- * issued to (u), which path issued it (s: u = member, a = admin) and until when (e).
- *
- * <p>HMAC-SHA256 over "id|u|s|e". The key is derived from the JWT secret rather than being the JWT
- * secret itself, so a stream signature can never pass as anything else, and there is no new
- * environment variable to forget in production.
- */
 @Component
 public class StreamLinkSigner {
 
@@ -36,7 +27,6 @@ public class StreamLinkSigner {
                 .encodeToString(mac(attachmentId, userId, scope, expEpochSeconds));
     }
 
-    /** The link is still valid at {@code now} (the second it expires included) and untouched. */
     public boolean verify(
             long attachmentId, long userId, char scope, long exp, String signature, Instant now) {
         if (signature == null || (scope != 'u' && scope != 'a') || now.getEpochSecond() > exp) {
@@ -48,7 +38,6 @@ public class StreamLinkSigner {
         } catch (IllegalArgumentException e) {
             return false;
         }
-        // Constant time, so the signature cannot be guessed byte by byte from response times
         return MessageDigest.isEqual(mac(attachmentId, userId, scope, exp), given);
     }
 

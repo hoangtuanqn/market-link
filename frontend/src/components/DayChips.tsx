@@ -8,11 +8,6 @@ type DayChipsProps = {
   onChange: (value: string) => void;
 };
 
-/**
- * Weekday pill picker (design system `.ml-days`). With `date` the chip carries both the weekday and the date it falls
- * on, stacked in one grid cell so hover can swap them without the chip changing width. Both readings stay in the
- * accessibility tree: "Monday 29/09". Without `date` (an "All" choice) it is just the label.
- */
 const DayChips = ({ legend, name, options, value, onChange }: DayChipsProps) => {
   return (
     <fieldset className="m-0 flex flex-wrap gap-2 border-0 p-0">
@@ -31,8 +26,6 @@ const DayChips = ({ legend, name, options, value, onChange }: DayChipsProps) => 
           <span
             className={
               'border-line-strong bg-surface-raised peer-checked:bg-brand peer-checked:text-on-brand peer-focus-visible:outline-focus flex min-h-11 min-w-14 flex-col items-center justify-center rounded-full px-2.5 py-1 text-[14px] leading-[1.1] font-bold shadow-[inset_0_0_0_1.5px_var(--line-strong)] peer-checked:shadow-none peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2' +
-              // Hover, and keyboard focus only, swap the weekday for its date. Colour is inherited, so the selected
-              // and struck-through states read the same either way.
               ' group-hover:[&_b:first-child]:opacity-0 group-hover:[&_b:last-child]:opacity-100' +
               ' peer-focus-visible:[&_b:first-child]:opacity-0 peer-focus-visible:[&_b:last-child]:opacity-100' +
               (d.disabled ? ' bg-surface-sunken text-ink-muted line-through shadow-none' : '')

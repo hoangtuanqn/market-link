@@ -17,13 +17,6 @@ import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-/**
- * FR-125 (spec §4.5.4): deal days a customer can still order for, nearest day first, then the
- * biggest discount. "Can still order" is the rule the product pages use (a free slot before its
- * cutoff on a day the market and the stall both open, SlotQueryRepository#orderableDates), so the
- * page, its total and the cart agree. Deal days inside 14 days are few, so that check and the
- * paging run here, after one SQL read.
- */
 @Service
 @AllArgsConstructor
 public class DealQueryService implements DealQueryServiceInterface {

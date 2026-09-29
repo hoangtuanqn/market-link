@@ -7,11 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * FR-071: the suspension letters must be the same branded mail the rest of the product sends, and
- * every placeholder must resolve — MailTemplates throws on a missing one, so a broken template
- * fails here rather than in a Farmer's inbox.
- */
 @SpringBootTest
 class StallStatusMailTest {
 
@@ -29,18 +24,12 @@ class StallStatusMailTest {
                 .contains("Missed pickups")
                 .contains("Until an administrator lifts it")
                 .contains("admin@marketlink.vn");
-        // the stall name carries a Latin-1 diacritic ("ô") that htmlEscape renders as a named
-        // entity (&ocirc;) in the HTML part — correct for a browser, but not a literal substring
-        // match, so the un-escaped plain-text part is where we check it survived.
         assertThat(c.text())
                 .contains("Vườn Cô Tư")
                 .contains("Missed pickups")
                 .doesNotContain("<table");
     }
 
-    /**
-     * D-09: the letter must not imply everything stopped — accepted orders still have to be served.
-     */
     @Test
     void theSuspensionLetterSaysAcceptedOrdersMustStillBeCompleted() {
         StallStatusMail.Content c =
@@ -60,7 +49,7 @@ class StallStatusMailTest {
                         Instant.parse("2026-10-05T02:00:00Z"),
                         "en");
 
-        assertThat(c.html()).contains("09:00 05/10/2026"); // Asia/Ho_Chi_Minh
+        assertThat(c.html()).contains("09:00 05/10/2026");
     }
 
     @Test

@@ -12,7 +12,6 @@ type FarmerActionsProps = {
   onReject: (farmer: AdminFarmerListItemType) => void;
 };
 
-/** The row's actions, by status: approve or reject a new stall, suspend an approved one, reinstate a suspended one. */
 const FarmerActions = ({ farmer: f, busy, onConfirm, onReject }: FarmerActionsProps) => {
   const { t } = useTranslation('AdminFarmers');
   if (f.approvalStatus === 'pending') {

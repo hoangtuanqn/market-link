@@ -4,13 +4,8 @@ import DealApi from '@/api-requests/deal.requests';
 import DealCard from '@/components/DealCard';
 import useRequest from '@/hooks/useRequest';
 
-/** Four cards fill one row on desktop. */
 const STRIP_SIZE = 4;
 
-/**
- * FR-125 (spec §4.5.4): a strip of near-expiry deals on the home page, only when there are some. A teaser, so it shows
- * nothing while it loads, fails or finds none; the /deals page carries the full loading / empty / error states.
- */
 const DealsStrip = () => {
   const { t } = useTranslation('Home');
   const { state } = useRequest('home-deals', () => DealApi.list({ pageSize: STRIP_SIZE }));

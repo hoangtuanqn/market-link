@@ -18,7 +18,6 @@ describe('AuthLayout', () => {
     expect(screen.getByTestId('auth-card')).toBeInTheDocument();
     expect(screen.getByText('Login Form')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: /marketlink/i })).toHaveAttribute('href', '/');
-    // Ensure no header or footer elements from MainLayout exist
     expect(screen.queryByRole('contentinfo')).not.toBeInTheDocument();
   });
 });

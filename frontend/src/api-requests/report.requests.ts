@@ -3,13 +3,8 @@ import type { ApiResponse, PageType } from '@/types/api.types';
 import type { OrderStatus } from '@/types/order.types';
 import { privateApi } from '@/utils/axiosInstance';
 
-/** `yyyy-MM-dd` bounds on `pickupDate`; both optional (all time when omitted). */
 export type DateRange = { from?: string; to?: string };
 
-/**
- * `GET /farmer/dashboard` (FR-068). `pendingOrders` = orders still `placed`; revenue counts `completed` orders only;
- * `lowStockCount` = available products at or under 5 units.
- */
 export type FarmerDashboardDto = {
   totalOrders: number;
   pendingOrders: number;
@@ -20,10 +15,8 @@ export type FarmerDashboardDto = {
   lowStockCount: number;
 };
 
-/** `GET /farmer/reports/best-sellers` (FR-069): one product, summed over completed orders. */
 export type BestSellerDto = { productId: number; name: string; quantitySold: number; revenue: number };
 
-/** `GET /admin/dashboard` (FR-070, contract §10). `totalFarmers` counts approved stalls. */
 export type AdminDashboardDto = {
   totalFarmers: number;
   totalCustomers: number;
@@ -34,10 +27,8 @@ export type AdminDashboardDto = {
   hiddenListings: number;
 };
 
-/** `GET /admin/reports/revenue` (FR-075): every market, completed orders only (0 when none). */
 export type RevenueByMarketDto = { marketId: number; marketName: string; orderCount: number; revenue: number };
 
-/** `GET /admin/reports/top-farmers` (FR-075): stalls by completed revenue, highest first. */
 export type TopFarmerDto = {
   farmerId: number;
   stallName: string;
@@ -46,7 +37,6 @@ export type TopFarmerDto = {
   ratingAvg: number;
 };
 
-/** `GET /admin/customers` row (FR-072). `status` is `active` | `inactive`. */
 export type AdminCustomerDto = {
   userId: number;
   fullName: string;
@@ -58,7 +48,6 @@ export type AdminCustomerDto = {
   avatarUrl?: string | null;
 };
 
-/** `GET /admin/customers/{id}/status-history` row (FR-072). `changedByName` null = the system (auto-reactivate). */
 export type AdminCustomerStatusHistoryDto = {
   id: number;
   fromStatus: string;
@@ -69,7 +58,6 @@ export type AdminCustomerStatusHistoryDto = {
   changedAt: string;
 };
 
-/** `GET /admin/reports/top-products` (FR-075): the best-selling products platform-wide, completed orders only. */
 export type TopProductDto = {
   productId: number;
   name: string;
@@ -80,37 +68,29 @@ export type TopProductDto = {
   revenue: number;
 };
 
-/** FR-068/069 — the signed-in Farmer's own numbers (plan C9, Task 9.1). The stall comes from the token. */
 class FarmerReportApi {
   static dashboard = async () => {
     const response = await privateApi.get<ApiResponse<FarmerDashboardDto>>('/farmer/dashboard');
     return response.data.data;
   };
 
-  /** Top products by quantity sold; `limit` 1–20 (default 5). */
   static bestSellers = async (params: DateRange & { limit?: number } = {}) => {
     const response = await privateApi.get<ApiResponse<BestSellerDto[]>>('/farmer/reports/best-sellers', { params });
     return response.data.data;
   };
 
-  /** Completed orders, latest pickup first. `page` starts at 1. */
   static sales = async (params: DateRange & { page?: number; pageSize?: number } = {}) => {
     const response = await privateApi.get<ApiResponse<PageType<OrderListItemDto>>>('/farmer/reports/sales', { params });
     return response.data.data;
   };
 }
 
-/** FR-070/072/075 — admin dashboard, platform reports and customer accounts (contract §10). */
 class AdminReportApi {
   static dashboard = async () => {
     const response = await privateApi.get<ApiResponse<AdminDashboardDto>>('/admin/dashboard');
     return response.data.data;
   };
 
-  /**
-   * Platform-wide orders, newest first; admin is read-only here (D-04). `customerId` drills into one customer's own
-   * orders.
-   */
   static orders = async (
     params: DateRange & {
       marketId?: number;
@@ -129,19 +109,16 @@ class AdminReportApi {
     return response.data.data;
   };
 
-  /** `limit` 1–50 (default 10). */
   static topFarmers = async (params: DateRange & { limit?: number } = {}) => {
     const response = await privateApi.get<ApiResponse<TopFarmerDto[]>>('/admin/reports/top-farmers', { params });
     return response.data.data;
   };
 
-  /** `GET /admin/reports/top-products`: best-selling products platform-wide. `limit` 1–50 (default 10). */
   static topProducts = async (params: DateRange & { limit?: number } = {}) => {
     const response = await privateApi.get<ApiResponse<TopProductDto[]>>('/admin/reports/top-products', { params });
     return response.data.data;
   };
 
-  /** `q` matches name, email or phone; `status` filters `active` / `inactive`. `page` starts at 1. */
   static customers = async (
     params: { status?: 'active' | 'inactive'; q?: string; page?: number; pageSize?: number } = {},
   ) => {
@@ -149,17 +126,11 @@ class AdminReportApi {
     return response.data.data;
   };
 
-  /** `GET /admin/customers/{id}`: one customer's profile. 404 when the id is not a customer account. */
   static customer = async (id: number) => {
     const response = await privateApi.get<ApiResponse<AdminCustomerDto>>(`/admin/customers/${id}`);
     return response.data.data;
   };
 
-  /**
-   * Activate or deactivate a customer (FR-072). An inactive customer cannot sign in, their sessions are revoked right
-   * away, and — for a permanent ban (`until` null) — their open orders are cancelled. 400 for a stall/admin account, a
-   * missing reason, or a past `until`.
-   */
   static setCustomerStatus = async (
     userId: number,
     status: 'active' | 'inactive',
@@ -174,7 +145,6 @@ class AdminReportApi {
     return response.data.data;
   };
 
-  /** `GET /admin/customers/{id}/status-history`: every deactivate/reactivate on this account, newest first. */
   static customerStatusHistory = async (userId: number, page = 1, pageSize = 20) => {
     const response = await privateApi.get<ApiResponse<PageType<AdminCustomerStatusHistoryDto>>>(
       `/admin/customers/${userId}/status-history`,

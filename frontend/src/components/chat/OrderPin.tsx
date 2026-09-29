@@ -7,10 +7,6 @@ import { fetchOrderSummary } from '@/lib/chat/orderSummary';
 import { formatClock, formatDate, money } from '@/lib/format';
 import Helper from '@/utils/helper';
 
-/**
- * `yyyy-MM-dd` → a Date in local time. `new Date('2026-09-27')` is midnight UTC, which falls on the previous day at
- * UTC−x.
- */
 const localDay = (ymd: string) => {
   const [y, m, d] = ymd.split('-').map(Number);
   return new Date(y, m - 1, d);
@@ -18,10 +14,6 @@ const localDay = (ymd: string) => {
 
 type Props = { orderId: number; compact?: boolean };
 
-/**
- * FR-114: an order pinned to a message. The buyer and the stall owner can read it (the server checks); anyone else sees
- * a fallback line. Each role has its own order page, addressed by the numeric order id.
- */
 export default function OrderPin({ orderId, compact }: Props) {
   const { t } = useTranslation('common');
   const { user } = useSession();
@@ -41,7 +33,6 @@ export default function OrderPin({ orderId, compact }: Props) {
   }
 
   const o = state.data;
-  // Order pages take the numeric id, like the backend's notification links and every OrderApi call
   const to = user?.role === USER_ROLE.FARMER ? `/farmer/orders/${o.orderId}` : `/orders/${o.orderId}`;
 
   return (

@@ -14,17 +14,12 @@ import Notification from '@/utils/notification';
 import Session from '@/utils/session';
 import AccountSkeleton from './AccountSkeleton';
 
-/** Same password rules as register / reset (backend RegisterRules). */
 const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 72;
 
 type ProfileErrors = Partial<Record<'fullName' | 'phone', string>>;
 type PasswordErrors = Partial<Record<'currentPassword' | 'newPassword' | 'confirmPassword', string>>;
 
-/**
- * FR-004 — the admin's own account: name, phone and email, and the password that protects all of it. Two-step
- * verification lives on its own screen; this one links across to it rather than repeating the setup flow.
- */
 const AdminAccountPage = () => {
   const { t } = useTranslation('AdminAccount');
   const navigate = useNavigate();
@@ -73,7 +68,6 @@ const AdminAccountPage = () => {
 
     setSavingProfile(true);
     try {
-      // The admin's address is not shown anywhere: send the parts on file, or none to keep the address as it is.
       const response = await AuthApi.updateMe({
         fullName: profile.fullName.trim(),
         phone: profile.phone.trim(),
@@ -105,7 +99,6 @@ const AdminAccountPage = () => {
     setChangingPassword(true);
     try {
       const response = await AuthApi.changePassword(password);
-      // The backend signs every device out, this one included, so the session goes and we land on the admin login.
       Session.clear();
       Notification.success({ text: response.message || t('password.changed') });
       navigate(ADMIN_LOGIN_PATH, { replace: true });
@@ -126,7 +119,6 @@ const AdminAccountPage = () => {
 
   return (
     <div className="mx-auto flex w-full max-w-(--size-container) flex-col gap-6">
-      {/* Personal profile info */}
       <div className="flex items-center gap-4">
         <span
           aria-hidden="true"
@@ -140,9 +132,7 @@ const AdminAccountPage = () => {
         </div>
       </div>
 
-      {/* 2-column grid: Section "Your details" and Section "Password" equal height and horizontally aligned */}
       <div className="grid grid-cols-1 items-stretch gap-6 lg:grid-cols-2">
-        {/* Section Your details */}
         <Card as="form" className="flex h-full flex-col gap-4 p-6" noValidate onSubmit={saveProfile}>
           <h2 className="text-h3">{t('details.title')}</h2>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -182,14 +172,12 @@ const AdminAccountPage = () => {
           </div>
         </Card>
 
-        {/* Section Password */}
         <Card as="form" className="flex h-full flex-col gap-4 p-6" noValidate onSubmit={changePassword}>
           <div className="flex flex-col gap-1">
             <h2 className="text-h3">{t('password.title')}</h2>
             <p className="text-small text-ink-muted">{t('password.intro')}</p>
           </div>
 
-          {/* Tells a password manager which account this password belongs to */}
           <input type="email" name="username" autoComplete="username" value={profile.email} readOnly hidden />
 
           <div className="grid grid-cols-1 gap-4">
@@ -238,7 +226,6 @@ const AdminAccountPage = () => {
         </Card>
       </div>
 
-      {/* Two-step verification: Full width bottom spanning left to right */}
       <Card className="flex flex-col gap-4 p-6">
         <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div className="flex items-start gap-4">

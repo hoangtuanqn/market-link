@@ -44,10 +44,6 @@ import org.springframework.web.socket.WebSocketHttpHeaders;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
-/**
- * Simple broker (empty host) so CI does not need Rabbit; the path through Rabbit is checked by hand
- * in Task 8.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = "app.chat.rabbitmq.host=")
 class ChatStompIntegrationTest {
@@ -76,14 +72,9 @@ class ChatStompIntegrationTest {
     void setUp() {
         customer = newUser(RoleType.CUSTOMER);
         farmer = newUser(RoleType.FARMER);
-        // StallAccessPolicy looks up farmer_profiles (spec §8.1): a farmer role with no approved
-        // row
-        // is not an open stall, and send() returns 409.
         farmerProfile = approvedStallFor(farmer);
         thread = conversations.save(Conversation.between(customer.getId(), farmer.getId()));
         client = new WebSocketStompClient(new StandardWebSocketClient());
-        // byte[] both ways, not picky about content-type; the /app/typing frame carries its own
-        // JSON content-type
         client.setMessageConverter(new SimpleMessageConverter());
     }
 
@@ -131,16 +122,12 @@ class ChatStompIntegrationTest {
         headers.add("Authorization", "Bearer " + jwt.generateToken(u.getId()));
         return client.connectAsync(
                         "ws://localhost:" + port + WebSocketConfig.ENDPOINT,
-                        (WebSocketHttpHeaders) null, // avoid ambiguity with the varargs overload
+                        (WebSocketHttpHeaders) null,
                         headers,
                         new StompSessionHandlerAdapter() {})
                 .get(5, TimeUnit.SECONDS);
     }
 
-    /**
-     * One channel carries several kinds of events; wait for the kind needed instead of assuming an
-     * order.
-     */
     private static String awaitEvent(BlockingQueue<String> q, String marker) throws Exception {
         long deadline = System.nanoTime() + TimeUnit.SECONDS.toNanos(5);
         while (System.nanoTime() < deadline) {
@@ -175,7 +162,7 @@ class ChatStompIntegrationTest {
         StompSession farmerSession = connectAs(farmer);
         BlockingQueue<String> inbox = subscribe(farmerSession, "/user/topic/messages");
         BlockingQueue<String> threads = subscribe(farmerSession, "/user/topic/conversations");
-        Thread.sleep(300); // let SUBSCRIBE reach the broker before sending
+        Thread.sleep(300);
 
         messageService.send(
                 customer.getId(),
@@ -194,15 +181,11 @@ class ChatStompIntegrationTest {
                 .contains("\"unreadCount\":1");
     }
 
-    /**
-     * FR-042: a new message triggers a popup for the recipient but does not become a row in
-     * /notifications.
-     */
     @Test
     void aMessagePopsUpForTheRecipientWithoutBeingStored() throws Exception {
         StompSession farmerSession = connectAs(farmer);
         BlockingQueue<String> popups = subscribe(farmerSession, "/user/topic/notifications");
-        Thread.sleep(300); // let SUBSCRIBE reach the broker before sending
+        Thread.sleep(300);
 
         messageService.send(
                 customer.getId(),
@@ -233,14 +216,9 @@ class ChatStompIntegrationTest {
                 new SendMessageRequest(null, "hello", null, null, null));
 
         assertThat(threads.poll(5, TimeUnit.SECONDS)).isNotNull().contains("\"unreadCount\":0");
-        // the sender's other devices also receive the bubble (the FE dedupes by id)
         assertThat(inbox.poll(5, TimeUnit.SECONDS)).isNotNull().contains("\"body\":\"hello\"");
     }
 
-    /**
-     * An ERROR frame must carry our own reason, not Spring's internal string, so the FE knows
-     * whether to retry.
-     */
     @Test
     void connectingWithABadTokenIsRefusedWithAClearReason() {
         StompHeaders headers = new StompHeaders();
@@ -287,10 +265,6 @@ class ChatStompIntegrationTest {
                 .contains("\"userId\":" + customer.getId());
     }
 
-    /**
-     * FR-116 through a real broker: when an admin hides a message BOTH people in the thread receive
-     * the "hidden" event on /user/topic/conversations — including the sender of the hidden message.
-     */
     @Test
     void hidingAMessageReachesBothMembersOverStomp() throws Exception {
         StompSession customerSession = connectAs(customer);
@@ -298,7 +272,7 @@ class ChatStompIntegrationTest {
         BlockingQueue<String> customerThreads =
                 subscribe(customerSession, "/user/topic/conversations");
         BlockingQueue<String> farmerThreads = subscribe(farmerSession, "/user/topic/conversations");
-        Thread.sleep(300); // let SUBSCRIBE reach the broker before hiding
+        Thread.sleep(300);
 
         Long messageId =
                 messageService
@@ -319,13 +293,9 @@ class ChatStompIntegrationTest {
         try {
             moderation.hide(farmer.getId(), messageId);
 
-            // Sending one message already emits "updated" and "read" on this same channel, so we
-            // must wait for the exact
-            // event needed instead of counting frames.
             String toCustomer = awaitEvent(customerThreads, "\"type\":\"hidden\"");
             String toFarmer = awaitEvent(farmerThreads, "\"type\":\"hidden\"");
             assertThat(toCustomer).isNotNull().contains("\"messageId\":" + messageId);
-            // The sender of the hidden message must also see it disappear
             assertThat(toFarmer).isNotNull().contains("\"messageId\":" + messageId);
         } finally {
             reports.deleteById(report.getId());

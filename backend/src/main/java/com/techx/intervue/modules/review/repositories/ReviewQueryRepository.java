@@ -20,11 +20,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * Public reads (FR-052) and the rating caches (FR-050/051) of the review module. Every statement is
- * parameterised (R-04); the {@code status = 'visible'} filter is part of the SQL text so that a
- * hidden review (FR-074) disappears from lists, histograms and averages in one place.
- */
 @Repository
 @RequiredArgsConstructor
 public class ReviewQueryRepository {
@@ -52,7 +47,6 @@ public class ReviewQueryRepository {
             WHERE r.target_type = 'farmer' AND r.farmer_id = :targetId AND r.status = 'visible'
             """;
 
-    /** FR-053: the stall owner's own inbox — reviews of the stall itself and of its products. */
     private static final String FOR_STALL_OWNER_WHERE =
             """
             WHERE r.status = 'visible' AND (r.farmer_id = :farmerId OR p.farmer_id = :farmerId)
@@ -61,13 +55,10 @@ public class ReviewQueryRepository {
     private static final String NEWEST_FIRST =
             "ORDER BY r.created_at DESC, r.id DESC\nLIMIT :limit OFFSET :offset";
 
-    /** {@code GET /products/{id}/reviews}, newest first, visible only. */
     public static final String FOR_PRODUCT_SQL = LIST_COLUMNS + FOR_PRODUCT_WHERE + NEWEST_FIRST;
 
-    /** {@code GET /farmers/{id}/reviews}, newest first, visible only. */
     public static final String FOR_FARMER_SQL = LIST_COLUMNS + FOR_FARMER_WHERE + NEWEST_FIRST;
 
-    /** {@code GET /farmer/reviews}, newest first, visible only. */
     public static final String FOR_STALL_OWNER_SQL =
             LIST_COLUMNS + FOR_STALL_OWNER_WHERE + NEWEST_FIRST;
 
@@ -79,7 +70,6 @@ public class ReviewQueryRepository {
             "SELECT COUNT(*) FROM reviews r LEFT JOIN products p ON p.id = r.product_id "
                     + FOR_STALL_OWNER_WHERE;
 
-    /** FR-074: the admin moderation queue — every status, filterable by rating and customer. */
     private static final String ADMIN_LIST_SQL =
             """
             SELECT r.id, r.target_type, r.product_id, r.farmer_id, r.rating, r.comment, r.created_at,
@@ -108,7 +98,6 @@ public class ReviewQueryRepository {
               AND (:customerId IS NULL OR r.customer_id = :customerId)
             """;
 
-    /** One row per star value; the service turns it into the 5-slot histogram and the average. */
     public static final String SUMMARY_SQL =
             """
             SELECT rating, COUNT(*) AS n
@@ -119,10 +108,6 @@ public class ReviewQueryRepository {
             GROUP BY rating
             """;
 
-    /**
-     * Rating cache of a product, recomputed from the visible reviews in one statement — never
-     * accumulated, because accumulation goes wrong the first time an admin hides a review.
-     */
     public static final String RECOMPUTE_PRODUCT_SQL =
             """
             UPDATE products p
@@ -135,7 +120,6 @@ public class ReviewQueryRepository {
             WHERE p.id = :id
             """;
 
-    /** Same as {@link #RECOMPUTE_PRODUCT_SQL} for the stall. */
     public static final String RECOMPUTE_FARMER_SQL =
             """
             UPDATE farmer_profiles f
@@ -158,7 +142,6 @@ public class ReviewQueryRepository {
         return page(FOR_FARMER_SQL, FOR_FARMER_COUNT_SQL, farmerId, page, pageSize);
     }
 
-    /** FR-053: the stall owner's own reviews — of the stall itself and of its products. */
     public PageResource<ReviewResource> forStallOwner(long farmerId, int page, int pageSize) {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
@@ -171,7 +154,6 @@ public class ReviewQueryRepository {
         return new PageResource<>(items, page, pageSize, total == null ? 0 : total);
     }
 
-    /** FR-074: the admin moderation queue, newest first. */
     public PageResource<AdminReviewResource> adminList(
             String status, Integer maxRating, Long customerId, int page, int pageSize) {
         MapSqlParameterSource params =
@@ -199,7 +181,6 @@ public class ReviewQueryRepository {
         return new PageResource<>(items, page, pageSize, total == null ? 0 : total);
     }
 
-    /** Average and 5-slot histogram (1★…5★) of the visible reviews of one target. */
     public ReviewSummaryResource summary(ReviewTarget target, long targetId) {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()

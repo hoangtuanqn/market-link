@@ -8,8 +8,4 @@ public record CategoryResource(
         boolean isActive,
         int minShelfLifeDays,
         int maxShelfLifeDays,
-        /**
-         * Live (non-deleted) products pointing at this category. 0 on the public listing
-         * (listActive).
-         */
         int productCount) {}

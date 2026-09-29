@@ -1,9 +1,3 @@
-/**
- * FR-115 (spec 2026-09-28-chat-media-design §6): what the chat can send, checked in the browser before any upload. The
- * server checks again from the file's bytes; this only saves the person a 50 MB upload that would be refused.
- */
-
-/** Matches app.chat.max-upload-bytes on the server. */
 export const MAX_MEDIA_BYTES = 52_428_800;
 
 const IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'];
@@ -14,17 +8,10 @@ const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'avif'];
 const VIDEO_EXTENSIONS = ['mp4', 'm4v', 'mov', 'webm'];
 const HEIC_EXTENSIONS = ['heic', 'heif'];
 
-/** The file picker's `accept`: the mime types plus the extensions some systems report no mime for. */
 export const ACCEPT = [...IMAGE_TYPES, ...VIDEO_TYPES, ...HEIC_TYPES, '.heic', '.heif', '.mov', '.m4v'].join(',');
 
-/** Without HEIC: iOS then converts a HEIC photo to JPEG itself, upright and at full size. */
 const ACCEPT_WITHOUT_HEIC = [...IMAGE_TYPES, ...VIDEO_TYPES, '.mov', '.m4v'].join(',');
 
-/**
- * The `accept` for this device. On an iPhone or iPad, naming HEIC makes iOS hand over the raw HEIC, and converting it
- * in JavaScript there fails for 24/48 MP photos (iOS caps a canvas at about 16.7 MP) — left out, iOS sends a JPEG.
- * iPadOS asks for the desktop site and says "Macintosh", so a touch screen on a "Mac" counts as an iPad.
- */
 export function acceptFor({ userAgent, maxTouchPoints }: { userAgent: string; maxTouchPoints: number }): string {
   const ios = /iPhone|iPad|iPod/.test(userAgent) || (/Macintosh/.test(userAgent) && maxTouchPoints > 1);
   return ios ? ACCEPT_WITHOUT_HEIC : ACCEPT;
@@ -39,7 +26,6 @@ export class MediaError extends Error {
   }
 }
 
-/** By mime first; by extension when the browser gives none (HEIC on Windows, MOV on some Androids). */
 export function classify(file: File): MediaKind | 'heic' | null {
   const type = file.type.toLowerCase();
   if (IMAGE_TYPES.includes(type)) return 'image';
@@ -53,10 +39,6 @@ export function classify(file: File): MediaKind | 'heic' | null {
   return null;
 }
 
-/**
- * Makes a picked file ready to upload. A HEIC photo (the iPhone default) is converted to JPEG here, because browsers
- * other than Safari cannot show HEIC; the converter is only loaded when needed.
- */
 export async function prepareMedia(
   file: File,
   { onConverting }: { onConverting?: () => void } = {},

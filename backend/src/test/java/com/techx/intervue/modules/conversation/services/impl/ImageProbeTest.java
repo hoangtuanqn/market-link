@@ -34,7 +34,6 @@ class ImageProbeTest {
         assertThat(probed.height()).isEqualTo(200);
     }
 
-    /** Review Focus #1. */
     @Test
     void rejectsAFileThatIsNotAnImageWhateverItsName() {
         byte[] pdf = "%PDF-1.7\nnot a photo at all\n".getBytes(StandardCharsets.ISO_8859_1);
@@ -59,7 +58,6 @@ class ImageProbeTest {
                 .isInstanceOf(UnsupportedImageTypeException.class);
     }
 
-    /** Review Focus #2: the header claims a huge size, the pixels must not be decoded. */
     @Test
     void rejectsAnImageThatIsTooLargeInPixels() {
         byte[] bomb = lossyWebp(16000, 16000);
@@ -92,14 +90,11 @@ class ImageProbeTest {
         return out.toByteArray();
     }
 
-    /**
-     * RIFF….WEBP + a lossy "VP8 " chunk: sync code 9d 01 2a then 14-bit little-endian width/height.
-     */
     private static byte[] lossyWebp(int w, int h) {
         byte[] payload = new byte[30];
         ByteBuffer body = ByteBuffer.wrap(payload).order(ByteOrder.LITTLE_ENDIAN);
-        body.put(new byte[] {0x00, 0x00, 0x00}); // frame tag
-        body.put(new byte[] {(byte) 0x9d, 0x01, 0x2a}); // sync code
+        body.put(new byte[] {0x00, 0x00, 0x00});
+        body.put(new byte[] {(byte) 0x9d, 0x01, 0x2a});
         body.putShort((short) w);
         body.putShort((short) h);
 
@@ -114,15 +109,10 @@ class ImageProbeTest {
         return riff.array();
     }
 
-    /**
-     * Finding #6: WebP is stored as is, so if only "RIFF…WEBP" were checked then 16 valid header
-     * bytes would be enough to stash any payload on the server and serve it back under Content-Type
-     * image/webp. The VP8 sync code is the cheapest proof that this really is an image frame.
-     */
     @Test
     void rejectsAWebpWhoseVp8SyncCodeIsWrong() {
         byte[] fake = lossyWebp(20, 10);
-        fake[23] = 0x00; // the sync code must be 9d 01 2a
+        fake[23] = 0x00;
 
         assertThatThrownBy(() -> ImageProbe.probe(fake))
                 .isInstanceOf(UnsupportedImageTypeException.class);
@@ -131,7 +121,7 @@ class ImageProbeTest {
     @Test
     void rejectsALosslessWebpWhoseSignatureByteIsWrong() {
         byte[] fake = losslessWebp(20, 10);
-        fake[20] = 0x00; // the VP8L signature must be 0x2f
+        fake[20] = 0x00;
 
         assertThatThrownBy(() -> ImageProbe.probe(fake))
                 .isInstanceOf(UnsupportedImageTypeException.class);
@@ -149,7 +139,6 @@ class ImageProbeTest {
     @Test
     void rejectsAWebpWhoseRiffSizeDoesNotMatchTheFile() {
         byte[] fake = lossyWebp(20, 10);
-        // RIFF declares more than the real file: a sign of a truncated or forged payload
         fake[4] = (byte) 0xF0;
         fake[5] = (byte) 0xFF;
 
@@ -157,12 +146,6 @@ class ImageProbeTest {
                 .isInstanceOf(UnsupportedImageTypeException.class);
     }
 
-    /**
-     * Finding #8: the "decompression bomb" case above uses WebP, but WebP is never decoded — it
-     * goes down the probeWebp branch and normalize() returns the bytes as is. The branch that
-     * really needs the backstop is JPEG/PNG: a header claiming a huge size must be rejected BEFORE
-     * ImageIO allocates the pixels.
-     */
     @Test
     void rejectsAPngThatDeclaresHugeDimensionsBeforeDecodingIt() {
         byte[] bomb = pngHeaderOnly(60000, 60000);
@@ -172,7 +155,6 @@ class ImageProbeTest {
                 .hasMessageContaining("30000");
     }
 
-    /** FR-115 Review Focus #3: a big phone photo is scaled down, not refused. */
     @Test
     void downscalesALargePhotoWithoutRefusingIt() throws Exception {
         byte[] big = jpeg(5000, 2500);
@@ -191,11 +173,6 @@ class ImageProbeTest {
         assertThat(ImageProbe.probe(pngHeaderOnly(6000, 4000)).width()).isEqualTo(6000);
     }
 
-    /**
-     * Final review #3: subsampling bounds the Java raster, not libjpeg. A progressive JPEG keeps
-     * every DCT coefficient in native memory (about 6 bytes a pixel), so a small file declaring a
-     * large progressive image must be refused from its header, before ImageIO touches it.
-     */
     @Test
     void refusesAProgressiveJpegOverThePixelBudgetBeforeDecoding() {
         byte[] bomb = jpegHeaderOnly(0xC2, 10_000, 10_000);
@@ -205,7 +182,6 @@ class ImageProbeTest {
                 .hasMessageContaining("too large");
     }
 
-    /** A baseline JPEG decodes row by row, so the same size stays acceptable (48 MP phones). */
     @Test
     void aBaselineJpegOfTheSameSizeIsStillAccepted() {
         ImageProbe.Probed probed = ImageProbe.probe(jpegHeaderOnly(0xC0, 10_000, 10_000));
@@ -216,7 +192,6 @@ class ImageProbeTest {
 
     @Test
     void refusesAnyJpegOrPngOverTheTotalPixelCap() {
-        // 25000 × 25000 is under the side limit but far over any real camera
         assertThatThrownBy(() -> ImageProbe.probe(jpegHeaderOnly(0xC0, 25_000, 25_000)))
                 .isInstanceOf(InvalidFieldException.class);
         assertThatThrownBy(() -> ImageProbe.probe(pngHeaderOnly(25_000, 25_000)))
@@ -231,11 +206,6 @@ class ImageProbeTest {
         assertThat(ImageProbe.reencode(small, "image/jpeg").width()).isEqualTo(64);
     }
 
-    /**
-     * Final review #5: phones store a portrait photo as landscape pixels plus EXIF Orientation.
-     * Re-encoding drops EXIF, so the rotation must be applied to the pixels, and the stored size
-     * must be the upright one.
-     */
     @Test
     void aSidewaysPhoneJpegIsStoredUpright() throws Exception {
         byte[] sideways = withOrientation(halves(40, 20), 6);
@@ -247,7 +217,6 @@ class ImageProbeTest {
         assertThat(stored.height()).isEqualTo(40);
         assertThat(upright.getWidth()).isEqualTo(20);
         assertThat(upright.getHeight()).isEqualTo(40);
-        // Rotating 90° clockwise puts the left (red) half on top
         assertThat(new java.awt.Color(upright.getRGB(10, 5)).getRed()).isGreaterThan(200);
         assertThat(new java.awt.Color(upright.getRGB(10, 35)).getBlue()).isGreaterThan(200);
     }
@@ -265,7 +234,6 @@ class ImageProbeTest {
         }
     }
 
-    /** Final review #7: the size saved with the photo is the size of the file actually stored. */
     @Test
     void theReportedSizeIsTheEncodedSize() throws Exception {
         ImageProbe.Normalized stored = ImageProbe.reencode(jpeg(5000, 2500), "image/jpeg");
@@ -275,7 +243,6 @@ class ImageProbeTest {
         assertThat(stored.height()).isEqualTo(decoded.getHeight());
     }
 
-    /** Left half red, right half blue. */
     private static byte[] halves(int w, int h) throws Exception {
         BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         for (int x = 0; x < w; x++) {
@@ -288,16 +255,15 @@ class ImageProbeTest {
         return out.toByteArray();
     }
 
-    /** Inserts an APP1 Exif segment right after SOI whose IFD0 holds only the Orientation tag. */
     private static byte[] withOrientation(byte[] jpeg, int orientation) {
         ByteBuffer app1 = ByteBuffer.allocate(2 + 2 + 6 + 26).order(ByteOrder.BIG_ENDIAN);
         app1.put((byte) 0xFF).put((byte) 0xE1).putShort((short) (2 + 6 + 26));
         app1.put("Exif".getBytes(StandardCharsets.US_ASCII)).put((byte) 0).put((byte) 0);
         app1.put("MM".getBytes(StandardCharsets.US_ASCII)).putShort((short) 42).putInt(8);
-        app1.putShort((short) 1); // one IFD entry
+        app1.putShort((short) 1);
         app1.putShort((short) 0x0112).putShort((short) 3).putInt(1);
         app1.putShort((short) orientation).putShort((short) 0);
-        app1.putInt(0); // no next IFD
+        app1.putInt(0);
         byte[] segment = app1.array();
         byte[] out = new byte[jpeg.length + segment.length];
         System.arraycopy(jpeg, 0, out, 0, 2);
@@ -306,7 +272,6 @@ class ImageProbeTest {
         return out;
     }
 
-    /** SOI + one SOFn segment (1 component) + EOI: enough for a header check, nothing to decode. */
     private static byte[] jpegHeaderOnly(int sofMarker, int w, int h) {
         ByteBuffer b = ByteBuffer.allocate(2 + 2 + 11 + 2).order(ByteOrder.BIG_ENDIAN);
         b.put((byte) 0xFF).put((byte) 0xD8);
@@ -330,7 +295,6 @@ class ImageProbeTest {
             writer.dispose();
         }
         byte[] bytes = out.toByteArray();
-        // Make sure the fixture really is progressive (SOF2), or the test proves nothing
         boolean sof2 = false;
         for (int i = 0; i + 1 < bytes.length; i++) {
             if ((bytes[i] & 0xFF) == 0xFF && (bytes[i + 1] & 0xFF) == 0xC2) {
@@ -349,7 +313,6 @@ class ImageProbeTest {
         return out.toByteArray();
     }
 
-    /** RIFF….WEBP + a "VP8L" chunk: signature 0x2f then 14 bits (w-1) and 14 bits (h-1). */
     private static byte[] losslessWebp(int w, int h) {
         byte[] payload = new byte[30];
         payload[0] = 0x2f;
@@ -373,18 +336,14 @@ class ImageProbeTest {
         return riff.array();
     }
 
-    /**
-     * A PNG with only the signature + an IHDR declaring 60000x60000. ImageIO can read the size from
-     * the header without decoding any IDAT — exactly what the backstop must catch.
-     */
     private static byte[] pngHeaderOnly(int w, int h) {
         java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
         out.writeBytes(new byte[] {(byte) 0x89, 'P', 'N', 'G', '\r', '\n', 0x1A, '\n'});
         ByteBuffer ihdr = ByteBuffer.allocate(13).order(ByteOrder.BIG_ENDIAN);
         ihdr.putInt(w);
         ihdr.putInt(h);
-        ihdr.put((byte) 8); // bit depth
-        ihdr.put((byte) 2); // colour type: truecolour
+        ihdr.put((byte) 8);
+        ihdr.put((byte) 2);
         ihdr.put((byte) 0);
         ihdr.put((byte) 0);
         ihdr.put((byte) 0);

@@ -20,7 +20,6 @@ import java.util.stream.LongStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** FR-039 — how the sweep walks the due orders: batches of 200, one transaction per order. */
 class OrderAutoCompleteJobBatchTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -43,7 +42,6 @@ class OrderAutoCompleteJobBatchTest {
         return LongStream.rangeClosed(from, to).boxed().toList();
     }
 
-    /** D-03: due = pickup end + 24 hours is before now, in Vietnam local time. */
     @Test
     void sweepAsksForReadyOrdersWhosePickupEndedMoreThanADayAgo() {
         when(queries.readyPastPickup(eq(NOW.minusHours(24)), anyInt())).thenReturn(List.of());
@@ -63,7 +61,6 @@ class OrderAutoCompleteJobBatchTest {
         verify(orders, times(203)).autoComplete(anyLong());
     }
 
-    /** An order that can never be completed must not make the sweep loop forever. */
     @Test
     void sweepStopsWhenTheSameOrdersComeBackAgain() {
         when(queries.readyPastPickup(eq(NOW.minusHours(24)), anyInt())).thenReturn(ids(1, 200));
@@ -74,7 +71,6 @@ class OrderAutoCompleteJobBatchTest {
         verify(orders, times(200)).autoComplete(anyLong());
     }
 
-    /** A lock timeout on one order must not cost every other due order its completion. */
     @Test
     void oneFailingOrderDoesNotStopTheOthers() {
         when(queries.readyPastPickup(eq(NOW.minusHours(24)), anyInt())).thenReturn(ids(1, 3));

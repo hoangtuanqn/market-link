@@ -18,16 +18,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * GET /api/v1/geo/* — Public (SecurityConfig): the sign-up form needs them before there is an
- * account. FR-001, FR-073.
- */
 @RestController
 @RequestMapping("/api/v1/geo")
 @AllArgsConstructor
 public class GeoController extends BaseController {
 
-    /** The lists only change with a migration, so browsers may keep them for a day. */
     private static final CacheControl LISTS = CacheControl.maxAge(Duration.ofDays(1)).cachePublic();
 
     private final GeoServiceInterface geoService;
@@ -47,7 +42,6 @@ public class GeoController extends BaseController {
         return cached(ok(geoService.wards(code), ""));
     }
 
-    /** Not cached: every keystroke asks something new. */
     @GetMapping("/provinces/{code}/streets")
     public ResponseEntity<ApiResource<List<StreetResource>>> streets(
             @PathVariable String code, @RequestParam(required = false) String q) {

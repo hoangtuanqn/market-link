@@ -11,18 +11,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-/**
- * FR-009 sign-up state in Redis.
- *
- * <pre>
- * signup:pending:{email}      JSON of PendingSignup (TTL = pending TTL, extended on every code)
- * signup:code:{email}         sha256(email:code), never the code itself (TTL = code TTL)
- * signup:attempts:{email}     tries at the current code, right or wrong (TTL follows the code)
- * signup:cooldown:{email}     "1" while a new code may not be sent (SET NX EX)
- * ratelimit:signup:{email}    codes sent to this address in the window
- * ratelimit:signup-ip:{ip}    codes sent from this IP in the window
- * </pre>
- */
 @Component
 @RequiredArgsConstructor
 public class RedisSignupStore implements SignupStoreInterface {
@@ -121,10 +109,6 @@ public class RedisSignupStore implements SignupStoreInterface {
         return count(SENDS_BY_IP + ip, window);
     }
 
-    /**
-     * INCR, EXPIRE on the first hit; a key that lost its TTL (a crash between the two commands)
-     * gets it back — same as PasswordResetService.
-     */
     private SendCount count(String key, Duration window) {
         Long count = redis.opsForValue().increment(key);
         Long ttl = redis.getExpire(key);

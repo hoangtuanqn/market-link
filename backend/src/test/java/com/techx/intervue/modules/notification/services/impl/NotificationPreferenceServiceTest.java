@@ -123,7 +123,6 @@ class NotificationPreferenceServiceTest {
                 .isEqualTo(new Alert(true, false, true));
     }
 
-    /** Muting farmer applications must not mute feedback: each has its own row in Settings. */
     @Test
     void feedbackFollowsItsOwnGroupNotFarmerApplications() {
         when(settings.findById(1L)).thenReturn(Optional.empty());

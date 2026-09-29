@@ -61,12 +61,10 @@ class EmailVerificationServiceTest {
                 null);
     }
 
-    /** A first sign-up from a browser; returns the token that browser keeps. */
     private String begin(String email, String name) {
         return service.start(pending(email, name), null, IP).signupToken();
     }
 
-    /** What the worker would put in the mail. */
     private String mailedCode(String email) {
         return service.issueCode(email).orElseThrow().code();
     }
@@ -88,7 +86,6 @@ class EmailVerificationServiceTest {
         verify(jobQueue).enqueue(EmailVerificationService.JOB_SEND_CODE, Map.of("email", EMAIL));
     }
 
-    /** Review Focus #4, from the same browser (it sends back its token). */
     @Test
     void theSameBrowserUpdatesItsFormDuringTheCooldownWithoutANewMail() {
         String token = begin(EMAIL, "Lan");
@@ -102,7 +99,6 @@ class EmailVerificationServiceTest {
         assertThat(again.signupToken()).isEqualTo(token);
     }
 
-    /** Final review #1: nobody can swap their own password into someone else's waiting sign-up. */
     @Test
     void aStrangerCannotReplaceAWaitingSignUpDuringItsCooldown() {
         begin(EMAIL, "Lan");
@@ -116,7 +112,6 @@ class EmailVerificationServiceTest {
         assertThat(store.pending.get(EMAIL).fullName()).isEqualTo("Lan");
     }
 
-    /** Final review #1: after the cooldown a new form replaces the old one, with a new token. */
     @Test
     void aReplacedSignUpCanNoLongerBeCompletedByTheFirstBrowser() {
         String first = begin(EMAIL, "Lan");
@@ -151,11 +146,9 @@ class EmailVerificationServiceTest {
                                 SignupExpiredException.class,
                                 () -> service.resend(EMAIL, null, IP)))
                 .isNotNull();
-        // A wrong token does not use up one of the five tries
         assertThat(store.attempts).doesNotContainKey(EMAIL);
     }
 
-    /** Review Focus #3. */
     @Test
     void theRightCodeIsUsedOnceOnly() {
         String token = begin(EMAIL, "Lan");
@@ -171,7 +164,6 @@ class EmailVerificationServiceTest {
                 .isNotNull();
     }
 
-    /** Review Focus #1. */
     @Test
     void emailCaseAndSpacesDoNotMatter() {
         String token = begin(EMAIL, "Lan");
@@ -181,7 +173,6 @@ class EmailVerificationServiceTest {
                 .isEqualTo(EMAIL);
     }
 
-    /** Review Focus #2. */
     @Test
     void codesKeepTheirLeadingZeros() {
         for (int i = 0; i < 2000; i++) assertThat(service.generateCode()).matches("\\d{6}");
@@ -225,10 +216,6 @@ class EmailVerificationServiceTest {
                 .isNotNull();
     }
 
-    /**
-     * Final review: a try is counted before the comparison, so parallel requests cannot all
-     * compare.
-     */
     @Test
     void everyTryIsCountedBeforeTheCodeIsCompared() {
         String token = begin(EMAIL, "Lan");
@@ -243,7 +230,6 @@ class EmailVerificationServiceTest {
     void aTryBeyondTheLimitIsRefusedEvenWithTheRightCode() {
         String token = begin(EMAIL, "Lan");
         String code = mailedCode(EMAIL);
-        // Five other tries are already in flight and counted
         store.attempts.put(EMAIL, 5);
 
         assertThat(

@@ -10,7 +10,6 @@ vi.mock('@/api-requests/deal.requests', async (importOriginal) => {
 
 describe('ActiveDeals', () => {
   it('shows a loading line before the first list resolves', () => {
-    // Never resolves within the test, so the component stays on its first "loading" render.
     vi.mocked(DealApi.mine).mockReturnValue(new Promise(() => {}));
 
     render(<ActiveDeals version={0} />);

@@ -19,7 +19,6 @@ vi.mock('@/hooks/useSession', () => ({
   default: () => ({ user: { id: 2, role: 'customer', fullName: 'Khách' }, isLoggedIn: true }),
 }));
 
-/** A free slot of stall 1 at market 1, unless `extra` says otherwise. */
 const slot = (
   slotId: number,
   slotDate: string,
@@ -40,11 +39,9 @@ const slot = (
   ...extra,
 });
 
-/** Every place of the slot taken. */
 const FULL: Partial<SlotDto> = { bookedCount: 5, isFull: true };
 
 beforeEach(() => {
-  // Today is Wed 30/09/2026 in Ho Chi Minh City; only Date is faked, so user-event's timers still run
   vi.useFakeTimers({ toFake: ['Date'] });
   vi.setSystemTime(new Date('2026-09-30T09:00:00+07:00'));
   vi.clearAllMocks();
@@ -90,10 +87,6 @@ afterEach(() => {
 });
 
 describe('CustomerCartPage', () => {
-  /**
-   * The first pickup day is shown already selected; picking a time on it must be enough to place the order, and the
-   * order goes out for that day — not blocked with "choose a pickup time", not sent without a date.
-   */
   it('places the order for the day shown as selected when only a time is picked', async () => {
     render(
       <MemoryRouter>
@@ -112,17 +105,12 @@ describe('CustomerCartPage', () => {
     ]);
   });
 
-  /** FR-031: the server keeps at most 255 characters of the note (400 beyond), so the box stops there too. */
   it('stops the note at 255 characters, the most the server keeps', async () => {
     renderCart();
 
     expect(await screen.findByLabelText('Note to the stalls')).toHaveAttribute('maxLength', '255');
   });
 
-  /**
-   * FR-031/032: placing answered 409 because the time was taken meanwhile. The slots are loaded again with the preview,
-   * and the time that is now full can no longer be sent.
-   */
   it('reloads the slots after placing fails and does not place a time that is now full', async () => {
     vi.mocked(StallApi.slots).mockResolvedValue([
       slot(11, '2026-10-03', '07:00', '08:00'),
@@ -153,7 +141,6 @@ const renderCart = () =>
     </MemoryRouter>,
   );
 
-/** One stall, one line of 2 bunches of water spinach, with the numbers of the day it is priced for. */
 const priced = (item: Partial<PreviewItemDto>): OrderGroupPreviewDto[] => [
   {
     farmerId: 1,
@@ -180,7 +167,6 @@ const priced = (item: Partial<PreviewItemDto>): OrderGroupPreviewDto[] => [
   },
 ];
 
-/** The same stall selling at two markets, so the cart lets the customer choose (C5-11: no market filled in). */
 const atTwoMarkets = (groups: OrderGroupPreviewDto[]): OrderGroupPreviewDto[] =>
   groups.map((g) => ({
     ...g,
@@ -211,12 +197,10 @@ const addFromDeals = (pickupDate: string) => {
   );
 };
 
-/** Every day any preview so far was asked to price. */
 const pricedDays = () =>
   vi.mocked(OrderApi.preview).mock.calls.flatMap(([, dates]) => (dates ?? []).map((d) => d.date));
 
 describe('CustomerCartPage — near-expiry deals (FR-125)', () => {
-  /** Spec §4.5.5: the stall's day picker starts on the deal day, and the preview prices that day. */
   it('starts a stall on the day its line was added for, priced for that day', async () => {
     addFromDeals('2026-10-04');
     vi.mocked(OrderApi.preview).mockResolvedValue(priced({ ...DEAL, storageMode: 'chilled' }));
@@ -250,7 +234,6 @@ describe('CustomerCartPage — near-expiry deals (FR-125)', () => {
     await waitFor(() => expect(screen.queryByText('−40% near-expiry deal')).not.toBeInTheDocument());
   });
 
-  /** The deal day has no pickup time left: the picker falls back to the first day and says why. */
   it('says so when the deal day can no longer be picked', async () => {
     addFromDeals('2026-10-10');
     renderCart();
@@ -261,7 +244,6 @@ describe('CustomerCartPage — near-expiry deals (FR-125)', () => {
     expect(screen.getByRole('radio', { name: /03\/10/ })).toBeChecked();
   });
 
-  /** I-1: the stall's slots come for all its markets at once, and it starts at the market that has the deal day. */
   it('starts a stall at two markets on the one that still has the deal day', async () => {
     addFromDeals('2026-09-30');
     vi.mocked(StallApi.slots).mockResolvedValue([
@@ -291,7 +273,6 @@ describe('CustomerCartPage — near-expiry deals (FR-125)', () => {
     ]);
   });
 
-  /** I-3: the stall is priced for its first deal line's day, so the other line says at once that its deal is elsewhere. */
   it('tells a second deal line of the stall right away that its deal is for another day', async () => {
     addFromDeals('2026-10-03');
     Cart.add(
@@ -340,7 +321,6 @@ describe('CustomerCartPage — near-expiry deals (FR-125)', () => {
     );
   });
 
-  /** I-2: a deal day remembered from /deals that has passed counts as none, instead of pricing a day nobody can book. */
   it('ignores a remembered deal day that has passed', async () => {
     addFromDeals('2026-09-29');
     renderCart();
@@ -355,7 +335,6 @@ describe('CustomerCartPage — near-expiry deals (FR-125)', () => {
     expect(screen.queryByText(/The deal only applies/)).not.toBeInTheDocument();
   });
 
-  /** I-2: a deal day whose times are all taken is still a chip, but the stall is never priced for it. */
   it('prices a stall whose deal day is fully booked for its first day with a free time', async () => {
     addFromDeals('2026-10-04');
     vi.mocked(StallApi.slots).mockResolvedValue([
@@ -376,7 +355,6 @@ describe('CustomerCartPage — near-expiry deals (FR-125)', () => {
     expect(pricedDays()).not.toContain('2026-10-04');
   });
 
-  /** I-2: clicking a fully booked day shows its full times; the stall stays priced for the day it could book. */
   it('keeps the stall on its last bookable day when a fully booked day is clicked', async () => {
     vi.mocked(StallApi.slots).mockResolvedValue([
       slot(11, '2026-10-03', '07:00', '08:00'),
@@ -397,7 +375,6 @@ describe('CustomerCartPage — near-expiry deals (FR-125)', () => {
     expect(screen.getByRole('button', { name: 'Place 1 order' })).toBeDisabled();
   });
 
-  /** M-6: with no deal, the day shown first is the first one with a free time, and the stall is priced for it. */
   it('starts a stall with no deal on its first day with a free time, priced for that day', async () => {
     vi.mocked(StallApi.slots).mockResolvedValue([
       slot(11, '2026-10-03', '07:00', '08:00', FULL),

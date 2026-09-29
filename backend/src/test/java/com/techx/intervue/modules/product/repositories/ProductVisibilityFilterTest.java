@@ -4,11 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-/**
- * Review focus #5 / D-09 — a suspended stall's products must disappear from every public page, but
- * the records remain so running orders can read them. The test reads the constant SQL statement
- * directly, needing no database.
- */
 class ProductVisibilityFilterTest {
 
     @Test
@@ -21,10 +16,6 @@ class ProductVisibilityFilterTest {
         assertThat(sql).doesNotContain("'suspended'");
     }
 
-    /**
-     * FR-063 daily stock: a product with no active weekly template is never orderable, so the
-     * public pages leave it out — inside the SQL, so the page and its total count agree.
-     */
     @Test
     void publicProductSqlOnlyListsProductsWithAnActiveWeeklyTemplate() {
         assertThat(ProductQueryRepository.VISIBILITY_FILTER)

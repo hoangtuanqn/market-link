@@ -20,12 +20,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * FR-093: the fixed SQL the Farmer assistant may run. Same rules as {@link ChatKnowledgeRepository}
- * (R-04: read-only, every user value is a parameter, nothing is concatenated) plus one more that
- * matters more here — <b>every query is scoped by {@code :farmerId}</b>, and that value comes from
- * the signed-in account, never from a tool argument.
- */
 @Repository
 @RequiredArgsConstructor
 public class FarmerKnowledgeRepository {
@@ -38,7 +32,6 @@ public class FarmerKnowledgeRepository {
     private static final String STALL_NAME =
             "SELECT stall_name FROM farmer_profiles WHERE id = :farmerId";
 
-    /** What is in one order of this stall; another stall's order id finds nothing. */
     private static final String MY_ORDER_ITEMS =
             """
             SELECT i.product_name, i.quantity, i.unit, i.subtotal
@@ -67,7 +60,6 @@ public class FarmerKnowledgeRepository {
             LIMIT :limit
             """;
 
-    /** Still waiting to be accepted, and the stall is running out of time to decide. */
     private static final String CUTOFF_SOON =
             """
             SELECT o.id AS order_id, o.order_code, u.full_name AS customer_name, m.market_name,
@@ -156,7 +148,6 @@ public class FarmerKnowledgeRepository {
             LIMIT 30
             """;
 
-    /** FR-093 Overview banner: one round trip, five numbers, all for one pickup date. */
     private static final String BRIEFING =
             """
             SELECT
@@ -178,10 +169,6 @@ public class FarmerKnowledgeRepository {
                    AND stock_quantity <= :lowStock)                       AS low_stock
             """;
 
-    /**
-     * One order of this stall, found by the code the person typed. Another stall's code finds
-     * nothing.
-     */
     private static final String MY_ORDER_BY_CODE =
             """
             SELECT o.id AS order_id, o.order_code, u.full_name AS customer_name, m.market_name,
@@ -199,7 +186,6 @@ public class FarmerKnowledgeRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
 
-    /** Vietnam time ({@code ChatConfig}), the zone {@code orders.cutoff_at} is written in. */
     private final Clock clock;
 
     public Optional<OrderRow> myOrderByCode(long farmerId, String orderCode) {
@@ -248,7 +234,6 @@ public class FarmerKnowledgeRepository {
                                 rs.getBigDecimal("subtotal")));
     }
 
-    /** The name of a stall, so a Farmer tool result can say whose numbers it holds. */
     public Optional<String> stallName(long farmerId) {
         return jdbc
                 .queryForList(
@@ -257,7 +242,6 @@ public class FarmerKnowledgeRepository {
                 .findFirst();
     }
 
-    /** The stall this account owns, or empty when it owns none. Resolved from the JWT's user id. */
     public Optional<Long> farmerIdOf(long userId) {
         return jdbc
                 .queryForList(

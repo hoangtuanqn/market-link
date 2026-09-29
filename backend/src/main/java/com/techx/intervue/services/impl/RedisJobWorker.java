@@ -16,11 +16,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-/**
- * A background thread BRPOPs the Redis queue and calls the matching JobHandler. On an error the job
- * is pushed back, after MAX_ATTEMPTS it is dropped and logged. Turn off with
- * app.jobs.worker-enabled=false.
- */
 @Slf4j
 @Component
 public class RedisJobWorker {

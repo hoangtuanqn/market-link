@@ -113,7 +113,6 @@ class FarmerServiceTest {
                 .build();
     }
 
-    /** Fill in the two required fields, leave the description and images/videos empty. */
     private static FarmerApplicationRequest minimalRequest(String stallName, String contactPerson) {
         return new FarmerApplicationRequest(stallName, contactPerson, null, null, null);
     }
@@ -166,10 +165,6 @@ class FarmerServiceTest {
         verify(farmerProfileRepository, never()).save(any());
     }
 
-    /**
-     * Being rejected is no longer a dead end: the old application is overwritten, and the new
-     * submission is written to the history.
-     */
     @Test
     void apply_reopensTheRejectedApplication_andRecordsANewAttempt() {
         FarmerProfile rejected = pendingProfile();
@@ -194,9 +189,6 @@ class FarmerServiceTest {
         assertThat(saved.getValue().getStatus()).isEqualTo(ApprovalStatus.PENDING);
     }
 
-    /**
-     * Someone else's image must not be attached to your application, even if the path is guessed.
-     */
     @Test
     void apply_rejectsFilesThatBelongToSomeoneElse() {
         when(farmerProfileRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
@@ -237,7 +229,6 @@ class FarmerServiceTest {
         verify(farmerProfileRepository).delete(profile);
     }
 
-    /** Once approved there is nothing left to withdraw — that is an outcome, not pending work. */
     @Test
     void withdraw_throws_whenTheApplicationWasAlreadyDecided() {
         FarmerProfile profile = pendingProfile();
@@ -273,11 +264,6 @@ class FarmerServiceTest {
         assertThat(profile.getApprovedAt()).isNotNull();
     }
 
-    /**
-     * JwtAuthFilter builds authorities from UserSessionCache and not from the token's claim:
-     * writing only users.role would leave a just-approved Farmer with ROLE_CUSTOMER until the
-     * access token TTL ends.
-     */
     @Test
     void approve_refreshesCachedSessionRole_soTheNewRoleAppliesOnTheNextRequest() {
         FarmerProfile profile = pendingProfile();
@@ -292,10 +278,6 @@ class FarmerServiceTest {
         verify(userSessionCache).updateRoles(USER_ID, Set.of(RoleType.FARMER));
     }
 
-    /**
-     * Suspend does not change the role (D-09: still farmer, can still sign in) so it does not touch
-     * the session.
-     */
     @Test
     void suspend_leavesTheCachedSessionAlone() {
         FarmerProfile profile = pendingProfile();
@@ -416,8 +398,6 @@ class FarmerServiceTest {
                 .isInstanceOf(InvalidApprovalTransitionException.class);
     }
 
-    // FR-042: every decision on a Farmer application notifies the people involved
-
     private FarmerProfile withStatus(ApprovalStatus status) {
         FarmerProfile profile = pendingProfile();
         profile.setApprovalStatus(status);
@@ -527,7 +507,6 @@ class FarmerServiceTest {
         verifyNoInteractions(notifications);
     }
 
-    /** FR-123 (spec §4.4.4): the admin sees the stall's strikes and when a lock ends. */
     @Test
     void theDetailCarriesTheShelfLifeStrikesAndTheLockEnd() {
         withStatus(ApprovalStatus.APPROVED);

@@ -14,11 +14,8 @@ public record UserResource(
         String fullName,
         String phone,
         String address,
-        /* the parts behind `address`; absent on accounts saved before addresses had parts */
         AddressPartsResource addressParts,
         RoleType role,
         Instant createdAt,
-        /* false: an account created through Google has not set a password → the FE invites them to set one */
         boolean hasPassword,
-        /* a Google photo (full URL) or a self-uploaded photo ("/uploads/avatars/..."); when null the FE shows the initial letter */
         String avatarUrl) {}

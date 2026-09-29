@@ -21,7 +21,6 @@ type StallCardFarmer = {
   distance?: string;
 };
 
-/** Design system `.ml-stall` — a monogram, the stall's markets/days/pickup, and where to find it. */
 const StallCard = ({ farmer, children }: { farmer: StallCardFarmer; children?: ReactNode }) => {
   const { t } = useTranslation();
   return (
@@ -34,8 +33,6 @@ const StallCard = ({ farmer, children }: { farmer: StallCardFarmer; children?: R
       </span>
       <div>
         <h3 className="text-[17px] leading-tight font-bold">
-          {/* after:inset-0 stretches the hit area over the whole card (the Card is relative), so a
-              finger anywhere on it opens the page. The button below sits above it with z-2. */}
           <Link
             to={`/stalls/${farmer.id}`}
             className="text-inherit no-underline after:absolute after:inset-0 hover:underline hover:underline-offset-3"

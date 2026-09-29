@@ -17,20 +17,14 @@ import { cutoffLabel, formatDate, formatTime, pickupLabel, units, money } from '
 import Helper from '@/utils/helper';
 import OrderDetailSkeleton from './OrderDetailSkeleton';
 
-/** 403 (should not happen for an admin, Task 1.4) and 404 read the same: the order is not here to show. */
 const isGone = (error: unknown) =>
   isAxiosError(error) && (error.response?.status === 403 || error.response?.status === 404);
 
-/** An ISO instant (history entries) as the reader's date and time. */
 const when = (iso: string) => {
   const at = new Date(iso);
   return `${formatDate(at)} ${formatTime(at)}`;
 };
 
-/**
- * FR-070 / FR-038 — one order, read-only. D-04 gives the stall the transitions and the customer the cancel before
- * cutoff; an admin is not in that list, so this screen reads and does not touch.
- */
 const AdminOrderDetailPage = () => {
   const { t } = useTranslation('AdminOrderDetail');
   const { code } = useParams<{ code: string }>();
@@ -50,8 +44,6 @@ const AdminOrderDetailPage = () => {
   );
   const order = state.kind === 'ready' ? state.data : null;
 
-  // A Farmer can buy too (D-13), but the customer record only opens customer accounts: find the buyer's own stall by
-  // email so the button opens the record that exists (FR-072).
   const buyerEmail = order?.customer?.email.toLowerCase() ?? '';
   const { state: buyerStallLoad } = useRequest(`admin-order-buyer-stall:${buyerEmail}`, () =>
     buyerEmail

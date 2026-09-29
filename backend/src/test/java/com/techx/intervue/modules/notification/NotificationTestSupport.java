@@ -19,10 +19,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
-/**
- * Creates a user with a real session and makes real HTTP calls (the repo has no MockMvc on the Boot
- * 4 classpath yet).
- */
 public class NotificationTestSupport {
 
     private final UserRepository users;
@@ -63,8 +59,6 @@ public class NotificationTestSupport {
         u.setStatus(status);
         u = users.save(u);
         if (role == RoleType.ADMIN) {
-            // FR-008: SecurityConfig refuses /api/v1/admin/** to an admin whose two-step
-            // verification is not set up, so a test admin has to be one that finished it.
             adminMfa.save(
                     AdminMfa.builder()
                             .userId(u.getId())
@@ -100,10 +94,6 @@ public class NotificationTestSupport {
         }
     }
 
-    /**
-     * Delete the users created; FK ON DELETE CASCADE deletes notifications / preferences /
-     * settings.
-     */
     public void cleanUp() {
         for (User u : created) {
             sessions.evict(u.getId());

@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Which day of the week the market is held: 0 = Sunday … 6 = Saturday (contract §3). */
 @Entity
 @Getter
 @Setter

@@ -11,9 +11,7 @@ export type CartLineType = {
   price: number;
   max: number;
   qty: number;
-  /** Near-expiry deal (FR-125): the price before the discount, shown struck through. */
   listPrice?: number | null;
-  /** A line under the price, e.g. the deal and until when it stays good. */
   note?: ReactNode;
 };
 
@@ -27,7 +25,6 @@ type CartGroupProps = {
   onRemove: (id: number) => void;
 };
 
-/** One order = one Farmer (D-01) — design system `.ml-cart`. */
 const CartGroup = ({ index, of, stallName, where, items, onQtyChange, onRemove }: CartGroupProps) => {
   const { t } = useTranslation();
   const total = items.reduce((sum, i) => sum + i.qty * i.price, 0);

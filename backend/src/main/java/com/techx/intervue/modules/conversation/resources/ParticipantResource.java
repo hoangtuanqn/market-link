@@ -8,9 +8,6 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import java.time.Instant;
 import lombok.Builder;
 
-/**
- * The other person in a thread. Does not expose email, phone, address. FR-112: online / last seen.
- */
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ParticipantResource(
@@ -23,11 +20,6 @@ public record ParticipantResource(
         Long farmerId,
         String stallName) {
 
-    /**
-     * `stall` is null when the other person has no stall profile (a Customer): farmerId and
-     * stallName are absent. A customer messages a stall, so the FE shows stallName first, fullName
-     * second (spec §9.2).
-     */
     public static ParticipantResource from(
             User user, PresenceService.PresenceInfo presence, FarmerProfile stall) {
         return ParticipantResource.builder()

@@ -5,7 +5,6 @@ const OriginStory = () => {
 
   return (
     <section className="about-section" id="origin">
-      {/* Section Header */}
       <div className="about-section-header">
         <div className="about-section-title-wrap">
           <span className="about-eyebrow">🌱 {t('story.eyebrow', 'HOW IT BEGAN')}</span>
@@ -19,10 +18,8 @@ const OriginStory = () => {
         </div>
       </div>
 
-      {/* Grid: 3 Dilemma Cards on Left + Visual Quote Card on Right */}
       <div className="about-origin-grid">
         <div className="about-origin-cards">
-          {/* Card 1 */}
           <div className="about-dilemma-card">
             <span className="about-dilemma-tag tag-farmer">{t('story.farmerTitle', "The Farmer's Burden")}</span>
             <h3 className="about-dilemma-h3">
@@ -36,7 +33,6 @@ const OriginStory = () => {
             </p>
           </div>
 
-          {/* Card 2 */}
           <div className="about-dilemma-card">
             <span className="about-dilemma-tag tag-customer">
               {t('story.customerTitle', "The City Family's Search")}
@@ -52,7 +48,6 @@ const OriginStory = () => {
             </p>
           </div>
 
-          {/* Card 3 */}
           <div
             className="about-dilemma-card"
             style={{ borderLeft: '4px solid var(--brand)', borderColor: 'var(--card-border)' }}
@@ -72,7 +67,6 @@ const OriginStory = () => {
           </div>
         </div>
 
-        {/* Visual Card with Overlaid Quote */}
         <div className="about-origin-visual-card">
           <img
             className="about-origin-visual-img"

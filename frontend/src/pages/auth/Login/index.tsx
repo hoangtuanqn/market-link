@@ -8,14 +8,11 @@ import type { LoginRedirectState } from '@/layout/RequireAuth';
 import FormLogin from './FormLogin';
 import GoogleLoginButton from './GoogleLoginButton';
 
-/** FR-003 — shared sign-in for Customer and Farmer. Admin uses its own sign-in screen (FR-004). */
 const LoginPage = () => {
   const { t } = useTranslation('Login');
   const { user } = useSession();
   const location = useLocation();
 
-  // FR-003: if already signed in do not show the form again — go to the page they had open (sent by RequireAuth), otherwise to the home page
-  // for the role (the same destination FormLogin routes to after sign-in)
   if (user) {
     const from = (location.state as LoginRedirectState | null)?.from;
     const home = user.role === USER_ROLE.ADMIN ? ADMIN_HOME_PATH : '/';

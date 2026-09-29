@@ -26,7 +26,6 @@ import Helper from '@/utils/helper';
 const NO_PRODUCTS: ProductType[] = [];
 const NO_FAVORITES: FavoriteDto[] = [];
 
-/** FR-010 FR-011 — one market: who sells there on a given day, and what they have. */
 const MarketDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const { t } = useTranslation('MarketDetail');
@@ -38,32 +37,24 @@ const MarketDetailPage = () => {
   const { state: load, retry } = useRequest(`market:${id}`, () =>
     validId ? CatalogApi.getMarket(marketId).then((result) => result.market) : Promise.reject(new Error('missing')),
   );
-  /** The server's 404, or an id that could never be one — the "not here any more" page, not the error block. */
   const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'MARKET_NOT_FOUND');
   const market = load.kind === 'ready' ? load.data : undefined;
 
-  // FR-040 — whether this market is already a favourite of the signed-in customer.
   const { state: favLoad } = useRequest(`fav-market:${marketId}`, () =>
     isLoggedIn ? FavoriteApi.list('market') : Promise.resolve(NO_FAVORITES),
   );
   const favoriteId = favLoad.kind === 'ready' ? (favLoad.data.find((f) => f.targetId === marketId)?.id ?? null) : null;
 
-  // The coming week from today (FR-010); a day the market does not open on is struck through. Until the visitor picks
-  // a chip, the day is the first one from today that the market opens on.
   const [week] = useState(() => nextSevenDays());
-  // A pick belongs to the market it was made on, so moving to another market starts again from its first open day.
   const [picked, setPicked] = useState<{ market: string | undefined; dow: number } | null>(null);
   const pickedDay = picked && picked.market === id ? picked.dow : null;
   const day = pickedDay ?? (market ? firstOpenDay((d) => market.days.includes(d), week[0].date) : week[0].dow);
-  /** No request goes out for a day before the market's own days are known, so a closed day is never fetched. */
   const dayKey = market ? String(day) : 'pending';
   const [category, setCategory] = useState('All');
   const [inStockOnly, setInStockOnly] = useState(false);
   const [scope, setScope] = useState<'product' | 'farmer'>('product');
   const [query, setQuery] = useState('');
 
-  // FR-010: who is selling here on the chosen day, straight from the API. Keyed by market and day, so a new
-  // chip or a new id starts a new request; while the market itself is still loading, this waits.
   const { state: stallsLoad, retry: retryStalls } = useRequest(`market-stalls:${id}:${dayKey}`, () =>
     validId && market ? StallApi.atMarket(marketId, day) : Promise.resolve([]),
   );
@@ -73,7 +64,6 @@ const MarketDetailPage = () => {
     [market, stallsLoad],
   );
 
-  // What is on sale here on the chosen day (FR-020), from the same filters the products page uses.
   const { state: productsLoad } = useRequest(`market-products:${id}:${dayKey}`, () =>
     validId && market
       ? ProductApi.list({ marketId, day, pageSize: 50 }).then((r) => r.items)
@@ -87,7 +77,6 @@ const MarketDetailPage = () => {
     return counts;
   }, [productsToday]);
 
-  // The market itself plus every stall trading today that has pinned its spot (FR-012).
   const mapMarkers = useMemo<MapMarker[]>(() => {
     if (!market) return [];
     const pins: MapMarker[] = [
@@ -120,8 +109,6 @@ const MarketDetailPage = () => {
     return pins;
   }, [market, stallsToday, tc]);
 
-  // FR-010 FR-021 — the search box narrows the lists already loaded for this market and day, in place: products by
-  // name, or stalls by stall or Farmer name, whichever the scope says. Clearing it brings the full lists back.
   const searching = query.trim() !== '';
   const shownProducts = productsToday.filter((p) => {
     if (category !== 'All' && p.category !== category) return false;
@@ -134,8 +121,6 @@ const MarketDetailPage = () => {
   const productsRef = useRef<HTMLDivElement>(null);
   const stallsRef = useRef<HTMLElement>(null);
 
-  // Hook, so it has to run before either early return below — it stays unconditional even though
-  // the fallback photos only matter once `market` is loaded.
   const marketImages = useMemo(() => {
     if (market?.images && market.images.length > 0) return market.images;
     return [
@@ -171,7 +156,6 @@ const MarketDetailPage = () => {
   const dayLong = dayName(day, 'long');
   const dayDate = week.find((d) => d.dow === day)?.date;
 
-  // The lists filter as you type; submitting brings the list being searched into view (the stalls sit below the map).
   const onSearch = (e: React.FormEvent) => {
     e.preventDefault();
     const still = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -194,7 +178,6 @@ const MarketDetailPage = () => {
 
   return (
     <div className="flex flex-col gap-8">
-      {/* Top Market Photos Carousel */}
       <MarketCarousel images={marketImages} marketName={market.name} />
 
       <div className="flex flex-wrap items-end justify-between gap-4">
@@ -221,7 +204,6 @@ const MarketDetailPage = () => {
         </div>
       </div>
 
-      {/* Filter and Search Section */}
       <Card as="section" aria-label="Filters" className="flex flex-col gap-4 p-5">
         <form
           onSubmit={onSearch}

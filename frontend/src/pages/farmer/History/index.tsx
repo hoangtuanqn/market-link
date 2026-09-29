@@ -21,16 +21,11 @@ const PAGE_SIZE = 50;
 const BEST_SELLER_LIMIT = 8;
 
 const pad = (n: number) => String(n).padStart(2, '0');
-/** A Date, local time, as "yyyy-MM-dd" — what `from`/`to` expect. */
 const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 const startOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth(), 1);
 const endOfMonth = (d: Date) => new Date(d.getFullYear(), d.getMonth() + 1, 0);
 const sameMonth = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth();
 
-/**
- * FR-069 — what sold this month: completed orders (`FarmerReportApi.sales`), best sellers, and the declined/cancelled
- * counts (two small all-time totals — the order list has no date range filter).
- */
 const FarmerHistoryPage = () => {
   const { t, i18n } = useTranslation('FarmerHistory');
   const now = new Date();
@@ -47,20 +42,15 @@ const FarmerHistoryPage = () => {
   const from = ymd(startOfMonth(month));
   const to = ymd(endOfMonth(month));
 
-  // The "past orders" table: its own paged request, independent of the month totals below.
   const { state: salesLoad, retry: retrySales } = useRequest(`farmer-sales:${from}:${to}:${page}`, () =>
     FarmerReportApi.sales({ from, to, page, pageSize: PAGE_SIZE }),
   );
-  // The month's revenue/average KPIs: every completed order in range, not just the table's current page — a
-  // partial sum here would silently change as the reader pages through the table.
   const { state: totalsLoad, retry: retryTotals } = useRequest(`history-totals:${from}:${to}`, () =>
     fetchAllSales(from, to),
   );
   const { state: bestLoad, retry: retryBest } = useRequest(`farmer-history-best:${from}:${to}`, () =>
     FarmerReportApi.bestSellers({ from, to, limit: BEST_SELLER_LIMIT }),
   );
-  // All-time totals: `OrderApi.farmerList` filters by a single pickup date, not a range, so these cannot be
-  // scoped to the month on screen yet.
   const { state: declinedLoad } = useRequest('farmer-declined-total', () =>
     OrderApi.farmerList({ status: 'declined', pageSize: 1 }),
   );

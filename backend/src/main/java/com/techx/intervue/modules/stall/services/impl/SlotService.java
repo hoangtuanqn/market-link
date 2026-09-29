@@ -39,22 +39,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-032, FR-067 — a Farmer generates slots from their weekday time windows
- * (farmer_operating_days), edits a slot's capacity or turns it off; a customer views a stall's
- * still-open slots.
- */
 @Service
 @AllArgsConstructor
 public class SlotService implements SlotServiceInterface {
 
-    /** One click of "Generate" must not spawn thousands of rows. */
     private static final int MAX_RANGE_DAYS = 60;
 
-    /**
-     * No date given: from today through the next 14 days — enough for the cart to build its
-     * pickup-day list.
-     */
     private static final int DEFAULT_PUBLIC_DAYS = 14;
 
     private final FarmerProfileRepository farmerProfileRepository;
@@ -64,11 +54,6 @@ public class SlotService implements SlotServiceInterface {
     private final SlotQueryRepository queryRepository;
     private final Clock clock;
 
-    /**
-     * Cuts [start, end) of one day into slotMinutes-minute windows; a leftover partial window at
-     * the end is dropped. Computed in minutes of the day: LocalTime.plusMinutes wraps past 00:00,
-     * so a loop written in LocalTime could run forever for a window right up against midnight.
-     */
     static List<LocalTime[]> windows(LocalTime start, LocalTime end, int slotMinutes) {
         List<LocalTime[]> out = new ArrayList<>();
         int endMinute = end.getHour() * 60 + end.getMinute();
@@ -84,12 +69,6 @@ public class SlotService implements SlotServiceInterface {
         return LocalTime.of(m / 60, m % 60);
     }
 
-    /**
-     * FR-067: whether the window [w0, w1) overlaps a slot of that day still inside the day's time
-     * window — generating again with another slot length must not lay new slots over those. A slot
-     * outside the window is no longer offered or bookable ({@link PickupSlotRepository#OPEN_DAYS}),
-     * so it does not block the window's new slots.
-     */
     static boolean overlapsAnOfferedSlot(
             List<PickupSlot> sameDay, FarmerOperatingDay day, LocalTime[] w) {
         if (sameDay == null) {
@@ -128,8 +107,6 @@ public class SlotService implements SlotServiceInterface {
                     "Generate at most " + MAX_RANGE_DAYS + " days at a time.");
         }
 
-        // 0 = Sunday … 6 = Saturday, like farmer_operating_days; Java's DayOfWeek: Mon = 1 … Sun =
-        // 7
         Map<Integer, FarmerOperatingDay> byWeekday =
                 operatingDayRepository.findByFarmerMarketId(link.getId()).stream()
                         .collect(
@@ -137,9 +114,6 @@ public class SlotService implements SlotServiceInterface {
                                         FarmerOperatingDay::getDayOfWeek, Function.identity()));
         List<PickupSlot> existing =
                 slotRepository.findByFarmerMarketIdAndSlotDateBetween(link.getId(), from, to);
-        // Idempotent: an existing slot (even a disabled one, or one whose capacity was already
-        // edited) is left unchanged, and no new window is laid over it; uq_slot also blocks
-        // two simultaneous requests
         Set<String> taken = new HashSet<>();
         Map<LocalDate, List<PickupSlot>> existingByDate = new HashMap<>();
         for (PickupSlot s : existing) {
@@ -189,8 +163,6 @@ public class SlotService implements SlotServiceInterface {
     public SlotResource updateSlot(long userId, long slotId, UpdateSlotRequest request) {
         FarmerProfile profile = mine(userId);
         StallSuspensionMessage.assertUsable(profile);
-        // Locked the same way as placing an order (C5): the order count read here cannot change
-        // until this write finishes
         PickupSlot slot = slotRepository.lockById(slotId).orElseThrow(SlotNotFoundException::new);
         FarmerMarket link =
                 farmerMarketRepository
@@ -211,10 +183,6 @@ public class SlotService implements SlotServiceInterface {
         return SlotResource.of(slotRepository.save(slot), link.getMarketId());
     }
 
-    /**
-     * D-09: a stall not approved / suspended has no slots for customers → 404, without revealing
-     * the reason.
-     */
     @Override
     public List<SlotResource> publicSlots(long farmerId, Long marketId, LocalDate date) {
         farmerProfileRepository
@@ -247,10 +215,6 @@ public class SlotService implements SlotServiceInterface {
         return LocalDate.now(clock);
     }
 
-    /**
-     * R-06: the profile is always looked up by the token's userId; there is no path that takes a
-     * farmerId from the request.
-     */
     private FarmerProfile mine(long userId) {
         return farmerProfileRepository
                 .findByUserId(userId)

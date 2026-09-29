@@ -51,7 +51,6 @@ describe('CustomerMessagesPage', () => {
     expect(await screen.findByRole('button', { name: /cô tư/i })).toBeInTheDocument();
   });
 
-  /** Spec §9.2: at 375px these are two separate screens, so there must be a way back after opening a thread. */
   it('offers a way back once a thread is open', async () => {
     render(
       <MemoryRouter>
@@ -64,7 +63,6 @@ describe('CustomerMessagesPage', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: /^back$/i })).toBeInTheDocument());
   });
 
-  /** Review Focus #14: the hook must know which thread is open to keep its badge at 0. */
   it('tells the thread list which thread is open', async () => {
     render(
       <MemoryRouter>
@@ -92,7 +90,6 @@ describe('CustomerMessagesPage', () => {
   });
 });
 
-/** Spec §9.3: Farmer reuses the exact same conversation component as Customer, only the shell differs. */
 describe('FarmerMessagesPage', () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -112,7 +109,6 @@ describe('FarmerMessagesPage', () => {
     expect(useThreadList).toHaveBeenLastCalledWith(42);
   });
 
-  /** A Farmer cannot open a conversation themself: the Customer's "message a stall" sentence is wrong for them. */
   it('explains where conversations come from when there are none', async () => {
     useThreadList.mockReturnValue({ threads: [], loading: false, error: false, reload: vi.fn() });
     render(

@@ -6,11 +6,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import jakarta.validation.constraints.Size;
 
-/**
- * Body of POST/PUT /api/v1/admin/categories (contract §5). The server generates the slug from name.
- * `minShelfLifeDays`/`maxShelfLifeDays` are the standard shelf-life range the Admin sets for this
- * category — no official FR yet, see migration V20260926015.
- */
 public record CategoryRequest(
         @NotBlank(message = "Category name is required.")
                 @Size(max = 80, message = "Keep the category name to 80 characters or fewer.")

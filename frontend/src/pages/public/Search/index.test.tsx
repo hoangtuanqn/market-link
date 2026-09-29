@@ -49,7 +49,6 @@ describe('SearchPage scope (FR-021)', () => {
     vi.spyOn(StallApi, 'list').mockResolvedValue(page([stall]));
   });
 
-  /** Home "See all stalls" links to /search?scope=farmer with no keyword: it must list the stalls. */
   it('lists the stalls when the scope is stalls and there is no keyword', async () => {
     renderAt('/search?scope=farmer');
 

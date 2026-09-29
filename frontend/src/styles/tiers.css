@@ -1,14 +1,3 @@
-/*
- * Achievement tiers (Bronze / Silver / Gold / Diamond): the ring around the avatar and the tier badge.
- *
- * NOT part of the design system — a feature proposed outside the SRS (requested by the LEAD on 26/09/2026). The design system does not yet
- * have metallic colours so they live here separately instead of hand-editing marketlink-*.css. FE1: when merging into the design
- * system, move the --tier-* variables into tokens.json, regenerate, then delete this file.
- *
- * Written in plain CSS (no @apply) so the prototype can load it too: docs/prototype/prototype.css @imports
- * this file, while the app uses the ml-tier-* classes and the bg-tier-* / text-tier-* utilities.
- */
-
 :root {
   --tier-bronze-ring: linear-gradient(135deg, #f2b98a 0%, #c47a3e 45%, #8f4d1f 100%);
   --tier-silver-ring: linear-gradient(135deg, #f4f6f8 0%, #aab2bb 45%, #6f7882 100%);
@@ -53,10 +42,6 @@
   --color-tier-diamond-ink: var(--tier-diamond-ink);
 }
 
-/*
- * Ring: a gradient ring around the image, separated from the image by a gap of the background colour (--tier-gap). On the header / drawer (board
- * background) set --tier-gap: var(--board). The higher the tier the thicker the ring; Gold and Diamond get an extra mark at the corner.
- */
 .ml-tier-ring {
   --tier-gap: var(--surface-raised);
   position: relative;
@@ -87,7 +72,6 @@
   box-shadow: var(--tier-diamond-glow);
 }
 
-/* The mark at the bottom-right corner for Gold (star) and Diamond (a diamond gem), only on images of 40px or more. */
 .ml-tier-mark {
   position: absolute;
   right: -2px;
@@ -114,7 +98,6 @@
   height: 62%;
 }
 
-/* Tier badge: a small pill next to the name, the tier-coloured dot before the text. */
 .ml-tier-badge {
   display: inline-flex;
   align-items: center;
@@ -154,10 +137,6 @@
   color: var(--tier-diamond-ink);
 }
 
-/*
- * The personal tier panel (Account page): tinted in the tier colour, a metallic strip along the top edge, Diamond adds a sparkling
- * pattern. Text uses --tier-*-ink so it has enough contrast in both themes.
- */
 .ml-tier-panel {
   position: relative;
   overflow: hidden;
@@ -204,7 +183,6 @@
   --tier-gap: var(--tier-panel-bg);
 }
 
-/* The progress bar carries the colour of the tier being worked toward. */
 .ml-tier-fill {
   display: block;
   height: 100%;
@@ -221,7 +199,6 @@
   background: var(--tier-diamond-ring);
 }
 
-/* The tier-coloured bullet dot (the privileges list). */
 .ml-tier-dot {
   flex: none;
   width: 12px;

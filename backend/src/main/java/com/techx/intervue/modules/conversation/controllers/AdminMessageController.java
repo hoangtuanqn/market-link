@@ -14,11 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-116 — Admin only. Soft hide, never a hard delete (spec §8.5): being able to delete means being
- * able to delete evidence of fraud. There is no un-hide endpoint — nobody needs it yet, and adding
- * it adds a state that has to be checked everywhere.
- */
 @RestController
 @RequestMapping("/api/v1/admin/messages")
 @PreAuthorize("hasRole('ADMIN')")

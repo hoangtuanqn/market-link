@@ -20,10 +20,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-/**
- * HTTP codes per spec §6 for the notification module's controllers (the repo has no shared handler
- * yet).
- */
 @RestControllerAdvice(
         assignableTypes = {
             NotificationController.class,
@@ -76,7 +72,6 @@ public class NotificationExceptionHandler {
         return error(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), List.of());
     }
 
-    /** R-06: someone else's → 403. */
     @ExceptionHandler(NotificationAccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> notYours(NotificationAccessDeniedException e) {
         return error(HttpStatus.FORBIDDEN, "NOT_YOURS", e.getMessage(), List.of());

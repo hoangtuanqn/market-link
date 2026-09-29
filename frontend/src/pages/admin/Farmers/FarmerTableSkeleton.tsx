@@ -1,10 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { SKELETON_ROWS } from './constants';
 
-/**
- * The skeleton is built to the exact shape of the table about to appear: same row height so it does not jerk when data
- * arrives.
- */
 const FarmerTableSkeleton = () => {
   const { t } = useTranslation('AdminFarmers');
   return (

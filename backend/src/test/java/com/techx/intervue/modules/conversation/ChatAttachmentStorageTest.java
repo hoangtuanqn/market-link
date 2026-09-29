@@ -8,11 +8,6 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-/**
- * Spec §8.2: chat images must live outside app.storage.dir — AppConfig maps that directory to
- * /uploads/** and SecurityConfig sets it to permitAll. The end-to-end proof is the curl step in
- * Task 5; here we only pin that this bean writes into the separate root it was given.
- */
 class ChatAttachmentStorageTest {
 
     @Test

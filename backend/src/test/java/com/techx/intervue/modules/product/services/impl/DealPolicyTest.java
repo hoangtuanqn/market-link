@@ -7,16 +7,8 @@ import java.time.LocalDate;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-/**
- * FR-124 (spec §4.5.1–4.5.2). The same rows run in frontend/src/lib/deals.test.ts, so the dialog
- * and the server always agree. Rows 1–2 are the spec's examples (tomato, eggs); for N = 7 the rows
- * with L = 4 and L = 5 pin the upper bound ⌈N/2⌉ = 4 exactly.
- */
 class DealPolicyTest {
 
-    /**
-     * Shelf life N, packed on H, pickup P, today → best-before B, days left L, outcome, suggestion.
-     */
     @ParameterizedTest(name = "N={0} H={1} P={2} today={3} → {6}")
     @CsvSource({
         "7,  2026-09-29, 2026-10-03, 2026-09-30, 2026-10-05,  3, OK,                    20",
@@ -56,7 +48,6 @@ class DealPolicyTest {
         }
     }
 
-    /** Rounded half up to the cent, at least $0.01, never above the list price. */
     @ParameterizedTest(name = "{0} at {1}% → {2}")
     @CsvSource({
         "0.60, 20, 0.48",

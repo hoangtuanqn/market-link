@@ -94,12 +94,6 @@ import AdminOrderDetailPage from './pages/admin/OrderDetail';
 import AdminOrdersPage from './pages/admin/Orders';
 import AdminReportsPage from './pages/admin/Reports';
 
-/**
- * Site-wide maintenance mode (MaintenanceModeFilter is the real gate; this is the UX on top of it): while it is on,
- * anyone but a signed-in admin gets the notice instead of whatever path they asked for. The admin area itself (login
- * included, since a fresh browser has no session yet) stays reachable so an admin can always get in to turn it back
- * off.
- */
 const AppRoutes = () => {
   const { user } = useSession();
   const maintenanceMode = usePlatformStatus();
@@ -115,7 +109,6 @@ const AppRoutes = () => {
       <ScrollToTop />
       <SettingsSync>
         <Routes>
-          {/* Public informational pages (Guest shell: Header with guest actions + Footer) */}
           <Route path="/" element={<MainLayout />}>
             <Route index element={<HomePage />} />
             <Route path="markets" element={<MarketsPage />} />
@@ -154,13 +147,10 @@ const AppRoutes = () => {
             <Route path="feedback" element={<FeedbackPage />} />
           </Route>
 
-          {/* Authentication flow pages (Focused Auth shell: Logo + page content, no Header/Footer) */}
           <Route element={<AuthLayout />}>
             <Route path="login" element={<LoginPage />} />
             <Route path="register/customer" element={<RegisterCustomerPage />} />
-            {/* FR-009: the 6-digit code mailed at sign-up */}
             <Route path="register/verify" element={<VerifyEmailPage />} />
-            {/* FR-002: no separate stall sign-up — create a customer account first, then submit the Farmer application at /become-farmer */}
             <Route path="register/farmer" element={<Navigate to="/become-farmer" replace />} />
             <Route path="forgot-password" element={<ForgotPasswordPage />} />
             <Route path="reset-password" element={<ResetPasswordPage />} />
@@ -172,7 +162,6 @@ const AppRoutes = () => {
             </Route>
           </Route>
 
-          {/* Signed-in Customer shell: same SiteHeader, "customer" variant (README, "Two shells"). */}
           <Route element={<MainLayout />}>
             <Route element={<RequireAuth />}>
               <Route path="dashboard" element={<CustomerDashboardPage />} />
@@ -213,12 +202,9 @@ const AppRoutes = () => {
             </Route>
           </Route>
 
-          {/* Standalone error screens (403 Forbidden and 404 Not Found) with no Header and Footer */}
           <Route path="403" element={<ForbiddenPage />} />
           <Route path="*" element={<NotFoundPage />} />
 
-          {/* Farmer dashboard shell: board-green sidebar, separate from the guest/customer SiteHeader.
-              FR-005: signed-in Farmers only — guests go to /login, other roles to their own home. */}
           <Route element={<RequireAuth role={USER_ROLE.FARMER} />}>
             <Route path="/farmer" element={<FarmerLayout />}>
               <Route index element={<FarmerOverviewPage />} />
@@ -253,12 +239,8 @@ const AppRoutes = () => {
             </Route>
           </Route>
 
-          {/* FR-004: the admin area is separate from the Customer/Farmer layout. */}
           <Route path="admin/login" element={<AdminLoginPage />} />
-          {/* FR-008: step 2 of admin sign-in, no session yet so it sits outside AdminLayout. */}
           <Route path="admin/verify" element={<AdminVerifyPage />} />
-          {/* FR-008: mandatory first-time 2FA setup. Has a real session already (issued at login), but sits
-              outside AdminLayout so its own guard (not setupRequired) never fights AdminLayout's redirect here. */}
           <Route path="admin/setup-2fa" element={<AdminSetup2FAPage />} />
           <Route path="admin" element={<AdminLayout />}>
             <Route index element={<AdminHomePage />} />
@@ -275,7 +257,6 @@ const AppRoutes = () => {
             <Route path="settings" element={<AdminSettingsPage />} />
             <Route path="account" element={<AdminAccountPage />} />
 
-            {/* FR-075 + FR-070: reports and platform-wide orders (admin is read-only, D-04) */}
             <Route path="reports" element={<AdminReportsPage />} />
             <Route path="orders" element={<AdminOrdersPage />} />
             <Route
@@ -287,7 +268,6 @@ const AppRoutes = () => {
               }
             />
 
-            {/* FR-072 */}
             <Route path="customers" element={<AdminCustomersPage />} />
             <Route
               path="customers/:id"
@@ -298,7 +278,6 @@ const AppRoutes = () => {
               }
             />
 
-            {/* FR-073: `new` goes before `:id` so it is not caught by mistake as an id */}
             <Route path="markets" element={<AdminMarketsPage />} />
             <Route path="markets/new" element={<AdminMarketFormPage />} />
             <Route
@@ -310,14 +289,12 @@ const AppRoutes = () => {
               }
             />
 
-            {/* FR-074, FR-077, FR-081 and categories / units */}
             <Route path="moderation" element={<AdminModerationPage />} />
             <Route path="categories" element={<AdminCategoriesPage />} />
             <Route path="announcements" element={<AdminAnnouncementsPage />} />
             <Route path="notifications" element={<AdminNotificationsPage />} />
             <Route path="feedback" element={<AdminFeedbackPage />} />
 
-            {/* An admin path that matches nothing → 404 right inside the admin frame */}
             <Route path="*" element={<NotFoundPage standalone={false} />} />
           </Route>
         </Routes>

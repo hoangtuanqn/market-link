@@ -18,7 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-/** FR-123 (spec §9): confirming a violation, strikes in 90 days and the lock, on real MySQL. */
 @SpringBootTest
 @Transactional
 class AdminQualityDecisionFlowTest {
@@ -52,7 +51,6 @@ class AdminQualityDecisionFlowTest {
                         TODAY.minusDays(3));
     }
 
-    /** A line of a product the stall set to 5 days against a suggestion of 3. */
     private long extendedLine(String name) {
         long product = fx.base.product(farmer, category, name, 1);
         fx.shelfLife(product, null, 5, 3);
@@ -64,7 +62,6 @@ class AdminQualityDecisionFlowTest {
                 "SELECT product_id FROM order_items WHERE id = ?", Long.class, line);
     }
 
-    /** Spec §9: confirming the violation puts the product back to its suggestion. */
     @Test
     void confirmingAnExtendedReportResetsTheProductAndRecordsAStrike() {
         long line = extendedLine("Rau muống");
@@ -101,9 +98,6 @@ class AdminQualityDecisionFlowTest {
                 .isEqualTo(1);
     }
 
-    /**
-     * Spec §4.4.4, §9: three strikes inside 90 days lock; a strike of 95 days ago does not count.
-     */
     @Test
     void theThirdStrikeInNinetyDaysLocksTheStall() {
         fx.strike(fx.report(extendedLine("Cải ngọt"), "confirmed", true, 60), admin, 20);
@@ -125,7 +119,6 @@ class AdminQualityDecisionFlowTest {
                 .isEqualTo(oldestCounting.toInstant().plus(Duration.ofDays(90)));
     }
 
-    /** Spec §4.4.3: within its suggestion — the report closes, the stall stays clean. */
     @Test
     void confirmingALineWithinItsSuggestionRecordsNothing() {
         long product = fx.base.product(farmer, category, "Rau lang", 1);

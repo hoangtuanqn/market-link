@@ -1,8 +1,3 @@
-/**
- * English is the source language and ships in the main bundle; its JSON also types every `t()` key (see i18next.d.ts).
- * One namespace per page folder plus `common` for shared components. New page: add `src/locales/<lng>/<Folder>.json`
- * for every language and a line here.
- */
 import common from '@/locales/en/common.json';
 import adminHome from '@/locales/en/AdminHome.json';
 import adminLogin from '@/locales/en/AdminLogin.json';

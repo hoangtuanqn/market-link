@@ -21,7 +21,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/** 400/403/404/409 for the review module — same shape as the order and product handlers. */
 @RestControllerAdvice(
         assignableTypes = {
             ReviewController.class,
@@ -52,7 +51,6 @@ public class ReviewExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
-    /** Unknown targetType, rating outside 1–5 (server-side twin of the annotations). */
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ApiResource<Void>> invalidArgument(IllegalArgumentException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
@@ -63,13 +61,11 @@ public class ReviewExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "TARGET_NOT_IN_ORDER", e.getMessage(), List.of());
     }
 
-    /** D-10: contract §8 — 403 when the order is not completed. */
     @ExceptionHandler(OrderNotCompletedException.class)
     ResponseEntity<ApiResource<Void>> notCompleted(OrderNotCompletedException e) {
         return error(HttpStatus.FORBIDDEN, "ORDER_NOT_COMPLETED", e.getMessage(), List.of());
     }
 
-    /** R-06 / Review Focus #3: someone else's order or review → 403, never 404. */
     @ExceptionHandler({OrderNotYoursException.class, ReviewNotYoursException.class})
     ResponseEntity<ApiResource<Void>> notYours(RuntimeException e) {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), List.of());
@@ -90,7 +86,6 @@ public class ReviewExceptionHandler {
         return error(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), List.of());
     }
 
-    /** Last net: {@code uq_review} / {@code review_responses.review_id} under a race. */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
@@ -111,7 +106,6 @@ public class ReviewExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
-    /** {@code @PreAuthorize} wrong role, or D-13 admin writing a review → 403. */
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> forbidden(AccessDeniedException e) {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), List.of());

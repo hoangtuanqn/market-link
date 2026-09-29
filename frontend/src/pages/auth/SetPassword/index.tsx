@@ -15,7 +15,6 @@ type FormErrors = Partial<Record<'password' | 'confirmPassword', string>>;
 const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 72;
 
-/** Client-side validation, same rules as the backend's SetPasswordRequest. */
 const validate = (password: string, confirm: string, t: TFunction<'SetPassword'>): FormErrors => {
   const errors: FormErrors = {};
   if (!password) errors.password = t('errors.passwordRequired');
@@ -26,7 +25,6 @@ const validate = (password: string, confirm: string, t: TFunction<'SetPassword'>
   return errors;
 };
 
-/** After the first Google sign-in: invite setting a password so they can sign in with email + password. */
 const SetPasswordPage = () => {
   const { t } = useTranslation('SetPassword');
   const navigate = useNavigate();
@@ -36,7 +34,6 @@ const SetPasswordPage = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Not signed in means a password cannot be set
   if (!Session.getAccessToken()) return <Navigate to="/login" replace />;
 
   const onSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
@@ -84,7 +81,6 @@ const SetPasswordPage = () => {
           </p>
         </div>
 
-        {/* Tell the password manager which account the new password belongs to */}
         <input type="email" name="username" autoComplete="username" value={user?.email ?? ''} readOnly hidden />
 
         <Field

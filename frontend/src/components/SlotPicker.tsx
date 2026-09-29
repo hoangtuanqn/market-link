@@ -10,7 +10,6 @@ type SlotPickerProps = {
   onChange: (value: string) => void;
 };
 
-/** Pickup time-window picker (design system `.ml-slots`). */
 const SlotPicker = ({ legend, name, slots, value, onChange }: SlotPickerProps) => {
   const { t } = useTranslation();
   return (

@@ -35,7 +35,6 @@ describe('FeaturedFarmers (FR-082)', () => {
     expect(screen.queryByText(/Thảo Điền Market/)).not.toBeInTheDocument();
   });
 
-  /** An empty list is an empty state, not three made-up farmers with made-up ratings. */
   it('shows the empty state instead of sample farmers', () => {
     renderWith([]);
 

@@ -11,11 +11,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-/** 400/403 for the report module (read-only endpoints: nothing to conflict with). */
 @RestControllerAdvice(assignableTypes = {FarmerReportController.class, AdminReportController.class})
 public class ReportExceptionHandler {
 
-    /** Unknown status, or a date that is not {@code yyyy-MM-dd}. */
     @ExceptionHandler({IllegalArgumentException.class, MethodArgumentTypeMismatchException.class})
     ResponseEntity<ApiResource<Void>> badRequest(Exception e) {
         String message =
@@ -30,9 +28,6 @@ public class ReportExceptionHandler {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage());
     }
 
-    /**
-     * FR-071/D-09: FarmerReportService.dashboard is guarded the same as the other selling screens.
-     */
     @ExceptionHandler(StallSuspendedException.class)
     ResponseEntity<ApiResource<Void>> suspended(StallSuspendedException e) {
         return error(HttpStatus.FORBIDDEN, "STALL_SUSPENDED", e.getMessage());

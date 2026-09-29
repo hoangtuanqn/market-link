@@ -12,11 +12,6 @@ import java.util.Locale;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * The order-list shape the report queries share with {@code OrderQueryRepository} (same columns,
- * same formats: date {@code yyyy-MM-dd}, time {@code HH:mm}, instants ISO-8601 UTC). Kept here so
- * the report module does not reach into the order module's private mapper.
- */
 @Component
 @RequiredArgsConstructor
 public class OrderRows {
@@ -40,7 +35,6 @@ public class OrderRows {
             JOIN users cu ON cu.id = o.customer_id
             """;
 
-    /** Everything a report can filter on; a null parameter means "no filter". */
     public static final String RANGE_FILTER =
             """
               AND (:from IS NULL OR o.pickup_date >= :from)
@@ -73,7 +67,6 @@ public class OrderRows {
                 rs.getBoolean("reviewed"));
     }
 
-    /** Whitelist for a {@code status} query parameter: unknown text is a 400, never SQL. */
     public static String statusOrNull(String status) {
         if (status == null || status.isBlank()) {
             return null;

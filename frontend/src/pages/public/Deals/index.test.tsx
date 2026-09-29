@@ -14,7 +14,6 @@ vi.mock('@/api-requests/deal.requests', async (importOriginal) => {
 });
 vi.mock('@/api-requests/catalog.requests', () => ({ default: { listCategories: vi.fn(), listMarkets: vi.fn() } }));
 
-/** Spec §4.5.4 card: tomato, 20% off, picked up Sat 03/10, good until end of Mon 05/10, 12 kg left. */
 const tomato: DealDto = {
   productId: 7,
   name: 'Cà chua bi',
@@ -70,7 +69,6 @@ describe('DealsPage', () => {
     expect(screen.getByText('Nông trại Hoa Đà Lạt · Chợ Bà Chiểu')).toBeInTheDocument();
   });
 
-  /** The cards' names are h3, so a hidden h2 sits between them and the page's h1. */
   it('keeps the heading levels in order', async () => {
     vi.mocked(DealApi.list).mockResolvedValue(page([tomato]));
     renderPage();

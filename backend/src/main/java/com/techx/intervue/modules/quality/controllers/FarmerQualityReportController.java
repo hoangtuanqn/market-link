@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-122 — the stall's spoilage reports (spec §4.4.2, §6). */
 @RestController
 @RequestMapping("/api/v1/farmer/quality-reports")
 @PreAuthorize("hasRole('FARMER')")

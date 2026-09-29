@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-/** FR-124 on real MySQL: the "On sale" block lists this stall's deal days from today on. */
 @SpringBootTest
 @Transactional
 class FarmerDealsQueryTest {
@@ -30,7 +29,6 @@ class FarmerDealsQueryTest {
 
     @BeforeEach
     void setUp() {
-        // Rows are rolled back with the test transaction; no clean-up needed
         fx = new ReportFixture(jdbc);
     }
 
@@ -75,7 +73,6 @@ class FarmerDealsQueryTest {
         assertThat(first.daysLeft()).isEqualTo(2);
     }
 
-    /** A deal day: 5 left, packed 3 days ago, good until the day after pickup. */
     private void deal(long productId, LocalDate day, int percent) {
         BigDecimal list =
                 jdbc.queryForObject(

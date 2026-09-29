@@ -21,10 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-040, FR-014 — favourites (contract §9). Customers and farmers (D-13: a farmer also buys);
- * admin accounts get 403 here and again in the service.
- */
 @RestController
 @RequestMapping("/api/v1/favorites")
 @PreAuthorize("hasAnyRole('CUSTOMER','FARMER')")
@@ -40,7 +36,6 @@ public class FavoriteController extends BaseController {
         return ok(favorites.list(user.getId(), targetType), "");
     }
 
-    /** Idempotent: adding the same target again returns the existing favourite (200). */
     @PostMapping
     public ResponseEntity<ApiResource<FavoriteResource>> add(
             @AuthenticationPrincipal CustomUserDetails user,

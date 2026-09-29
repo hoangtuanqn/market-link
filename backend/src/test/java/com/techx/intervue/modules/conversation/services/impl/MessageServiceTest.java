@@ -109,12 +109,10 @@ class MessageServiceTest {
                                         .role(RoleType.FARMER)
                                         .status(UserStatus.ACTIVE)
                                         .build()));
-        // Stall 30 belongs to user 3 (the Farmer in the thread); stall 31 belongs to someone else
         when(farmerProfiles.findById(30L))
                 .thenReturn(Optional.of(FarmerProfile.builder().id(30L).userId(3L).build()));
         when(farmerProfiles.findById(31L))
                 .thenReturn(Optional.of(FarmerProfile.builder().id(31L).userId(5L).build()));
-        // Order 21: customer 7 bought at stall 30 — exactly the pair of thread 42
         when(orders.findById(21L)).thenReturn(Optional.of(order(21L, 7L, 30L)));
         when(messages.save(any(Message.class)))
                 .thenAnswer(
@@ -153,8 +151,6 @@ class MessageServiceTest {
         assertThat(thread.readAtOf(7L)).isEqualTo(NOW);
         verify(conversations).save(thread);
         verify(events).messageCreated(thread, result);
-        // Replying means having read up to here: the other side must receive "seen" (Plan 1 review,
-        // minor #4)
         verify(events).conversationRead(thread, 7L, NOW);
     }
 
@@ -170,7 +166,6 @@ class MessageServiceTest {
         assertThat(result.orderId()).isEqualTo(21L);
     }
 
-    /** Review Focus #1 · R-06: another customer's order, even at the same stall. */
     @Test
     void refusesToPinAnOrderOfSomeoneElse() {
         when(orders.findById(22L)).thenReturn(Optional.of(order(22L, 8L, 30L)));
@@ -180,7 +175,6 @@ class MessageServiceTest {
         verify(messages, never()).save(any());
     }
 
-    /** Review Focus #1 · this customer's own order, but at another stall. */
     @Test
     void refusesToPinAnOrderFromAnotherStall() {
         when(orders.findById(23L)).thenReturn(Optional.of(order(23L, 7L, 31L)));
@@ -190,7 +184,6 @@ class MessageServiceTest {
         verify(messages, never()).save(any());
     }
 
-    /** Review Focus #2 */
     @Test
     void refusesToPinAnOrderThatDoesNotExist() {
         when(orders.findById(99L)).thenReturn(Optional.empty());
@@ -201,7 +194,6 @@ class MessageServiceTest {
         verify(messages, never()).save(any());
     }
 
-    /** Review Focus #3 · the Farmer pins the customer's order, in the thread with that customer. */
     @Test
     void letsTheStallPinTheCustomersOrderToo() {
         MessageResource result = service.send(3L, 42L, withOrder(21L));
@@ -357,7 +349,6 @@ class MessageServiceTest {
                 .isInstanceOf(EmptyMessageException.class);
     }
 
-    /** A client that lies about the kind cannot make a photo play as a video, or the reverse. */
     @Test
     void refusesAVideoMessageWithAPhoto() {
         when(attachments.findById(55L)).thenReturn(Optional.of(upload(55L, 7L, null)));
@@ -401,7 +392,6 @@ class MessageServiceTest {
                 .isInstanceOf(EmptyMessageException.class);
     }
 
-    /** Review Focus #3. */
     @Test
     void cannotAttachSomeoneElsesUpload() {
         when(attachments.findById(55L)).thenReturn(Optional.of(upload(55L, 3L, null)));
@@ -417,7 +407,6 @@ class MessageServiceTest {
         verify(messages, never()).save(any(Message.class));
     }
 
-    /** Review Focus #3, second half: an image can be attached to exactly one message. */
     @Test
     void cannotReuseAnAttachmentThatIsAlreadyOnAMessage() {
         when(attachments.findById(55L)).thenReturn(Optional.of(upload(55L, 7L, 900L)));

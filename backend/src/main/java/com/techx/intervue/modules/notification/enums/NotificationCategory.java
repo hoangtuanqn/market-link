@@ -8,25 +8,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-/**
- * Categories users turn on / off in Settings → Notifications (spec §3). Each role only sees its own
- * categories; the camelCase code is the value of the notification_preferences.category column and
- * of the JSON.
- */
 public enum NotificationCategory {
     MESSAGES("messages", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
     ANNOUNCEMENTS("announcements", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
     ACCOUNT("account", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
-    /** FR-042/D-11: the order lifecycle milestones — both roles buy as well as sell (D-13). */
     ORDERS("orders", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
-    /** FR-041: a favourite product is back in stock — both roles keep favourites (D-13). */
     FAVORITES("favorites", EnumSet.of(RoleType.CUSTOMER, RoleType.FARMER)),
     FARMER_APPLICATIONS("farmerApplications", EnumSet.of(RoleType.ADMIN)),
-    /** FR-081: someone sent the feedback form — admins only, its own row in Settings. */
     FEEDBACK("feedback", EnumSet.of(RoleType.ADMIN)),
-    /**
-     * FR-122: spoiled produce on an extended shelf life (spec §4.6) — admins only, on by default.
-     */
     QUALITY_REPORTS("qualityReports", EnumSet.of(RoleType.ADMIN));
 
     private final String code;

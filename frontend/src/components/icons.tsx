@@ -2,7 +2,6 @@ import type { ReactNode, SVGProps } from 'react';
 
 export type IconProps = SVGProps<SVGSVGElement> & { size?: number };
 
-/** 16px glyph, 1.75 stroke, currentColor (design system icon style). */
 function Glyph({ size = 16, children, ...rest }: IconProps & { children: ReactNode }) {
   return (
     <svg
@@ -409,11 +408,6 @@ export function PlayIcon(props: IconProps) {
   );
 }
 
-/**
- * MarketLink mark: a market stall under an arch — striped awning, produce on the counter. The logo is brand artwork, so
- * its colours are fixed hex rather than theme tokens: it must look the same in light and dark mode. Pick the skin that
- * matches what is behind it — `light` on `board` and other dark surfaces, `ink` on paper.
- */
 const LOGO_SKINS = {
   ink: { arch: '#2f4a2a', stripe: '#a8402b', gap: '#f1e5cb', art: '#f1e5cb', ground: '#e8b33c' },
   light: { arch: '#f1e5cb', stripe: '#a8402b', gap: '#f1e5cb', art: '#2f4a2a', ground: '#a8402b' },
@@ -447,7 +441,6 @@ export function LogoMark({ size = 30, variant = 'ink' }: { size?: number; varian
   );
 }
 
-/** Official Google brand multi-color icon for OAuth buttons. */
 export function GoogleIcon({ size = 18, className, ...rest }: IconProps) {
   return (
     <svg

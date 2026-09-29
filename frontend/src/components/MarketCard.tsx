@@ -9,19 +9,12 @@ import { ButtonLink } from './ui/button';
 import { Card } from './ui/card';
 import DirectionsButton from './DirectionsButton';
 
-/** Monday first; names come from `dayName` in the reader's language. */
 const WEEK = [1, 2, 3, 4, 5, 6, 0];
 
 type MarketCardProps = {
   market: MarketType;
-  /** Real straight-line distance, once the visitor has shared where they are. Overrides the demo figure. */
   distanceKm?: number;
-  /** The favourite's id when the caller already knows this market is saved (e.g. the Favorites page). */
   favoriteId?: number | null;
-  /**
-   * Forwarded to the FavoriteButton's `onChange` — a caller showing its own list of saved markets uses this to drop or
-   * update the row instead of leaving it stale after the card's own heart is what got clicked.
-   */
   onFavoriteChange?: (favoriteId: number | null) => void;
 };
 
@@ -34,8 +27,6 @@ const MarketCard = ({ market, distanceKm, favoriteId, onFavoriteChange }: Market
     <Card as="article" className="relative grid grid-cols-[1fr_auto] gap-x-4 gap-y-2 p-4">
       <div>
         <h3 className="font-hand text-[28px] leading-[1.1]">
-          {/* after:inset-0 stretches the hit area over the whole card (the Card is relative), so a
-              finger anywhere on it opens the page. The button below sits above it with z-2. */}
           <Link
             to={href}
             className="text-inherit no-underline after:absolute after:inset-0 hover:underline hover:underline-offset-3"

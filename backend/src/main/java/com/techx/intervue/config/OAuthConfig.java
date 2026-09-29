@@ -11,7 +11,6 @@ import org.springframework.web.client.RestClient;
 @EnableConfigurationProperties(OAuthProperties.class)
 public class OAuthConfig {
 
-    /** HTTP client that calls Google, with a timeout so login requests never hang forever. */
     @Bean
     RestClient oauthRestClient() {
         SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();

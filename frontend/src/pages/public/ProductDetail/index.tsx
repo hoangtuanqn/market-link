@@ -36,14 +36,12 @@ const NO_PRODUCTS: ProductType[] = [];
 const NO_REVIEWS: ReviewDto[] = [];
 const NO_FAVORITES: FavoriteDto[] = [];
 
-/** Earliest start to latest end across the days a stall keeps at one market. */
 const windowOf = (m: StallMarketDto) => {
   const starts = m.operatingDays.map((d) => d.pickupStartTime).sort();
   const ends = m.operatingDays.map((d) => d.pickupEndTime).sort();
   return pickupWindow(starts[0], ends[ends.length - 1]);
 };
 
-/** FR-022 — one product: price, stock, the seller, pickup, reviews, and what else is nearby. */
 const ProductDetailPage = () => {
   const { t } = useTranslation('ProductDetail');
   const { id } = useParams<{ id: string }>();
@@ -58,13 +56,11 @@ const ProductDetailPage = () => {
   const detail = load.kind === 'ready' ? load.data : undefined;
   const farmerId = detail?.product.farmerId;
 
-  // FR-040 — whether this product is already a favourite of the signed-in customer (heart starts filled).
   const { state: favLoad } = useRequest(`fav-product:${productId}`, () =>
     isLoggedIn ? FavoriteApi.list('product') : Promise.resolve(NO_FAVORITES),
   );
   const favoriteId = favLoad.kind === 'ready' ? (favLoad.data.find((f) => f.targetId === productId)?.id ?? null) : null;
 
-  // The stall with its markets, days and cutoff — one request keyed by the stall, so it is not repeated per product.
   const { state: stallLoad } = useRequest(`stall:${farmerId ?? 'none'}`, () =>
     farmerId ? StallApi.get(farmerId) : Promise.resolve(null),
   );
@@ -119,7 +115,6 @@ const ProductDetailPage = () => {
   const stallRating = detail.farmer.ratingCount === 0 ? null : Number(detail.farmer.ratingAvg);
   const soldOut = p.status !== 'available' || p.stockQuantity === 0;
   const qty = pickedQty ?? Math.min(2, Math.max(1, p.stockQuantity));
-  // FR-022: the stock number is for one pickup date, the nearest one still open to orders
   const availableDay = stockDay(p.availableDate);
   const stallLink = (
     <Link to={`/stalls/${p.farmerId}`} className="text-brand underline">
@@ -202,7 +197,6 @@ const ProductDetailPage = () => {
               )}
             </div>
             <p className="text-small text-ink-muted">{t('stockUpdated')}</p>
-            {/* Restock alerts go through Favorites (Task 5), not a notify-me button here. */}
             {soldOut ? null : (
               <div className="flex flex-wrap items-center gap-6">
                 <QtyStepper value={qty} max={p.stockQuantity} unit={p.unit} onChange={setPickedQty} />
@@ -433,7 +427,6 @@ const ProductDetailPage = () => {
                 key: 'left',
                 label: t('table.left'),
                 align: 'num',
-                // Each row can be for a different pickup day, so the day goes under the number.
                 render: (row: ProductType) => (
                   <>
                     {units(row.stock, row.unit, row.plural)}

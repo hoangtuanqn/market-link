@@ -3,11 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { Banner } from '@/components/ui/banner';
 
 type CameraStepProps = {
-  /** Takes the playing video element so the dialog can capture a frame. */
   onReady: (video: HTMLVideoElement | null) => void;
 };
 
-/** Why the camera is not showing; the step shows `CustomerAccount:camera.<code>.title / .text`. */
 type CameraError = 'blocked' | 'notFound' | 'busy' | 'failed' | 'insecure';
 
 const cameraError = (error: unknown): CameraError => {
@@ -18,7 +16,6 @@ const cameraError = (error: unknown): CameraError => {
   return 'failed';
 };
 
-/** Preview the front camera (mirrored so it is easier to frame), turn the camera off as soon as this step is left. */
 const CameraStep = ({ onReady }: CameraStepProps) => {
   const { t } = useTranslation('CustomerAccount');
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -29,7 +26,6 @@ const CameraStep = ({ onReady }: CameraStepProps) => {
     let stream: MediaStream | null = null;
     let cancelled = false;
 
-    // getUserMedia only exists on https or localhost
     if (!navigator.mediaDevices?.getUserMedia) {
       // eslint-disable-next-line react-hooks/set-state-in-effect -- the browser does not support it, report right away
       setError('insecure');

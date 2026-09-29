@@ -5,7 +5,6 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** Matches ENUM('spam','abuse','scam','other') in migration V20260926005. */
 public enum ReportReason {
     SPAM,
     ABUSE,

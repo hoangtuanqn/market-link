@@ -11,15 +11,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * Reads that serve the cart. The order module does not import the catalog module — a market is only
- * touched by SQL here, like StallQueryRepository; every value goes through parameters (R-04).
- */
 @Repository
 @RequiredArgsConstructor
 public class CheckoutQueryRepository {
 
-    /** C5-11: the markets a stall sells at — the link is still on and the market is still open. */
     public static final String STALL_MARKETS =
             """
             SELECT fm.farmer_id, m.id AS market_id, m.market_name

@@ -68,10 +68,6 @@ public class AuthController extends BaseController {
     private final EmailVerificationServiceInterface emailVerification;
     private final LoginRateLimiter loginRateLimiter;
 
-    /**
-     * FR-001 + FR-009: nothing is created yet — the account waits for the code mailed to the
-     * address.
-     */
     @PostMapping("/register")
     public ResponseEntity<ApiResource<SignupStartedResource>> registerCustomer(
             @Valid @RequestBody CustomerRegisterRequest request, HttpServletRequest httpRequest) {
@@ -81,9 +77,6 @@ public class AuthController extends BaseController {
                 .body(ApiResource.success(started, "We sent a 6-digit code to your email."));
     }
 
-    /**
-     * FR-009: the right code creates the account and signs in — the answer the old /register gave.
-     */
     @PostMapping("/register/verify")
     public ResponseEntity<ApiResource<RegisterResource>> verifySignup(
             @Valid @RequestBody SignupVerifyRequest request) {
@@ -101,7 +94,6 @@ public class AuthController extends BaseController {
                 .body(ApiResource.success(body, "Account created."));
     }
 
-    /** FR-009: a new code, after the one-minute cooldown and within the hourly limits. */
     @PostMapping("/register/resend")
     public ResponseEntity<ApiResource<SignupStartedResource>> resendSignupCode(
             @Valid @RequestBody SignupResendRequest request, HttpServletRequest httpRequest) {
@@ -111,11 +103,6 @@ public class AuthController extends BaseController {
                 "We sent a new code to your email.");
     }
 
-    /**
-     * FR-003: shared by customer, farmer and admin — the FE routes by user.role. Too many wrong
-     * passwords for the email or from the IP → 429 LOGIN_LOCKED with Retry-After
-     * (LoginRateLimiter).
-     */
     @PostMapping("/login")
     public ResponseEntity<ApiResource<LoginResource>> login(
             @Valid @RequestBody LoginRequest request, HttpServletRequest httpRequest) {
@@ -132,16 +119,6 @@ public class AuthController extends BaseController {
         return loggedIn(auth);
     }
 
-    /**
-     * Google sign-in: the FE sends the authorization code (Google redirects to redirect_uri with
-     * ?code=...). The backend exchanges the code for an id_token itself with client_secret and
-     * verifies the id_token.
-     */
-    /**
-     * Step 1 of Google sign-in: returns the URL of the Google sign-in page. state (a random string
-     * the FE generates and keeps) is attached to the URL, and Google returns it unchanged to the
-     * callback page so the FE can compare it.
-     */
     @GetMapping("/google/authorize-url")
     public ResponseEntity<ApiResource<AuthorizeUrlResource>> googleAuthorizeUrl(
             @RequestParam(required = false) String state) {
@@ -159,11 +136,6 @@ public class AuthController extends BaseController {
         return loggedIn(userService.loginWithSocial(googleClient.fetchProfile(request.code())));
     }
 
-    /**
-     * FR-008: step 2 of admin sign-in with two-step verification on. A correct code → issue the
-     * session + cookie like a normal sign-in; wrong → 400 MFA_CODE_INVALID, more than 5 wrong → 429
-     * MFA_LOCKED.
-     */
     @PostMapping("/mfa/verify")
     public ResponseEntity<ApiResource<LoginResource>> verifyMfa(
             @Valid @RequestBody MfaVerifyRequest request) {
@@ -174,7 +146,6 @@ public class AuthController extends BaseController {
 
     private ResponseEntity<ApiResource<LoginResource>> loggedIn(AuthResult auth) {
         if (auth.mfaRequired()) {
-            // no session yet: do not set the cookie, the FE moves to the code entry screen
             LoginResource pending = new LoginResource(null, auth.user(), true, auth.mfaToken());
             return ok(pending, "Enter the code from your authenticator.");
         }
@@ -193,11 +164,6 @@ public class AuthController extends BaseController {
                 .body(ApiResource.success(body, "Signed in."));
     }
 
-    /**
-     * FR-006: the access token comes from the Bearer header (already authenticated by
-     * JwtAuthFilter), the refresh token comes from the cookie. Returns an immediately-expired
-     * cookie so the browser deletes refresh_token.
-     */
     @PostMapping("/logout")
     public ResponseEntity<ApiResource<Void>> logout(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -213,10 +179,6 @@ public class AuthController extends BaseController {
                 .body(ApiResource.success(null, "Signed out."));
     }
 
-    /**
-     * Set a password for the first time after Google sign-in (user.hasPassword = false). Needs an
-     * access token; an account that already has a password → 409 PASSWORD_ALREADY_SET.
-     */
     @PostMapping("/set-password")
     public ResponseEntity<ApiResource<Void>> setPassword(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -225,11 +187,6 @@ public class AuthController extends BaseController {
         return ok(null, "Password saved. You can now also sign in with your email.");
     }
 
-    /**
-     * Change the password on the Account page. Afterwards every session (including the current one)
-     * is revoked, the refresh_token cookie is deleted — the user signs in again with the new
-     * password.
-     */
     @PostMapping("/change-password")
     public ResponseEntity<ApiResource<Void>> changePassword(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -245,11 +202,6 @@ public class AuthController extends BaseController {
                                 null, "Your password has been changed. Please sign in again."));
     }
 
-    /**
-     * FR-003: called when the access token expires. The refresh token is only read from the
-     * HttpOnly cookie (not accepted in the body), returns a new access token and overwrites the
-     * cookie with a new refresh token.
-     */
     @PostMapping("/refresh")
     public ResponseEntity<ApiResource<RefreshResource>> refresh(
             @CookieValue(name = CookieHelper.REFRESH_TOKEN_COOKIE, required = false)
@@ -271,11 +223,6 @@ public class AuthController extends BaseController {
                 .body(ApiResource.success(body, "Session refreshed."));
     }
 
-    /**
-     * FR-007 step A: always returns the same sentence whether or not the email exists, even after
-     * passing the limit of 5 per hour. Creating the token and sending the mail run in the
-     * background through the Redis queue.
-     */
     @PostMapping("/forgot-password")
     public ResponseEntity<ApiResource<Void>> forgotPassword(
             @Valid @RequestBody ForgotPasswordRequest request, HttpServletRequest httpRequest) {
@@ -283,11 +230,6 @@ public class AuthController extends BaseController {
         return ok(null, "If that email is registered, you will receive a password reset link.");
     }
 
-    /**
-     * FR-007 step C (before showing the form): check the link is still usable and return the
-     * account's email. Only reads the token, does not delete it — the token can still be used for
-     * /reset-password.
-     */
     @PostMapping("/reset-password/verify")
     public ResponseEntity<ApiResource<ResetTokenResource>> verifyResetToken(
             @Valid @RequestBody VerifyResetTokenRequest request) {
@@ -297,10 +239,6 @@ public class AuthController extends BaseController {
                 .body(ApiResource.success(new ResetTokenResource(email), "This link is valid."));
     }
 
-    /**
-     * FR-007 steps C + D: the token is single-use. Once changed, every old session is revoked and
-     * the FE goes back to the sign-in page.
-     */
     @PostMapping("/reset-password")
     public ResponseEntity<ApiResource<Void>> resetPassword(
             @Valid @RequestBody ResetPasswordRequest request) {
@@ -312,17 +250,12 @@ public class AuthController extends BaseController {
                                 null, "Your password has been reset. Please sign in again."));
     }
 
-    /** The profile of the signed-in user themself (Account page). */
     @GetMapping("/me")
     public ResponseEntity<ApiResource<UserResource>> me(
             @AuthenticationPrincipal CustomUserDetails user) {
         return ok(userService.getProfile(user.getId()), "Profile loaded.");
     }
 
-    /**
-     * Edit your own full name, phone number, address — the id comes from the access token so
-     * another account cannot be edited (R-06). The email cannot be changed here.
-     */
     @PutMapping("/me")
     public ResponseEntity<ApiResource<UserResource>> updateMe(
             @AuthenticationPrincipal CustomUserDetails user,

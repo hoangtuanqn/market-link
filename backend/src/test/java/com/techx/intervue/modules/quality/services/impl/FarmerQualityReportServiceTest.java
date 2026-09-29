@@ -33,7 +33,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-/** FR-122 (spec §4.4.2, §8): the stall's reports and its one editable reply. */
 class FarmerQualityReportServiceTest {
 
     private static final long STALL_OWNER = 30L;
@@ -42,7 +41,6 @@ class FarmerQualityReportServiceTest {
     private static final Clock CLOCK =
             Clock.fixed(Instant.parse("2026-10-06T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
 
-    /** CLOCK minus 90 days. */
     private static final Instant SINCE = Instant.parse("2026-07-08T03:00:00Z");
 
     private FarmerProfileRepository farmers;
@@ -133,7 +131,6 @@ class FarmerQualityReportServiceTest {
         assertThat(result.farmerResponse()).isEqualTo("Khách để nhiệt độ thường.");
     }
 
-    /** Spec §8: a suspended stall can still answer a report. */
     @Test
     void aSuspendedStallCanStillReply() {
         when(farmers.findByUserId(STALL_OWNER))
@@ -144,7 +141,6 @@ class FarmerQualityReportServiceTest {
         verify(reports).saveAndFlush(report);
     }
 
-    /** R-06: another stall's report is a 403 even though it exists. */
     @Test
     void anotherStallsReportIs403() {
         report.setFarmerId(99L);
@@ -154,7 +150,6 @@ class FarmerQualityReportServiceTest {
         verify(reports, never()).saveAndFlush(any());
     }
 
-    /** Review Focus #1: the reply can be edited until an admin decides, not after. */
     @Test
     void aDecidedReportCannotBeAnsweredAnyMore() {
         report.setStatus(QualityReportStatus.CONFIRMED);

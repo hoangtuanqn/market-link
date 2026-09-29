@@ -14,7 +14,6 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import FeedbackTableSkeleton from './FeedbackTableSkeleton';
 
-/** Statuses filter server-side via `status`; the three types filter client-side over the fetched page. */
 const FILTERS = ['all', 'new', 'reviewed', 'resolved', 'bug', 'suggestion', 'query'] as const;
 type Filter = (typeof FILTERS)[number];
 const STATUS_FILTERS: FeedbackStatus[] = ['new', 'reviewed', 'resolved'];
@@ -29,10 +28,6 @@ const STATUS_META: Record<FeedbackStatus, { icon: typeof ClockIcon; className: s
 
 const NO_ROWS: FeedbackDto[] = [];
 
-/**
- * FR-081 — bug reports, suggestions and questions sent through the feedback form. A row opens the whole message in a
- * dialog; the admin only moves it between `new`, `reviewed` and `resolved` (the platform sends no reply).
- */
 const AdminFeedbackPage = () => {
   const { t } = useTranslation('AdminFeedback');
   const { t: tAssistant } = useTranslation('common');

@@ -21,7 +21,6 @@ type ApplicationStatusProps = {
   onWithdraw: () => void;
 };
 
-/** The application once it is sent: its content, where it stands, past attempts, and the way to withdraw or re-apply. */
 const ApplicationStatus = ({
   data,
   confirmWithdraw,
@@ -56,12 +55,10 @@ const ApplicationStatus = ({
 
       {data.approvalStatus === 'suspended' && (
         <Banner variant="warning" title={t('suspendedBanner.title')}>
-          {/* The suspension reason is written by the Admin; if there is none it still says clearly what is happening. */}
           {data.suspendReason ?? t('suspendedBanner.text')}
         </Banner>
       )}
 
-      {/* Being rejected without knowing why means the re-application will be wrong just the same. */}
       {data.approvalStatus === 'rejected' && (
         <Banner variant="danger" title={t('rejectedBanner.title')}>
           {data.rejectReason ?? t('rejectedBanner.noReason')}
@@ -106,9 +103,7 @@ const ApplicationStatus = ({
           </div>
         )}
         <div className="flex flex-wrap gap-2">
-          {/* Only a rejected application can be re-submitted — the server blocks it exactly the same way. */}
           {data.approvalStatus === 'rejected' && <Button onClick={onApplyAgain}>{t('sent.applyAgain')}</Button>}
-          {/* While pending they can still change their mind; once there is a result there is nothing left to withdraw. */}
           {data.approvalStatus === 'pending' && (
             <Button variant="danger" disabled={isWithdrawing} onClick={onAskWithdraw}>
               {t('sent.withdraw')}

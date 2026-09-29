@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** GET /api/v1/deals — Public (FR-125, spec §4.5.4). */
 @RestController
 @RequestMapping("/api/v1/deals")
 @AllArgsConstructor

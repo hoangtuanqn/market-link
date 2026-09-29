@@ -21,7 +21,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** FR-081. Rate limit first (cheapest, and before any parsing), then validate, then store. */
 @Service
 @AllArgsConstructor
 public class FeedbackService implements FeedbackServiceInterface {

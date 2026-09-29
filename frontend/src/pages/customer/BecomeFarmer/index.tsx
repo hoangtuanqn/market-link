@@ -21,7 +21,6 @@ import { grabPoster } from './grabPoster';
 import StallDetailsStep from './StallDetailsStep';
 import { fileError, focusFirstError, validate } from './validation';
 
-/** FR-002 (second route, applying from an existing Customer account — needs its own FR, see the caption below). */
 const CustomerBecomeFarmerPage = () => {
   const { t } = useTranslation('CustomerBecomeFarmer');
   const { user } = useSession();
@@ -44,16 +43,13 @@ const CustomerBecomeFarmerPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [confirmWithdraw, setConfirmWithdraw] = useState(false);
   const [isWithdrawing, setIsWithdrawing] = useState(false);
-  /** The date of the draft that is open, to tell the user they are continuing unfinished work. */
   const [draftSavedAt, setDraftSavedAt] = useState<string>();
   const navigate = useNavigate();
 
-  // only setState in a promise callback (the initial state is already loading)
   const fetchStatus = useCallback(() => {
     FarmerApi.myApplication()
       .then((response) => {
         if (response.data) return setStatus({ kind: 'applied', data: response.data });
-        // No application submitted yet: reopen exactly what they typed last time after clicking "Save and finish later".
         const draft = readDraft(user?.id);
         if (draft) {
           setStallName(draft.stallName);
@@ -70,7 +66,6 @@ const CustomerBecomeFarmerPage = () => {
 
   useEffect(fetchStatus, [fetchStatus]);
 
-  // An admin decided while the page was open: read again so it no longer shows "pending" with the old withdraw button
   useEffect(
     () =>
       NotificationStore.onFrame((frame) => {
@@ -84,11 +79,6 @@ const CustomerBecomeFarmerPage = () => {
     fetchStatus();
   };
 
-  /**
-   * Re-applying after a rejection: reopen the form with last time's content so the applicant fixes exactly what the
-   * Admin criticised, instead of typing everything again from scratch. The three commitment boxes must be ticked again
-   * — they are commitments for the new application.
-   */
   const applyAgain = () => {
     if (status.kind !== 'applied') return;
     const previous = status.data;
@@ -105,10 +95,6 @@ const CustomerBecomeFarmerPage = () => {
     window.scrollTo(0, 0);
   };
 
-  /**
-   * "Save and finish later": keep what was typed (the images are already on the server so only paths are saved) and
-   * send the user back to the account page, where the continue button is.
-   */
   const saveAndLeave = () => {
     saveDraft(user?.id, {
       stallName,
@@ -127,12 +113,10 @@ const CustomerBecomeFarmerPage = () => {
       await FarmerApi.withdraw();
       setConfirmWithdraw(false);
       Notification.success({ title: t('toast.withdrawnTitle'), text: t('toast.withdrawn') });
-      // After withdrawing it is as if never applied: back to a blank form, not the status screen.
       setStatus({ kind: 'form' });
       window.scrollTo(0, 0);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, t('errors.withdraw')) });
-      // Usually the application was just decided (no longer "pending"): show the new status exactly
       setConfirmWithdraw(false);
       fetchStatus();
     } finally {
@@ -140,7 +124,6 @@ const CustomerBecomeFarmerPage = () => {
     }
   };
 
-  /** Discard the draft: clear it both on the machine and on screen, the form goes blank like the first time. */
   const discardDraft = () => {
     clearDraft(user?.id);
     setDraftSavedAt(undefined);
@@ -152,7 +135,6 @@ const CustomerBecomeFarmerPage = () => {
     setErrors({});
   };
 
-  /** After fixing, the red line disappears at once, without waiting for Submit to be pressed again. */
   const clearError = (key: keyof FormErrors) =>
     setErrors((prev) => {
       if (!prev[key]) return prev;
@@ -205,7 +187,6 @@ const CustomerBecomeFarmerPage = () => {
     }
     setVideo({ url: null, uploading: true, poster: null });
     try {
-      // Build the thumbnail in parallel with the upload, so the user does not wait an extra beat.
       const [response, poster] = await Promise.all([FarmerApi.uploadFile(file, 'video'), grabPoster(file)]);
       setVideo({ url: response.data.url, uploading: false, poster });
     } catch (error) {
@@ -247,7 +228,6 @@ const CustomerBecomeFarmerPage = () => {
       window.scrollTo(0, 0);
       Notification.success({ title: t('toast.sentTitle'), text: t('toast.sent') });
     } catch (error) {
-      // Server per-field errors: photoUrls/videoUrl merge into the image block's red line.
       const fromServer = Helper.getFieldErrors(error);
       setErrors({
         stallName: fromServer.stallName,
@@ -326,7 +306,6 @@ const CustomerBecomeFarmerPage = () => {
         <p className="text-body-lg">{t('intro')}</p>
       </div>
 
-      {/* Reopened from a draft: say clearly this is unfinished work, and offer a way to discard the draft and start over. */}
       {draftSavedAt && (
         <Banner title={t('draft.title')}>
           {t('draft.text', { date: formatDate(new Date(draftSavedAt)) })}{' '}
@@ -345,8 +324,6 @@ const CustomerBecomeFarmerPage = () => {
         </ol>
       </Card>
 
-      {/* noValidate: turn off the browser's default bubble (text that cannot be translated and hides the form's own
-          error line). `required` is still kept for screen readers and the asterisk on the label. */}
       <form onSubmit={onSubmit} noValidate className="flex flex-col gap-8">
         <ol className="m-0 flex flex-col gap-8 p-0">
           <StallDetailsStep

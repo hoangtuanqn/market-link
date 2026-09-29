@@ -91,7 +91,6 @@ class UserServiceTest {
                         mock(BlacklistServiceInterface.class),
                         authConfig,
                         jobQueue,
-                        // FR-008: nobody has 2FA on → sign in as before
                         mock(MfaServiceInterface.class),
                         addressService,
                         emailVerification);
@@ -175,9 +174,6 @@ class UserServiceTest {
                 "Nguyen Van An", phone, email, BEN_THANH, PASSWORD, PASSWORD, "vi", null, null);
     }
 
-    /**
-     * What AddressService answers for BEN_THANH; its own rules are pinned in AddressServiceTest.
-     */
     private void addressResolves() {
         when(addressService.resolve(BEN_THANH, AddressPolicy.ACCOUNT))
                 .thenReturn(
@@ -221,10 +217,6 @@ class UserServiceTest {
         verify(userRepository, never()).save(any());
     }
 
-    /**
-     * Final review #1: the browser's token goes with a corrected form, so the same sign-up is
-     * updated.
-     */
     @Test
     void aCorrectedFormCarriesTheBrowsersToken() {
         addressResolves();
@@ -290,11 +282,9 @@ class UserServiceTest {
         assertThat(saved.getValue().getAddressParts().getWardCode()).isEqualTo("26743");
         assertThat(result.accessToken()).isEqualTo("access");
         assertThat(result.user().address()).isEqualTo(BEN_THANH_TEXT);
-        // No transaction in a unit test, so the after-commit clean-up runs straight away
         verify(emailVerification).discard(EMAIL);
     }
 
-    /** Spec §4.2: when saving the account fails, the code goes back so the person can try again. */
     @Test
     void aFailedSaveGivesTheCodeBack() {
         VerifiedSignup verified = new VerifiedSignup(parked(EMAIL), "hash", 500);
@@ -394,7 +384,6 @@ class UserServiceTest {
         assertThat(profile.addressParts()).isNull();
     }
 
-    /** QA E2E v2 BUG-005 (RETEST-002): both taken fields are reported in one answer. */
     @Test
     void signUpReportsEmailAndPhoneTogetherWhenBothAreTaken() {
         when(userRepository.existsByEmail(EMAIL)).thenReturn(true);

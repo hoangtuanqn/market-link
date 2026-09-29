@@ -1,4 +1,3 @@
-/** FR-042 — matches docs/api-contract.md §9 (NotificationResource, the STOMP frame, preferences). */
 export type NotificationKindCode =
   | 'announcement'
   | 'farmer_application'
@@ -27,7 +26,6 @@ export type NotificationItem = {
 
 export type NotificationAlert = { inApp: boolean; browser: boolean; sound: boolean };
 
-/** The frame on /user/topic/notifications. id is null for kinds that are not stored (message, test). */
 export type NotificationFrame = {
   id: number | null;
   kind: NotificationKindCode;
@@ -60,7 +58,6 @@ export type NotificationPreferences = {
 
 export type AnnouncementAudience = 'all' | 'customers' | 'farmers';
 
-/** FR-077 — AnnouncementResource. */
 export type Announcement = {
   id: number;
   title: string;

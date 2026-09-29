@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/** Same reason as CatalogExceptionHandler: without it the 404 falls through to /error as a 401. */
 @RestControllerAdvice(assignableTypes = GeoController.class)
 public class GeoExceptionHandler {
 

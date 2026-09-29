@@ -6,7 +6,6 @@ type CodeInputProps = {
   label: string;
   value: string;
   onChange: (value: string) => void;
-  /** Called once, when the last digit goes in. */
   onComplete?: (code: string) => void;
   length?: number;
   invalid?: boolean;
@@ -15,11 +14,6 @@ type CodeInputProps = {
   ref?: Ref<HTMLInputElement>;
 };
 
-/**
- * One-time code entry (design system `CodeInput`, FR-009). One real input — so paste, the browser's one-time-code
- * autofill and screen readers behave as usual — drawn as one box per digit. No maxLength on purpose: a pasted "123 456"
- * is 7 characters and the browser would cut it before the spaces are stripped.
- */
 export function CodeInput({
   id,
   label,

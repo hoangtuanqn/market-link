@@ -42,10 +42,6 @@ public class MailService implements MailServiceInterface {
         deliver(to, subject, true, helper -> helper.setText(text, html));
     }
 
-    /**
-     * No SMTP account yet (MAIL_USERNAME is empty): write the mail to the log instead, so the whole
-     * flow can still be tried locally.
-     */
     private boolean notConfigured(String to, String subject, String body) {
         if (StringUtils.hasText(fromAddress)) return false;
         log.warn(

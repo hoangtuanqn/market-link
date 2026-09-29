@@ -12,10 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.mock.web.MockMultipartFile;
 
-/**
- * Content-Type is claimed by the browser (or by whoever calls the API directly), so the file type
- * must be concluded from the first few bytes — same as avatars and chat images.
- */
 class FarmerUploadServiceTest {
 
     private static final byte[] PNG = {
@@ -57,9 +53,6 @@ class FarmerUploadServiceTest {
                         dir -> assertThat(dir).isEmptyDirectory());
     }
 
-    /**
-     * A PNG image renamed to .jpg is still a real image: stored by its real type, not by its claim.
-     */
     @Test
     void theExtensionFollowsTheContentNotTheLabel() {
         assertThat(service.store(7L, "photo", file("image/jpeg", PNG))).endsWith(".png");

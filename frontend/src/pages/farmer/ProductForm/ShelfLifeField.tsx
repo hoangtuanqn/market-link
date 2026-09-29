@@ -12,7 +12,6 @@ export type ShelfLifeFieldProps = {
   loading: boolean;
   loadFailed: boolean;
   onRetry: () => void;
-  /** The category's own range, shown when it has no groups yet. */
   categoryRange: { min: number; max: number } | null;
   groupName: string | null;
   storageMode: StorageMode;
@@ -20,23 +19,17 @@ export type ShelfLifeFieldProps = {
   peerMedianDays: number | null;
   days: number;
   acknowledged: boolean;
-  /** The saved group is no longer offered: only the group select shows, empty, until the Farmer picks one. */
   groupGone: boolean;
   errors: { group?: string; mode?: string; days?: string; ack?: string };
   onGroup: (groupName: string) => void;
   onMode: (mode: StorageMode, suggestedDays: number) => void;
   onDays: (days: number) => void;
   onAcknowledge: (value: boolean) => void;
-  /** FR-123: while the stall has 3 strikes in 90 days, when the lock ends (ISO 8601); + then stops at the suggestion. */
   lockedUntil?: string | null;
 };
 
 const MODES: StorageMode[] = ['room', 'chilled'];
 
-/**
- * FR-120, FR-121 — the product form's storage block (spec §4.2): the group, how it is kept (each way with its suggested
- * days), a stepper capped at twice the suggestion, and the promise a longer shelf life needs.
- */
 const ShelfLifeField = ({
   groups,
   loading,
@@ -77,8 +70,6 @@ const ShelfLifeField = ({
 
   const groupOptions = groups.map((g) => ({ value: g.groupName, label: g.groupName }));
   if (groupGone) {
-    // Spec §8: the saved group is no longer offered. The select starts empty, so picking any group is a change the
-    // Farmer makes (the one the name matches included), and the rest of the block waits for that pick.
     return (
       <div className="md:col-span-2">
         <SelectField
@@ -95,11 +86,9 @@ const ShelfLifeField = ({
   }
 
   const group = groups.find((g) => g.groupName === groupName);
-  // No groups: both ways of keeping are offered with the category's upper bound as the suggestion.
   const modes = group
     ? group.modes.map((m) => ({ mode: m.storageMode, suggested: m.suggestedDays }))
     : MODES.map((mode) => ({ mode, suggested: suggestedDays }));
-  // FR-123 (spec §4.2): a locked stall cannot go above the suggestion, so the + button stops there
   const max = lockedUntil ? suggestedDays : maxShelfLifeDays(suggestedDays);
   const longer = extendedBy(days, suggestedDays);
   const storageLabel = tc(`storageMode.${storageMode}`);
@@ -195,7 +184,6 @@ const ShelfLifeField = ({
           variant="warning"
           title={t('shelfLife.longerTitle', {
             count: longer,
-            // Pluralised on its own, so a one-day suggestion reads "1 day"
             suggested: t('shelfLife.days', { count: suggestedDays }),
             storage: storageLabel,
           })}

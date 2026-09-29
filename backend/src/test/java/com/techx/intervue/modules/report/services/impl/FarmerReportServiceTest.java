@@ -14,11 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/**
- * FR-068/069 on MySQL: the totals are SQL aggregates, so a mock could not prove which statuses
- * count. Stall A receives one order in every status; stall B has one completed order that must
- * never leak into A's numbers (Review Focus #3 at the report layer).
- */
 @SpringBootTest
 class FarmerReportServiceTest {
 
@@ -103,10 +98,6 @@ class FarmerReportServiceTest {
         assertThat(reports.salesHistory(farmerBUserId, null, null, 1, 10).total()).isEqualTo(1);
     }
 
-    /**
-     * A stall approved today has no order at all: every SUM is NULL and MySQL types the COALESCE
-     * fallback as an integer, not a DECIMAL — the dashboard must still be all zeros, not a 500.
-     */
     @Test
     void dashboardOfAStallWithoutOrdersIsAllZeros() {
         long newFarmerUserId = fx.user("farmer", "Farmer new", "x");
@@ -120,11 +111,6 @@ class FarmerReportServiceTest {
         assertThat(reports.bestSellers(newFarmerUserId, null, null, 5)).isEmpty();
     }
 
-    /**
-     * Per-date stock (FR-063): "low stock" is what the nearest pickup date still has, not
-     * products.stock_quantity (9 for every fixture product, only the Farmer's reference now). A
-     * product no weekly template makes orderable counts too — it cannot be sold at all.
-     */
     @Test
     void lowStockCountsTheNearestPickupDateStock() {
         long userId = fx.user("farmer", "Farmer stock", "x");
@@ -133,7 +119,6 @@ class FarmerReportServiceTest {
         fx.everyDayTemplate(farmer, fx.product(farmer, category, "Plenty", 10000), 20);
         fx.everyDayTemplate(farmer, fx.product(farmer, category, "Nearly gone", 10000), 3);
         fx.product(farmer, category, "No template", 10000);
-        // Stock only counts on a date the stall can still take orders for
         fx.openSlot(
                 farmer,
                 fx.market("Stock market"),

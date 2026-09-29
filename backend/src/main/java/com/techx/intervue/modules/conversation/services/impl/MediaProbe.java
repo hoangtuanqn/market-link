@@ -12,19 +12,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/**
- * FR-115 (spec 2026-09-28-chat-media-design §2): tells what a chat upload really is from its bytes,
- * never from the file name or the Content-Type the client sent.
- *
- * <p>JPEG/PNG are re-encoded later (EXIF and any hidden payload go away). Everything else is stored
- * exactly as uploaded, so it gets a structural check here: an ISO BMFF file (AVIF, MP4, MOV) must
- * be a chain of boxes ending exactly at the end of the file, a GIF must end with its trailer byte,
- * a WebP keeps the RIFF checks of ImageProbe. That blocks attached tails and truncated files, and
- * any payload that only borrows a few magic bytes.
- *
- * <p>WebM is recognised from its EBML header and DocType only; parsing the whole Matroska element
- * tree is out of proportion for a file that only ever reaches the recipient the sender chose.
- */
 public final class MediaProbe {
 
     public static final String GIF = "image/gif";
@@ -33,7 +20,6 @@ public final class MediaProbe {
     public static final String MOV = "video/quicktime";
     public static final String WEBM = "video/webm";
 
-    /** Enough to sniff every format and to find an AVIF's image size in its meta box. */
     static final int HEAD_BYTES = 64 * 1024;
 
     private static final Set<String> AVIF_BRANDS = Set.of("avif", "avis");
@@ -45,9 +31,7 @@ public final class MediaProbe {
     private MediaProbe() {}
 
     public enum Handling {
-        /** Decoded and re-encoded as JPEG. */
         REENCODE,
-        /** Kept byte for byte after the structural check. */
         STORE_AS_IS
     }
 
@@ -86,7 +70,6 @@ public final class MediaProbe {
         }
     }
 
-    /** The file name the stored copy gets, after its real type. */
     public static String extension(String mime) {
         return switch (mime) {
             case ImageProbe.WEBP -> ".webp";
@@ -100,7 +83,6 @@ public final class MediaProbe {
     }
 
     private static Probed probeGif(Path file, byte[] head, long length) throws IOException {
-        // A GIF ends with the trailer 0x3B: anything after it does not belong to the picture
         if (head.length < 13 || lastByte(file, length) != 0x3B) {
             throw new UnsupportedImageTypeException();
         }
@@ -115,7 +97,6 @@ public final class MediaProbe {
         if (start.contains("webm")) {
             return new Probed(WEBM, true, null, null, Handling.STORE_AS_IS);
         }
-        // Matroska (.mkv) shares the header but browsers do not play it
         throw new UnsupportedImageTypeException();
     }
 
@@ -123,7 +104,6 @@ public final class MediaProbe {
         List<String> boxes = topLevelBoxes(file, length);
         String first = boxes.getFirst();
         if (!first.equals("ftyp")) {
-            // A QuickTime file from before the ftyp box existed
             if (LEGACY_QUICKTIME_FIRST_BOXES.contains(first) && boxes.contains("moov")) {
                 return new Probed(MOV, true, null, null, Handling.STORE_AS_IS);
             }
@@ -137,20 +117,17 @@ public final class MediaProbe {
         if (brands.stream().anyMatch(HEIF_BRANDS::contains)) {
             throw new UnsupportedImageTypeException("Convert HEIC photos to JPEG before sending.");
         }
-        // A video without its movie header cannot be played
         if (!boxes.contains("moov")) {
             throw new UnsupportedImageTypeException();
         }
         return new Probed(major.equals("qt  ") ? MOV : MP4, true, null, null, Handling.STORE_AS_IS);
     }
 
-    /** The image size of an AVIF sits in its ispe (image spatial extents) property box. */
     private static Probed probeAvif(byte[] head) {
         int at = indexOf(head, "ispe");
         if (at < 4 || at + 16 > head.length) {
             throw new UnsupportedImageTypeException();
         }
-        // "ispe" · 4 bytes version/flags · width (32-bit big endian) · height
         int width = be32(head, at + 8);
         int height = be32(head, at + 12);
         if (width <= 0 || height <= 0) {
@@ -160,10 +137,6 @@ public final class MediaProbe {
         return new Probed(AVIF, false, width, height, Handling.STORE_AS_IS);
     }
 
-    /**
-     * Walks the top-level boxes: each has a 32-bit size (1 = a 64-bit size follows, 0 = up to the
-     * end of the file) and a four-letter type. The chain must stop exactly at the end of the file.
-     */
     private static List<String> topLevelBoxes(Path file, long length) throws IOException {
         List<String> types = new ArrayList<>();
         byte[] header = new byte[16];
@@ -232,7 +205,6 @@ public final class MediaProbe {
                 && (b[3] & 0xFF) == 0xA3;
     }
 
-    /** A box type is four printable ASCII characters. */
     private static boolean isFourCc(byte[] b, int at) {
         for (int i = at; i < at + 4; i++) {
             int c = b[i] & 0xFF;

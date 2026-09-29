@@ -8,16 +8,10 @@ import { Card } from '@/components/ui/card';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-/** Keys under `types.` and `sent.` in Feedback.json. */
 const TYPES: FeedbackType[] = ['bug', 'suggestion', 'query'];
 
-/** The server rule (`message` 10–2000 characters); repeated here so the form can guide before it submits. */
 const MESSAGE_MIN = 10;
 
-/**
- * FR-081 — bugs, suggestions and questions for the platform team, routed by type. Anyone can send; a signed-in user is
- * attached on the server automatically, so the form asks for nothing about who is sending it.
- */
 const FeedbackPage = () => {
   const { t } = useTranslation('Feedback');
   const [type, setType] = useState<FeedbackType>('bug');

@@ -30,12 +30,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-124 (spec §4.5.3) — a Farmer puts one pickup day of their own product on a near-expiry deal.
- * The day's row is created when missing and locked by its natural key, the same lock placing an
- * order takes, so a deal and an order for that day never interleave (spec §8). Orders already
- * placed keep the price they copied.
- */
 @Service
 @AllArgsConstructor
 public class FarmerDealService implements FarmerDealServiceInterface {
@@ -49,7 +43,6 @@ public class FarmerDealService implements FarmerDealServiceInterface {
     private final RestockNotifier restock;
     private final Clock clock;
 
-    /** Checks run cheapest first: 403/404, then the request (400), then the day itself (409). */
     @Override
     @Transactional
     public DailyStockResource post(
@@ -84,7 +77,6 @@ public class FarmerDealService implements FarmerDealServiceInterface {
         requireOrderable(profile.getId(), date, today);
 
         dailyStock.materialize(productId, date, date.getDayOfWeek().getValue() % 7);
-        // Nothing to lock: no active template covers that weekday, the product is not sold then
         ProductDailyStock row =
                 dailyStock
                         .lockByProductIdAndStockDate(productId, date)
@@ -98,7 +90,6 @@ public class FarmerDealService implements FarmerDealServiceInterface {
                 check.bestBefore());
         row.setQuantityAvailable(request.quantityAvailable());
         ProductDailyStock saved = dailyStock.save(row);
-        // FR-041: bringing stock for a sold-out day can make the product orderable again
         restock.afterChange(product, wasOrderable, restock.isOrderable(product));
         return DailyStockResource.of(saved);
     }
@@ -119,7 +110,6 @@ public class FarmerDealService implements FarmerDealServiceInterface {
                         });
     }
 
-    /** Read-only: a suspended stall still sees its deals (D-09 blocks writes only). */
     @Override
     public List<FarmerDealResource> mine(long userId) {
         return deals.farmerDeals(profileOf(userId).getId(), LocalDate.now(clock));
@@ -131,11 +121,6 @@ public class FarmerDealService implements FarmerDealServiceInterface {
         return availability.upcoming(product).stream().map(a -> toResource(productId, a)).toList();
     }
 
-    /**
-     * The same "can still be ordered" rule the public pages use (ProductAvailabilityResolver): a
-     * free slot before its cutoff on a day the market and the stall both open, inside the 14-day
-     * lookahead.
-     */
     private void requireOrderable(long farmerId, LocalDate date, LocalDate today) {
         boolean inWindow =
                 !date.isBefore(today)
@@ -166,12 +151,10 @@ public class FarmerDealService implements FarmerDealServiceInterface {
                 deal == null ? null : deal.bestBefore());
     }
 
-    /** R-06: the profile always comes from the token's user, never from the request. */
     private FarmerProfile profileOf(long userId) {
         return farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
     }
 
-    /** Missing or deleted → 404; another stall's product → 403 (R-06). */
     private Product owned(FarmerProfile profile, long productId) {
         Product product =
                 products.findByIdAndDeletedFalse(productId)

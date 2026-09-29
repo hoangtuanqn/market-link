@@ -15,7 +15,6 @@ const LOW_STOCK = 3;
 
 type ProductCardProps = { product: ProductType; showMarket?: boolean };
 
-/** Hang tag with a punched hole: photo area, name, stall, price and stock. */
 const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
   const { t } = useTranslation();
   const paused = product.status === PRODUCT_STATUS.UNAVAILABLE;
@@ -23,14 +22,12 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
   const low = !soldOut && product.stock <= LOW_STOCK;
   const qty = units(product.stock, product.unit, product.plural);
   const left = low ? t('product.onlyLeft', { qty }) : t('product.left', { qty });
-  // FR-022: the number is for one pickup date (the nearest one still open to orders), so name it
   const day = stockDay(product.availableDate);
   const stock = soldOut ? (paused ? t('product.notThisWeek') : t('product.backSoon')) : day ? `${day} · ${left}` : left;
   const href = `/products/${product.id}`;
 
   return (
     <Card as="article" className="relative flex h-full flex-col overflow-hidden">
-      {/* punched hole */}
       <span
         aria-hidden="true"
         className="bg-surface absolute top-2.25 left-1/2 z-1 size-3.5 -translate-x-1/2 rounded-full shadow-[inset_0_0_0_1.5px_var(--line-strong)]"
@@ -74,9 +71,6 @@ const ProductCard = ({ product, showMarket = true }: ProductCardProps) => {
       <div className="flex flex-1 flex-col justify-between gap-3 p-4">
         <div>
           <h3 className={Helper.cn('line-clamp-1 text-[17px] leading-tight font-bold', soldOut && 'text-ink-muted')}>
-            {/* after:inset-0 stretches the hit area over the whole card (the Card is relative), so a
-                finger landing on the photo or the price opens the product too. The two buttons sit
-                above it with z-2 — wrapping the card in an <a> instead would nest them inside a link. */}
             <Link
               to={href}
               className="text-inherit no-underline after:absolute after:inset-0 hover:underline hover:underline-offset-3"

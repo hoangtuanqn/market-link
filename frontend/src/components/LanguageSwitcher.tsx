@@ -10,10 +10,6 @@ type LanguageSwitcherProps = {
   variant?: 'dark' | 'light';
 };
 
-/**
- * Language picker: anyone can change it, including guests who have not signed in. When signed in it is also saved to
- * the account, like the Language item in Settings.
- */
 const LanguageSwitcher = ({ variant = 'dark' }: LanguageSwitcherProps) => {
   const { t } = useTranslation();
   const { language } = useSettings();

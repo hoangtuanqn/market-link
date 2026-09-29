@@ -17,9 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Runs on real MySQL: the fan-out statement is native SQL so it must be checked on the real engine.
- */
 @SpringBootTest
 @Transactional
 class NotificationRepositoryTest {

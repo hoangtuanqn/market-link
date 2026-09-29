@@ -33,11 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/**
- * FR-071 on MySQL + Redis: suspending a stall must record why and for how long, cut the live
- * session, and — the one thing D-09 guarantees — still let the Farmer finish an order a customer
- * already placed.
- */
 @SpringBootTest
 class FarmerSuspensionTest {
 
@@ -158,7 +153,6 @@ class FarmerSuspensionTest {
                                 farmerId))
                 .isTrue();
 
-        // a later, unrelated permanent suspension must not show the earlier expiry
         farmers.suspend(farmerId, permanent("New violation"), adminUserId);
         assertThat(
                         jdbc.queryForObject(
@@ -181,7 +175,6 @@ class FarmerSuspensionTest {
                 .isEqualTo(2);
     }
 
-    /** D-09: "chỉ thấy đơn cũ" — the selling screens close while the suspension lasts. */
     @Test
     void aSuspendedStallCannotReadItsSellingScreens() {
         farmers.suspend(farmerId, permanent("Complaints"), adminUserId);
@@ -195,11 +188,6 @@ class FarmerSuspensionTest {
                 .isInstanceOf(StallSuspendedException.class);
     }
 
-    /**
-     * Review finding on FR-071: updateProfile, leaveMarket and SlotService.updateSlot had no guard
-     * at all before this test — a suspended stall could still rename itself, leave a market or
-     * change slot capacity while the FE menu hid those very screens (server must be the real gate).
-     */
     @Test
     void aSuspendedStallCannotWriteToItsProfileMarketsOrSlots() {
         long market = fx.market("Market");
@@ -231,11 +219,6 @@ class FarmerSuspensionTest {
                 .isInstanceOf(StallSuspendedException.class);
     }
 
-    /**
-     * …but never the screen that explains the suspension. FarmerPendingPage and FarmerLayout both
-     * read the stall profile to learn the status and the reason; blocking it would leave a
-     * suspended Farmer with no way to find out why.
-     */
     @Test
     void aSuspendedStallCanStillReadItsOwnProfileAndReason() {
         farmers.suspend(farmerId, permanent("Complaints"), adminUserId);
@@ -243,10 +226,6 @@ class FarmerSuspensionTest {
         assertThatCode(() -> stalls.myProfile(farmerUserId)).doesNotThrowAnyException();
     }
 
-    /**
-     * D-09, the whole point: a customer's order that the stall already accepted must still be
-     * completable after the suspension, or the customer loses food that was picked for them.
-     */
     @Test
     void aSuspendedStallCanStillCompleteAnOrderItAlreadyAccepted() {
         long market = fx.market("Market");

@@ -15,12 +15,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * FR-122: a customer's report of spoiled produce on one line of a completed order (table {@code
- * quality_reports}, V20260928014). The promise is copied from the order line when the report is
- * made, so a later edit of the product never changes how the report is judged. Reports are never
- * deleted: they are the trail behind every shelf-life strike.
- */
 @Entity
 @Getter
 @Setter
@@ -38,11 +32,9 @@ public class QualityReport {
     @Column(name = "order_id", nullable = false, updatable = false)
     private Long orderId;
 
-    /** users.id of the buyer. */
     @Column(name = "customer_id", nullable = false, updatable = false)
     private Long customerId;
 
-    /** farmer_profiles.id, not users.id. */
     @Column(name = "farmer_id", nullable = false, updatable = false)
     private Long farmerId;
 
@@ -62,7 +54,6 @@ public class QualityReport {
     @Column(name = "photo_url", length = 255, updatable = false)
     private String photoUrl;
 
-    /** Spoiled on or before the line's best_before. */
     @Column(name = "before_promise", nullable = false, updatable = false)
     private boolean beforePromise;
 
@@ -91,7 +82,6 @@ public class QualityReport {
     @Column(name = "decision_note", length = 255)
     private String decisionNote;
 
-    /** Set from the application Clock so the response can echo it at once. */
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
@@ -99,7 +89,6 @@ public class QualityReport {
         return status == QualityReportStatus.OPEN;
     }
 
-    /** FR-123: the admin's decision. Callers check {@link #isOpen()} first. */
     public void decide(QualityReportStatus outcome, Long adminId, String note, Instant at) {
         this.status = outcome;
         this.decidedBy = adminId;

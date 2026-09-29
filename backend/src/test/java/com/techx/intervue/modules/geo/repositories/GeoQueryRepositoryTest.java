@@ -9,10 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * Runs on the real MySQL against the master data of V20260927001: the street search is one
- * hand-written query whose LIKE, escaping, ordering and limit only mean something on the engine.
- */
 @SpringBootTest
 class GeoQueryRepositoryTest {
 
@@ -47,7 +43,6 @@ class GeoQueryRepositoryTest {
         List<String> names = search(List.of("hai"), 20);
 
         assertThat(names).isNotEmpty();
-        // Compared folded: "Hải Âu" starts with the word "hai" as the user typed it
         assertThat(TextNormalizer.normalize(names.get(0))).startsWith("hai");
     }
 

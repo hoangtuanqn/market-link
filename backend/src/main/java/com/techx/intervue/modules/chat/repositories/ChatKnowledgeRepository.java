@@ -16,14 +16,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * The fixed SQL the chatbot may run (R-04): read-only, every user value goes in as a parameter,
- * nothing is concatenated. Primary keys are {@code id} on every table (plan S.4.1); the {@code
- * *_id} names only survive as column aliases so the row mappers keep reading the same labels.
- * Hidden listings (FR-074), unapproved stalls (D-09) and products with no active weekly template
- * (never orderable with per-date stock, FR-063 — the catalogue leaves them out too) never appear in
- * an answer.
- */
 @Repository
 @RequiredArgsConstructor
 public class ChatKnowledgeRepository {
@@ -99,7 +91,6 @@ public class ChatKnowledgeRepository {
                         .addValue("keyword", "%" + escapeLike(keyword) + "%")
                         .addValue("marketId", marketId, Types.BIGINT);
 
-        // One product sold at several markets → several rows; merge them by product_id
         Map<Long, ProductRow> products = new LinkedHashMap<>();
         jdbc.query(
                 SEARCH_PRODUCTS,
@@ -171,7 +162,6 @@ public class ChatKnowledgeRepository {
                                 rs.getObject("pickup_end_time", LocalTime.class)));
     }
 
-    /** Escape LIKE special characters so the keyword is always read as plain text. */
     static String escapeLike(String keyword) {
         return keyword.replace("!", "!!").replace("%", "!%").replace("_", "!_");
     }

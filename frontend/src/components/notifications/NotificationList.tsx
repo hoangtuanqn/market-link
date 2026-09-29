@@ -36,10 +36,6 @@ const iconOf = (kind: NotificationKindCode) => {
 
 type Load = { status: 'loading' } | { status: 'error' } | { status: 'ready'; items: NotificationItem[]; total: number };
 
-/**
- * FR-042 — the real notification list (/notifications, /farmer/notifications, /admin/notifications). A new notification
- * via STOMP is inserted at the top as soon as it arrives; clicking a row marks it read and then opens the right page.
- */
 const NotificationList = ({ title, intro }: { title: string; intro: string }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -75,7 +71,6 @@ const NotificationList = ({ title, intro }: { title: string; intro: string }) =>
     };
   }, [filter]);
 
-  // A new storable notification arrives → goes to the top of the list
   useEffect(
     () =>
       NotificationStore.onFrame((f) => {

@@ -3,7 +3,6 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { Dialog } from './dialog';
 
 beforeEach(() => {
-  // jsdom has no native <dialog> support: stub the two methods the component calls.
   HTMLDialogElement.prototype.showModal = vi.fn(function (this: HTMLDialogElement) {
     this.open = true;
   });
@@ -12,11 +11,6 @@ beforeEach(() => {
   });
 });
 
-/**
- * M-2: the id used for aria-labelledby was a hardcoded "dialog-title", so two <Dialog>s mounted at once (e.g. the
- * cancel-order dialog and the spoilage-report dialog on the same page) both pointed at the first one's <h2>, and the
- * second announced the wrong name to screen readers. useId() gives every instance its own id.
- */
 describe('Dialog', () => {
   it('announces each open dialog by its own title, not another dialog on the page', () => {
     render(

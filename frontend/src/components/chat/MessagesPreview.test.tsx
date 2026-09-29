@@ -67,7 +67,6 @@ describe('MessagesPreview', () => {
     expect(await screen.findByText(/could not load/i)).toBeInTheDocument();
   });
 
-  /** FR-084: loading is a state with words, readable by a screen reader and translated. */
   it('says it is loading, in the reader’s language', () => {
     vi.mocked(ConversationApi.list).mockReturnValue(new Promise(() => {}) as never);
     render(

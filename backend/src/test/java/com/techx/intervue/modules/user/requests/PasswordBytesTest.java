@@ -12,11 +12,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-/**
- * BCrypt takes 72 bytes, not 72 characters: 40 × "ệ" is 40 characters but 120 bytes, and used to
- * reach the encoder and come back as a 500. Every form that sets a password refuses it on the
- * password field.
- */
 class PasswordBytesTest {
 
     private static final String ACCENTED = "ệ".repeat(40);
@@ -79,7 +74,6 @@ class PasswordBytesTest {
 
     @Test
     void anAccentedPasswordThatFitsIsAccepted() {
-        // 24 × "ệ" = 72 bytes, exactly BCrypt's limit
         assertThat(messagesOn(register("ệ".repeat(24)), "password")).isEmpty();
         assertThat(messagesOn(register("Mật khẩu an toàn 2026"), "password")).isEmpty();
     }

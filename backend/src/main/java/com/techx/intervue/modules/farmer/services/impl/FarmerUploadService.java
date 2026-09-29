@@ -17,16 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * Stores images/videos of the Farmer application on the local disk (app.uploads.dir) — for
- * test/demo only (docs/prototype/customer/become-farmer.html), not production object storage
- * infrastructure. File names are always generated (UUID); the file name the client sends is never
- * used, to avoid path traversal.
- *
- * <p>Each account has its own directory {@code farmer-applications/<userId>/}. That makes it
- * possible to check "is this path the applicant's own" without an extra table, and cleaning up one
- * person's leftover files is just sweeping exactly their directory.
- */
 @Slf4j
 @Service
 public class FarmerUploadService {
@@ -57,9 +47,6 @@ public class FarmerUploadService {
         }
     }
 
-    /**
-     * @param kind "photo" or "video" — decides the allowed content-type/size.
-     */
     public String store(Long userId, String kind, MultipartFile file) {
         boolean isPhoto = "photo".equals(kind);
         boolean isVideo = "video".equals(kind);
@@ -95,30 +82,14 @@ public class FarmerUploadService {
         return urlPrefix(userId) + filename;
     }
 
-    /**
-     * Is the path the client sent with the application really a file this person just uploaded.
-     * Without the check anyone could attach someone else's image to their own application just by
-     * guessing the file name.
-     */
     public boolean isOwnedBy(String url, Long userId) {
         if (url == null) {
             return true;
         }
         String prefix = urlPrefix(userId);
-        // Block "…/<userId>/../<another userId>/x.jpg": after the prefix only a flat file name is
-        // allowed.
         return url.startsWith(prefix) && !url.substring(prefix.length()).contains("/");
     }
 
-    /**
-     * Delete the files in an account's directory that no application points to any more. Call it
-     * after re-applying or withdrawing: the images of an old draft are read by nobody, keeping them
-     * only costs disk space.
-     *
-     * @param keepUrls the URLs that are still referenced
-     * @param olderThan only delete files older than this mark, so an image just uploaded but not
-     *     yet submitted is not deleted by mistake
-     */
     public int deleteUnreferenced(Long userId, Set<String> keepUrls, Instant olderThan) {
         Path userDir = dirOf(userId);
         if (!Files.isDirectory(userDir)) {
@@ -138,9 +109,6 @@ public class FarmerUploadService {
                     Files.deleteIfExists(file);
                     removed++;
                 } catch (IOException e) {
-                    // One bad file must not block the whole batch; a leftover file only costs
-                    // space, it does not corrupt
-                    // data.
                     log.warn("Could not delete farmer upload {}: {}", file, e.getMessage());
                 }
             }
@@ -150,9 +118,6 @@ public class FarmerUploadService {
         return removed;
     }
 
-    /**
-     * The directories that currently hold files, so the cleanup job knows which accounts to sweep.
-     */
     public Set<Long> usersWithFiles() {
         if (!Files.isDirectory(storageDir)) {
             return Set.of();
@@ -177,7 +142,6 @@ public class FarmerUploadService {
         return baseUrl + "/" + FOLDER + "/" + userId + "/";
     }
 
-    /** The first few bytes of the file — enough to recognize JPEG, PNG, WEBP, MP4/MOV, WEBM. */
     private static byte[] head(MultipartFile file) {
         try (InputStream in = file.getInputStream()) {
             return in.readNBytes(HEAD_BYTES);
@@ -186,12 +150,6 @@ public class FarmerUploadService {
         }
     }
 
-    /**
-     * Content-Type is only the client's claim: still used to reject unaccepted types early, while
-     * the real type (and the file extension) is concluded from the magic bytes — same as avatars
-     * and chat images. Without the check an HTML file claiming "image/png" would still be stored
-     * and served at /uploads.
-     */
     private static String photoExtension(String contentType, byte[] head) {
         if (!PHOTO_TYPES.contains(contentType)) {
             throw new InvalidFieldException("file", "Photos must be JPEG, PNG or WEBP.");
@@ -212,9 +170,6 @@ public class FarmerUploadService {
         if (!VIDEO_TYPES.contains(contentType)) {
             throw new InvalidFieldException("file", "Video must be MP4, WEBM or MOV.");
         }
-        // WEBM is EBML; MP4 and MOV belong to the same ISO BMFF family (the first box is usually
-        // ftyp, an old MOV may be
-        // moov/mdat/wide/free/skip) — these two are told apart by the claim.
         if (startsWith(head, 0, 0x1A, 0x45, 0xDF, 0xA3)) {
             return ".webm";
         }

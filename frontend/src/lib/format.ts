@@ -1,21 +1,10 @@
-/**
- * Formatting helpers that follow the MarketLink design system (docs/design-system/README.md → Voice), and the reader's
- * Settings (src/lib/settings.ts): language, date format, clock, metric or imperial. Every page goes through these, so a
- * setting changes the whole app in one place. Currency is locked to USD (user decision 2026-09-26) — no per-reader
- * choice any more, see `money()`.
- */
 import SettingsStore from './settings';
 
 const UNIT_SAME = new Set(['kg', 'g', 'dozen', 'lb', 'oz', 'l', 'ml', 'pt', 'fl oz']);
 
 const settings = () => SettingsStore.get();
-/** BCP 47 tag for Intl: the interface language. */
 const locale = () => settings().language;
 
-/**
- * Locked to USD (user decision 2026-09-26) — no per-reader currency choice. `amount` is a plain number of dollars, not
- * cents.
- */
 export function money(amount: number): string {
   return new Intl.NumberFormat(locale(), {
     style: 'currency',
@@ -24,9 +13,6 @@ export function money(amount: number): string {
   }).format(amount);
 }
 
-/* ---------- units ---------- */
-
-/** Metric unit → imperial unit and how many imperial units one metric unit is. Count units (bunch, tray) are absent. */
 const IMPERIAL: Record<string, { unit: string; factor: number }> = {
   kg: { unit: 'lb', factor: 2.20462 },
   g: { unit: 'oz', factor: 0.035274 },
@@ -38,34 +24,26 @@ const IMPERIAL: Record<string, { unit: string; factor: number }> = {
 
 const imperialFor = (unit?: string) => (unit && settings().units === 'imperial' ? IMPERIAL[unit] : undefined);
 
-/** A measured quantity in the reader's units: (2, 'kg') → { count: 4.4, unit: 'lb' }. Count units pass through. */
 function measure(count: number, unit?: string): { count: number; unit?: string } {
   const to = imperialFor(unit);
   if (!to) return { count, unit };
   return { count: Math.round(count * to.factor * 10) / 10, unit: to.unit };
 }
 
-/** The unit word the reader sees: 'kg' → 'lb' when imperial. */
 export function unitName(unit: string): string {
   return imperialFor(unit)?.unit ?? unit;
 }
 
-/** Price per sale unit in the reader's units: (4.5, 'kg') → "$4.50 / kg", or "$2.04 / lb". */
 export function perUnit(price: number, unit: string): string {
   const to = imperialFor(unit);
   return to ? `${money(price / to.factor)} / ${to.unit}` : `${money(price)} / ${unit}`;
 }
 
-/** The price of one sale unit converted like `perUnit`, for components that lay the number and the unit out apart. */
 export function unitPrice(price: number, unit?: string): { amount: number; unit?: string } {
   const to = imperialFor(unit);
   return to ? { amount: price / to.factor, unit: to.unit } : { amount: price, unit };
 }
 
-/**
- * English cannot derive the plural of an arbitrary unit phrase ("tray of 30" → "trays of 30"), so this is only the
- * guess a form offers by default; a stall can override it (see `units`' third argument).
- */
 function guessPlural(unit: string): string {
   if (UNIT_SAME.has(unit)) return unit;
   if (unit === 'loaf') return 'loaves';
@@ -74,11 +52,6 @@ function guessPlural(unit: string): string {
   return `${unit}s`;
 }
 
-/**
- * Quantity with its sale unit, in the reader's units: (3, 'bunch') → "3 bunches", (2, 'kg') → "2 kg" or "4.4 lb". Unit
- * words are the stall's own and stay as written. Pass the stall's plural (e.g. "trays of 30") as the third argument
- * when the unit doesn't just take an "s".
- */
 export function units(count: number, unit?: string, plural?: string): string {
   if (!unit) return new Intl.NumberFormat(locale()).format(count);
   const m = measure(count, unit);
@@ -88,11 +61,8 @@ export function units(count: number, unit?: string, plural?: string): string {
   return `${n} ${plural || guessPlural(unit)}`;
 }
 
-/* ---------- dates and times (Asia/Ho_Chi_Minh wall clock, D-locale) ---------- */
-
 const pad = (n: number) => String(n).padStart(2, '0');
 
-/** Date → "26/09/2026", "09/26/2026" or "2026-09-26" (Settings → Date). */
 export function formatDate(date: Date): string {
   const d = pad(date.getDate());
   const m = pad(date.getMonth() + 1);
@@ -107,7 +77,6 @@ export function formatDate(date: Date): string {
   }
 }
 
-/** Day and month without the year, in the same order: "26/09", "09/26" or "09-26". */
 export function formatDayMonth(date: Date): string {
   const d = pad(date.getDate());
   const m = pad(date.getMonth() + 1);
@@ -121,14 +90,11 @@ export function formatDayMonth(date: Date): string {
   }
 }
 
-/** Date → "07:30", or "7:30 PM" in the reader's language (Settings → Clock). */
 export function formatTime(date: Date): string {
   if (settings().clock === 'h24') return `${pad(date.getHours())}:${pad(date.getMinutes())}`;
-  // am/pm words and their place follow the language: "7:30 PM", "7:30 CH", "午後7:30"
   return new Intl.DateTimeFormat(locale(), { hour: 'numeric', minute: '2-digit', hour12: true }).format(date);
 }
 
-/** "07:00" (a stall's slot or opening hour, always stored 24-hour) → "07:00" or "7:00 am". */
 export function formatClock(hhmm: string): string {
   const [h, m] = hhmm.split(':').map(Number);
   if (Number.isNaN(h) || Number.isNaN(m)) return hhmm;
@@ -136,36 +102,27 @@ export function formatClock(hhmm: string): string {
   return formatTime(d);
 }
 
-/** A Sunday, so day 0…6 map straight onto dates. */
 const SUNDAY = new Date(2026, 0, 4);
 const dayDate = (dow: number) => new Date(SUNDAY.getFullYear(), SUNDAY.getMonth(), SUNDAY.getDate() + dow);
 
-/** Weekday name in the interface language: (6) → "Sat" / "T7" / "土"; `long` → "Saturday". */
 export function dayName(dow: number, style: 'short' | 'long' = 'short'): string {
   return new Intl.DateTimeFormat(locale(), { weekday: style }).format(dayDate(dow));
 }
 
-/** Date → "Sat" in the interface language */
 export function weekday(date: Date): string {
   return dayName(date.getDay());
 }
 
-/**
- * The next date a weekday falls on, counted from today; today itself counts. (6) → "26/09". Day chips show the weekday
- * and reveal this on hover, so you can see which market morning you are actually picking.
- */
 export function upcoming(dow: number, from: Date = new Date()): string {
   return formatDayMonth(upcomingDate(dow, from));
 }
 
-/** The same next date as {@link upcoming}, as a Date. */
 export function upcomingDate(dow: number, from: Date = new Date()): Date {
   const d = new Date(from);
   d.setDate(d.getDate() + ((dow - d.getDay() + 7) % 7));
   return d;
 }
 
-/** The market weekend to show: Friday to Sunday, the one under way on a Saturday or Sunday, else the coming one. */
 export function upcomingWeekend(from: Date = new Date()): { from: Date; to: Date } {
   const to = upcomingDate(0, from);
   const friday = new Date(to);
@@ -173,12 +130,6 @@ export function upcomingWeekend(from: Date = new Date()): { from: Date; to: Date
   return { from: friday, to };
 }
 
-/**
- * Today and the six days after it, each at local midnight, today first: the market mornings a visitor can still shop
- * for. `dow` is 0 = Sunday … 6 = Saturday, like `market_operating_days.day_of_week`. Built from the calendar date
- * rather than by adding 24 hours, so a daylight-saving change can neither skip nor repeat a day. Day chips use this so
- * they always start from today instead of a fixed week.
- */
 export function nextSevenDays(from: Date = new Date()): { dow: number; date: Date }[] {
   return Array.from({ length: 7 }, (_, i) => {
     const date = new Date(from.getFullYear(), from.getMonth(), from.getDate() + i);
@@ -186,60 +137,40 @@ export function nextSevenDays(from: Date = new Date()): { dow: number; date: Dat
   });
 }
 
-/**
- * The first weekday, counting from today, on which `isOpen` holds — the default "market day" of a day picker. Falls
- * back to today's weekday when no day of the coming week is open, so a picker always has a value.
- */
 export function firstOpenDay(isOpen: (dow: number) => boolean, from: Date = new Date()): number {
   return nextSevenDays(from).find((d) => isOpen(d.dow))?.dow ?? from.getDay();
 }
 
-/** Date → "Thu 24/09 · 14:35" */
 export function nowLabel(date: Date): string {
   return `${weekday(date)} ${formatDayMonth(date)} · ${formatTime(date)}`;
 }
 
-/** [5, 6, 0] → "Fri, Sat, Sun" (Monday first, interface language) */
 export function dayList(days: number[]): string {
   return new Intl.ListFormat(locale(), { style: 'short', type: 'unit' }).format(
     [1, 2, 3, 4, 5, 6, 0].filter((d) => days.includes(d)).map((d) => dayName(d)),
   );
 }
 
-/** "yyyy-MM-dd" → a Date in local time; `new Date('2026-10-03')` is midnight UTC and lands on the previous day at UTC−x. */
 const localDay = (ymd: string) => {
   const [y, m, d] = ymd.split('-').map(Number);
   return new Date(y, m - 1, d);
 };
 
-/**
- * An order's pickup window for the ticket: "yyyy-MM-dd" + "HH:mm–HH:mm" → "Sat 26/09 · 07:00–08:00". A non-ISO date
- * (sample/demo data) is returned as-is next to the slot instead of throwing.
- */
 export function pickupLabel(date: string, slot: string): string {
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) return `${date} · ${slot}`;
   const d = localDay(date);
   return `${dayName(d.getDay())} ${formatDayMonth(d)} · ${slot.split('–').map(formatClock).join('–')}`;
 }
 
-/** An ISO instant (an order's cutoff) as the reader's time then date. The raw string when it cannot be parsed. */
 export function cutoffLabel(iso: string): string {
   const at = new Date(iso);
   return Number.isNaN(at.getTime()) ? iso : `${formatTime(at)} ${formatDate(at)}`;
 }
 
-/* ---------- text matching ---------- */
-
-/**
- * Lower-case text without accents, for matching what a visitor types against names: "Rau Muống" and "rau muong" both
- * become "rau muong". NFD splits a letter from its combining marks, which are then dropped; "đ" is its own letter in
- * Unicode, not "d" plus a mark, so it is mapped by hand.
- */
 export function foldText(text: string): string {
   return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/đ/g, 'd');
 }
 
-/** Whether any of `fields` contains `query`, ignoring case and accents. An empty or blank query matches everything. */
 export function matchesQuery(query: string, ...fields: (string | undefined)[]): boolean {
   const q = foldText(query.trim());
   return q === '' || fields.some((f) => f != null && foldText(f).includes(q));

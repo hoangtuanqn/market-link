@@ -18,13 +18,11 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 const PHOTO_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
-/** The server's limit (spec §4.4.1), checked here too so a large file never starts uploading. */
 const PHOTO_MAX_BYTES = 5 * 1024 * 1024;
 const NOTE_MAX = 500;
 
 type ReportErrors = Partial<Record<'day' | 'problem' | 'note' | 'photo', string>>;
 
-/** Server field → this dialog's field. */
 const SERVER_FIELDS: Record<string, keyof ReportErrors> = {
   spoiledOn: 'day',
   problem: 'problem',
@@ -37,15 +35,10 @@ type SpoilageActionProps = {
   item: OrderItemDto;
   status: OrderStatus;
   today: string;
-  /** "yyyy-MM-dd" — M-1: an order can be completed before its own pickup day, which must hide the button too. */
   pickupDate: string;
   onReport: () => void;
 };
 
-/**
- * FR-122 — under one order line: the report's status once the customer reported it, else the "Report spoiled" button
- * while the line can still be reported (spec §4.4.1).
- */
 export function SpoilageAction({ item, status, today, pickupDate, onReport }: SpoilageActionProps) {
   const { t } = useTranslation('CustomerOrderDetail');
   const { t: tc } = useTranslation();
@@ -76,15 +69,12 @@ type SpoilageReportDialogProps = {
   itemId: number;
   productName: string;
   stallName: string;
-  /** "yyyy-MM-dd". */
   pickupDate: string;
-  /** "yyyy-MM-dd" on the Vietnam calendar. */
   today: string;
   onClose: () => void;
   onSent: (report: ItemQualityReportDto) => void;
 };
 
-/** FR-122 (spec §4.4.1) — the day it spoiled, what went wrong, an optional note and an optional photo. */
 export function SpoilageReportDialog({
   orderId,
   itemId,
@@ -97,7 +87,6 @@ export function SpoilageReportDialog({
 }: SpoilageReportDialogProps) {
   const { t } = useTranslation('CustomerOrderDetail');
   const { t: tc } = useTranslation();
-  // Newest first: produce is usually reported the day it turns
   const days = spoiledOnChoices(pickupDate, today).reverse();
   const [day, setDay] = useState(days[0] ?? today);
   const [problem, setProblem] = useState<QualityProblem | null>(null);

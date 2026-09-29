@@ -12,10 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * One category × two channels for one person. No row = both channels on. category keeps the string
- * code (NotificationCategory.code()) because JPA does not apply a converter to an @Id attribute.
- */
 @Entity
 @Getter
 @Setter

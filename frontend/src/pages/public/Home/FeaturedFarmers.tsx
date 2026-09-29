@@ -7,7 +7,6 @@ import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
 
 type FeaturedFarmersProps = {
-  /** Full stall profiles (GET /farmers/{id}): the card shows the stall's own bio and markets, nothing made up. */
   stalls?: StallDetailDto[];
   loading?: boolean;
 };
@@ -66,8 +65,6 @@ const FeaturedFarmers = ({ stalls = [], loading = false }: FeaturedFarmersProps)
                     </div>
                     <div className="min-w-0 flex-1">
                       <h3 className="text-[18px] leading-tight font-bold">
-                        {/* after:inset-0 stretches the hit area over the whole card; the button below
-                          sits above it with z-2. */}
                         <Link
                           to={`/stalls/${stall.farmerId}`}
                           className="text-inherit after:absolute after:inset-0 hover:underline"

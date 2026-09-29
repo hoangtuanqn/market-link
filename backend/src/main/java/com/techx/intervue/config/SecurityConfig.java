@@ -30,25 +30,11 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @AllArgsConstructor
 @Configuration
-@EnableMethodSecurity // method-based authorization (the default is URL-based authorization)
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    /**
-     * Who may reach /api/v1/admin/**: an admin whose two-step verification is already set up.
-     * JwtAuthFilter marks the session of an admin who has not done it yet with MFA_SETUP_PENDING
-     * (FR-008), and that session is refused here. Kept as a constant so
-     * SecurityConfigAdminAccessTest can exercise the expression — a typo inside it would otherwise
-     * only surface at runtime.
-     */
     static final String ADMIN_ACCESS = "hasRole('ADMIN') and !hasAuthority('MFA_SETUP_PENDING')";
 
-    /**
-     * Who may reach any other signed-in route: anyone signed in, except a session still marked
-     * MFA_SETUP_PENDING (FR-008). Such a session exists only so the setup screen can call the
-     * /api/v1/auth/** routes listed below (me, settings, mfa, logout); letting it read orders,
-     * conversations or attachments would hand customer data to anyone holding the admin password.
-     * An anonymous caller still fails isAuthenticated() and gets the 401 from signInRequired().
-     */
     static final String SIGNED_IN_ACCESS =
             "isAuthenticated() and !hasAuthority('MFA_SETUP_PENDING')";
 
@@ -64,11 +50,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * Lets the React frontend (a different origin from the backend) call the API. The origin list
-     * comes from app.cors.allowed-origins (variable CORS_ALLOWED_ORIGINS, several origins separated
-     * by commas). allowCredentials lets the browser send/receive the refresh_token cookie.
-     */
     @Bean
     CorsConfigurationSource corsConfigurationSource(
             @Value("${app.cors.allowed-origins}") List<String> allowedOrigins) {
@@ -76,7 +57,6 @@ public class SecurityConfig {
         config.setAllowedOrigins(allowedOrigins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        // Retry-After: the sign-up screen counts down after a 429 (FR-009)
         config.setExposedHeaders(List.of("X-Trace-Id", "Retry-After"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
@@ -92,21 +72,8 @@ public class SecurityConfig {
                 .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         auth ->
-                                auth
-                                        // FR-008: an admin who has never set up two-step
-                                        // verification still gets a session, because the setup
-                                        // screen needs one to call /auth/mfa/**. That session must
-                                        // not reach the admin API — otherwise the mandatory step
-                                        // guards the screens only and anyone holding the password
-                                        // can call these endpoints directly. JwtAuthFilter marks
-                                        // such a session with MFA_SETUP_PENDING.
-                                        // Placed first so it wins over any later admin matcher.
-                                        .requestMatchers("/api/v1/admin/**")
+                                auth.requestMatchers("/api/v1/admin/**")
                                         .access(new WebExpressionAuthorizationManager(ADMIN_ACCESS))
-                                        // Logout, own profile and setting a password need a valid
-                                        // access
-                                        // token
-                                        // — placed before auth/**
                                         .requestMatchers(
                                                 "/api/v1/auth/logout",
                                                 "/api/v1/auth/set-password",
@@ -115,110 +82,69 @@ public class SecurityConfig {
                                                 "/api/v1/auth/me/avatar",
                                                 "/api/v1/auth/me/settings",
                                                 "/api/v1/auth/me/achievements",
-                                                // FR-008: enable / disable 2FA (verification at
-                                                // sign-in is still
-                                                // public)
                                                 "/api/v1/auth/mfa",
                                                 "/api/v1/auth/mfa/setup",
                                                 "/api/v1/auth/mfa/enable",
                                                 "/api/v1/auth/mfa/disable",
                                                 "/api/v1/auth/mfa/recovery-codes")
                                         .authenticated()
-                                        // 1. Route AUTH - No JWT
                                         .requestMatchers("/api/v1/auth/**")
                                         .permitAll()
-                                        // FR-111: the WebSocket handshake carries no
-                                        // Authorization header;
-                                        // the JWT is checked in the STOMP CONNECT frame
-                                        // (StompAuthInterceptor)
                                         .requestMatchers("/ws", "/ws/**")
                                         .permitAll()
-                                        // Ping - health check
                                         .requestMatchers("/ping")
                                         .permitAll()
-                                        // Errors that no handler caught are forwarded to /error:
-                                        // if it is not public it returns 401 and the FE thinks the
-                                        // session is over
                                         .requestMatchers("/error")
                                         .permitAll()
                                         .requestMatchers("/uploads/**")
                                         .permitAll()
-                                        // Swagger UI + OpenAPI JSON (off in prod through
-                                        // springdoc.*)
                                         .requestMatchers(
                                                 "/swagger-ui.html",
                                                 "/swagger-ui/**",
                                                 "/v3/api-docs/**")
                                         .permitAll()
-                                        // 2. Public API
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()
-                                        // FR-125: near-expiry deals can be browsed before signing
-                                        // in, like the product list
                                         .requestMatchers(HttpMethod.GET, "/api/v1/deals")
                                         .permitAll()
-                                        // FR-020…023, FR-011: a stall's products and stock can be
-                                        // viewed
-                                        // before signing in
                                         .requestMatchers(
                                                 HttpMethod.GET,
                                                 "/api/v1/products/*",
                                                 "/api/v1/farmers/*/products")
                                         .permitAll()
-                                        // FR-020/FR-076: the category filter can be used before
-                                        // signing
-                                        // in
                                         .requestMatchers(HttpMethod.GET, "/api/v1/categories")
                                         .permitAll()
-                                        // FR-001: the sign-up form lists countries, provinces,
-                                        // wards and streets before there is an account
                                         .requestMatchers(HttpMethod.GET, "/api/v1/geo/**")
                                         .permitAll()
-                                        // FR-010/FR-012: markets and the map can be viewed before
-                                        // signing in
                                         .requestMatchers(
                                                 HttpMethod.GET,
                                                 "/api/v1/markets",
                                                 "/api/v1/markets/*")
                                         .permitAll()
-                                        // FR-011: a market's stalls and Farmer list can be viewed
-                                        // before
-                                        // signing in
                                         .requestMatchers(
                                                 HttpMethod.GET,
                                                 "/api/v1/farmers",
                                                 "/api/v1/farmers/*",
                                                 "/api/v1/markets/*/farmers",
-                                                // FR-032: the cart can pick a slot before signing
-                                                // in
                                                 "/api/v1/farmers/*/slots")
                                         .permitAll()
-                                        // FR-052: reviews are readable before signing in
                                         .requestMatchers(
                                                 HttpMethod.GET,
                                                 "/api/v1/products/*/reviews",
                                                 "/api/v1/farmers/*/reviews")
                                         .permitAll()
-                                        // FR-081: the feedback form is open to visitors
                                         .requestMatchers(HttpMethod.POST, "/api/v1/feedbacks")
                                         .permitAll()
-                                        // Chatbot FR-090…092: guests can ask questions too
                                         .requestMatchers("/api/v1/chat", "/api/v1/chat/history")
                                         .permitAll()
-                                        // FR-077: notice banner on the public pages
                                         .requestMatchers(
                                                 HttpMethod.GET, "/api/v1/announcements/active")
                                         .permitAll()
-                                        // Maintenance mode: every visitor polls this, signed in or
-                                        // not
                                         .requestMatchers(HttpMethod.GET, "/api/v1/platform/status")
                                         .permitAll()
-                                        // FR-115: a video element cannot send the token; the
-                                        // signed link is checked in AttachmentService.stream
                                         .requestMatchers(
                                                 HttpMethod.GET, "/api/v1/attachments/*/stream")
                                         .permitAll()
-                                        // FR-008: a session still owing 2FA setup stops here
                                         .anyRequest()
                                         .access(
                                                 new WebExpressionAuthorizationManager(
@@ -226,10 +152,6 @@ public class SecurityConfig {
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(signInRequired()))
-                // UsernamePasswordAuthenticationFilter.class is just a reference point:
-                // after the request passes through jwtAuthFilter it goes on through
-                // UsernamePasswordAuthenticationFilter.class (which runs but does nothing)
-                // two parameters are required
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterBefore(traceIdFilter, JwtAuthFilter.class)
                 .addFilterAfter(maintenanceModeFilter, JwtAuthFilter.class);
@@ -237,10 +159,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * No access token on a route that needs one → 401 with a message the user can act on (QA E2E v2
-     * BUG-003), the same shape JwtAuthFilter returns for a bad token.
-     */
     AuthenticationEntryPoint signInRequired() {
         return (request, response, authException) -> {
             ErrorResource error =

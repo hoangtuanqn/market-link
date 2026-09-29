@@ -8,15 +8,11 @@ import ProductPin from './ProductPin';
 
 type Props = {
   onSend: (text: string, extra?: { productId?: number; orderId?: number }) => Promise<void>;
-  /** FR-115: a photo or a video, already checked and converted; reports upload progress and stops on `signal`. */
   onSendMedia: (file: File, options: { onProgress: (percent: number) => void; signal: AbortSignal }) => Promise<void>;
-  /** Reports "typing" on every keystroke; the hook filters out extra frames itself (Review Focus #9). */
   onTyping?: (on: boolean) => void;
   disabled: boolean;
-  /** A locked button always carries a reason in words (frontend/CLAUDE.md). */
   disabledReason?: string;
   pinnedProductId?: number;
-  /** FR-114: the chat was opened from an order — it rides with the first message, like a product pin. */
   pinnedOrderId?: number;
   onUnpin?: () => void;
 };
@@ -36,7 +32,6 @@ export default function Composer({
   const [busy, setBusy] = useState(false);
   const [failed, setFailed] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement>(null);
-  /** Where a photo or video is on its way out; `null` when nothing is being sent. */
   const [sending, setSending] = useState<{ phase: 'converting' } | { phase: 'uploading'; percent: number } | null>(
     null,
   );
@@ -48,7 +43,6 @@ export default function Composer({
     if (!text || busy || disabled) return;
     setBusy(true);
     setFailed(null);
-    // Cleared right when sending, not waiting for the server: if the user keeps typing while the message is in flight, the new text is not wiped
     setDraft('');
     try {
       await onSend(text, {
@@ -57,7 +51,6 @@ export default function Composer({
       });
       onUnpin?.();
     } catch (error) {
-      // Gives the text back so Send can be pressed again, unless the user has already typed something else
       setDraft((current) => (current === '' ? text : current));
       setFailed(t(sendErrorKey(error, 'text')));
     } finally {
@@ -65,20 +58,12 @@ export default function Composer({
     }
   };
 
-  /**
-   * Enter sends, Shift+Enter is a new line. An IME (Vietnamese, Japanese…) uses Enter to commit a word: it must not
-   * send at that moment.
-   */
   const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key !== 'Enter' || event.shiftKey || event.nativeEvent.isComposing) return;
     event.preventDefault();
     void submit();
   };
 
-  /**
-   * Checks and converts in the browser first (nothing over 50 MB is uploaded), then uploads with a progress bar and a
-   * Cancel button. Cancelling is the person's choice, so it ends quietly rather than as an error.
-   */
   const pickMedia = async (file: File | undefined) => {
     if (!file || disabled) return;
     const controller = new AbortController();
@@ -174,7 +159,6 @@ export default function Composer({
           id="chat-draft"
           rows={1}
           value={draft}
-          // Do not lock it while sending: a disabled element loses focus, forcing the user to click again to keep typing
           disabled={disabled}
           onChange={(event) => {
             setDraft(event.target.value);

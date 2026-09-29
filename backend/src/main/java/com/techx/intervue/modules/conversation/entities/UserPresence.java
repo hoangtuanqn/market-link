@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-112: last activity timestamp, written on disconnect (PresenceService). */
 @Entity
 @Getter
 @Setter

@@ -14,7 +14,6 @@ type ConfirmActionDialogProps = {
   onConfirm: () => void;
 };
 
-/** Confirms approve, suspend or reinstate; suspending also asks for the reason the Farmer will read. */
 const ConfirmActionDialog = ({
   action,
   reason,

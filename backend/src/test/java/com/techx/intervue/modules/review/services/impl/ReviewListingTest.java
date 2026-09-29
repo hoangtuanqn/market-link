@@ -18,10 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/**
- * FR-053/074 on MySQL: the stall owner's own review inbox (product + stall reviews of their own
- * stall) and the admin moderation queue (filter by status / rating / customer).
- */
 @SpringBootTest
 class ReviewListingTest {
 

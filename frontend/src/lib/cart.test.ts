@@ -41,7 +41,6 @@ describe('Cart', () => {
     return placed.catch(() => undefined).then(() => expect(Cart.count()).toBe(2));
   });
 
-  /** FR-125: a line added from /deals remembers its pickup day, so the cart can start on it. */
   it('remembers the deal day a line was added for', () => {
     Cart.add({ ...tomato, pickupDate: '2026-10-03' }, 1);
     expect(Cart.lines()[0].pickupDate).toBe('2026-10-03');
@@ -60,7 +59,6 @@ describe('Cart', () => {
   });
 });
 
-/** Reading a stored cart needs a fresh module: lib/cart caches what it read first. */
 const loadFreshCart = async () => {
   vi.resetModules();
   return (await import('./cart')).Cart;

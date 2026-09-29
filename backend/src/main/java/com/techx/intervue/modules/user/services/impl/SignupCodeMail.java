@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-/** FR-009: the code email, in the language picked on the sign-up form. */
 @Component
 public class SignupCodeMail {
 

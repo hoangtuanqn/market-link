@@ -17,7 +17,6 @@ type FormErrors = Partial<Record<'newPassword' | 'confirmPassword', string>>;
 const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 72;
 
-/** Client-side validation, same rules as the backend's ResetPasswordRequest. */
 const validate = (password: string, confirm: string, t: TFunction<'ResetPassword'>): FormErrors => {
   const errors: FormErrors = {};
   if (!password) errors.newPassword = t('errors.passwordRequired');
@@ -28,14 +27,12 @@ const validate = (password: string, confirm: string, t: TFunction<'ResetPassword
   return errors;
 };
 
-/** FR-007 — set a new password from the emailed link (step 2 of 2). The form only shows once the link is verified. */
 const ResetPasswordPage = () => {
   const { t } = useTranslation('ResetPassword');
   const [searchParams] = useSearchParams();
   const token = searchParams.get('token') ?? '';
 
   const [status, setStatus] = useState<Status>(token ? 'checking' : 'invalid');
-  // undefined → the default sentence (translated at render); a value → the server's message
   const [invalidMessage, setInvalidMessage] = useState<string>();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -43,10 +40,6 @@ const ResetPasswordPage = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  /**
-   * Ask the backend whether the link is still usable (only reads the token, does not consume it) and get the account's
-   * email.
-   */
   const verify = useCallback(async () => {
     if (!token) return;
     setStatus('checking');
@@ -56,7 +49,6 @@ const ResetPasswordPage = () => {
       setStatus('ready');
     } catch (error) {
       if (Helper.getErrorCode(error) === undefined && Helper.getFieldErrors(error).token === undefined) {
-        // No response from the backend (lost network, server down): do not conclude the link is wrong
         setStatus('unreachable');
         return;
       }
@@ -79,7 +71,6 @@ const ResetPasswordPage = () => {
     setIsSubmitting(true);
     try {
       const response = await AuthApi.resetPassword({ token, newPassword: password, confirmPassword: confirm });
-      // The backend has revoked every sign-in session of the account, also clear the session stored in this browser
       Session.clear();
       Notification.success({ text: response.message || t('toast.reset') });
       setStatus('done');
@@ -100,7 +91,6 @@ const ResetPasswordPage = () => {
 
   return (
     <div className="mx-auto my-4 flex w-full max-w-115 flex-col gap-2 md:my-8">
-      {/* Do not send the URL containing the token to another page through the Referer header */}
       <meta name="referrer" content="no-referrer" />
       <span className="text-small text-ink-muted">{t('step', { step: 2, total: 2 })}</span>
 
@@ -168,7 +158,6 @@ const ResetPasswordPage = () => {
               </p>
             </div>
 
-            {/* Tell the password manager which account the new password belongs to */}
             <input type="email" name="username" autoComplete="username" value={email} readOnly hidden />
 
             <Field

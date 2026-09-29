@@ -16,11 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * One Farmer application, a snapshot of its content at submission. {@code farmer_profiles} is
- * overwritten when the user re-applies so it cannot keep history; this table keeps it, so both the
- * applicant and the Admin can check why the previous one was rejected.
- */
 @Entity
 @Getter
 @Setter
@@ -36,7 +31,6 @@ public class FarmerApplicationHistory {
     @Column(name = "user_id", nullable = false)
     private Long userId;
 
-    /** Which submission this is for the account, starting at 1. */
     @Column(name = "attempt", nullable = false)
     private Integer attempt;
 
@@ -49,7 +43,6 @@ public class FarmerApplicationHistory {
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    /** Several paths separated by ';' — same convention as farmer_profiles. */
     @Column(name = "photo_paths", columnDefinition = "TEXT")
     private String photoPaths;
 

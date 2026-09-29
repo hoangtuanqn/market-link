@@ -45,11 +45,9 @@ describe('MessageStallButton', () => {
     await userEvent.click(screen.getByRole('button', { name: /message this stall/i }));
 
     expect(ConversationApi.open).toHaveBeenCalledWith(30);
-    // The thread opens only after the API answers, so the navigation lands a tick after the click.
     await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/messages?c=42&product=8'));
   });
 
-  /** FR-114, order part: messaging from an order pins that order in the composer. */
   it('lands on the thread with the order pinned', async () => {
     mockSessionUser = mockUser;
     vi.mocked(ConversationApi.open).mockResolvedValue(ok({ id: 42, other: {}, unreadCount: 0 }));
@@ -65,7 +63,6 @@ describe('MessageStallButton', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /message this stall/i }));
 
-    // The thread opens only after the API answers, so the navigation lands a tick after the click.
     await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/messages?c=42&order=21'));
   });
 
@@ -83,7 +80,6 @@ describe('MessageStallButton', () => {
     await userEvent.click(screen.getByRole('button', { name: /message this stall/i }));
 
     expect(ConversationApi.open).not.toHaveBeenCalled();
-    // The Login page reads the return destination from location.state.from (like RequireAuth, FavoriteButton), not from a query
     expect(screen.getByTestId('location')).toHaveTextContent('/login');
     expect(screen.getByTestId('from')).toHaveTextContent('/stalls/30');
   });

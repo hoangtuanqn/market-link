@@ -5,11 +5,6 @@ import { Banner } from '@/components/ui/banner';
 import useRequest from '@/hooks/useRequest';
 import { formatDate } from '@/lib/format';
 
-/**
- * FR-123 (spec §4.4.4) — "Shelf-life strikes: 2 of 3 in 90 days" on the Farmer overview, only when the stall has
- * strikes. A secondary notice (Ruling 14): nothing while loading or when the read fails; the full list with its four
- * states is the Reviews → Spoiled reports tab.
- */
 export default function ShelfLifeStrikes() {
   const { t } = useTranslation('FarmerOverview');
   const { state } = useRequest('shelf-life-standing', () => QualityReportApi.standing());

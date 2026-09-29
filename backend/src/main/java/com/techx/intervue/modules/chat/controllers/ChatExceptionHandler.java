@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 
-/**
- * Returns 400 for bad chatbot requests. Applies only to ChatController — the repo has no shared
- * handler yet, so validation errors fall through to /error (not public) and come back as 401.
- */
 @RestControllerAdvice(assignableTypes = ChatController.class)
 public class ChatExceptionHandler {
 

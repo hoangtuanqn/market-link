@@ -8,7 +8,6 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** FR-071: tell the Farmer their stall is open again (manual or auto-reinstate). */
 @Component
 @AllArgsConstructor
 public class StallReinstatedNoticeJob implements JobHandler {
@@ -32,7 +31,6 @@ public class StallReinstatedNoticeJob implements JobHandler {
         mailService.send(payload.get("email"), letter.subject(), letter.html(), letter.text());
     }
 
-    /** Their own language (Settings → Language); English when they never chose one. */
     private String languageOf(String userId) {
         if (userId == null || userId.isBlank()) return "en";
         return settings.findById(Long.valueOf(userId)).map(UserSettings::getLanguage).orElse("en");

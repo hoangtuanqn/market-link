@@ -8,10 +8,6 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-/**
- * Holds the web-push library's PushService once VAPID keys are configured. Without keys push is off
- * and the app keeps running as before (like an empty app.chat.rabbitmq.host → simple broker).
- */
 @Slf4j
 @Component
 @EnableConfigurationProperties(WebPushProperties.class)
@@ -45,10 +41,6 @@ public class WebPushGateway {
         return Optional.ofNullable(pushService);
     }
 
-    /**
-     * The public key for the FE (pushManager.subscribe applicationServerKey); null when push is
-     * off.
-     */
     public String publicKey() {
         return pushService == null ? null : properties.vapidPublicKey();
     }

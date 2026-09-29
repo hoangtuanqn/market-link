@@ -7,10 +7,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * FR-009 worker side: make a code for a sign-up that is still waiting and mail it. The code is
- * created here, so it never sits in the queue or in Redis in the clear.
- */
 @Component
 @RequiredArgsConstructor
 public class SignupCodeMailJob implements JobHandler {

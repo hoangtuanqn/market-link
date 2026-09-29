@@ -17,10 +17,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-/**
- * FR-074: the Admin's hidden-listings queue. Without it a hidden listing can never be found again
- * to unhide it (QA E2E round 3, bug 2). Runs against real MySQL because the query is native SQL.
- */
 @SpringBootTest
 class ProductHiddenListTest {
 

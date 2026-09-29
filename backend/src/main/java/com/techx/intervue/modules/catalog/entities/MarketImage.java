@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** One row = one image of one market (V20260926013). Display order follows {@code sortOrder}. */
 @Entity
 @Getter
 @Setter

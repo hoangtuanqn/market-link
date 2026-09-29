@@ -5,7 +5,6 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** What a review is about (contract §8 `targetType`): a product line of the order, or the stall. */
 public enum ReviewTarget {
     PRODUCT,
     FARMER;
@@ -15,7 +14,6 @@ public enum ReviewTarget {
         return name().toLowerCase(Locale.ROOT);
     }
 
-    /** Lower-case JSON value → enum; unknown text is a 400 (`IllegalArgumentException`). */
     public static ReviewTarget parse(String value) {
         if (value == null) {
             throw new IllegalArgumentException("targetType must be 'product' or 'farmer'.");

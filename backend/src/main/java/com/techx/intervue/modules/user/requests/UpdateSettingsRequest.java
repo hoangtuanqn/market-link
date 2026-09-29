@@ -5,10 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import java.util.Map;
 
-/**
- * All preferences (PUT replaces the whole set). The list of values matches the frontend's
- * src/lib/settings.ts; adding a language or currency means editing both places.
- */
 public record UpdateSettingsRequest(
         @NotNull(message = "Choose a theme.")
                 @Pattern(regexp = "light|dark|system", message = "Choose a theme from the list.")

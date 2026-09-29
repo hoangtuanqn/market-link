@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** One submission of the feedback form (table {@code feedbacks}, V20260926021). */
 @Entity
 @Getter
 @Setter
@@ -26,7 +25,6 @@ public class Feedback {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /** NULL for a visitor who was not signed in. */
     @Column(name = "user_id")
     private Long userId;
 

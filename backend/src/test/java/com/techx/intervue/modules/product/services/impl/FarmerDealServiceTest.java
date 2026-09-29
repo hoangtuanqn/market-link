@@ -45,10 +45,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-/**
- * FR-124 (spec §4.5.1, §4.5.3, §8). Today (by Clock) is Wednesday 30/09/2026, 10:00 Vietnam time;
- * the pickup day is Saturday 03/10; the product keeps 7 days and sells at $0.60.
- */
 class FarmerDealServiceTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -118,7 +114,6 @@ class FarmerDealServiceTest {
         return p;
     }
 
-    /** Spec §4.5.2 example: harvested 29/09, picked up Sat 03/10 → good until 05/10, 3 days. */
     private static DealRequest request(int percent) {
         return new DealRequest(12, HARVESTED, percent);
     }
@@ -133,7 +128,6 @@ class FarmerDealServiceTest {
         assertThat(result.discountPercent()).isEqualTo(20);
         assertThat(result.packedOn()).isEqualTo(HARVESTED);
         assertThat(result.bestBefore()).isEqualTo(LocalDate.of(2026, 10, 5));
-        // Created when missing, then locked by its natural key, like placing an order (spec §8)
         verify(dailyStock).materialize(PRODUCT_ID, PICKUP, 6);
         verify(dailyStock).lockByProductIdAndStockDate(PRODUCT_ID, PICKUP);
         verify(dailyStock, never()).findByProductIdAndStockDate(any(), any());
@@ -149,7 +143,6 @@ class FarmerDealServiceTest {
         assertThat(again.unitPrice()).isEqualByComparingTo("0.36");
     }
 
-    /** D-09, spec §8: a suspended stall cannot post a deal, and is told it is suspended. */
     @Test
     void postRefusesASuspendedStall() {
         when(farmers.findByUserId(USER_ID))
@@ -160,7 +153,6 @@ class FarmerDealServiceTest {
         verify(dailyStock, never()).lockByProductIdAndStockDate(any(), any());
     }
 
-    /** D-09: a stall still waiting for approval cannot post a deal either. */
     @Test
     void postRefusesAStallThatIsNotApproved() {
         when(farmers.findByUserId(USER_ID)).thenReturn(Optional.of(stall(ApprovalStatus.PENDING)));
@@ -170,7 +162,6 @@ class FarmerDealServiceTest {
         verify(dailyStock, never()).lockByProductIdAndStockDate(any(), any());
     }
 
-    /** D-09: a suspended stall cannot remove a deal. */
     @Test
     void removeRefusesASuspendedStall() {
         when(farmers.findByUserId(USER_ID))
@@ -180,7 +171,6 @@ class FarmerDealServiceTest {
                 .isInstanceOf(StallSuspendedException.class);
     }
 
-    /** R-06: another stall's product → 403, even though the id is real. */
     @Test
     void postRefusesAnotherStallsProduct() {
         when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(product(99L, 7)));
@@ -212,7 +202,6 @@ class FarmerDealServiceTest {
                         e -> assertThat(e.getField()).isEqualTo("packedOn"));
     }
 
-    /** Packed today for pickup tomorrow: 6 of 7 days are still left, so it is not near expiry. */
     @Test
     void postRefusesProduceWithMoreThanHalfItsShelfLifeLeft() {
         assertThatThrownBy(
@@ -225,7 +214,6 @@ class FarmerDealServiceTest {
                 .isInstanceOf(NotNearExpiryException.class);
     }
 
-    /** Picked on the pickup day itself is fresh produce. */
     @Test
     void postRefusesProducePickedOnThePickupDay() {
         assertThatThrownBy(
@@ -235,7 +223,6 @@ class FarmerDealServiceTest {
                 .isInstanceOf(NotNearExpiryException.class);
     }
 
-    /** Packed 20/09 with 7 days: good until 26/09, before the pickup day. */
     @Test
     void postRefusesABatchThatIsGoneBeforePickup() {
         assertThatThrownBy(
@@ -248,7 +235,6 @@ class FarmerDealServiceTest {
                 .isInstanceOf(ExpiredBeforePickupException.class);
     }
 
-    /** No free slot before the cutoff that day (or the market or the stall is closed). */
     @Test
     void postRefusesADayCustomersCanNoLongerOrder() {
         when(slots.orderableDates(anyCollection(), any(), any(), any())).thenReturn(Map.of());
@@ -258,7 +244,6 @@ class FarmerDealServiceTest {
         verify(dailyStock, never()).materialize(any(), any(), anyInt());
     }
 
-    /** Beyond the 14-day window the public pages show, even when a slot exists. */
     @Test
     void postRefusesADayBeyondTheFourteenDayWindow() {
         when(products.findByIdAndDeletedFalse(PRODUCT_ID))
@@ -267,12 +252,10 @@ class FarmerDealServiceTest {
         when(slots.orderableDates(anyCollection(), any(), any(), any()))
                 .thenReturn(Map.of(FARMER_ID, Set.of(far)));
 
-        // 30 days, packed 29/09: good until 28/10, 15 of 30 days left on 14/10 — near expiry
         assertThatThrownBy(() -> service.post(USER_ID, PRODUCT_ID, far, request(20)))
                 .isInstanceOf(DateNotOrderableException.class);
     }
 
-    /** No weekly template for that weekday: the product is not sold that day. */
     @Test
     void postRefusesADayWithoutAWeeklyTemplate() {
         when(dailyStock.lockByProductIdAndStockDate(PRODUCT_ID, PICKUP))
@@ -311,7 +294,6 @@ class FarmerDealServiceTest {
         verify(dailyStock, never()).lockByProductIdAndStockDate(any(), any());
     }
 
-    /** Read-only: a suspended stall still sees its deals (D-09 blocks writes only). */
     @Test
     void mineListsTheStallsDealsFromToday() {
         when(farmers.findByUserId(USER_ID))

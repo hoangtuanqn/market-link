@@ -21,10 +21,6 @@ import org.mockito.InOrder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
-/**
- * FR-008: turning two-step verification on signs out every earlier session and hands the caller a
- * new one, so the setup screen can still go on to the dashboard.
- */
 class MfaControllerEnableTest {
 
     @Test

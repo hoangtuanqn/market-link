@@ -11,10 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * A Farmer selling at a market, with the booth location (FR-060, FR-061). Table `farmer_markets`
- * (V20260926008).
- */
 @Entity
 @Getter
 @Setter
@@ -41,7 +37,6 @@ public class FarmerMarket {
     @Column(name = "stall_longitude", precision = 11, scale = 8)
     private BigDecimal stallLongitude;
 
-    /** Leaving a market = turn the row off; old slots and orders can still point back to it. */
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 }

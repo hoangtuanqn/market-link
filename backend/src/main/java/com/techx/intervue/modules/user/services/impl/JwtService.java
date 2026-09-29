@@ -25,7 +25,6 @@ public class JwtService implements JwtServiceInterface {
         this.key = Keys.hmacShaKeyFor(Base64.getDecoder().decode(authConfig.getSecretKey()));
     }
 
-    // creates the jwt
     @Override
     public String generateToken(Long userId) {
         Date now = new Date();
@@ -36,15 +35,9 @@ public class JwtService implements JwtServiceInterface {
                 .claim("jti", UUID.randomUUID().toString())
                 .issuer(issuer)
                 .issuedAt(now)
-                // iat is only accurate to the second; UserSessionCache.isRevoked needs to compare
-                // to the millisecond
                 .claim(ISSUED_AT_MS, now.getTime())
                 .expiration(expiredAt)
-                .signWith(
-                        key) // automatically chooses the HS256, HS384, ... algorithm by the length
-                // of our key,
-                // so that it is compatible
-                // with the input of each algorithm
+                .signWith(key)
                 .compact();
     }
 
@@ -54,7 +47,6 @@ public class JwtService implements JwtServiceInterface {
         return userId.equals(userDetails.getId()) && !isTokenExpired(token);
     }
 
-    // check whether the token is still within its expiry
     @Override
     public boolean isTokenExpired(String token) {
         Date expiration = extractClaim(token, Claims::getExpiration);
@@ -72,10 +64,6 @@ public class JwtService implements JwtServiceInterface {
         return claims.get("jti", String.class);
     }
 
-    /**
-     * The time the token was issued, accurate to the millisecond (an old token with no such claim
-     * falls back to iat).
-     */
     @Override
     public Instant extractIssuedAt(String token) {
         Claims claims = extractAllClaims(token);
@@ -97,7 +85,6 @@ public class JwtService implements JwtServiceInterface {
     public Claims extractAllClaims(String token) {
         return Jwts.parser()
                 .verifyWith((SecretKey) this.key)
-                // A token signed with the same secret but issued by another system is not accepted
                 .requireIssuer(issuer)
                 .build()
                 .parseSignedClaims(token)

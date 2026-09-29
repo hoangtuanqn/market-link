@@ -1,11 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { checkDeal, dealPrice, isValidDiscount, suggestedDiscount, todayYmd, type DealProblem } from './deals';
 
-/**
- * The same rows as backend DealPolicyTest (spec §4.5.1–4.5.2), so the dialog and the server always agree: shelf life N,
- * packed on H, pickup P, today → best-before B, days left L, problem (null = may go on a deal), suggested %. For N = 7
- * the rows with L = 4 and L = 5 pin the upper bound ⌈N/2⌉ = 4 exactly.
- */
 const CASES: [number, string, string, string, string, number, DealProblem | null, number][] = [
   [7, '2026-09-29', '2026-10-03', '2026-09-30', '2026-10-05', 3, null, 20],
   [21, '2026-09-14', '2026-10-03', '2026-09-30', '2026-10-04', 2, null, 40],
@@ -35,7 +30,6 @@ describe('checkDeal', () => {
 });
 
 describe('dealPrice', () => {
-  /** Half up to the cent, at least $0.01, never above the list price. */
   it.each([
     [0.6, 20, 0.48],
     [2.6, 40, 1.56],

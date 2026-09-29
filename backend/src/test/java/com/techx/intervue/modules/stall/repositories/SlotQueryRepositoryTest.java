@@ -30,17 +30,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Runs on real MySQL: the public-slot statement is plain SQL, and the D-06 guardrail is a database
- * CHECK — both are only checkable on the real engine.
- */
 @SpringBootTest
 @Transactional
 class SlotQueryRepositoryTest {
 
     private static final LocalDate DAY = LocalDate.of(2031, 3, 2);
 
-    /** Long before DAY: no slot of DAY has reached its cutoff yet. */
     private static final LocalDateTime EARLY = LocalDateTime.of(2031, 1, 1, 0, 0);
 
     @Autowired UserRepository users;
@@ -92,10 +87,6 @@ class SlotQueryRepositoryTest {
         return markets.save(m);
     }
 
-    /**
-     * The market is held every day and the stall attends every day, so only the rule a test is
-     * about can hide a slot (FR-032, FR-060, FR-073).
-     */
     private FarmerMarket link(FarmerProfile f, Market m) {
         FarmerMarket fm = new FarmerMarket();
         fm.setFarmerId(f.getId());
@@ -112,7 +103,6 @@ class SlotQueryRepositoryTest {
                 .toList();
     }
 
-    /** 0 = Sunday … 6 = Saturday, the day_of_week convention of both operating-day tables. */
     private static int weekdayOf(LocalDate date) {
         return date.getDayOfWeek().getValue() % 7;
     }
@@ -149,10 +139,6 @@ class SlotQueryRepositoryTest {
         assertThat(query.publicSlots(f.getId(), m.getId() + 100_000, DAY, DAY, EARLY)).isEmpty();
     }
 
-    /**
-     * Leaving a market (fm.is_active = FALSE) makes a slot there disappear from the customer's
-     * page.
-     */
     @Test
     void publicSlotsHideAMarketTheStallHasLeft() {
         FarmerProfile f = approvedFarmer();
@@ -164,18 +150,13 @@ class SlotQueryRepositoryTest {
         assertThat(query.publicSlots(f.getId(), null, DAY, DAY, EARLY)).isEmpty();
     }
 
-    /**
-     * FR-032/D-05: a slot whose cutoff (start − the stall's order_cutoff_hours) has passed no
-     * longer takes orders, so the customer never gets it to pick — placing it would only answer 409
-     * CUTOFF_PASSED.
-     */
     @Test
     void publicSlotsHideSlotsPastTheirCutoff() {
-        FarmerProfile f = approvedFarmer(); // order_cutoff_hours = 12
+        FarmerProfile f = approvedFarmer();
         FarmerMarket fm = link(f, market());
-        slot(fm, DAY, 7, 0, true); // cutoff DAY-1 19:00
-        slot(fm, DAY, 8, 0, true); // cutoff DAY-1 20:00
-        slot(fm, DAY, 9, 0, true); // cutoff DAY-1 21:00
+        slot(fm, DAY, 7, 0, true);
+        slot(fm, DAY, 8, 0, true);
+        slot(fm, DAY, 9, 0, true);
 
         List<SlotResource> out =
                 query.publicSlots(f.getId(), null, DAY, DAY, DAY.minusDays(1).atTime(20, 0));
@@ -183,7 +164,6 @@ class SlotQueryRepositoryTest {
         assertThat(out).extracting(SlotResource::startTime).containsExactly("09:00");
     }
 
-    /** D-06: even with a code bug, the database does not let booked_count exceed max_orders. */
     @Test
     void databaseRefusesMoreBookingsThanCapacity() {
         FarmerMarket fm = link(approvedFarmer(), market());
@@ -192,10 +172,6 @@ class SlotQueryRepositoryTest {
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
-    /**
-     * FR-073: the admin stopped holding the market on DAY's weekday. Slots already generated for
-     * that day must no longer be offered.
-     */
     @Test
     void publicSlotsHideADayTheMarketIsNoLongerHeld() {
         FarmerProfile f = approvedFarmer();
@@ -213,10 +189,6 @@ class SlotQueryRepositoryTest {
                 .containsExactly(DAY.plusDays(1).toString());
     }
 
-    /**
-     * FR-060: the stall took DAY's weekday out of its operating days at this market. Slots it had
-     * generated for that day must no longer be offered.
-     */
     @Test
     void publicSlotsHideADayTheStallNoLongerAttends() {
         FarmerProfile f = approvedFarmer();
@@ -234,10 +206,6 @@ class SlotQueryRepositoryTest {
                 .containsExactly(DAY.plusDays(1).toString());
     }
 
-    /**
-     * The slot-booking check reads the same rule: a slot on a weekday the market or the stall has
-     * dropped is not on an open day any more.
-     */
     @Test
     void aSlotIsOnAnOpenDayOnlyWhileBothTheMarketAndTheStallStillOpenThatWeekday() {
         FarmerProfile f = approvedFarmer();
@@ -263,10 +231,6 @@ class SlotQueryRepositoryTest {
         assertThat(slots.isOnOpenDay(stallAway.getId())).isFalse();
     }
 
-    /**
-     * FR-067: the stall shortened DAY's time window after its slots were generated. A slot that no
-     * longer fits inside the window is neither offered nor bookable, like a dropped weekday.
-     */
     @Test
     void aSlotOutsideTheStallsCurrentTimeWindowIsNotOfferedNorBookable() {
         FarmerProfile f = approvedFarmer();
@@ -293,20 +257,15 @@ class SlotQueryRepositoryTest {
         assertThat(slots.isOnOpenDay(late.getId())).isFalse();
     }
 
-    /**
-     * A date counts as orderable only when a slot still has room, is switched on and is before its
-     * cutoff — the dates the availability resolver may show stock for.
-     */
     @Test
     void orderableDatesKeepOnlyDatesWithAFreeSlotBeforeItsCutoff() {
         FarmerProfile f = approvedFarmer();
         FarmerMarket fm = link(f, market());
-        slot(fm, DAY, 7, 2, true); // open
-        slot(fm, DAY.plusDays(1), 7, 5, true); // full
-        slot(fm, DAY.plusDays(2), 7, 0, false); // turned off
-        slot(fm, DAY.plusDays(3), 7, 0, true); // past its cutoff at "now" below
+        slot(fm, DAY, 7, 2, true);
+        slot(fm, DAY.plusDays(1), 7, 5, true);
+        slot(fm, DAY.plusDays(2), 7, 0, false);
+        slot(fm, DAY.plusDays(3), 7, 0, true);
 
-        // 12 hours (the default cutoff) before DAY+3 07:00 is DAY+2 19:00
         LocalDateTime now = DAY.plusDays(2).atTime(20, 0);
         assertThat(query.orderableDates(List.of(f.getId()), DAY, DAY.plusDays(6), EARLY))
                 .containsEntry(f.getId(), java.util.Set.of(DAY, DAY.plusDays(3)));
@@ -315,9 +274,6 @@ class SlotQueryRepositoryTest {
         assertThat(query.orderableDates(List.of(), DAY, DAY, EARLY)).isEmpty();
     }
 
-    /**
-     * The availability resolver reads the same open-day rule: a dropped weekday is not orderable.
-     */
     @Test
     void orderableDatesSkipAWeekdayTheMarketNoLongerHolds() {
         FarmerProfile f = approvedFarmer();

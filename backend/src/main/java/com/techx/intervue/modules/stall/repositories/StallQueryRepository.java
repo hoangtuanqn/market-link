@@ -21,16 +21,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * Reads stalls with their market and time windows. JdbcTemplate because it joins 3–4 tables in one
- * pass; every user value goes through parameters (R-04). The stall module does not import the
- * catalog module — a market is only touched by SQL here.
- */
 @Repository
 @RequiredArgsConstructor
 public class StallQueryRepository {
 
-    /** The shared filter: only approved stalls (D-09) and selling at an open market. */
     private static final String WHERE_PUBLIC =
             """
             WHERE f.approval_status = 'approved'
@@ -40,13 +34,6 @@ public class StallQueryRepository {
                                             WHERE d.farmer_market_id = fm.id AND d.day_of_week = :day))
             """;
 
-    /**
-     * One row per Farmer, even when they sell at several markets; when filtering by market the
-     * booth and hours are those of that market. The booth code and pin come from one and the same
-     * farmer_markets row (the lowest id that matches) — taking MIN of each column on its own mixed
-     * one market's code with another's latitude and a third value's longitude, a pin at neither
-     * market (FR-011).
-     */
     public static final String SEARCH_STALLS =
             """
             SELECT f.id, f.stall_name, f.contact_person, f.logo_url, f.rating_avg, f.rating_count,
@@ -90,10 +77,6 @@ public class StallQueryRepository {
             """
                     + WHERE_PUBLIC;
 
-    /**
-     * A stall's markets with the time windows for each day (for the public stall page and the
-     * Farmer's own profile).
-     */
     private static final String STALL_MARKETS =
             """
             SELECT fm.id AS farmer_market_id, m.id AS market_id, m.market_name,
@@ -140,10 +123,6 @@ public class StallQueryRepository {
             BigDecimal latitude,
             BigDecimal longitude) {}
 
-    /**
-     * Looks up an active market's operating schedule (opening hours and held weekdays) and its
-     * coordinates.
-     */
     public Optional<MarketSchedule> findMarketSchedule(long marketId) {
         String sql =
                 """
@@ -181,10 +160,6 @@ public class StallQueryRepository {
         return res.stream().filter(MarketSchedule::active).findFirst();
     }
 
-    /**
-     * Does the market exist and is it open? Checked with SQL so the stall module does not have to
-     * import the catalog module.
-     */
     public boolean marketExists(long marketId) {
         return findMarketSchedule(marketId).isPresent();
     }
@@ -250,12 +225,10 @@ public class StallQueryRepository {
                 hhmm(rs.getString("pickup_end")));
     }
 
-    /** '%' and '_' typed by the user must not act as wildcards. */
     private static String escapeLike(String raw) {
         return raw.replace("!", "!!").replace("%", "!%").replace("_", "!_");
     }
 
-    /** A TIME column reads as "07:00:00"; the contract returns "07:00". */
     public static String hhmm(String time) {
         return time == null ? null : time.substring(0, Math.min(5, time.length()));
     }

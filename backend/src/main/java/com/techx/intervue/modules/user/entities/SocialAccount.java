@@ -16,7 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Links a user to a Google account through provider_user_id (not through email). */
 @Entity
 @Getter
 @Setter

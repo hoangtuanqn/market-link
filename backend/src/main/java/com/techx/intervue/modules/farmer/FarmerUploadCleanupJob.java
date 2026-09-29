@@ -16,12 +16,6 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * A user uploads an image and abandons it without submitting: the file stays on disk forever. Once
- * an hour it sweeps, deleting images/videos older than 24 hours that no application — current or
- * historical — still points to. Same approach as {@code
- * ChatAttachmentCleanupJob}. @EnableScheduling is already on in AppConfig.
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -50,7 +44,6 @@ public class FarmerUploadCleanupJob {
         }
     }
 
-    /** Every path this account still uses: the current application plus every past submission. */
     private Set<String> referencedBy(Long userId) {
         Set<String> urls = new HashSet<>();
         profiles.findByUserId(userId)

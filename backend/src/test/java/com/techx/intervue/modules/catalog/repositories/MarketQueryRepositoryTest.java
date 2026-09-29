@@ -11,10 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Runs on the real MySQL: the ward and province names come from joins, and the area filter is a
- * WHERE on the codes (FR-010, FR-073).
- */
 @SpringBootTest
 @Transactional
 class MarketQueryRepositoryTest {

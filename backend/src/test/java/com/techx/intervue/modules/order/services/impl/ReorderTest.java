@@ -43,13 +43,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * FR-037 — "Order again" turns an old order into a suggested cart; it never creates an order.
- * Quantities are capped at the nearest orderable date's availability ({@link
- * ProductAvailabilityResolver}, the same rule browse/search uses) — never {@code
- * Product.stockQuantity} (D-02 redesign): the old order carries no guarantee its own pickup date
- * still has any stock left.
- */
 class ReorderTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -152,9 +145,6 @@ class ReorderTest {
         return i;
     }
 
-    /**
-     * {@code stock} is the nearest orderable date's quantity, resolved via {@code availability}.
-     */
     private Product product(long id, int stock, ProductStatus status) {
         Product p = new Product();
         p.setId(id);
@@ -195,7 +185,6 @@ class ReorderTest {
         assertThat(service.reorder(CUSTOMER_ID, ORDER_ID)).containsExactly(new CartLine(1L, 4));
     }
 
-    /** R-06: someone else's order → 403 even though it exists. */
     @Test
     void reorderOnAnotherCustomersOrderIs403() {
         anOrderOf(OTHER_CUSTOMER_ID, line(1, 3));
@@ -204,10 +193,6 @@ class ReorderTest {
                 .isInstanceOf(OrderNotYoursException.class);
     }
 
-    /**
-     * The same "can be bought" rule as placing an order: hidden, paused, sold-out or no-orderable-
-     * date lines drop out.
-     */
     @Test
     void reorderDropsHiddenPausedAndSoldOutProducts() {
         product(1, 50, ProductStatus.AVAILABLE).setHidden(true);
@@ -219,7 +204,6 @@ class ReorderTest {
         assertThat(service.reorder(CUSTOMER_ID, ORDER_ID)).containsExactly(new CartLine(4L, 2));
     }
 
-    /** No orderable date within the lookahead (no active template) → the line drops out. */
     @Test
     void reorderDropsAProductWithNoOrderableDate() {
         Product p = new Product();
@@ -230,7 +214,6 @@ class ReorderTest {
         p.setUnit("kg");
         p.setStatus(ProductStatus.AVAILABLE);
         productRows.put(1L, p);
-        // Deliberately no availableQty entry: resolve() returns nothing for it.
         anOrderOf(CUSTOMER_ID, line(1, 3));
 
         assertThat(service.reorder(CUSTOMER_ID, ORDER_ID)).isEmpty();
@@ -254,7 +237,6 @@ class ReorderTest {
                 .build();
     }
 
-    /** D-09: a suspended stall takes no orders, so nothing of its old order is suggested again. */
     @Test
     void reorderFromASuspendedStallSuggestsNothing() {
         when(farmerRepository.findById(10L))

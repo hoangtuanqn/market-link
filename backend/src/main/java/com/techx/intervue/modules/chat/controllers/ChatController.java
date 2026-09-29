@@ -28,12 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-090…094 — public, guests can use it; with a token the user_id is attached to the history.
- * Signed-in Customers, Farmers and Admins are answered by the Claude assistant, each with the tools
- * of their role. Guests, and an admin who has not finished the mandatory two-step setup (FR-008),
- * get the keyword engine.
- */
 @Validated
 @RestController
 @RequestMapping("/api/v1/chat")
@@ -60,14 +54,6 @@ public class ChatController extends BaseController {
         return ok(chatService.history(sessionKey, userId), "OK");
     }
 
-    /**
-     * Which assistant the caller gets, from the authenticated principal only (FR-093, FR-094). A
-     * guest, or an account with none of the three roles, gets null and the keyword engine answers.
-     *
-     * <p>So does an admin whose session JwtAuthFilter marked {@code MFA_SETUP_PENDING}: that
-     * session is refused on /api/v1/admin/** (FR-008), and the admin tools read the same private
-     * data — accounts with their emails, platform revenue, the feedback inbox.
-     */
     private static AssistantAudience audienceOf(CustomUserDetails user) {
         if (user == null) {
             return null;
@@ -82,10 +68,6 @@ public class ChatController extends BaseController {
         return AssistantAudience.of(authorities);
     }
 
-    /**
-     * FR-093: the Farmer Overview banner. Farmer only, and the stall is resolved from the
-     * principal, so there is nothing in the request that could point at another stall.
-     */
     @GetMapping("/farmer-briefing")
     @PreAuthorize("hasRole('FARMER')")
     public ResponseEntity<ApiResource<FarmerBriefingResource>> farmerBriefing(

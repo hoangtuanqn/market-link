@@ -156,10 +156,6 @@ export default function ReportedMessages() {
     ModerationApi.reports({ status, page: 1, pageSize: 20 }).then((r) => r.data),
   );
 
-  /**
-   * Handled reports leave the `new` queue. Hiding a message actions every report on it, so all of them go; when that
-   * empties the page while more are waiting, fetch the next ones instead of showing an empty queue.
-   */
   const dropFromNew = (leaves: (r: ReportListItem) => boolean) => {
     if (status !== 'new' || state.kind !== 'ready') return;
     const left = state.data.items.filter((r) => !leaves(r));
@@ -214,7 +210,6 @@ export default function ReportedMessages() {
                 </Button>
               </div>
               {r.note ? <p className="text-small whitespace-pre-wrap">{t('messages.note', { note: r.note })}</p> : null}
-              {/* The server writes "Photo"/"Video" in English for a media message: show them in the admin's language. */}
               <p className="text-ink">
                 {r.preview === 'Video'
                   ? t('messages.video')

@@ -9,9 +9,5 @@ public interface MarketClosureRepository extends JpaRepository<MarketClosure, Lo
 
     List<MarketClosure> findByMarketIdOrderByClosedOnAsc(Long marketId);
 
-    /**
-     * R-06: a delete must be paired with the right market, so a closure of another market cannot be
-     * deleted by guessing its id.
-     */
     Optional<MarketClosure> findByIdAndMarketId(Long id, Long marketId);
 }

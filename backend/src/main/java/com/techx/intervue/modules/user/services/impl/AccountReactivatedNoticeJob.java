@@ -8,7 +8,6 @@ import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** FR-072: tell the customer their account is active again (manual or auto-reactivate). */
 @Component
 @AllArgsConstructor
 public class AccountReactivatedNoticeJob implements JobHandler {
@@ -29,7 +28,6 @@ public class AccountReactivatedNoticeJob implements JobHandler {
         mailService.send(payload.get("email"), letter.subject(), letter.html(), letter.text());
     }
 
-    /** Their own language (Settings → Language); English when they never chose one. */
     private String languageOf(String userId) {
         if (userId == null || userId.isBlank()) return "en";
         return settings.findById(Long.valueOf(userId)).map(UserSettings::getLanguage).orElse("en");

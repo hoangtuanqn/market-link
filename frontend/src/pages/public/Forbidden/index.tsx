@@ -13,10 +13,6 @@ type ForbiddenPageProps = {
   standalone?: boolean;
 };
 
-/**
- * 403 Forbidden page displayed when an authenticated user attempts to access an area reserved for another role (such as
- * a Customer or Farmer trying to access /admin/*).
- */
 const ForbiddenPage = ({ standalone = true }: ForbiddenPageProps) => {
   const { t } = useTranslation('Forbidden');
   const { user, isLoggedIn } = useSession();

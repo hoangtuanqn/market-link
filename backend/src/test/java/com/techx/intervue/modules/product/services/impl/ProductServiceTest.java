@@ -56,7 +56,6 @@ class ProductServiceTest {
     private static final long OTHER_FARMER_ID = 2L;
     private static final long PRODUCT_ID = 100L;
 
-    /** 10:00 on 27/09/2026 in Ho Chi Minh City. */
     private static final Clock CLOCK =
             Clock.fixed(Instant.parse("2026-09-27T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
 
@@ -178,10 +177,6 @@ class ProductServiceTest {
         when(categories.findById(1L)).thenReturn(Optional.of(leafyGreens()));
     }
 
-    /**
-     * D-09 / contract §4: not approved means it cannot be posted for sale — 403 with the right
-     * sentence.
-     */
     @Test
     void createRejectsStallNotApproved() {
         when(farmers.findByUserId(USER_ID)).thenReturn(Optional.of(stall(ApprovalStatus.PENDING)));
@@ -192,10 +187,6 @@ class ProductServiceTest {
         verify(products, never()).save(any());
     }
 
-    /**
-     * Review focus #3: the examiner changes the id in the URL → 403, not 404 (someone else's order
-     * really exists).
-     */
     @Test
     void updateOnAnotherFarmersProductIs403() {
         approvedStall();
@@ -222,7 +213,6 @@ class ProductServiceTest {
         verify(templates).deleteByProductId(PRODUCT_ID);
     }
 
-    /** FR-064: "sold out" is a status, not stock — two different concepts. */
     @Test
     void setStatusSoldOutDoesNotTouchStock() {
         approvedStall();
@@ -258,10 +248,6 @@ class ProductServiceTest {
         verify(products).save(p);
     }
 
-    /**
-     * FR-074: only an admin can clear the hide flag; a Farmer changing the status does not touch
-     * it.
-     */
     @Test
     void farmerCannotUnhideWhatAdminHid() {
         approvedStall();
@@ -277,11 +263,6 @@ class ProductServiceTest {
         assertThat(p.getHiddenReason()).isEqualTo("Vi phạm.");
     }
 
-    /**
-     * FR-071: reading a product used to be allowed while suspended, on the grounds that only writes
-     * needed an approved stall. D-09 is stricter than that — a suspended Farmer "chỉ thấy đơn cũ" —
-     * so the product screens now close too, with the admin's reason attached.
-     */
     @Test
     void mineOneIsRefusedWhileTheStallIsSuspended() {
         when(farmers.findByUserId(USER_ID))
@@ -291,7 +272,6 @@ class ProductServiceTest {
                 .isInstanceOf(StallSuspendedException.class);
     }
 
-    /** Review focus #3, applied to GET: the examiner changes the id in the URL → 403, not 404. */
     @Test
     void mineOneOnAnotherFarmersProductIs403() {
         approvedStall();
@@ -302,10 +282,6 @@ class ProductServiceTest {
                 .isInstanceOf(ProductNotYoursException.class);
     }
 
-    /**
-     * The Farmer's list skips soft-deleted products, but still shows hidden products with the
-     * reason.
-     */
     @Test
     void mineReturnsDeletedProductsNever() {
         assertThat(ProductQueryRepository.MINE_SQL).contains("p.is_deleted = FALSE");
@@ -357,12 +333,6 @@ class ProductServiceTest {
                 .isInstanceOf(ProductNotYoursException.class);
         verify(products, never()).save(any());
     }
-
-    // ---------- Task 5.3b (D-02, Review Focus #1 by another path): every write path must lock
-    // the product row before reading it, never load it through an unlocked findById /
-    // findByIdAndDeletedFalse — otherwise the transaction overwrites the stock that
-    // OrderService.place just deducted.
-    // ----------
 
     @Test
     void updateLoadsThroughTheLock() {
@@ -428,10 +398,6 @@ class ProductServiceTest {
         verify(products, never()).findByIdAndDeletedFalse(any());
     }
 
-    /**
-     * FR-062/FR-063: a new price must reach the pickup days that already have a daily-stock row —
-     * the sync is handed the price the product had before this edit.
-     */
     @Test
     void updateHandsTheOldPriceToTheDailyStockSync() {
         approvedStall();
@@ -446,13 +412,6 @@ class ProductServiceTest {
         verify(dailyStockSync).followPrice(p, new BigDecimal("0.50"), active);
     }
 
-    // ---------- FR-041 restock ----------
-
-    /**
-     * {@code stockQuantity} is a reference number only since the per-date redesign (D-02): {@link
-     * ProductStatus} does not react to it, and an edit is never a restock event — availability
-     * lives in {@code product_daily_stock}, not on the product row.
-     */
     @Test
     void updateDoesNotTouchStatusOrTellTheRestockNotifier() {
         approvedStall();
@@ -468,7 +427,6 @@ class ProductServiceTest {
         verify(restock, never()).afterChange(any(), anyBoolean(), anyBoolean());
     }
 
-    /** FR-041: lifting the farmer's pause makes an orderable product orderable again → alert. */
     @Test
     void unpausingAnOrderableProductTellsTheRestockNotifier() {
         approvedStall();
@@ -482,7 +440,6 @@ class ProductServiceTest {
         verify(restock).afterChange(p, false, true);
     }
 
-    /** FR-041: an admin un-hiding an orderable product makes it orderable again → alert. */
     @Test
     void adminUnhideTellsTheRestockNotifier() {
         Product p = product(FARMER_ID);
@@ -494,8 +451,6 @@ class ProductServiceTest {
 
         verify(restock).afterChange(p, false, true);
     }
-
-    // ---------- shelf life (FR-121) ----------
 
     @Test
     void createTakesTheSuggestionFromTheChosenGroup() {
@@ -554,7 +509,6 @@ class ProductServiceTest {
         assertThat(saved.shelfLife().suggestedDays()).isEqualTo(3);
     }
 
-    /** Twice the suggestion is the cap itself: still allowed, with the promise. */
     @Test
     void createAllowsTwiceTheSuggestionWithThePromise() {
         approvedStall();
@@ -567,10 +521,6 @@ class ProductServiceTest {
         assertThat(saved.shelfLife().extended()).isTrue();
     }
 
-    /**
-     * Spec §4.2: shelf_life_ack_at is when the Farmer ticked the promise. Saving the same promise
-     * again, as a price change does, keeps that time; another number is a new promise.
-     */
     @Test
     void updateKeepsThePromiseTimeUntilThePromiseChanges() {
         approvedStall();
@@ -637,7 +587,6 @@ class ProductServiceTest {
                 .isEqualTo("storageMode");
     }
 
-    /** Ruling 5: once a category has groups, a product must pick one. */
     @Test
     void createNeedsAGroupWhenTheCategoryHasGroups() {
         approvedStall();
@@ -650,7 +599,6 @@ class ProductServiceTest {
                 .isEqualTo("shelfLifeGuideId");
     }
 
-    /** Spec §4.1 fallback: no groups yet → the category's upper bound is the suggestion. */
     @Test
     void createWithoutGroupsUsesTheCategoryRange() {
         approvedStall();
@@ -666,9 +614,6 @@ class ProductServiceTest {
                 .isEqualTo("acknowledgeLongerShelfLife");
     }
 
-    // ---------- extension lock (FR-123) ----------
-
-    /** Review Focus #2: 3 strikes in 90 days — nothing above the suggestion is saved. */
     @Test
     void aLockedStallCannotSaveLongerThanSuggested() {
         approvedStall();
@@ -683,7 +628,6 @@ class ProductServiceTest {
         verify(products, never()).save(any());
     }
 
-    /** The lock only stops going longer: the suggestion (or less) still saves, unchecked. */
     @Test
     void aLockedStallCanStillSaveAtTheSuggestion() {
         approvedStall();

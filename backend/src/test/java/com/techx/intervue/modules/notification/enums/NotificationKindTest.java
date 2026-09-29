@@ -6,7 +6,6 @@ import com.techx.intervue.modules.user.enums.RoleType;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-/** Spec §4.6: which Settings group each spoilage notification belongs to. */
 class NotificationKindTest {
 
     @Test
@@ -31,7 +30,6 @@ class NotificationKindTest {
         assertThat(NotificationCategory.QUALITY_REPORTS.visibleTo(RoleType.FARMER)).isFalse();
     }
 
-    /** notifications.kind is VARCHAR(40), notification_preferences.category VARCHAR(30). */
     @Test
     void everyCodeFitsItsColumn() {
         assertThat(NotificationKind.values()).allMatch(k -> k.code().length() <= 40);

@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Personal achievements of the signed-in user. Not in api-contract.md yet — a proposal; the id
- * comes from the access token, so users can only view their own (R-06).
- */
 @RestController
 @RequestMapping("/api/v1/auth/me/achievements")
 @AllArgsConstructor

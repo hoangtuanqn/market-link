@@ -27,12 +27,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/**
- * FR-072 on MySQL: deactivating a customer must block their next sign-in through the real {@code
- * UserService.authenticate}, cut off any live session immediately, record why, and must not touch
- * an already-`placed` order that stays `placed` after a temporary ban (permanent-ban cancellation
- * is Task 5's own tests).
- */
 @SpringBootTest
 class AdminCustomerServiceTest {
 
@@ -164,11 +158,9 @@ class AdminCustomerServiceTest {
                         String.class,
                         customerId);
         assertThat(reason).isNull();
-        // A later, unrelated deactivation must not see the earlier ban's expiry.
         customers.setStatus(customerId, "inactive", "New violation", null, adminUserId);
         assertThatThrownBy(() -> users.authenticate(new LoginRequest(email, PASSWORD, false, null)))
-                .hasMessageContaining(
-                        "deactivated") // permanent wording, not "temporarily suspended"
+                .hasMessageContaining("deactivated")
                 .hasMessageNotContaining("temporarily");
     }
 
@@ -285,7 +277,6 @@ class AdminCustomerServiceTest {
         assertThat(row.status()).isEqualTo("inactive");
     }
 
-    /** FR-072: {@code GET /admin/customers/{id}} — one customer, 404 for a non-customer account. */
     @Test
     void detailReturnsOneCustomerAndRefusesAStall() {
         assertThat(customers.detail(customerId).email()).isEqualTo(email);

@@ -5,10 +5,6 @@ import type { AchievementType } from '@/types/achievement.types';
 
 type State = { status: 'idle' | 'loading' } | { status: 'ready'; data: AchievementType } | { status: 'error' };
 
-/**
- * The header (avatar ring) and the Account page both need your achievements: loaded once per user, shared, `reload`
- * when a new number is needed. Switching accounts loads again.
- */
 let state: State = { status: 'idle' };
 let loadedFor: number | null = null;
 const listeners = new Set<() => void>();

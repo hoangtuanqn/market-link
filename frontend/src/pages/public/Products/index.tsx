@@ -16,18 +16,14 @@ import { bandOf, HIGH, LOW, PRICE_BANDS, type PriceBand } from '@/lib/priceBands
 import type { MarketType } from '@/types/market.types';
 
 const PAGE_SIZE = 12;
-/** Chip label → the server's whitelist value. */
 const SORTS = { newest: 'newest', priceAsc: 'price_asc', priceDesc: 'price_desc', rating: 'rating' } as const;
 type SortKey = keyof typeof SORTS;
-/** The market filter's "no filter" value. */
 const ALL_MARKETS = 'all';
 const NO_MARKETS: MarketType[] = [];
 
-/** FR-020 FR-021 — browse products by category, price, market and day. Filtering and paging happen on the server. */
 const ProductsPage = () => {
   const { t } = useTranslation('Products');
   const [picked, setPicked] = useState<number | null>(null);
-  // The category lives in the address, so the Home category tiles and the product breadcrumb open it filtered
   const [searchParams, setSearchParams] = useSearchParams();
   const categoryParam = Number(searchParams.get('category'));
   const categoryId = Number.isInteger(categoryParam) && categoryParam > 0 ? categoryParam : null;
@@ -54,10 +50,7 @@ const ProductsPage = () => {
   const markets = marketsLoad.kind === 'ready' ? marketsLoad.data : NO_MARKETS;
   const categories = categoriesLoad.kind === 'ready' ? categoriesLoad.data : [];
 
-  /** A day no market opens on is struck through: nothing can be on sale then. */
   const anyMarketOn = (dow: number) => marketsLoad.kind !== 'ready' || markets.some((m) => m.days.includes(dow));
-  // The coming week from today, today first (FR-021). Until the visitor picks one, the day is the first from today
-  // that some market opens on — today whenever any market is open today.
   const [week] = useState(() => nextSevenDays());
   const day = picked ?? firstOpenDay(anyMarketOn, week[0].date);
 
@@ -75,7 +68,6 @@ const ProductsPage = () => {
   const { state: load, retry } = useRequest(`products:${JSON.stringify(params)}`, () => ProductApi.list(params));
 
   const pageItems = load.kind === 'ready' ? load.data.items : [];
-  // The contract has no in-stock parameter yet; the tick hides sold-out and paused items on the page you are on.
   const shown = inStockOnly ? pageItems.filter((p) => p.status === 'available' && p.stock > 0) : pageItems;
   const total = load.kind === 'ready' ? load.data.total : 0;
   const pages = Math.max(1, Math.ceil(total / PAGE_SIZE));

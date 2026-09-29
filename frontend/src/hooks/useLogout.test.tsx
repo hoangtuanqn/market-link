@@ -20,7 +20,6 @@ beforeEach(() => {
   Cart.clear();
 });
 
-// FR-006: on a shared browser the next person must not find the previous account's cart
 describe('useLogout', () => {
   it('empties the cart along with the session', async () => {
     vi.mocked(AuthApi.logout).mockResolvedValue({ message: 'Signed out.' } as never);

@@ -27,7 +27,6 @@ import {
 import MarketsTab from './MarketsTab';
 import StallDetailsTab from './StallDetailsTab';
 
-/** FR-060 FR-061 FR-067 — stall details, order cutoff, and per-market days, pickup windows and pin. */
 const FarmerStallProfilePage = () => {
   const { t } = useTranslation('FarmerStallProfile');
   const { t: tc } = useTranslation();
@@ -43,7 +42,6 @@ const FarmerStallProfilePage = () => {
   const approved = stall?.approvalStatus === 'approved';
   const marketById = (id: number) => allMarkets.find((m) => m.id === id);
 
-  // Both forms mirror the loaded stall until something is typed, then they are their own state.
   const [editedForm, setEditedForm] = useState<StallForm | null>(null);
   const form = editedForm ?? (stall ? formFrom(stall) : { stallName: '', person: '', about: '', cutoffHours: 12 });
   const setForm = (patch: Partial<StallForm>) => setEditedForm({ ...form, ...patch });
@@ -100,7 +98,6 @@ const FarmerStallProfilePage = () => {
     }
   };
 
-  /** Ticking a market joins it right away (POST); unticking leaves it (DELETE, a soft delete on the server). */
   const toggleMarket = async (m: MarketType, checked: boolean) => {
     setBusyMarket(m.id);
     try {
@@ -127,10 +124,6 @@ const FarmerStallProfilePage = () => {
     }
   };
 
-  /**
-   * Days and windows go through PUT …/days. The contract has no PUT for the stall code or pin, so a changed code or pin
-   * re-joins the market (DELETE then POST): the server reuses the same row, so slots and orders keep pointing at it.
-   */
   const saveMarkets = async () => {
     for (const sm of stall.markets) {
       const s = settingsOf(sm);
@@ -138,7 +131,6 @@ const FarmerStallProfilePage = () => {
         Notification.error({ text: t('markets.windowError', { market: sm.marketName }) });
         return;
       }
-      // FR-060: checked before any request, so no market is saved halfway
       if (s.code.trim().length > STALL_CODE_MAX) {
         Notification.error({ text: t('markets.codeError', { market: sm.marketName, max: STALL_CODE_MAX }) });
         return;
@@ -171,7 +163,6 @@ const FarmerStallProfilePage = () => {
       Notification.success({ title: t('saved'), text: t('markets.savedText') });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
-      // Markets saved before the failing one are on the server now: show what it holds, keep the typed edits
       StallApi.myProfile()
         .then((fresh) => mutate(() => fresh))
         .catch(() => undefined);

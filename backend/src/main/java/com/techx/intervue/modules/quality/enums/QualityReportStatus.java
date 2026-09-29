@@ -5,10 +5,6 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/**
- * FR-122, FR-123: open until an admin decides; confirmed or dismissed after. Matches
- * ENUM('open','confirmed','dismissed') in V20260928014.
- */
 public enum QualityReportStatus {
     OPEN,
     CONFIRMED,

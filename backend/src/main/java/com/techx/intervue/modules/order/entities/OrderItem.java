@@ -16,10 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * One line of an order. Name, price and unit are copied at order time: if the Farmer changes the
- * price afterward, old orders do not change with it. Table `order_items` (V20260926012).
- */
 @Entity
 @Getter
 @Setter
@@ -52,7 +48,6 @@ public class OrderItem {
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal subtotal;
 
-    /** FR-121: the shelf-life promise at ordering time (spec §4.3); null on lines placed before. */
     @Column(name = "shelf_life_days")
     private Integer shelfLifeDays;
 
@@ -60,7 +55,6 @@ public class OrderItem {
     @Column(name = "storage_mode")
     private StorageMode storageMode;
 
-    /** The last day the line is still good. */
     @Column(name = "best_before")
     private LocalDate bestBefore;
 
@@ -70,17 +64,9 @@ public class OrderItem {
     @Column(name = "extended_by_days", nullable = false)
     private int extendedByDays;
 
-    /** FR-124: the price before a near-expiry discount; null when the line was not discounted. */
     @Column(name = "list_price", precision = 10, scale = 2)
     private BigDecimal listPrice;
 
-    /**
-     * Copies the product's name and unit, the price actually charged and the shelf-life promise, at
-     * this moment; orderId is assigned once the order has an id. {@code unitPrice} comes from the
-     * locked {@code product_daily_stock} row for the pickup date, not {@code product.getPrice()} —
-     * price can differ by day (weekly stock template). The line is good from the pickup date for
-     * the product's shelf life (FR-121).
-     */
     public static OrderItem snapshot(
             Product product,
             BigDecimal unitPrice,

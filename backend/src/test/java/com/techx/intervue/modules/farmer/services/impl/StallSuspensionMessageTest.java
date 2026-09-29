@@ -11,12 +11,6 @@ import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import java.time.Instant;
 import org.junit.jupiter.api.Test;
 
-/**
- * FR-071/D-09: the approval check lived in five services as a copy-paste. One of them getting a new
- * rule and the others not is exactly how FR-072's Google sign-in kept the wrong wording, so it is
- * one guard here — and a suspended stall is told apart from one that was never approved, because
- * the two need different words.
- */
 class StallSuspensionMessageTest {
 
     private static FarmerProfile profile(ApprovalStatus status, String reason, Instant until) {
@@ -46,9 +40,6 @@ class StallSuspensionMessageTest {
                 .hasMessageContaining("Missed pickups");
     }
 
-    /**
-     * D-09: the letter and the screen must both say the accepted orders still have to be served.
-     */
     @Test
     void aPermanentSuspensionStillTellsThemToFinishAcceptedOrders() {
         assertThat(StallSuspensionMessage.of(profile(ApprovalStatus.SUSPENDED, "Complaints", null)))
@@ -66,10 +57,9 @@ class StallSuspensionMessageTest {
                                 "Complaints",
                                 Instant.parse("2026-10-05T02:00:00Z")));
 
-        assertThat(message).contains("09:00 05/10/2026").contains("Complaints"); // Asia/Ho_Chi_Minh
+        assertThat(message).contains("09:00 05/10/2026").contains("Complaints");
     }
 
-    /** Pending/rejected is not a ban: it keeps the older, separate exception and wording. */
     @Test
     void aStallThatWasNeverApprovedKeepsTheOtherException() {
         assertThatThrownBy(

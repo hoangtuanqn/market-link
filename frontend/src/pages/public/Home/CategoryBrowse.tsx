@@ -2,11 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import type { CategoryType } from '@/api-requests/catalog.requests';
 
-/**
- * Decorative icon per real category slug (db/seed.sql — "the eight agreed categories", PR #137). A category added later
- * without a matching slug falls back to FALLBACK_EMOJI instead of being mismatched to whichever slot it happens to land
- * in.
- */
 const EMOJI_BY_SLUG: Record<string, string> = {
   vegetables: '🥬',
   fruits: '🍊',

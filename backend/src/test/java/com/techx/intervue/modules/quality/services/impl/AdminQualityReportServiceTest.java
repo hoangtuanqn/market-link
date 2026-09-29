@@ -42,7 +42,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-/** FR-123 (spec §4.4.3, §4.4.4): the admin's decision and what it does to the stall. */
 class AdminQualityReportServiceTest {
 
     private static final long ADMIN = 99L;
@@ -55,7 +54,6 @@ class AdminQualityReportServiceTest {
             Clock.fixed(Instant.parse("2026-10-06T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
     private static final Instant NOW = Instant.parse("2026-10-06T03:00:00Z");
 
-    /** CLOCK minus 90 days. */
     private static final Instant SINCE = Instant.parse("2026-07-08T03:00:00Z");
 
     private QualityReportRepository reports;
@@ -92,7 +90,6 @@ class AdminQualityReportServiceTest {
                         notifications,
                         CLOCK);
 
-        // Rau muống set to 5 days against a suggestion of 3, spoiled before its date
         report = new QualityReport();
         report.setId(REPORT);
         report.setOrderId(21L);
@@ -165,7 +162,6 @@ class AdminQualityReportServiceTest {
                 1);
     }
 
-    /** Spec §4.4.3 steps 1–2: extended and spoiled early → a strike, back to the suggestion. */
     @Test
     void confirmingAnExtendedLineThatSpoiledEarlyRecordsAStrikeAndResetsTheProduct() {
         service.confirm(ADMIN, REPORT, "  Lá úng đen trước hạn  ");
@@ -197,7 +193,6 @@ class AdminQualityReportServiceTest {
                 .dispatch(any(), argThat(e -> e.kind() == NotificationKind.SHELF_LIFE_LOCKED));
     }
 
-    /** Spec §4.4.3: a line within its suggestion only closes the report. */
     @Test
     void confirmingALineWithinItsSuggestionOnlyClosesTheReport() {
         report.setShelfLifeExtended(false);
@@ -219,7 +214,6 @@ class AdminQualityReportServiceTest {
         verify(violations, never()).saveAndFlush(any());
     }
 
-    /** Ruling 8: a stall that already went back down keeps its own number. */
     @Test
     void aProductNoLongerExtendedKeepsItsShelfLife() {
         product.setShelfLifeDays(2);
@@ -231,7 +225,6 @@ class AdminQualityReportServiceTest {
         verify(products, never()).saveAndFlush(any());
     }
 
-    /** Spec §4.4.3 step 3: the third strike in 90 days locks longer shelf lives. */
     @Test
     void theThirdStrikeLocksLongerShelfLivesAndSaysUntilWhen() {
         when(violations.activeTimes(FARMER_ID, SINCE))
@@ -276,7 +269,6 @@ class AdminQualityReportServiceTest {
                                                 && e.link().equals("/farmer/reviews?tab=spoiled")));
     }
 
-    /** Spec §4.4.3: "Not the stall's fault" needs a note. */
     @Test
     void dismissingNeedsANote() {
         assertThatThrownBy(() -> service.dismiss(ADMIN, REPORT, "   "))
@@ -299,7 +291,6 @@ class AdminQualityReportServiceTest {
                         argThat(e -> e.kind() == NotificationKind.QUALITY_DECIDED));
     }
 
-    /** Review Focus #1: the second of two admins gets a 409 and records nothing. */
     @Test
     void aDecidedReportCannotBeDecidedAgain() {
         report.setStatus(QualityReportStatus.CONFIRMED);
@@ -319,7 +310,6 @@ class AdminQualityReportServiceTest {
                 .isInstanceOf(QualityReportNotFoundException.class);
     }
 
-    /** Ruling 6: the queue filters are whitelisted; "decided" means confirmed or dismissed. */
     @Test
     void theQueueFiltersAreWhitelisted() {
         service.list("decided", null, 1, 20);

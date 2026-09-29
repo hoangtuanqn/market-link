@@ -12,13 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-/**
- * Spec §8.4. Buckets live in Redis so several backend instances share one limit.
- *
- * <p>If Redis is down let the request through (fail-open): the rate limit is an anti-abuse layer,
- * not a security layer — letting Redis take all of chat down would trade one nuisance for an
- * outage.
- */
 @Slf4j
 @Service
 public class Bucket4jChatRateLimiter implements ChatRateLimiterInterface {
@@ -28,18 +21,6 @@ public class Bucket4jChatRateLimiter implements ChatRateLimiterInterface {
     private final ProxyManager<String> buckets;
     private final ChatLimitsProperties limits;
 
-    /**
-     * @Lazy here is what actually defers connecting to Redis: the chatRateLimitBuckets bean is
-     * declared @Lazy but this service is an eager singleton, so injecting it directly would still
-     * force creation at startup. With @Lazy Spring injects a proxy of the ProxyManager interface
-     * and only connects when check() is called the first time.
-     *
-     * <p>The limit is validated right here, not left until use: capacity <= 0 makes
-     * Bandwidth.builder() throw IllegalArgumentException, and the caller catches a broad
-     * RuntimeException to fail open — a wrong config would silently turn the rate limit off
-     * completely and log it wrongly as "Redis unavailable". A wrong config must die at startup,
-     * where it is seen right away.
-     */
     public Bucket4jChatRateLimiter(
             @Lazy ProxyManager<String> buckets, ChatLimitsProperties limits) {
         requirePositive("app.chat.limits.messages-per-minute", limits.messagesPerMinute());
@@ -64,10 +45,6 @@ public class Bucket4jChatRateLimiter implements ChatRateLimiterInterface {
         try {
             allowed = buckets.builder().build(key, () -> configFor(action)).tryConsume(1);
         } catch (RuntimeException e) {
-            // Catch broadly: Spring's DataAccessException, Lettuce's RedisException and
-            // bucket4j's BucketExecutionException are all RuntimeException and all mean
-            // "could not ask Redis". RateLimitedException is thrown AFTER this block so it is not
-            // swallowed.
             log.warn("Chat rate limit check skipped, Redis unavailable: {}", e.getMessage());
             return;
         }
@@ -98,14 +75,10 @@ public class Bucket4jChatRateLimiter implements ChatRateLimiterInterface {
     private static String reasonFor(Action action) {
         return switch (action) {
             case MESSAGE -> "You are sending messages too quickly. Wait a moment and try again.";
-            // FR-115: photos and videos share this limit
             case IMAGE ->
                     "You are sending photos or videos too quickly. Wait a moment and try again.";
             case CONVERSATION ->
                     "You have started too many conversations in the last hour. Try again later.";
-            // Never reaches the user: a typing frame is dropped silently because STOMP has no HTTP
-            // code
-            // to return (spec §7.1). Still written properly in case someone returns it later.
             case TYPING -> "You are typing too fast for us to keep up.";
         };
     }

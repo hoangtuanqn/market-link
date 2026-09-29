@@ -30,7 +30,6 @@ import FarmerActions from './FarmerActions';
 import FarmerTableSkeleton from './FarmerTableSkeleton';
 import RejectDialog from './RejectDialog';
 
-/** §6, §7, §8 — an Admin views, approves, rejects, suspends, reinstates a Farmer (FR-071/D-09). */
 const AdminFarmersPage = () => {
   const { t } = useTranslation('AdminFarmers');
   const [activeTab, setActiveTab] = useState<FarmerTab>('all');
@@ -39,10 +38,8 @@ const AdminFarmersPage = () => {
   const [busyId, setBusyId] = useState<number | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [rejectTarget, setRejectTarget] = useState<AdminFarmerListItemType | null>(null);
-  /** One reason used for both reject and suspend — only one dialog can be open at a time. */
   const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [reasonError, setReasonError] = useState<string>();
-  /** The text being typed in the search box, separate from the applied keyword: only Enter or the button calls the API. */
   const [queryDraft, setQueryDraft] = useState('');
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
@@ -56,14 +53,12 @@ const AdminFarmersPage = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // only setState in a promise callback (the initial state is already loading)
   const fetchList = useCallback(() => {
     AdminFarmerApi.list({ status: activeTab, q: query || undefined, page, pageSize: PAGE_SIZE })
       .then((response) => setStatus({ kind: 'ready', items: response.data.items, total: response.data.total }))
       .catch(() => setStatus({ kind: 'error' }));
   }, [activeTab, query, page]);
 
-  // The number on a tab must count within the current search scope, otherwise a tab says 5 while the table has only 1 row.
   const fetchCounts = useCallback(() => {
     Promise.all(TABS.map((tab) => AdminFarmerApi.list({ status: tab, q: query || undefined, page: 1, pageSize: 1 })))
       .then((responses) => {
@@ -79,8 +74,6 @@ const AdminFarmersPage = () => {
   useEffect(fetchList, [fetchList]);
   useEffect(fetchCounts, [fetchCounts]);
 
-  // Changing tab, searching or going to another page is a fresh fetch each time: build the skeleton right away so the screen
-  // does not sit still with old data while waiting.
   const changeTab = (tab: FarmerTab) => {
     if (tab === activeTab) return;
     setStatus({ kind: 'loading' });
@@ -121,7 +114,6 @@ const AdminFarmersPage = () => {
     if (!confirmAction) return;
     const { kind, item } = confirmAction;
     const written = composeReason('suspend', reason);
-    // Suspension needs a reason too: the Farmer reads this sentence back on their own profile page.
     if (kind === 'suspend') {
       if (!written) return setReasonError(t('suspend.required'));
       if (written.length > REASON_MAX) return setReasonError(t('suspend.tooLong', { max: REASON_MAX }));
@@ -144,7 +136,6 @@ const AdminFarmersPage = () => {
 
   const submitReject = async () => {
     if (!rejectTarget) return;
-    // The server requires a reason (@NotBlank, at most 255) — block it here so the admin does not lose the dialog.
     const written = composeReason('reject', reason);
     if (!written) return setReasonError(t('reject.required'));
     if (written.length > REASON_MAX) return setReasonError(t('reject.tooLong', { max: REASON_MAX }));
@@ -177,7 +168,6 @@ const AdminFarmersPage = () => {
 
   const columns: TableColumn<AdminFarmerListItemType>[] = [
     {
-      // docs/prototype/admin/farmers.html: the stall name is a link, below it is "contact person · phone".
       key: 'stallName',
       label: t('col.stall'),
       render: (f) => (
@@ -219,18 +209,13 @@ const AdminFarmersPage = () => {
   const showSkeleton = status.kind === 'loading' || initialLoading;
 
   return (
-    // The shell's <main> is flex-col so flex-1 here takes all the remaining height — that way the
-    // "no data" block grows to fill the free space instead of being a small box at the top.
     <div className="flex flex-1 flex-col gap-6">
-      {/* docs/prototype/admin/farmers.html: the title on the left, the search box on the right in the same row. */}
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="flex flex-col gap-2">
           <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
-        {/* The search box takes all the remaining space up to the right margin; too narrow and it drops to its own row. */}
         <form role="search" onSubmit={submitSearch} className="flex min-w-70 flex-1 items-end gap-2">
-          {/* Field passes className down to the <input> tag, so the flexible part must be this wrapper. */}
           <div className="flex-1">
             <Field
               id="farmer-q"
@@ -287,7 +272,6 @@ const AdminFarmersPage = () => {
             )}
           </div>
         ) : (
-          // The empty list is the only thing on the screen: let it take all the space and centre.
           <DataState fill title={t(`empty.${activeTab}.title`)} text={t(`empty.${activeTab}.text`)} />
         ))}
 

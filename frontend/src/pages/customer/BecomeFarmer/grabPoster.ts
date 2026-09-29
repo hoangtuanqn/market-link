@@ -1,8 +1,3 @@
-/**
- * Cut a frame from the very file on the machine to serve as the thumbnail — no need to download the video again, and it
- * does not depend on whether the server supports range requests. On failure returns null, and then the <video> tag
- * takes the first frame itself.
- */
 export const grabPoster = (file: File): Promise<string | null> =>
   new Promise((resolve) => {
     const objectUrl = URL.createObjectURL(file);
@@ -16,7 +11,6 @@ export const grabPoster = (file: File): Promise<string | null> =>
     probe.muted = true;
     probe.playsInline = true;
     probe.src = objectUrl;
-    // The 0-second frame is often black; take one around the first second, or the middle of the video if it is too short.
     probe.onloadeddata = () => {
       probe.currentTime = Math.min(1, (probe.duration || 2) / 2);
     };

@@ -7,10 +7,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
-/**
- * Body of POST/PUT /api/v1/admin/shelf-life-guides (FR-120). {@code active} null keeps the current
- * state on update and means "on" when creating.
- */
 public record ShelfLifeGuideRequest(
         @NotNull(message = "Choose a category.") Long categoryId,
         @NotBlank(message = "Give the group a name.")

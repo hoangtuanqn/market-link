@@ -15,7 +15,6 @@ type UserMenuProps = {
   avatarUrl?: string;
   tier?: Tier;
   role?: RoleType;
-  /** Trang Settings theo vai: Customer /settings, Farmer /farmer/settings. */
   settingsTo?: string;
   onSignOut: () => void;
 };
@@ -23,11 +22,6 @@ type UserMenuProps = {
 const item =
   'text-ink hover:bg-surface-sunken focus-visible:bg-surface-sunken flex min-h-11 w-full cursor-pointer items-center gap-3 rounded-sm bg-transparent px-3 text-left text-[15px] font-bold no-underline outline-none [&_svg]:size-4.5';
 
-/**
- * The account button on the right of SiteHeader: image + name, click to open a Profile / Settings / Sign out menu (the
- * menu button pattern of WAI-ARIA: Esc or clicking outside closes it, up/down arrows move between items, Home/End go to
- * the first/last).
- */
 const UserMenu = ({
   name,
   email,
@@ -55,7 +49,6 @@ const UserMenu = ({
     if (returnFocus) buttonRef.current?.focus();
   };
 
-  // Opening by keyboard or mouse both put focus on the first item, so the arrow keys work right away
   useEffect(() => {
     if (open) items()[0]?.focus();
   }, [open]);

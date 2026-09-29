@@ -19,7 +19,6 @@ const CONVERSATIONS = '/user/topic/conversations';
 const TYPING = '/user/topic/typing';
 const PRESENCE = '/user/topic/presence';
 const TYPING_OUT = '/app/typing';
-/** The other side turns off their three dots after 6 seconds of silence, so keep typing repeats sooner than that. */
 const TYPING_REPEAT_MS = 3000;
 const TYPING_TIMEOUT_MS = 6000;
 
@@ -31,29 +30,18 @@ const parse = <T>(body: string): T | null => {
   }
 };
 
-/**
- * Marking as read is secondary: if it fails (429, network drop), the next open marks it again — it must not break the
- * screen being read.
- */
 const markRead = (conversationId: number) => {
   ConversationApi.markRead(conversationId)
-    // FR-111: the backend tells only the other member about this read, so the header and sidebar badges would keep
-    // counting this thread until some later event. Refresh the count once the read is saved.
     .then(() => ConversationApi.unreadCount())
     .then((response) => ChatUnreadStore.setUnread(response.data.count))
     .catch(() => {});
 };
 
-/** An open thread's badge is 0: the backend only reports "read" to the other person, not to the one who just read. */
 const clearUnread = (threads: ConversationSummary[], activeId: number | null) =>
   activeId === null || !threads.some((t) => t.id === activeId && t.unreadCount !== 0)
     ? threads
     : threads.map((t) => (t.id === activeId ? { ...t, unreadCount: 0 } : t));
 
-/**
- * The signed-in user's thread list, jumping to the top by itself on a new message. `activeId` is the open thread, to
- * keep its badge at 0.
- */
 export function useThreadList(activeId: number | null = null) {
   const [threads, setThreads] = useState<ConversationSummary[]>([]);
   const [loading, setLoading] = useState(true);
@@ -66,7 +54,6 @@ export function useThreadList(activeId: number | null = null) {
     activeRef.current = activeId;
   });
 
-  // A thread was just opened: clear its badge right in this render
   const [clearedFor, setClearedFor] = useState(activeId);
   if (clearedFor !== activeId) {
     setClearedFor(activeId);
@@ -95,10 +82,6 @@ export function useThreadList(activeId: number | null = null) {
     }
   }, [fetchList]);
 
-  /**
-   * Catching up does not turn on "loading": the list already shown is still correct, just missing a few updates. On
-   * failure, leave it as is.
-   */
   const refresh = useCallback(() => {
     fetchList().catch(() => {});
   }, [fetchList]);
@@ -111,7 +94,6 @@ export function useThreadList(activeId: number | null = null) {
       const next = pageRef.current + 1;
       const response = await ConversationApi.list({ page: next, size: THREAD_PAGE });
       pageRef.current = next;
-      // A thread jumping to the top between two pages can appear twice: dedupe by id
       setThreads((current) => {
         const have = new Set(current.map((t) => t.id));
         return clearUnread([...current, ...response.data.items.filter((t) => !have.has(t.id))], activeRef.current);
@@ -135,7 +117,6 @@ export function useThreadList(activeId: number | null = null) {
     const offEvents = realtime.subscribe(CONVERSATIONS, (body) => {
       const frame = parse<ConversationEventFrame>(body);
       if (!frame) return;
-      // A thread not yet in the list (a customer's first message): the event carries no sender name, so reload
       if (frame.type === 'updated' && !threadsRef.current.some((t) => t.id === frame.conversationId)) {
         refresh();
         return;
@@ -161,7 +142,6 @@ export function useThreadList(activeId: number | null = null) {
   return { threads, loading, error, reload, hasMore, loadMore, loadingMore };
 }
 
-/** One open conversation. conversationId null = no thread selected (the 375px screen). */
 export function useConversation(conversationId: number | null, opts: { otherReadAt?: string } = {}) {
   const [messages, setMessages] = useState<ChatMessageItem[]>([]);
   const [loading, setLoading] = useState(conversationId !== null);
@@ -181,8 +161,6 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     at: 0,
   });
 
-  // Changing thread drops the old thread's data right in this render, not waiting for an effect
-  // (react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes)
   const [shownFor, setShownFor] = useState(conversationId);
   if (shownFor !== conversationId) {
     setShownFor(conversationId);
@@ -195,8 +173,6 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     setOtherReadAt(opts.otherReadAt ?? null);
   }
 
-  // A reload or a deep link opens the thread before the thread list (which carries the read marker) has loaded: take
-  // the marker when it arrives, unless a live "read" frame has already moved "Seen" further.
   const seed = opts.otherReadAt ?? null;
   const [seededFrom, setSeededFrom] = useState(seed);
   if (seed !== seededFrom) {
@@ -204,7 +180,6 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     if (seed && (!otherReadAt || Date.parse(seed) > Date.parse(otherReadAt))) setOtherReadAt(seed);
   }
 
-  // A REST response arriving late for a thread already left is dropped. Effects run in declaration order: this one before any request.
   useEffect(() => {
     openRef.current = conversationId;
   }, [conversationId]);
@@ -216,7 +191,6 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     ConversationApi.messages(id, { size: PAGE })
       .then((response) => {
         if (!live) return;
-        // The API returns newest → oldest; state keeps oldest → newest
         setMessages([...response.data].reverse());
         setHasMore(response.data.length === PAGE);
         if (document.visibilityState === 'visible') markRead(id);
@@ -238,11 +212,6 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     const id = conversationId;
     realtime.start();
 
-    /**
-     * Review Focus #3: the broker does not replay what was missed during a drop. On every reconnect, MERGE the newest
-     * page in (not replacing the whole list, so an old page already scrolled up to is kept). Dropping more than PAGE
-     * messages still leaves a gap: accepted in 4A.
-     */
     const catchUp = () => {
       ConversationApi.messages(id, { size: PAGE })
         .then((response) => {
@@ -260,7 +229,6 @@ export function useConversation(conversationId: number | null, opts: { otherRead
       if (!incoming || incoming.conversationId !== id) return;
       setMessages((current) => mergeMessage(current, incoming));
       if (incoming.senderId !== meId) {
-        // Their message arriving means they stopped typing
         setOtherTyping(false);
         if (document.visibilityState === 'visible') markRead(id);
         else pendingRead.current = id;
@@ -271,10 +239,8 @@ export function useConversation(conversationId: number | null, opts: { otherRead
       if (!frame || frame.conversationId !== id) return;
       setOtherTyping(frame.typing);
       if (typingTimer.current) clearTimeout(typingTimer.current);
-      // If the other person closes the tab mid-typing, the three dots must turn off by themselves
       if (frame.typing) typingTimer.current = setTimeout(() => setOtherTyping(false), TYPING_TIMEOUT_MS);
     });
-    // FR-112 "seen": the backend only sends "read" to the sender, when the other person reads
     const offRead = realtime.subscribe(CONVERSATIONS, (body) => {
       const frame = parse<ConversationEventFrame>(body);
       if (frame?.type === 'read' && frame.conversationId === id && frame.readAt) setOtherReadAt(frame.readAt);
@@ -298,7 +264,6 @@ export function useConversation(conversationId: number | null, opts: { otherRead
       offRead();
       offConnect();
       if (typingTimer.current) clearTimeout(typingTimer.current);
-      // Leaving mid-typing: turn off the other side's three dots right away, do not make them wait 6 seconds
       const last = lastTyping.current;
       if (last.on && last.conversationId === id) {
         realtime.publish(TYPING_OUT, { conversationId: id, typing: false });
@@ -308,7 +273,6 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     };
   }, [conversationId, meId]);
 
-  /** Does not throw outward: on failure `olderError` turns on, messages already read stay put, clicking again retries. */
   const loadOlder = useCallback(async () => {
     if (conversationId === null || messages.length === 0 || olderFor.current === conversationId) return;
     const id = conversationId;
@@ -326,23 +290,17 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     }
   }, [conversationId, messages]);
 
-  /**
-   * A send failure is thrown to Composer: it keeps the typed text and reports the error, without swallowing the
-   * message.
-   */
   const send = useCallback(
     async (body: string, extra: { productId?: number; orderId?: number } = {}) => {
       if (conversationId === null) return;
       const id = conversationId;
       const response = await ConversationApi.send(id, { body, ...extra });
-      // A message arriving means the other side turned off their own three dots; typing more sends typing(true) again right away
       lastTyping.current = { conversationId: id, on: false, at: 0 };
       if (openRef.current === id) setMessages((current) => mergeMessage(current, response.data));
     },
     [conversationId],
   );
 
-  /** FR-115: the message kind follows the type the server read from the file, not the file name. */
   const sendMedia = useCallback(
     async (file: File, options: { onProgress?: (percent: number) => void; signal?: AbortSignal } = {}) => {
       if (conversationId === null) return;
@@ -355,10 +313,6 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     [conversationId],
   );
 
-  /**
-   * Composer calls this on every keystroke. The server caps it at 120 frames/minute and silently drops the rest, so
-   * only send when the state changes, or repeat "typing" after TYPING_REPEAT_MS.
-   */
   const typing = useCallback(
     (on: boolean) => {
       if (conversationId === null) return;

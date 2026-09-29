@@ -13,7 +13,6 @@ type HarnessProps = {
   legacyAddress?: string;
 };
 
-/** Holds the value like a form would and prints it, so a test can read what the form would send. */
 const Harness = ({ initial = emptyAddress(), ...rest }: HarnessProps) => {
   const [value, setValue] = useState<AddressParts>(initial);
   return (

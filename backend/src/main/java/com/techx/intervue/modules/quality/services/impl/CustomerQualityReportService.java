@@ -31,12 +31,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-122 (spec §4.4.1). {@link #report} checks, in this order: the order exists (404) → it is the
- * caller's (403, before anything else, R-06) → the line belongs to it (404) → it is completed (409)
- * → the line has a good-until date (409) → not reported yet (409) → still inside the window (409) →
- * the spoiled day lies between pickup and today (400) → the photo is the caller's own upload (400).
- */
 @Service
 @AllArgsConstructor
 public class CustomerQualityReportService implements CustomerQualityReportServiceInterface {
@@ -97,7 +91,6 @@ public class CustomerQualityReportService implements CustomerQualityReportServic
         report.setNote(blankToNull(request.note()));
         report.setPhotoUrl(photoUrl);
         report.setBeforePromise(SpoilagePolicy.beforePromise(spoiledOn, bestBefore));
-        // The promise on the line, not today's product: spec §8 "judged by what the order says"
         report.setShelfLifeExtended(line.isShelfLifeExtended());
         report.setExtendedByDays(line.getExtendedByDays());
         report.setCreatedAt(clock.instant());
@@ -111,10 +104,6 @@ public class CustomerQualityReportService implements CustomerQualityReportServic
                 saved.getProblem().value());
     }
 
-    /**
-     * The stall always hears of it; the admins only when an extended shelf life failed before its
-     * own promise (spec §4.4.1) — the others wait in the queue without a push.
-     */
     private void tellStallAndAdmins(Order order, OrderItem line, QualityReport report) {
         FarmerProfile stall = farmers.findById(order.getFarmerId()).orElse(null);
         if (stall == null) {

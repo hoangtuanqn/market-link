@@ -25,10 +25,6 @@ describe('mergeMessage', () => {
     expect(mergeMessage([msg(1), msg(2)], msg(3)).map((m) => m.id)).toEqual([1, 2, 3]);
   });
 
-  /**
-   * Review Focus #1. REST returns the message in its response AND STOMP publishes that same message back to every
-   * device of the sender (Plan 2 does this on purpose). Without deduping, the bubble shows twice.
-   */
   it('ignores an event for a message already in the list', () => {
     const before = [msg(1), msg(2)];
 
@@ -53,7 +49,6 @@ describe('mergeMessage', () => {
 });
 
 describe('prependOlder', () => {
-  /** Review Focus #2: scrolling up to read old messages while a new message arrives. */
   it('keeps older pages when a new message arrives', () => {
     const withHistory = prependOlder([msg(10), msg(11)], [msg(9), msg(8), msg(7)]);
 
@@ -121,10 +116,6 @@ describe('applyConversationEvent', () => {
     expect(after[0].unreadCount).toBe(3);
   });
 
-  /**
-   * The "read" event deliberately does NOT carry unreadCount (the backend uses a Long so it can be absent). The client
-   * must not infer 0 from its absence — that was a bug found in Plan 2's smoke test.
-   */
   it('leaves the badge alone when the event carries no count', () => {
     const after = applyConversationEvent([thread(1, 5)], { type: 'read', conversationId: 1, readerId: 9 });
 
@@ -141,17 +132,12 @@ describe('applyConversationEvent', () => {
     expect(after[0].unreadCount).toBe(0);
   });
 
-  /**
-   * The backend sends "read" to the sender when the other person reads: the list is sorted by the newest message,
-   * reading is not a new message.
-   */
   it('does not reorder the list for a read receipt', () => {
     const threads = [thread(1), thread(2)];
 
     expect(applyConversationEvent(threads, { type: 'read', conversationId: 2, readerId: 9 })).toBe(threads);
   });
 
-  /** "hidden" (FR-116) is Plan 4B's job; in 4A it also must not bump the thread to the top. */
   it('does not reorder the list for a hidden message', () => {
     const threads = [thread(1), thread(2)];
 
@@ -174,7 +160,6 @@ describe('applyConversationEvent', () => {
   });
 });
 
-/** /user/topic/presence: the other person going online / offline. Without it the online dot stays frozen from page load. */
 describe('applyPresence', () => {
   it('updates the other person in every thread with them', () => {
     const after = applyPresence([thread(1), thread(2)], {

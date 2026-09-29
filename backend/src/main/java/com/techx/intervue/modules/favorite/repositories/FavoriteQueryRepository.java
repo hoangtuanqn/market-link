@@ -10,19 +10,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * Favourites with what the Favorites screen shows about each target, in one query. JdbcTemplate
- * because it joins stalls, products and markets; every value goes through parameters (R-04).
- */
 @Repository
 @RequiredArgsConstructor
 public class FavoriteQueryRepository {
 
-    /**
-     * available: a stall is approved; a product is on sale (not deleted, not hidden, available) at
-     * an approved stall; a market is open. Whether a product still has stock is per pickup date
-     * since FR-063, so FavoriteService settles that part, not this statement.
-     */
     public static final String LIST_SQL =
             """
             SELECT fv.id, fv.target_type, fv.target_id,

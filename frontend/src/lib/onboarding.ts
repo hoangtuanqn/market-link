@@ -1,25 +1,17 @@
-/**
- * First-visit guided tour (driver.js), once per account and role. "Seen" lives on the server in the account's settings
- * extras (`tour.<role>` = 'done') so it follows the account across devices; a per-account copy in localStorage keeps
- * the tour from coming back when the save fails or the settings are being reloaded.
- */
 import SettingsApi from '@/api-requests/settings.requests';
 import SettingsStore, { normalize } from '@/lib/settings';
 import type common from '@/locales/en/common.json';
 
 export type TourRole = 'customer' | 'farmer';
 
-/** Keys under `tour.steps.` in common.json. */
 type StepKey = keyof (typeof common)['tour']['steps'];
 
 export type TourStep = {
   key: StepKey;
-  /** `[data-tour="…"]` target; none = a centred card (welcome and closing steps). */
   target?: string;
   side?: 'top' | 'right' | 'bottom' | 'left';
 };
 
-/** The sidebar link of a dashboard section (DashboardShell sets `data-tour="nav:<path>"`). */
 const nav = (path: string, key: StepKey): TourStep => ({ key, target: `nav:${path}`, side: 'right' });
 
 export const TOURS: Record<TourRole, TourStep[]> = {
@@ -35,7 +27,6 @@ export const TOURS: Record<TourRole, TourStep[]> = {
     { key: 'customerMessages', target: 'header:messages', side: 'bottom' },
     { key: 'customerNotifications', target: 'header:notifications', side: 'bottom' },
     { key: 'customerAccount', target: 'header:account', side: 'bottom' },
-    // Phones and tablets: the links above are hidden, everything sits behind the menu button
     { key: 'customerMenu', target: 'header:menu', side: 'bottom' },
     { key: 'customerDone' },
   ],
@@ -57,7 +48,6 @@ export const TOURS: Record<TourRole, TourStep[]> = {
   ],
 };
 
-/** On screen right now: not display:none and not slid off the viewport (the mobile sidebar drawer). */
 export const isOnScreen = (el: Element | null): el is HTMLElement => {
   if (!el || el.getClientRects().length === 0) return false;
   const r = el.getBoundingClientRect();
@@ -76,10 +66,6 @@ const seenLocally = (userId: string | number, role: TourRole) => {
   }
 };
 
-/**
- * Whether the tour should open for this account. No answer from the server = do not open: better to miss the tour once
- * than to show it again to someone who already saw it.
- */
 export const shouldShowTour = async (userId: string | number, role: TourRole): Promise<boolean> => {
   if (seenLocally(userId, role)) return false;
   try {
@@ -90,7 +76,6 @@ export const shouldShowTour = async (userId: string | number, role: TourRole): P
   }
 };
 
-/** Mark the tour as seen: locally first (instant), then in the account's server settings. */
 export const markTourSeen = async (userId: string | number, role: TourRole) => {
   try {
     localStorage.setItem(localKey(userId, role), DONE);
@@ -98,8 +83,6 @@ export const markTourSeen = async (userId: string | number, role: TourRole) => {
     // private window: the server copy below still counts
   }
   try {
-    // Read the server copy again right before writing, so the PUT does not overwrite settings with a stale draft
-    // Never saved (null) → start from the device's settings, not the defaults, so the language and theme stay
     const server = (await SettingsApi.get()).data;
     const current = server ? normalize(server) : SettingsStore.get();
     const saved = await SettingsApi.save({ ...current, extras: { ...current.extras, [extrasKey(role)]: DONE } });

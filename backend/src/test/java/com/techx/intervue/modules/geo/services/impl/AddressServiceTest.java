@@ -176,7 +176,6 @@ class AddressServiceTest {
 
     @Test
     void composedAddressLongerThanTheColumnIsRejectedOnTheLine() {
-        // Only reachable if the field limits are ever raised; the column is VARCHAR(255)
         String longStreet = "x".repeat(220);
 
         assertThat(

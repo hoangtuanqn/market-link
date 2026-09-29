@@ -18,10 +18,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-/**
- * FR-120: "what other stalls set" counts only products on sale at approved stalls, never the asking
- * stall's own products (spec §4.1).
- */
 @SpringBootTest
 class ShelfLifePeerQueryRepositoryTest {
 
@@ -59,7 +55,6 @@ class ShelfLifePeerQueryRepositoryTest {
         product(other, category, "hidden", 7, true, false, true);
         product(other, category, "deleted", 8, false, true, true);
         product(suspended, category, "suspended", 5, false, false, true);
-        // A paused listing: its only weekly template day is turned off, so no date can be ordered
         product(other, category, "paused", 6, false, false, false);
     }
 
@@ -110,11 +105,6 @@ class ShelfLifePeerQueryRepositoryTest {
                         status));
     }
 
-    /**
-     * {@code onSale}: the product's one weekly stock template day is active, as the visibility
-     * filter of ProductQueryRepository asks; false turns that day off. The FK cascade removes the
-     * template with the product.
-     */
     private void product(
             long farmer,
             long category,

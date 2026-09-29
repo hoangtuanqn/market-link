@@ -24,11 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-060, FR-061 — the Farmer's own stall profile (contract §4). Everything is looked up by the
- * token's user (R-06); the farmer module's FarmerController keeps /apply, this controller keeps
- * /profile and /markets.
- */
 @RestController
 @RequestMapping("/api/v1/farmer")
 @PreAuthorize("hasRole('FARMER')")

@@ -10,7 +10,6 @@ export const PRODUCT_STATUS = {
   UNAVAILABLE: 'unavailable',
 } as const;
 
-/** D-04 order lifecycle. */
 export const ORDER_STATUS = {
   PLACED: 'placed',
   ACCEPTED: 'accepted',

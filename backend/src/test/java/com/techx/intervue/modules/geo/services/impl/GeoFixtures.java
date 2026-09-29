@@ -9,7 +9,6 @@ import com.techx.intervue.modules.geo.resources.ProvinceResource;
 import com.techx.intervue.modules.geo.resources.WardRow;
 import java.util.List;
 
-/** A tiny slice of the real master data, enough for the tests that check addresses. */
 public final class GeoFixtures {
 
     public static final String HCM = "79";

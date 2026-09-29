@@ -96,7 +96,6 @@ const HarvestJourney = () => {
 
   return (
     <section className="about-section" id="journey">
-      {/* Section Header with Arrows */}
       <div className="about-section-header">
         <div className="about-section-title-wrap">
           <span className="about-eyebrow">🔄 {t('journey.eyebrow', 'HOW IT WORKS')}</span>
@@ -118,13 +117,11 @@ const HarvestJourney = () => {
         </div>
       </div>
 
-      {/* Carousel Container */}
       <div
         className="journey-carousel-container"
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
-        {/* Top Step Nav Tabs */}
         <div className="journey-tabs-nav">
           {steps.map((step, idx) => (
             <button
@@ -139,7 +136,6 @@ const HarvestJourney = () => {
           ))}
         </div>
 
-        {/* Carousel Slide Stage */}
         <div className="journey-slide-stage">
           <div className="journey-slide-img-wrap">
             <img className="journey-slide-img" src={activeData.img} alt={activeData.title} />
@@ -159,7 +155,6 @@ const HarvestJourney = () => {
           </div>
         </div>
 
-        {/* Bottom Controls Row */}
         <div className="journey-controls-row">
           <div className="journey-dots">
             {steps.map((_, idx) => (

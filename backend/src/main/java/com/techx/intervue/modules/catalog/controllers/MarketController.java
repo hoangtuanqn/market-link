@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * GET /api/v1/markets, /api/v1/markets/{id} — Public (khai trong SecurityConfig). FR-010, FR-012.
- */
 @RestController
 @RequestMapping("/api/v1/markets")
 @AllArgsConstructor
@@ -44,13 +41,10 @@ public class MarketController extends BaseController {
         return ok(marketService.detail(id), "");
     }
 
-    /** FR-010: Farmers selling at the market, filtered by weekday (0 = Sunday) if given. */
     @GetMapping("/{id}/farmers")
     public ResponseEntity<ApiResource<List<StallSummaryResource>>> farmers(
             @PathVariable long id, @RequestParam(required = false) Integer day) {
-        marketService.detail(
-                id); // 404 if the market does not exist — before returning an empty list that would
-        // mislead
+        marketService.detail(id);
         return ok(stallService.atMarket(id, day), "");
     }
 }

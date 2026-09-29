@@ -15,10 +15,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.DynamicUpdate;
 
-/**
- * FR-110: one thread per pair of users. Always keep userAId < userBId so (3,7) and (7,3) are the
- * same row; who is the "stall" in a thread is decided at display time, by the other party's role.
- */
 @Entity
 @Getter
 @Setter
@@ -26,10 +22,6 @@ import org.hibernate.annotations.DynamicUpdate;
 @AllArgsConstructor
 @Builder
 @Table(name = "conversations")
-/*
- * DynamicUpdate: A sends a message while B marks it read. Without it, A's UPDATE rewrites every column
- * from the old snapshot and erases the read marker B just committed (review finding #1). With it, each side only writes the columns it changed.
- */
 @DynamicUpdate
 public class Conversation {
     @Id
@@ -57,9 +49,6 @@ public class Conversation {
     @Column(name = "created_at", updatable = false)
     private Instant createdAt;
 
-    /**
-     * Do not overwrite when a value already exists: integration tests need to set exact timestamps.
-     */
     @PrePersist
     protected void onCreated() {
         if (createdAt == null) {
@@ -67,10 +56,6 @@ public class Conversation {
         }
     }
 
-    /**
-     * The pair is already normalized in order; two identical ids is a programming error, not a user
-     * error.
-     */
     public static Conversation between(Long x, Long y) {
         if (x.equals(y)) {
             throw new IllegalArgumentException("A conversation needs two different users.");

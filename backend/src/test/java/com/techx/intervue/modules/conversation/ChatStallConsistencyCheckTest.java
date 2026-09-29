@@ -14,12 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * StallAccessPolicy fails closed: a FARMER role with no farmer_profiles row cannot be messaged, in
- * either direction. That is the right behavior per spec §8.1 — but it is silent, and a demo seed or
- * one manual DB edit is enough to produce that data. This query is what turns "chat just breaks"
- * into a warning line at startup.
- */
 @SpringBootTest
 @Transactional
 class ChatStallConsistencyCheckTest {
@@ -31,8 +25,7 @@ class ChatStallConsistencyCheckTest {
     void countsFarmerAccountsThatHaveNoStallProfile() {
         long before = farmerProfiles.countFarmersWithoutAProfile();
 
-        newUser(RoleType.FARMER); // does not create a profile: exactly the kind of inconsistent
-        // data that needs detecting
+        newUser(RoleType.FARMER);
 
         assertThat(farmerProfiles.countFarmersWithoutAProfile()).isEqualTo(before + 1);
     }

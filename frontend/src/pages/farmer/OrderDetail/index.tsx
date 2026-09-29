@@ -20,11 +20,9 @@ import Notification from '@/utils/notification';
 const DECLINE_REASONS = ['stock', 'day', 'time', 'other'] as const;
 type DeclineReason = (typeof DECLINE_REASONS)[number];
 
-/** 403 (someone else's order) and 404 read the same to the Farmer: the order is not theirs to see. */
 const isGone = (error: unknown) =>
   isAxiosError(error) && (error.response?.status === 403 || error.response?.status === 404);
 
-/** FR-065 FR-066 FR-038 — Farmer's view of one order: items, customer, pickup slot and status history. */
 const FarmerOrderDetailPage = () => {
   const { t, i18n } = useTranslation('FarmerOrderDetail');
   const { t: tc } = useTranslation();
@@ -77,7 +75,6 @@ const FarmerOrderDetailPage = () => {
       Notification.success({ title: successTitle, text: successText });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
-      // 409 (D-04): the order moved on elsewhere — read it again so the status and buttons are the current ones
       if (isAxiosError(error) && error.response?.status === 409) retry();
     } finally {
       setBusy(false);

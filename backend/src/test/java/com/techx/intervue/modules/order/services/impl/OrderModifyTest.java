@@ -58,17 +58,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
-/**
- * Task 5.6 (FR-034, 035) — the customer cancels and edits their own order before the cutoff. {@code
- * cancel} and {@code modifyItems} are just two new entrances to {@code transition(...)} / direct
- * changes on the locked order; stock lives per pickup date ({@code product_daily_stock}, D-02
- * redesign — never {@code Product.stockQuantity}), always this order's own {@code pickupDate}. The
- * repository is a plain mock like {@link OrderTransitionTest}, the real lock (PESSIMISTIC_WRITE) is
- * proven by a manual check (curl + mysql) after seeding, not here.
- *
- * <p>Today (per the Clock) is 26/09/2026, 09:00 Vietnam time — the same moment as {@link
- * OrderTransitionTest} and {@link OrderAccessTest}.
- */
 class OrderModifyTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -134,14 +123,10 @@ class OrderModifyTest {
                             history.add(inv.getArgument(0));
                             return inv.getArgument(0);
                         });
-        // The four public methods build the response by calling detail() again; mock enough not to
-        // throw.
         when(orderQueries.findDetail(ORDER_ID)).thenReturn(Optional.of(aDetailRow()));
         when(orderQueries.items(ORDER_ID)).thenReturn(List.of());
         when(orderQueries.history(ORDER_ID)).thenReturn(List.of());
     }
-
-    // ---------- data ----------
 
     private static Order anOrder(OrderStatus status, LocalDateTime cutoffAt) {
         return anOrder(CUSTOMER_ID, status, cutoffAt);
@@ -243,8 +228,6 @@ class OrderModifyTest {
                 null);
     }
 
-    // ---------- cancel: the brief's 4 tests ----------
-
     @Test
     void cancelBeforeCutoffRestoresStockAndSlot() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -285,10 +268,6 @@ class OrderModifyTest {
         verify(historyRepository, never()).save(any());
     }
 
-    /**
-     * An order already ready, even before the cutoff (D-04) — a wrong status is always 409, not the
-     * cutoff.
-     */
     @Test
     void cancelOnAReadyOrderIs409() {
         Order order = anOrder(OrderStatus.READY, CUTOFF_TOMORROW);
@@ -311,9 +290,6 @@ class OrderModifyTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    // ---------- cancel: extra rules ----------
-
-    /** An order id that does not exist → 404, not 403 (unlike a wrong owner). */
     @Test
     void cancelOnAnUnknownOrderIs404() {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.empty());
@@ -322,11 +298,6 @@ class OrderModifyTest {
                 .isInstanceOf(OrderNotFoundException.class);
     }
 
-    /**
-     * The Farmer serving the order (order.farmer_id points to their own stall) calls the customer's
-     * cancel API on that very order → still 403: the right to cancel only looks at {@code
-     * customer_id}, not {@code farmer_id}.
-     */
     @Test
     void theOwningFarmerCannotCancelTheCustomersOrder() {
         Order order = anOrder(CUSTOMER_ID, OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -337,10 +308,6 @@ class OrderModifyTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    /**
-     * C5-2/C5-18: the order is locked first, then the slot, then the daily-stock rows (inside
-     * transition).
-     */
     @Test
     void cancelLocksTheOrderThenTheSlotThenTheDailyStockRows() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -360,9 +327,6 @@ class OrderModifyTest {
         locks.verify(dailyStockRepository).lockByProductIdAndStockDate(eq(PRODUCT_A), eq(PICKUP));
     }
 
-    // ---------- modify: the brief's 5 tests ----------
-
-    /** 5 → 2: stock goes back up by exactly the difference (3), not the whole old quantity (5). */
     @Test
     void modifyLoweringQuantityGivesTheDifferenceBack() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -384,7 +348,6 @@ class OrderModifyTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    /** 2 → 5, enough stock: stock goes down by exactly the difference (3). */
     @Test
     void modifyRaisingQuantityTakesTheDifference() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -405,11 +368,6 @@ class OrderModifyTest {
         assertThat(order.getTotalAmount()).isEqualByComparingTo(new BigDecimal("50"));
     }
 
-    /**
-     * An order placed before per-date stock existed has no product_daily_stock row for its pickup
-     * date. Lowering it gives nothing back (nothing was taken from that date) and must not fail
-     * with a 500.
-     */
     @Test
     void modifyLoweringAnOrderPlacedBeforePerDateStockLeavesStockAlone() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -430,10 +388,6 @@ class OrderModifyTest {
         verify(dailyStockRepository, never()).materialize(any(), any(), anyInt());
     }
 
-    /**
-     * Raising the same kind of order needs the extra units from this date: the row is created from
-     * the weekly template first, exactly like placing an order does, then the difference is taken.
-     */
     @Test
     void modifyRaisingAnOrderPlacedBeforePerDateStockCreatesTheRowFirst() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -450,13 +404,11 @@ class OrderModifyTest {
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 5))));
 
-        // 29/09/2026 is a Tuesday = 2
         verify(dailyStockRepository).materialize(PRODUCT_A, PICKUP, 2);
         assertThat(created.getQuantityAvailable()).isEqualTo(27);
         assertThat(itemA.getQuantity()).isEqualTo(5);
     }
 
-    /** No weekly template covers that weekday: raising is refused (409), the order is unchanged. */
     @Test
     void modifyRaisingWhenNoTemplateCoversThePickupDayIs409() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -480,7 +432,6 @@ class OrderModifyTest {
         assertThat(itemA.getQuantity()).isEqualTo(2);
     }
 
-    /** order_items loses the dropped line, and its stock is returned in full. */
     @Test
     void modifyDroppingAnItemRemovesTheRow() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -505,7 +456,6 @@ class OrderModifyTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    /** D-07: adding a productId that was never in the order → 400 PRODUCT_NOT_IN_ORDER, not 409. */
     @Test
     void modifyRefusesAProductNotAlreadyInTheOrder() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -528,10 +478,6 @@ class OrderModifyTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    /**
-     * D-07: editing an accepted order sends it back to placed for the Farmer to review again;
-     * history records accepted → placed.
-     */
     @Test
     void modifyPutsAnAcceptedOrderBackToPlaced() {
         Order order = anOrder(OrderStatus.ACCEPTED, CUTOFF_TOMORROW);
@@ -553,9 +499,6 @@ class OrderModifyTest {
         assertThat(history.getFirst().getNote()).isEqualTo("Customer changed the order.");
     }
 
-    // ---------- modify: extra rules ----------
-
-    /** Not enough stock to raise → 409 OUT_OF_STOCK, the order and stock stay as they were. */
     @Test
     void modifyRaisingQuantityWithInsufficientStockIs409AndLeavesOrderUnchanged() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -584,10 +527,6 @@ class OrderModifyTest {
         verify(historyRepository, never()).save(any());
     }
 
-    /**
-     * A product the Farmer paused (unavailable) cannot have its quantity raised even though stock
-     * shows plenty — only lowering/dropping is always allowed.
-     */
     @Test
     void modifyRaisingAnUnavailableProductIs409() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -613,12 +552,6 @@ class OrderModifyTest {
         assertThat(itemA.getQuantity()).isEqualTo(2);
     }
 
-    /**
-     * I-3/FR-064 — a product the Farmer set to {@code sold_out} while stock remained (not really
-     * sold out) cannot have its quantity raised either: the same "sellable" rule as {@code place}
-     * ({@code sellable(p) && row.quantityAvailable >= delta}), not only excluding {@code
-     * unavailable}.
-     */
     @Test
     void modifyRaisingASoldOutProductWithRemainingStockIs409() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -645,7 +578,6 @@ class OrderModifyTest {
         assertThat(itemA.getQuantity()).isEqualTo(2);
     }
 
-    /** Resending the same old quantity (delta = 0) never touches the daily-stock row at all. */
     @Test
     void modifyWithUnchangedQuantityDoesNotTouchTheDailyStockRow() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -665,17 +597,6 @@ class OrderModifyTest {
         assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    /**
-     * @NotEmpty + @Min(1) block "an empty request" or "quantity 0" at the HTTP layer; the defensive
-     * "dropping every item = cancelling the order" branch is only reachable by calling the service
-     * directly (this test) with a line of quantity 0 that validation never gets to block.
-     *
-     * <p>{@code orderItemRepository} is faked with state (not a static {@code thenReturn}): this
-     * branch calls {@code transition(CANCELLED, ...)} right after deleting every order_items row,
-     * and {@code transition} reads order_items again to restore stock — if the mock returned the
-     * old list (not reflecting the delete), the daily-stock row would get its quantity back TWICE.
-     * A static mock like the other tests in this class would not catch that bug.
-     */
     @Test
     void modifyDroppingEveryItemCancelsTheOrder() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -707,10 +628,6 @@ class OrderModifyTest {
         assertThat(history.getFirst().getNote()).isEqualTo("All items removed.");
     }
 
-    /**
-     * M-1 — a 0₫ price is valid: an order total of 0 because a free item remains is not "dropping
-     * every item", the order must stay {@code placed}, not be cancelled by mistake.
-     */
     @Test
     void modifyingToAFreeItemKeepsTheOrderPlacedInsteadOfCancellingIt() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -732,7 +649,6 @@ class OrderModifyTest {
         verify(orderItemRepository, never()).delete(any());
     }
 
-    /** M-1 — the same rule for the {@code accepted} → {@code placed} branch: 0₫ is not a cancel. */
     @Test
     void modifyingAnAcceptedOrderToAFreeItemGoesBackToPlacedInsteadOfCancelling() {
         Order order = anOrder(OrderStatus.ACCEPTED, CUTOFF_TOMORROW);
@@ -754,9 +670,6 @@ class OrderModifyTest {
         assertThat(history.getFirst().getToStatus()).isEqualTo(OrderStatus.PLACED);
     }
 
-    /**
-     * A placed order is still placed after the edit — NO history, since the status did not change.
-     */
     @Test
     void modifyOnAPlacedOrderWritesNoHistory() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -777,7 +690,6 @@ class OrderModifyTest {
         verify(orderRepository).flush();
     }
 
-    /** Past the cutoff → 409 CUTOFF_PASSED, stops before reading order_items. */
     @Test
     void modifyAfterCutoffIs409() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_YESTERDAY);
@@ -795,7 +707,6 @@ class OrderModifyTest {
         verify(orderItemRepository, never()).findByOrderId(any());
     }
 
-    /** Wrong status (ready), even before the cutoff → 409 INVALID_TRANSITION, not the cutoff. */
     @Test
     void modifyOnAReadyOrderIs409() {
         Order order = anOrder(OrderStatus.READY, CUTOFF_TOMORROW);
@@ -840,10 +751,6 @@ class OrderModifyTest {
                 .isInstanceOf(OrderNotYoursException.class);
     }
 
-    /**
-     * The Farmer serving the order cannot edit the customer's order for them — same ownership rule
-     * as cancel.
-     */
     @Test
     void theOwningFarmerCannotModifyTheCustomersOrder() {
         Order order = anOrder(CUSTOMER_ID, OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -859,10 +766,6 @@ class OrderModifyTest {
                 .isInstanceOf(OrderNotYoursException.class);
     }
 
-    /**
-     * C5-2/C5-18: the order is locked first, then the slot (even though booked_count does not
-     * change), then the daily-stock rows.
-     */
     @Test
     void modifyLocksTheOrderThenTheSlotThenTheDailyStockRows() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);
@@ -883,7 +786,6 @@ class OrderModifyTest {
         locks.verify(dailyStockRepository).lockByProductIdAndStockDate(eq(PRODUCT_A), eq(PICKUP));
     }
 
-    /** FR-041: lowering a quantity gives stock back, which reaches the restock alert. */
     @Test
     void loweringAQuantityReportsTheStockRiseForRestockAlerts() {
         Order order = anOrder(OrderStatus.PLACED, CUTOFF_TOMORROW);

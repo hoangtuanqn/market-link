@@ -6,20 +6,12 @@ import BlockedNotice from '@/utils/blockedNotice';
 
 const SUPPORT_EMAIL = 'admin@marketlink.vn';
 
-/**
- * FR-072: an admin can deactivate an account while its owner is in the middle of browsing. `watchForAccountDeactivated`
- * (axiosInstance.ts) signs them out and reloads to Home — landing there with no explanation is bewildering, so this
- * says plainly what happened, why, and what they can still do. A dialog rather than a toast: being locked out is not a
- * passing notice.
- */
 const AccountDeactivatedDialog = () => {
   const { t } = useTranslation();
-  // Read once during the first render (pure, so a double-invoked initializer is harmless)…
   const [notice] = useState(() => BlockedNotice.peek());
   const [dismissed, setDismissed] = useState(false);
   const reason = notice?.kind === 'account' ? notice.message : null;
 
-  // …and remove it after mounting, so a later reload does not show it again.
   useEffect(() => BlockedNotice.clear(), []);
 
   if (reason === null || dismissed) return null;

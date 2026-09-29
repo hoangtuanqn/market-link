@@ -16,11 +16,6 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.mock.http.MockHttpInputMessage;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-/**
- * QA E2E v2 BUG-002: POST /farmer/apply with no body (and the same on categories, markets, stall
- * and product routes) fell through to /error. Each of these module handlers must answer the
- * standard 400 envelope itself.
- */
 class UnreadableBodyHandlerTest {
 
     static Stream<Object> handlers() {

@@ -7,7 +7,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** R-06: every endpoint with {id} goes through here before returning anything. */
 @Component
 @RequiredArgsConstructor
 public class ConversationLookup {

@@ -4,7 +4,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-/** FR-007 */
 public record ForgotPasswordRequest(
         @NotBlank(message = "Enter your email.")
                 @Email(message = "Enter a valid email address.")

@@ -13,11 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 
-/**
- * FR-008: the rule that keeps an admin who has not set up two-step verification out of the admin
- * API. It is a SpEL string, so a typo in it compiles and only shows up when someone signs in; these
- * cases evaluate the real expression from SecurityConfig.
- */
 class SecurityConfigAdminAccessTest {
 
     private static final WebExpressionAuthorizationManager MANAGER =
@@ -62,9 +57,6 @@ class SecurityConfigAdminAccessTest {
     void aCustomerIsRefusedAsBefore() {
         assertThat(allowed(with("ROLE_CUSTOMER"))).isFalse();
     }
-
-    // Every other signed-in route (orders, conversations, attachments…): the session that only
-    // exists so the setup screen works must not read customer data either.
 
     @Test
     void adminStillOwingTwoStepSetupIsRefusedOnOtherSignedInRoutes() {

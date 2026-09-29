@@ -16,11 +16,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * FR-071: the two job handlers turn a queued payload into the real branded letter. The mail builder
- * is the real one (a broken template must fail here, not in a Farmer's inbox); only SMTP and the
- * settings lookup are stubbed.
- */
 @SpringBootTest
 class StallStatusNoticeJobsTest {
 

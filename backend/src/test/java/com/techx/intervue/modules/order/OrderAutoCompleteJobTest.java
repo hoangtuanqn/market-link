@@ -18,11 +18,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-/**
- * FR-039, D-03 — runs the real sweep against MySQL: the "24 hours after pickup" window and the
- * status filter live in SQL, so they are only proven on the real engine. Not @Transactional — the
- * sweep commits one transaction per order — so every row it inserts is removed in @AfterEach.
- */
 @SpringBootTest
 class OrderAutoCompleteJobTest {
 
@@ -58,7 +53,6 @@ class OrderAutoCompleteJobTest {
     @AfterEach
     void tearDown() {
         if (farmerId != null) {
-            // order_items and order_status_history follow orders (ON DELETE CASCADE)
             jdbc.update("DELETE FROM orders WHERE farmer_id = ?", farmerId);
             jdbc.update("DELETE FROM farmer_profiles WHERE id = ?", farmerId);
         }
@@ -82,7 +76,6 @@ class OrderAutoCompleteJobTest {
                 role);
     }
 
-    /** Pickup 07:00–08:00 on {@code pickupDate}. */
     private long order(String status, LocalDate pickupDate) {
         return insert(
                 "INSERT INTO orders (order_code, customer_id, farmer_id, market_id, pickup_date,"

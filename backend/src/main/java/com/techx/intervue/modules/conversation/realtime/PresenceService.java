@@ -15,11 +15,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
-/**
- * Spec 5.1: online = the set of the user's open STOMP sessions in Redis (two tabs do not corrupt
- * the state); a 30-minute TTL so an app that dies suddenly does not leave "online" forever. Offline
- * → write last_seen_at to MySQL, at most once per 60 seconds per user.
- */
 @Service
 @RequiredArgsConstructor
 public class PresenceService {
@@ -29,10 +24,6 @@ public class PresenceService {
     static final Duration ONLINE_TTL = Duration.ofMinutes(30);
     static final Duration LAST_SEEN_THROTTLE = Duration.ofSeconds(60);
 
-    /**
-     * SCARD first, then SADD + EXPIRE in one command: two tabs connecting at the same time cannot
-     * both see 0.
-     */
     private static final DefaultRedisScript<Long> CONNECT =
             new DefaultRedisScript<>(
                     "local before = redis.call('SCARD', KEYS[1]);"
@@ -41,10 +32,6 @@ public class PresenceService {
                             + " return before",
                     Long.class);
 
-    /**
-     * SREM then SCARD in one command; no DEL — Redis drops an empty set itself, and DEL once
-     * deleted the tab that had just connected.
-     */
     private static final DefaultRedisScript<Long> DISCONNECT =
             new DefaultRedisScript<>(
                     "redis.call('SREM', KEYS[1], ARGV[1]); return redis.call('SCARD', KEYS[1])",
@@ -62,9 +49,6 @@ public class PresenceService {
         return "chat:lastseen-written:" + userId;
     }
 
-    /**
-     * @return true if this is the first session — the user has just gone online.
-     */
     public boolean connected(Long userId, String sessionId) {
         Long before =
                 redis.execute(
@@ -75,19 +59,12 @@ public class PresenceService {
         return before == null || before == 0;
     }
 
-    /**
-     * Called periodically for users who are still connected (PresenceRefreshJob): a long-open tab
-     * is not seen as offline.
-     */
     public void touch(Collection<Long> userIds) {
         for (Long id : userIds) {
             redis.expire(onlineKey(id), ONLINE_TTL);
         }
     }
 
-    /**
-     * @return true if no session is left — the user has just gone offline.
-     */
     public boolean disconnected(Long userId, String sessionId) {
         Long left = redis.execute(DISCONNECT, List.of(onlineKey(userId)), sessionId);
         boolean offline = left == null || left == 0;

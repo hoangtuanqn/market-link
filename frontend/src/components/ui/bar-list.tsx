@@ -1,12 +1,10 @@
 import type { ReactNode } from 'react';
 import i18n from '@/i18n';
 
-/** `id` is only needed when the label is not plain text — a status pill, for instance. */
 export type BarRow = { label: ReactNode; value: number; suffix?: string; id?: string };
 
 type BarListProps = { rows: BarRow[]; format?: (v: number) => string };
 
-/** Horizontal bar chart, one measure across categories (design system `.pt-bars`). */
 export function BarList({ rows, format = (v) => v.toLocaleString(i18n.language) }: BarListProps) {
   const max = Math.max(...rows.map((r) => r.value));
   return (

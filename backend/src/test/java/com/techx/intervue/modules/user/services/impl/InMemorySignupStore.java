@@ -7,9 +7,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-/**
- * SignupStoreInterface in memory; time only passes when a test calls one of the expire* methods.
- */
 class InMemorySignupStore implements SignupStoreInterface {
 
     final Map<String, PendingSignup> pending = new HashMap<>();

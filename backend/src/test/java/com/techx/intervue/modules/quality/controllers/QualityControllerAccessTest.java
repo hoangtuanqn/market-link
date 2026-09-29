@@ -9,10 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/**
- * Pins the role rules of the module's controllers (the repo has no MockMvc, like
- * FarmerControllerAccessTest): a forgotten @PreAuthorize would open an admin endpoint to anyone.
- */
 class QualityControllerAccessTest {
 
     private static String rule(Class<?> controller) {
@@ -20,7 +16,6 @@ class QualityControllerAccessTest {
         return annotation == null ? null : annotation.value();
     }
 
-    /** D-13: the buyer is a customer or a Farmer shopping at another stall, never an admin. */
     @Test
     void onlyBuyersUploadReportPhotos() {
         assertThat(rule(QualityReportPhotoController.class))
@@ -38,17 +33,11 @@ class QualityControllerAccessTest {
         assertThat(rule(FarmerQualityReportController.class)).isEqualTo("hasRole('FARMER')");
     }
 
-    /** Spec §9 "Quyền": only an admin confirms or dismisses a report. */
     @Test
     void onlyAdminsDecideReports() {
         assertThat(rule(AdminQualityReportController.class)).isEqualTo("hasRole('ADMIN')");
     }
 
-    /**
-     * #202: SecurityConfig refuses an admin who has not set up two-step verification only for paths
-     * under /api/v1/admin/**; the class-level @PreAuthorize checked above does not by itself gate
-     * that (see AdminShelfLifeGuideControllerAccessTest, same pattern).
-     */
     @Test
     void reportDecisionsSitUnderTheAdminPathThatNeedsTwoStepVerification() {
         assertThat(AdminQualityReportController.class.getAnnotation(RequestMapping.class).value())

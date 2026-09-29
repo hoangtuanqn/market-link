@@ -19,21 +19,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * Reads products for the public pages. JdbcTemplate because it joins 5 tables and filters by
- * market/weekday; every user value goes through parameters, `sort` through a whitelist — nowhere
- * concatenates a string into SQL (R-04).
- */
 @Repository
 @RequiredArgsConstructor
 public class ProductQueryRepository {
 
-    /**
-     * The single place that defines "which products a customer may see" (D-09, FR-074). Every
-     * public statement pastes this fragment in. FR-063 daily stock: a product with no active weekly
-     * template is never orderable on any date, so it is left out here — in the SQL, never after
-     * paging, or a page would come back short and its total wrong.
-     */
     public static final String VISIBILITY_FILTER =
             """
               AND p.is_deleted = FALSE
@@ -65,10 +54,6 @@ public class ProductQueryRepository {
                                             WHERE d.farmer_market_id = fm.id AND d.day_of_week = :day))
             """;
 
-    /**
-     * A Farmer selling at two markets doubles rows through farmer_markets — GROUP BY merges them,
-     * MIN() picks one market.
-     */
     private static final String SELECT_ITEM =
             """
             SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
@@ -94,11 +79,6 @@ public class ProductQueryRepository {
     public static final String DETAIL_SQL =
             SELECT_ITEM + FROM + VISIBILITY_FILTER + "  AND p.id = :id\n" + GROUP_BY;
 
-    /**
-     * The Farmer's own list: skip soft-deleted products, but KEEP products hidden by an admin (with
-     * the reason) and every approval state of the stall — the Farmer must see their goods even when
-     * the stall is suspended (D-09).
-     */
     public static final String MINE_SQL =
             """
             SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
@@ -149,10 +129,6 @@ public class ProductQueryRepository {
               AND p.is_deleted = TRUE
             """;
 
-    /**
-     * FR-074: every listing the Admin has hidden, newest change first, so a hidden listing can be
-     * found again and unhidden.
-     */
     public static final String HIDDEN_SQL =
             """
             SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
@@ -177,11 +153,6 @@ public class ProductQueryRepository {
               AND p.is_deleted = FALSE
             """;
 
-    /**
-     * Units that orders still holding stock (placed, accepted, ready — D-02) take per product and
-     * pickup date. Declined and cancelled orders gave their stock back; completed ones were handed
-     * over.
-     */
     private static final String RESERVED_SQL =
             """
             SELECT oi.product_id, o.pickup_date, SUM(oi.quantity) AS reserved
@@ -206,10 +177,6 @@ public class ProductQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
 
-    /**
-     * For each product, the units active orders hold for the one pickup date given for it; a
-     * product with none is absent from the map.
-     */
     public Map<Long, Integer> reservedOn(Map<Long, LocalDate> dateByProductId) {
         if (dateByProductId.isEmpty()) {
             return Map.of();
@@ -232,11 +199,6 @@ public class ProductQueryRepository {
         return reserved;
     }
 
-    /**
-     * Units one product's orders took from each pickup date on or after {@code from} and still hold
-     * — every status but declined and cancelled, the two that give stock back (D-02). A date with
-     * none is absent from the map.
-     */
     public Map<LocalDate, Integer> soldFrom(long productId, LocalDate from) {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
@@ -307,7 +269,6 @@ public class ProductQueryRepository {
         return new PageResource<>(items, offset / limit + 1, limit, total == null ? 0 : total);
     }
 
-    /** Whitelist sort — a value from the query string NEVER goes straight into ORDER BY (R-04). */
     public static String orderBy(String sort) {
         return switch (sort == null ? "" : sort) {
             case "price_asc" -> "p.price ASC";
@@ -334,8 +295,6 @@ public class ProductQueryRepository {
                         .addValue("day", c.day());
         Long total = jdbc.queryForObject(COUNT_SQL, params, Long.class);
         params.addValue("limit", limit).addValue("offset", offset);
-        // orderBy has already gone through the whitelist above; p.id is appended so the order is
-        // stable between two pages.
         List<ProductListItemResource> items =
                 jdbc.query(
                         SEARCH_SQL + " ORDER BY " + orderBy + ", p.id LIMIT :limit OFFSET :offset",
@@ -363,7 +322,6 @@ public class ProductQueryRepository {
         return rows.stream().findFirst();
     }
 
-    /** FR-121: one product's stored shelf-life block for its public page. */
     public static final String SHELF_LIFE_SQL =
             """
             SELECT p.shelf_life_guide_id, g.group_name, p.storage_mode, p.shelf_life_days,
@@ -417,7 +375,6 @@ public class ProductQueryRepository {
                 null);
     }
 
-    /** '%' and '_' typed by the user must not act as wildcards. */
     private static String escapeLike(String raw) {
         return raw.replace("!", "!!").replace("%", "!%").replace("_", "!_");
     }

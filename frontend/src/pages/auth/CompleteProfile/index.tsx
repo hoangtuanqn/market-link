@@ -14,12 +14,6 @@ import Notification from '@/utils/notification';
 import Session from '@/utils/session';
 import { validateProfile, type ProfileErrors } from '@/utils/validation';
 
-/**
- * After the first Google sign-in: Google only gives the name and email, so the phone number + address (FR-001) are
- * required here — cannot be skipped (MainLayout blocks every other page until complete). Saved with PUT /auth/me; then
- * moves on to setting a password if the account has none. If they do not want to fill in, the only option is to sign
- * out.
- */
 const CompleteProfilePage = () => {
   const { t } = useTranslation('CompleteProfile');
   const navigate = useNavigate();
@@ -31,7 +25,6 @@ const CompleteProfilePage = () => {
   const [addressErrors, setAddressErrors] = useState<AddressErrors>({});
   const [isSaving, setIsSaving] = useState(false);
 
-  // Not signed in means there is no profile to complete
   if (!Session.getAccessToken() || !user) return <Navigate to="/login" replace />;
 
   const onChange = (key: keyof typeof form) => (e: ChangeEvent<HTMLInputElement>) =>
@@ -56,7 +49,6 @@ const CompleteProfilePage = () => {
       Notification.success({ text: response.message || t('toast.saved') });
       navigate(Helper.nextStepAfterSocialLogin({ ...user, ...response.data }), { replace: true });
     } catch (error) {
-      // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT (the phone number already belongs to another account) → error under the input
       const fieldErrors = Helper.getFieldErrors(error);
       setErrors(fieldErrors);
       setAddressErrors(addressErrorsFrom(fieldErrors));

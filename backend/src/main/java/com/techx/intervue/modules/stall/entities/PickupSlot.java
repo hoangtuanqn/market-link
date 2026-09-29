@@ -12,10 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * One pickup time window of a stall at a market on one day (FR-032, FR-067). Table `pickup_slots`
- * (V20260926011); CHECK `ck_slot_capacity` keeps booked_count ≤ max_orders (D-06).
- */
 @Entity
 @Getter
 @Setter
@@ -42,13 +38,9 @@ public class PickupSlot {
     @Column(name = "max_orders", nullable = false)
     private int maxOrders = 5;
 
-    /** Only orders (C5) increase/decrease it, under lockById's PESSIMISTIC_WRITE lock. */
     @Column(name = "booked_count", nullable = false)
     private int bookedCount;
 
-    /**
-     * A Farmer disabling a slot = no more new orders; orders already placed into it are unaffected.
-     */
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 }

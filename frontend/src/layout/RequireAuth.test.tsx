@@ -11,7 +11,6 @@ const userWith = (role: RoleType): UserType => ({ id: 7, email: 'someone@marketl
 
 const signIn = (role: RoleType) => Session.save({ accessToken: 'token', user: userWith(role) });
 
-/** What GET /auth/me answers: the role the server holds right now. */
 const serverSays = (role: RoleType) =>
   vi.spyOn(AuthApi, 'getMe').mockResolvedValue({ success: true, message: '', data: userWith(role), timestamp: '' });
 
@@ -66,7 +65,6 @@ describe('RequireAuth with a role (FR-005)', () => {
     expect(await screen.findByText('Admin panel')).toBeInTheDocument();
   });
 
-  /** FR-071: approved while this browser was offline — the stored user still says "customer". */
   it('lets a just-approved Farmer in when the stored role is out of date', async () => {
     signIn(USER_ROLE.CUSTOMER);
     serverSays(USER_ROLE.FARMER);

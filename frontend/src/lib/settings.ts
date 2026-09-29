@@ -1,10 +1,3 @@
-/**
- * Display preferences (the Settings page of all three roles). A copy lives in localStorage so a guest who has not
- * signed in keeps them too and the theme is set before the page paints (the script in index.html reads the same key).
- * Once signed in the server copy (GET/PUT /auth/me/settings) wins. The list of values matches the backend's
- * UpdateSettingsRequest.
- */
-
 export const LANGUAGES = [
   { code: 'en', name: 'English', english: 'English' },
   { code: 'vi', name: 'Tiếng Việt', english: 'Vietnamese' },
@@ -32,9 +25,7 @@ export type Settings = {
   units: Units;
   dateFormat: DateFormat;
   clock: Clock;
-  /** Market id in the markets list, '' = not chosen */
   preferredMarket: string;
-  /** Notifications and each role's own block: saved, no feature uses them yet. */
   extras: Record<string, string>;
 };
 
@@ -49,7 +40,6 @@ const DEFAULT_SETTINGS: Settings = {
   extras: {},
 };
 
-/** Same key as the anti-flash script in index.html. */
 const STORAGE_KEY = 'ml-settings';
 
 const THEMES: readonly Theme[] = ['light', 'dark', 'system'];
@@ -57,10 +47,6 @@ const CURRENCIES: readonly Currency[] = ['VND', 'USD', 'EUR', 'JPY'];
 const pick = <T extends string>(value: unknown, allowed: readonly T[], fallback: T): T =>
   allowed.includes(value as T) ? (value as T) : fallback;
 
-/**
- * An unknown value (an old copy, hand-edited localStorage, the server returned it incomplete) falls back to the default
- * per field.
- */
 export const normalize = (raw: Partial<Settings> | null | undefined): Settings => ({
   theme: pick(raw?.theme, THEMES, DEFAULT_SETTINGS.theme),
   language: pick(
@@ -76,7 +62,6 @@ export const normalize = (raw: Partial<Settings> | null | undefined): Settings =
   extras: raw?.extras && typeof raw.extras === 'object' ? { ...raw.extras } : {},
 });
 
-/** First visit (nothing saved): take the browser language if it is in the list, otherwise English. */
 const browserLanguage = (): Language => {
   const codes = LANGUAGES.map((l) => l.code) as string[];
   for (const tag of navigator.languages ?? [navigator.language]) {
@@ -109,19 +94,16 @@ const persist = () => {
 
 const darkQuery = () => window.matchMedia('(prefers-color-scheme: dark)');
 
-/** Set data-theme on <html>; "system" follows the operating system. */
 const applyTheme = (theme: Theme = current.theme) => {
   const dark = theme === 'dark' || (theme === 'system' && darkQuery().matches);
   document.documentElement.dataset.theme = dark ? 'dark' : 'light';
   document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
 };
 
-// The machine switches light/dark while the page is open: only affects those who chose "Match device"
 darkQuery().addEventListener('change', () => {
   if (current.theme === 'system') applyTheme();
 });
 
-// Another tab changes settings → sync this tab
 window.addEventListener('storage', (e) => {
   if (e.key !== STORAGE_KEY) return;
   current = read();
@@ -139,10 +121,6 @@ const SettingsStore = {
     listeners.forEach((l) => l());
   },
 
-  /**
-   * Temporarily set settings without saving, without telling anyone: only to preview the draft's formats
-   * (SettingsPanel).
-   */
   peek(next: Settings) {
     current = next;
   },

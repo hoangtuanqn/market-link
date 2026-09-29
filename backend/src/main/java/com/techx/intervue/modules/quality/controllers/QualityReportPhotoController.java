@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * FR-122 — {@code POST /quality-reports/photos}: upload the photo before sending the report, which
- * carries the returned URL in {@code photoUrl} (spec §6).
- */
 @RestController
 @RequestMapping("/api/v1/quality-reports/photos")
 @PreAuthorize("hasAnyRole('CUSTOMER','FARMER')")

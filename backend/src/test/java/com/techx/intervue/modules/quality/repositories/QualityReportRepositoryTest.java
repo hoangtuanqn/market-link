@@ -20,7 +20,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-/** FR-122, FR-123: the report and strike tables and their finders, against real MySQL. */
 @SpringBootTest
 @Transactional
 class QualityReportRepositoryTest {
@@ -48,7 +47,6 @@ class QualityReportRepositoryTest {
         order = fx.base.order(customer, farmer, fx.base.market("Market"), "completed", 3, PICKUP);
     }
 
-    /** Spec §4.4.1: each line is reported once — UNIQUE (order_item_id). */
     @Test
     void oneOrderLineIsReportedOnlyOnce() {
         long item = fx.line(order, product("Rau muống"), PICKUP.plusDays(4), true);
@@ -66,7 +64,6 @@ class QualityReportRepositoryTest {
         assertThat(reports.existsByOrderItemId(item)).isFalse();
     }
 
-    /** Spec §4.4.4: a strike counts for 90 days; the newest comes first. */
     @Test
     void onlyStrikesOfTheLast90DaysCountNewestFirst() {
         fx.strike(
@@ -89,7 +86,6 @@ class QualityReportRepositoryTest {
         assertThat(active.get(0)).isAfter(active.get(1));
     }
 
-    /** V20260928014: a decided report always says when it was decided. */
     @Test
     void aDecidedReportWithoutADecisionTimeIsRefused() {
         long item = fx.line(order, product("D"), PICKUP.plusDays(4), true);
@@ -110,7 +106,6 @@ class QualityReportRepositoryTest {
                 .hasMessageContaining("ck_quality_reports_decision");
     }
 
-    /** The lock the admin decision and the stall's reply both go through. */
     @Test
     void lockByIdReadsTheReport() {
         long item = fx.line(order, product("E"), PICKUP.plusDays(4), true);

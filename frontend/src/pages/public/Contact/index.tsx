@@ -3,15 +3,9 @@ import MarketMap from '@/components/MarketMap';
 import { ButtonLink } from '@/components/ui/button';
 import { directionsUrl } from '@/lib/directions';
 
-/**
- * The team's registered address (`admin@marketlink.vn`, seed.sql) has no geocode of its own — the nearest real
- * coordinate we have is Chợ Bến Thành, seeded a few streets away in the same district. The pin sits there; the label
- * and popup show the team's real address, not the market's.
- */
 const TEAM_LAT = 10.7725;
 const TEAM_LNG = 106.698;
 
-/** FR-083 — how to reach the MarketLink team, separate from a stall's own contact on an order. */
 const ContactPage = () => {
   const { t } = useTranslation('Contact');
 

@@ -24,27 +24,19 @@ import { SpoilageAction, SpoilageReportDialog } from './SpoilageReport';
 
 const STEPS: OrderStatus[] = ['placed', 'accepted', 'ready', 'completed'];
 
-/** `yyyy-MM-dd` → a Date in local time; `new Date('2026-10-03')` is midnight UTC and lands on the previous day at UTC−x. */
 const localDay = (ymd: string) => {
   const [y, m, d] = ymd.split('-').map(Number);
   return new Date(y, m - 1, d);
 };
 
-/** An ISO instant (cutoff, history) as the reader's date and time. */
 const when = (iso: string) => {
   const at = new Date(iso);
   return `${formatDate(at)} ${formatTime(at)}`;
 };
 
-/** 403 (someone else's order) and 404 read the same to the customer: the order is not theirs to see. */
 const isGone = (error: unknown) =>
   isAxiosError(error) && (error.response?.status === 403 || error.response?.status === 404);
 
-/**
- * FR-033 FR-034 FR-035 FR-036 FR-038 FR-114 — the customer's order: what was ordered at the prices copied when it was
- * placed, where to collect it, the status history, and the change/cancel panel. The server decides what may still be
- * changed (`canModify`, `canCancel`); the page only shows it. Backend notifications link here as `/orders/{id}`.
- */
 const CustomerOrderDetailPage = () => {
   const { t } = useTranslation('CustomerOrderDetail');
   const { t: tc } = useTranslation();
@@ -67,7 +59,6 @@ const CustomerOrderDetailPage = () => {
   const [confirming, setConfirming] = useState(false);
   const [cancelling, setCancelling] = useState(false);
   const [cancelFailed, setCancelFailed] = useState(false);
-  // FR-122: the line whose report dialog is open; today on the Vietnam calendar, read once so the render stays pure
   const [reporting, setReporting] = useState<OrderItemDto | null>(null);
   const [today] = useState(() => todayInVietnam());
 

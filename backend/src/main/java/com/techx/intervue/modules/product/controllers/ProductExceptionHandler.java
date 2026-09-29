@@ -26,10 +26,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
-/**
- * Returns 400/403/404/409 for the product module — same reason as FarmerExceptionHandler (no shared
- * handler yet).
- */
 @RestControllerAdvice(
         assignableTypes = {
             ProductController.class,
@@ -59,10 +55,6 @@ public class ProductExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
     }
 
-    /**
-     * An unknown / disabled category → 400 attached to the right field, so the form can mark the
-     * categoryId box.
-     */
     @ExceptionHandler(InvalidFieldException.class)
     ResponseEntity<ApiResource<Void>> invalidField(InvalidFieldException e) {
         return error(
@@ -81,7 +73,6 @@ public class ProductExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
     }
 
-    /** A file over spring.servlet.multipart.max-file-size/max-request-size → 400. */
     @ExceptionHandler({MaxUploadSizeExceededException.class, MultipartException.class})
     ResponseEntity<ApiResource<Void>> uploadTooLarge(Exception e) {
         String message = "File is too large.";
@@ -92,16 +83,11 @@ public class ProductExceptionHandler {
                 List.of(FieldErrorResource.builder().field("file").message(message).build()));
     }
 
-    /**
-     * R-06 / D-09: missing, soft-deleted, hidden or the stall is not approved → 404, without
-     * revealing the reason.
-     */
     @ExceptionHandler({ProductNotFoundException.class, FarmerProfileNotFoundException.class})
     ResponseEntity<ApiResource<Void>> notFound(RuntimeException e) {
         return error(HttpStatus.NOT_FOUND, "PRODUCT_NOT_FOUND", "Product not found.", List.of());
     }
 
-    /** R-06: a product of another stall → 403, even when the id is real. */
     @ExceptionHandler(ProductNotYoursException.class)
     ResponseEntity<ApiResource<Void>> notYours(ProductNotYoursException e) {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), List.of());
@@ -112,10 +98,6 @@ public class ProductExceptionHandler {
         return error(HttpStatus.FORBIDDEN, "STALL_NOT_APPROVED", e.getMessage(), List.of());
     }
 
-    /**
-     * FR-123 (spec §4.2): the stall is locked out of longer shelf lives — 409, attached to
-     * shelfLifeDays so the product form marks that box.
-     */
     @ExceptionHandler(ShelfLifeExtensionLockedException.class)
     ResponseEntity<ApiResource<Void>> extensionLocked(ShelfLifeExtensionLockedException e) {
         return error(
@@ -129,7 +111,6 @@ public class ProductExceptionHandler {
                                 .build()));
     }
 
-    /** Last safety net: UNIQUE (farmer_id, name) when a stall posts a duplicate name. */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
@@ -147,31 +128,26 @@ public class ProductExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
-    /** FR-124: the batch is fresh on that day, or more than half of its shelf life is left. */
     @ExceptionHandler(NotNearExpiryException.class)
     ResponseEntity<ApiResource<Void>> notNearExpiry(NotNearExpiryException e) {
         return error(HttpStatus.BAD_REQUEST, "NOT_NEAR_EXPIRY", e.getMessage(), List.of());
     }
 
-    /** FR-124: the batch is no longer good on the pickup day. */
     @ExceptionHandler(ExpiredBeforePickupException.class)
     ResponseEntity<ApiResource<Void>> expiredBeforePickup(ExpiredBeforePickupException e) {
         return error(HttpStatus.BAD_REQUEST, "EXPIRED_BEFORE_PICKUP", e.getMessage(), List.of());
     }
 
-    /** FR-124: customers can no longer order for that day — a state conflict, like a full slot. */
     @ExceptionHandler(DateNotOrderableException.class)
     ResponseEntity<ApiResource<Void>> dateNotOrderable(DateNotOrderableException e) {
         return error(HttpStatus.CONFLICT, "DATE_NOT_ORDERABLE", e.getMessage(), List.of());
     }
 
-    /** A path or query value of the wrong type, e.g. a {date} that is not yyyy-MM-dd → 400. */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     ResponseEntity<ApiResource<Void>> wrongType(MethodArgumentTypeMismatchException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
-    /** Wrong role for @PreAuthorize → 403. */
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> forbidden(AccessDeniedException e) {
         return error(
@@ -181,17 +157,11 @@ public class ProductExceptionHandler {
                 List.of());
     }
 
-    /**
-     * No body, malformed JSON or a value of the wrong type (QA E2E v2 BUG-002). Without this the
-     * error falls through to /error and comes back as Spring's default body instead of the
-     * envelope.
-     */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<ApiResource<Void>> unreadableBody(HttpMessageNotReadableException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
-    /** FR-071/D-09: approved once, suspended now — carries the admin's reason. */
     @ExceptionHandler(StallSuspendedException.class)
     ResponseEntity<ApiResource<Void>> suspended(StallSuspendedException e) {
         return error(HttpStatus.FORBIDDEN, "STALL_SUSPENDED", e.getMessage(), List.of());

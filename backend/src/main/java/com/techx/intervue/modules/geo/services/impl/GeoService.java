@@ -17,10 +17,8 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class GeoService implements GeoServiceInterface {
 
-    /** One screen of suggestions; the user keeps typing to narrow it down. */
     static final int STREET_LIMIT = 20;
 
-    /** Longer queries add nothing a street name could still match and only grow the SQL. */
     private static final int MAX_WORDS = 5;
 
     private final GeoDirectory directory;
@@ -45,7 +43,6 @@ public class GeoService implements GeoServiceInterface {
     @Override
     public List<StreetResource> streets(String provinceCode, String query) {
         requireProvince(provinceCode);
-        // Folded the same way as streets.name_search, so "le loi" and "Lê Lợi" both match
         List<String> words =
                 Arrays.stream(TextNormalizer.normalize(query).split(" "))
                         .filter(w -> !w.isEmpty())

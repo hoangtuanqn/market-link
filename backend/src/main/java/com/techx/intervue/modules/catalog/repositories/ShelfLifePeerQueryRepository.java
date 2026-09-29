@@ -11,12 +11,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * FR-120: the shelf lives other stalls set, per guide — the "other stalls usually set N days" hint.
- * Only products on sale count (spec §4.1): the same filter as the public pages, {@link
- * ProductQueryRepository#VISIBILITY_FILTER} (not deleted, not hidden, stall approved, an active
- * weekly stock template).
- */
 @Repository
 @RequiredArgsConstructor
 public class ShelfLifePeerQueryRepository {
@@ -33,7 +27,6 @@ public class ShelfLifePeerQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
 
-    /** Guide id → the shelf lives set on its products; {@code excludeFarmerId} null counts all. */
     public Map<Long, List<Integer>> daysByGuide(Collection<Long> guideIds, Long excludeFarmerId) {
         Map<Long, List<Integer>> out = new HashMap<>();
         if (guideIds.isEmpty()) {

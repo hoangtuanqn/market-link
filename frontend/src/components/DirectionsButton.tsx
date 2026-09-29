@@ -10,9 +10,7 @@ import type { LatLng } from '@/lib/geo';
 import Helper from '@/utils/helper';
 
 type DirectionsButtonProps = {
-  /** Where you are going. */
   to: LatLng;
-  /** What is at that point, named in the dialog so it is clear what you are routing to. */
   name: string;
   variant?: 'primary' | 'secondary' | 'ghost';
   size?: 'sm' | 'md';
@@ -21,13 +19,6 @@ type DirectionsButtonProps = {
 
 type Kind = StartChoice['kind'];
 
-/**
- * FR-013 — directions to a pickup point. Asks where you are setting off from, then opens OpenStreetMap in a new tab
- * (D-12). Three starting points, because no single one works for everybody: the browser's location needs permission and
- * https, a saved address needs an account, and a typed address always works.
- *
- * The choice is remembered, so the second market you look at costs one click.
- */
 const DirectionsButton = ({ to, name, variant = 'ghost', size = 'sm', className }: DirectionsButtonProps) => {
   const { t } = useTranslation();
   const { state, request } = useGeolocation();
@@ -37,7 +28,6 @@ const DirectionsButton = ({ to, name, variant = 'ghost', size = 'sm', className 
   const [open, setOpen] = useState(false);
   const [kind, setKind] = useState<Kind>('none');
   const [typed, setTyped] = useState('');
-  /** True when the visitor confirmed "my location" before the browser had answered. */
   const [waiting, setWaiting] = useState(false);
 
   const blocked = state.status === 'denied' || state.status === 'unavailable';
@@ -75,11 +65,9 @@ const DirectionsButton = ({ to, name, variant = 'ghost', size = 'sm', className 
         go({ kind: 'current', at: state.at });
         return;
       }
-      // Permission must be asked for from a click, which is exactly where we are.
       setWaiting(true);
       const settled = await request();
       setWaiting(false);
-      // Refused or unavailable: the dialog stays open with the reason now showing beside the option.
       if (settled.status === 'ready') go({ kind: 'current', at: settled.at });
       return;
     }
@@ -94,8 +82,6 @@ const DirectionsButton = ({ to, name, variant = 'ghost', size = 'sm', className 
     go({ kind: 'none' });
   };
 
-  // A plain function, not a component: a component defined during render remounts its inputs on every
-  // keystroke, which would drop focus in the address field below.
   const startOption = (value: Kind, label: string, note: string, disabled?: boolean) => (
     <label
       className={Helper.cn(

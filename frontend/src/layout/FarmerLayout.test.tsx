@@ -51,7 +51,6 @@ describe('FarmerLayout menu while suspended (FR-071, D-09)', () => {
     renderFarmerArea();
 
     expect(await screen.findByRole('link', { name: 'Products' })).toHaveAttribute('href', '/farmer/products');
-    // The stock page is a weekly template that refills itself, not a one-off count for this week.
     expect(screen.getByRole('link', { name: 'Weekly template' })).toHaveAttribute('href', '/farmer/stock');
     expect(screen.getByRole('link', { name: 'Pickup slots' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Stall & pickup' })).toBeInTheDocument();
@@ -64,15 +63,11 @@ describe('FarmerLayout menu while suspended (FR-071, D-09)', () => {
 
     renderFarmerArea();
 
-    // orders stay open — D-09's core guarantee
     expect(await screen.findByRole('link', { name: 'Orders' })).toHaveAttribute('href', '/farmer/orders');
-    // the approval-status page must stay reachable — it is what explains the suspension
     expect(screen.getByRole('link', { name: 'Approval status' })).toBeInTheDocument();
-    // reviews and sales history are read-only and un-guarded server-side — no reason to hide them
     expect(screen.getByRole('link', { name: 'Reviews' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Sales history' })).toBeInTheDocument();
 
-    // the screens the server now refuses (StallSuspendedException) must not be offered
     expect(screen.queryByRole('link', { name: 'Products' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Weekly template' })).not.toBeInTheDocument();
     expect(screen.queryByRole('link', { name: 'Pickup slots' })).not.toBeInTheDocument();
@@ -93,7 +88,6 @@ describe('FarmerLayout sign out (FR-006)', () => {
     vi.restoreAllMocks();
   });
 
-  /** A plain link to /login bounces a signed-in Farmer back, so the sidebar must really end the session. */
   it('signs out from the sidebar instead of linking to the sign-in page', async () => {
     const logout = vi
       .spyOn(AuthApi, 'logout')

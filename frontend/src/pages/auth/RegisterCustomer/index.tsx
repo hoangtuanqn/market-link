@@ -32,7 +32,6 @@ const EMPTY_FORM: RegisterInput = {
   confirmPassword: '',
 };
 
-/** Client-side validation, same rules as the backend's CustomerRegisterRequest; the address has its own (lib/address). */
 const validate = (form: RegisterInput, t: TFunction<'RegisterCustomer'>): FormErrors => {
   const errors: FormErrors = {};
   const fullName = form.fullName.trim();
@@ -58,11 +57,9 @@ const validate = (form: RegisterInput, t: TFunction<'RegisterCustomer'>): FormEr
   return errors;
 };
 
-/** FR-001 — Customer registration. */
 const RegisterCustomerPage = () => {
   const { t, i18n } = useTranslation('RegisterCustomer');
   const navigate = useNavigate();
-  // After "Change email" on the code screen the form comes back filled in (passwords are never kept)
   const [form, setForm] = useState<RegisterInput>(() => ({ ...EMPTY_FORM, ...SignupStore.getDraft() }));
   const [website, setWebsite] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
@@ -91,7 +88,6 @@ const RegisterCustomerPage = () => {
         email: form.email.trim(),
         addressParts: cleanAddress(form.addressParts),
       };
-      // The same address again from this tab: send its token so the waiting sign-up is corrected, not replaced
       const previous = SignupStore.getPending();
       const response = await AuthApi.register({
         ...payload,
@@ -100,7 +96,6 @@ const RegisterCustomerPage = () => {
         signupToken: previous?.email === payload.email.toLowerCase() ? previous.token : undefined,
       });
 
-      // FR-009: no account yet — it is created once the emailed code is entered
       SignupStore.savePending(response.data);
       SignupStore.saveDraft({
         fullName: payload.fullName,
@@ -111,12 +106,10 @@ const RegisterCustomerPage = () => {
       navigate(VERIFY_EMAIL_PATH);
     } catch (error) {
       if (Helper.getErrorCode(error) === 'RATE_LIMITED') {
-        // FR-009: too many codes for this address or network, or a sign-up from another tab is still waiting
         const minutes = Math.max(1, Math.ceil((Helper.getRetryAfterSeconds(error) ?? 60) / 60));
         Notification.error({ text: t('errors.tooMany', { count: minutes }) });
         return;
       }
-      // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT: per-field errors (email, phone, confirmPassword…) shown under the input
       const fieldErrors = Helper.getFieldErrors(error);
       setErrors(fieldErrors);
       setAddressErrors(addressErrorsFrom(fieldErrors));
@@ -207,7 +200,6 @@ const RegisterCustomerPage = () => {
           disabled={isSubmitting}
         />
 
-        {/* FR-009: a trap for form-filling bots; people never see or reach it */}
         <div aria-hidden="true" className="sr-only">
           <label htmlFor="website">{t('honeypot')}</label>
           <input

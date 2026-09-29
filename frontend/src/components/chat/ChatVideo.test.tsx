@@ -20,12 +20,10 @@ const renderVideo = () => render(<ChatVideo attachmentId={55} label="Video from 
 const videoElement = () => screen.getByLabelText('Video from Cô Tư') as HTMLVideoElement;
 
 describe('ChatVideo', () => {
-  // A block body: a function returned from beforeEach would be run as the test's teardown
   beforeEach(() => {
     vi.mocked(ConversationApi.streamUrl).mockReset();
   });
 
-  /** Nothing is downloaded while a thread scrolls by; the link is asked for when the reader presses play. */
   it('asks for a link only when played, then plays it from the API origin', async () => {
     vi.mocked(ConversationApi.streamUrl).mockResolvedValue(link('a'));
     renderVideo();

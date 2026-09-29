@@ -17,10 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-/**
- * FR-115: an upload without a file is the client's mistake, so it gets the module's 400 envelope,
- * not a 500 with Spring's default body.
- */
 class AttachmentUploadRequestTest {
 
     AttachmentServiceInterface service;

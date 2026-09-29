@@ -9,12 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-/**
- * FR-081: the form is public, so the guard is per client address — 5 submissions an hour, on the
- * same Redis-backed bucket4j proxy the chat limits use ({@code RedisConfig}). Redis down → the
- * request goes through (fail-open), exactly like {@code Bucket4jChatRateLimiter}: this is an
- * anti-abuse layer, not a security one.
- */
 @Slf4j
 @Service
 public class FeedbackRateLimiter {
@@ -24,7 +18,6 @@ public class FeedbackRateLimiter {
 
     private final ProxyManager<String> buckets;
 
-    /** {@code @Lazy} defers the Redis connection to the first check, see {@code RedisConfig}. */
     public FeedbackRateLimiter(@Lazy ProxyManager<String> buckets) {
         this.buckets = buckets;
     }

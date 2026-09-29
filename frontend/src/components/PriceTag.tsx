@@ -3,9 +3,7 @@ import { unitPrice, money } from '@/lib/format';
 
 type PriceTagProps = { amount: number; unit?: string; was?: number };
 
-/** Hand-lettered yellow tag, hung at an angle. */
 const PriceTag = ({ amount, unit, was }: PriceTagProps) => {
-  // Settings → Weights: a price per kg reads per lb in imperial; "was" converts the same way
   const { t } = useTranslation();
   const now = unitPrice(amount, unit);
   const before = was != null ? unitPrice(was, unit).amount : undefined;

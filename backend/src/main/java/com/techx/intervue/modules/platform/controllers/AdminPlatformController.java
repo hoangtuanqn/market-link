@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** Admin only — turns maintenance mode on / off for the whole site. */
 @RestController
 @RequestMapping("/api/v1/admin/platform")
 @PreAuthorize("hasRole('ADMIN')")

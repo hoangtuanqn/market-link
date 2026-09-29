@@ -16,10 +16,6 @@ import Notification from '@/utils/notification';
 
 const REPLY_MAX = 500;
 
-/**
- * FR-122 (spec §4.4.2) — the stall's spoiled reports: what the customer saw, the promise on the order, and one reply
- * the stall can change until an admin decides. The strikes banner shows only when there are strikes.
- */
 export default function QualityReports() {
   const { t } = useTranslation('FarmerReviews');
   const { t: tc } = useTranslation();

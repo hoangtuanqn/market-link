@@ -8,13 +8,8 @@ import useAddDeal from '@/hooks/useAddDeal';
 import useRequest from '@/hooks/useRequest';
 import { perUnit, units } from '@/lib/format';
 
-/** Every pickup day of the 14-day window fits. */
 const MAX_DAYS = 14;
 
-/**
- * FR-125 (spec §4.5.4): the pickup days this product is on a near-expiry deal, each added to the cart with its own day.
- * Nothing while it loads or when there is none, since the price block above already sells the product.
- */
 const ProductDeals = ({ productId }: { productId: number }) => {
   const { t } = useTranslation('ProductDetail');
   const addDeal = useAddDeal();

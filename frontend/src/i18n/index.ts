@@ -3,7 +3,6 @@ import { initReactI18next } from 'react-i18next';
 import SettingsStore, { type Language } from '@/lib/settings';
 import { en, NAMESPACES } from './resources';
 
-/** Languages other than English load on demand (one chunk each), a missing key shows English. */
 const bundles = import.meta.glob<Record<string, unknown>>(['../locales/*/*.json', '!../locales/en/*.json'], {
   import: 'default',
 });
@@ -32,10 +31,6 @@ i18n.use(initReactI18next).init({
   returnNull: false,
 });
 
-/**
- * Change the UI language: load the translations first and only then switch, to avoid a flash of half one language half
- * the other.
- */
 export const setLanguage = async (lng: Language) => {
   try {
     await load(lng);
@@ -46,13 +41,11 @@ export const setLanguage = async (lng: Language) => {
   document.documentElement.lang = lng;
 };
 
-// Settings changes the language (Settings page, another tab, the copy from the server) → the UI follows
 SettingsStore.subscribe(() => {
   const lng = SettingsStore.get().language;
   if (lng !== i18n.language) void setLanguage(lng);
 });
 
-/** Runs before render: someone who chose another language does not see English first. */
 export const i18nReady = setLanguage(SettingsStore.get().language);
 
 export default i18n;

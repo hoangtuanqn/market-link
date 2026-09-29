@@ -27,35 +27,27 @@ import { CLOSURE_HANDLINGS, type ClosureHandling, type ClosureType, type MarketT
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-/** Monday-first, which is how the operating days read on the market page. */
 const WEEK = [1, 2, 3, 4, 5, 6, 0];
 
-/** Lets the Save button sit at the end of the page instead of inside the form's own grid column. */
 const FORM_ID = 'market-form';
 
-/** Matches MarketRequest.images's @Size(max=8) on the server. */
 const MAX_IMAGES = 8;
 
 type FormState = {
   name: string;
-  /** Vietnam only (FR-073): the server composes the one-line address from these parts. */
   addressParts: AddressParts;
   days: number[];
   open: string;
   close: string;
   lat: number;
   lng: number;
-  /** URLs already uploaded via POST /admin/markets/images; the first one becomes the cover photo. */
   images: string[];
 };
 
-/** Keys are the form's own; the server's camelCase field names are translated onto them in `fieldErrors`. */
 type FormErrors = Partial<Record<'name' | 'days' | 'open' | 'close' | 'lat' | 'lng' | 'images', string>>;
 
-/** A closed day plus the raw ISO date `toClosure` drops, so a newly added one can be synced on submit. */
 type FormClosure = ClosureType & { closedOn: string };
 
-/** A blank market, for the add form. */
 const EMPTY: FormState = {
   name: '',
   addressParts: emptyAddress(),
@@ -67,12 +59,10 @@ const EMPTY: FormState = {
   images: [],
 };
 
-/** Today's calendar date in Ho Chi Minh City as "yyyy-MM-dd" (en-CA formats that way), whatever the browser's zone. */
 const todayInHcmc = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Ho_Chi_Minh' }).format(new Date());
 
 const EMPTY_DRAFT = { date: '', reason: '', handling: 'move' as ClosureHandling };
 
-/** Contract §3 field names → the form's keys, so a server-side validation message lands under the right input. */
 const SERVER_FIELDS: Record<string, keyof FormErrors> = {
   marketName: 'name',
   operatingDays: 'days',
@@ -94,10 +84,6 @@ const fromMarket = (m: MarketType): FormState => ({
   images: m.images ?? [],
 });
 
-/**
- * FR-073 — add or edit one market: name, address, operating days, hours and the pin customers navigate to. The closed
- * days panel underneath is where a one-off closure lives, so it has somewhere to sit instead of only being announced.
- */
 const AdminMarketFormPage = () => {
   const { t } = useTranslation('AdminMarketForm');
   const { t: tc } = useTranslation();
@@ -114,11 +100,9 @@ const AdminMarketFormPage = () => {
         ? CatalogApi.getMarket(marketId).then((result) => result.market)
         : Promise.reject(new Error('missing')),
   );
-  /** The server's 404, or an id that could never be one — the "not here any more" page, not the error block. */
   const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'MARKET_NOT_FOUND');
   const existing = load.kind === 'ready' ? load.data : null;
 
-  // The form mirrors the loaded market until something is typed, then it is its own state (no effect needed).
   const loadedForm = existing ? fromMarket(existing) : EMPTY;
   const [edited, setEdited] = useState<FormState | null>(null);
   const form = edited ?? loadedForm;
@@ -127,8 +111,6 @@ const AdminMarketFormPage = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [addressErrors, setAddressErrors] = useState<AddressErrors>({});
   const [saving, setSaving] = useState(false);
-  // Closed days: fetched independently of the market load, same isNew/validId guard as it. Never persisted until
-  // the whole form is submitted (see the diff-and-sync in onSubmit), same mirror-until-edited pattern as the rest.
   const { state: closuresLoad } = useRequest(`admin-market-closures:${id ?? 'new'}`, () =>
     isNew || !validId ? Promise.resolve<MarketClosureDto[]>([]) : CatalogApi.listClosures(marketId),
   );
@@ -144,11 +126,8 @@ const AdminMarketFormPage = () => {
   const [removingClosure, setRemovingClosure] = useState<FormClosure | null>(null);
   const [draft, setDraft] = useState(EMPTY_DRAFT);
   const [draftError, setDraftError] = useState<string | undefined>();
-  // In-flight uploads only, never persisted: each id becomes a skeleton tile until the URL lands in form.images.
   const [uploadingImages, setUploadingImages] = useState<string[]>([]);
   const imageInputRef = useRef<HTMLInputElement>(null);
-  // Latitude / longitude exactly as typed, until the field is left: re-formatting to 6 decimals on every keystroke made
-  // the fields impossible to type in or clear (QA E2E v2 MARKET-ADMIN-002). Absent = show the form's number.
   const [coordText, setCoordText] = useState<Partial<Record<'lat' | 'lng', string>>>({});
   const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
 
@@ -181,7 +160,6 @@ const AdminMarketFormPage = () => {
   const toggleDay = (dow: number) =>
     setForm((f) => ({ ...f, days: f.days.includes(dow) ? f.days.filter((d) => d !== dow) : [...f.days, dow].sort() }));
 
-  /** A whole "lat, lng" pasted into either field fills both; otherwise keep the text until the field is left. */
   const onCoordChange = (axis: 'lat' | 'lng', text: string) => {
     const pair = parseCoordinatePair(text);
     if (pair) {
@@ -192,7 +170,6 @@ const AdminMarketFormPage = () => {
     setCoordText((c) => ({ ...c, [axis]: text }));
   };
 
-  /** Leaving the field moves the pin there; text that is not a number stays as typed and is flagged on save. */
   const onCoordBlur = (axis: 'lat' | 'lng') => {
     const text = coordText[axis];
     if (text === undefined) return;
@@ -206,14 +183,12 @@ const AdminMarketFormPage = () => {
     });
   };
 
-  /** The form with any coordinate still being typed read in, so Save never uses a stale pin position. */
   const withTypedCoords = (f: FormState): FormState => ({
     ...f,
     lat: coordText.lat === undefined ? f.lat : (parseCoordinate(coordText.lat) ?? Number.NaN),
     lng: coordText.lng === undefined ? f.lng : (parseCoordinate(coordText.lng) ?? Number.NaN),
   });
 
-  /** Uploads each chosen file right away (docs/prototype pattern for Become a Farmer's photos), one request per file. */
   const onImagesChosen = (e: ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
     e.target.value = '';
@@ -245,7 +220,6 @@ const AdminMarketFormPage = () => {
 
   const removeImage = (url: string) => setForm((f) => ({ ...f, images: f.images.filter((u) => u !== url) }));
 
-  /** The same rules the server applies (MarketRequest + MarketService), so nobody waits on a round trip to learn them. */
   const validate = (f: FormState): FormErrors => {
     const next: FormErrors = {};
     if (!f.name.trim()) next.name = t('error.required');
@@ -289,8 +263,6 @@ const AdminMarketFormPage = () => {
     try {
       const saved = existing ? await CatalogApi.updateMarket(existing.id, input) : await CatalogApi.createMarket(input);
 
-      // Closed days only exist locally until now (mirror-until-edited, same as the rest of the form); sync the
-      // difference against what the server had. Skipped entirely if the panel was never touched.
       if (editedClosures) {
         const loadedIds = new Set(loadedClosures.map((c) => c.id));
         const currentIds = new Set(editedClosures.map((c) => c.id));
@@ -334,10 +306,6 @@ const AdminMarketFormPage = () => {
     }
   };
 
-  /**
-   * Adds the closed day to the list; it is only sent with the rest of the form on Save (QA E2E v2 MARKET-ADMIN-007: a
-   * missing date used to produce "undefined/undefined/", and the toast did not say the day was not saved yet).
-   */
   const addClosure = () => {
     const error = !draft.date
       ? t('closures.error.dateRequired')

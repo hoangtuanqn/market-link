@@ -13,13 +13,10 @@ import com.techx.intervue.modules.user.resources.UserResource;
 public interface UserServiceInterface {
     AuthResult authenticate(LoginRequest request);
 
-    /** FR-008: step 2 of admin sign-in with two-step verification on. */
     AuthResult completeMfaLogin(String mfaToken, String code, String recoveryCode);
 
-    /** FR-001 + FR-009: park the form and mail a code; no account exists yet. */
     SignupStartedResource registerCustomer(CustomerRegisterRequest request, String clientIp);
 
-    /** FR-009: the right code creates the customer account and signs it in. */
     AuthResult completeSignup(String email, String code, String signupToken);
 
     void logout(Long userId, String accessToken, String refreshToken);
@@ -28,25 +25,13 @@ public interface UserServiceInterface {
 
     AuthResult loginWithSocial(SocialProfile profile);
 
-    /**
-     * Set a password for the first time for an account with no password (created through Google).
-     */
     void setPassword(Long userId, SetPasswordRequest request);
 
-    /** Change the password (needs the current password), then sign out of every device. */
     void changePassword(Long userId, ChangePasswordRequest request);
 
-    /**
-     * FR-008: sign out of every device, then hand the caller a fresh session — used right after
-     * two-step verification is turned on.
-     */
     AuthResult restartSession(Long userId);
 
-    /** Information about the signed-in user themself (GET /auth/me). */
     UserResource getProfile(Long userId);
 
-    /**
-     * Update the full name, phone number, address of the signed-in user themself (PUT /auth/me).
-     */
     UserResource updateProfile(Long userId, UpdateProfileRequest request);
 }

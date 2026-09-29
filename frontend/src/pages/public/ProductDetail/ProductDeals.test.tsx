@@ -29,7 +29,6 @@ const tomato: DealDto = {
   storageMode: 'room',
 };
 
-// LoadError links to /feedback, so the block renders inside a router
 const renderDeals = () =>
   render(
     <MemoryRouter>

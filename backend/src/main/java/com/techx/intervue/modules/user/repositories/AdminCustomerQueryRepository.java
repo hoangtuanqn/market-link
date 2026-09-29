@@ -13,11 +13,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * FR-072: customer accounts with their order count, for the admin. Role is fixed to {@code
- * customer} in the SQL — stalls are managed on {@code /admin/farmers}. The search text goes in as a
- * LIKE parameter with {@code !} escaping (R-04).
- */
 @Repository
 @RequiredArgsConstructor
 public class AdminCustomerQueryRepository {

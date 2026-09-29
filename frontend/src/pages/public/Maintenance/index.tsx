@@ -3,10 +3,6 @@ import { ClockIcon } from '@/components/icons';
 import { Button, ButtonAnchor } from '@/components/ui/button';
 import ErrorShell from '@/layout/ErrorShell';
 
-/**
- * Shown instead of any page while the site is under maintenance (App.tsx's AppRoutes gate; the real block is
- * MaintenanceModeFilter on the backend). "Try again" reloads the page so the boot-time status check runs again.
- */
 const MaintenancePage = () => {
   const { t } = useTranslation('Maintenance');
 

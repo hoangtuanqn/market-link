@@ -145,7 +145,6 @@ describe('toOrderCard', () => {
     });
   });
 
-  /** FR-033: the list row says whether the order was reviewed, so a reviewed ticket no longer offers "Review". */
   it('carries the reviewed flag of the list row', () => {
     expect(toOrderCard({ ...baseDto().summary, status: 'completed', reviewed: true }).reviewed).toBe(true);
     expect(toOrderCard({ ...baseDto().summary, status: 'completed', reviewed: false }).reviewed).toBe(false);

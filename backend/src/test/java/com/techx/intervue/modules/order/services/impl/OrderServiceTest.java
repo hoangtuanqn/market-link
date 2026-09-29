@@ -76,11 +76,6 @@ import org.mockito.InOrder;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-030…032 — preview and place an order. Today (by Clock) is Saturday 26/09/2026, 09:00 Vietnam
- * time; the default pickup day is Tuesday 29/09. The repository is a fake in-memory table: real
- * locking and rollback are proven in PlaceOrderConcurrencyTest.
- */
 class OrderServiceTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -117,7 +112,6 @@ class OrderServiceTest {
     private ProductAvailabilityResolver availability;
     private OrderService service;
 
-    /** Fake tables. */
     private final Map<Long, FarmerProfile> farmers = new HashMap<>();
 
     private final Map<Long, FarmerMarket> links = new HashMap<>();
@@ -134,7 +128,6 @@ class OrderServiceTest {
         farmerRepository = mock(FarmerProfileRepository.class);
         farmerMarketRepository = mock(FarmerMarketRepository.class);
         slotRepository = mock(PickupSlotRepository.class);
-        // Every slot's weekday is still open for its market and stall unless a test says otherwise
         when(slotRepository.isOnOpenDay(anyLong())).thenReturn(true);
         productRepository = mock(ProductRepository.class);
         orderRepository = mock(OrderRepository.class);
@@ -228,8 +221,6 @@ class OrderServiceTest {
                                                 inv.<Long>getArgument(0)
                                                         + "@"
                                                         + inv.<LocalDate>getArgument(1))));
-        // Passes each product's live stock/price straight through, so tests that don't care about
-        // availability keep their existing PICKUP-dated expectations unchanged.
         when(availability.resolve(any()))
                 .thenAnswer(
                         inv -> {
@@ -286,9 +277,6 @@ class OrderServiceTest {
                                         new MarketOption(OTHER_MARKET_ID, "Chợ Bến Thành"))));
     }
 
-    // ---------- data ----------
-
-    /** Like the database: only returns real rows, ascending by id. */
     private static <T> List<T> rows(Map<Long, T> table, Iterable<Long> ids) {
         return StreamSupport.stream(ids.spliterator(), false)
                 .distinct()
@@ -394,9 +382,6 @@ class OrderServiceTest {
         return groups.stream().filter(g -> g.farmerId() == farmerId).findFirst().orElseThrow();
     }
 
-    // ---------- preview ----------
-
-    /** D-01: one cart, two Farmers → two orders are split out, each with its own total. */
     @Test
     void previewSplitsCartByFarmer() {
         List<OrderGroupPreviewResource> groups =
@@ -413,13 +398,11 @@ class OrderServiceTest {
         assertThat(a.subtotal()).isEqualByComparingTo("39000");
         assertThat(a.problems()).isEmpty();
         assertThat(groupOf(groups, FARMER_B).subtotal()).isEqualByComparingTo("35000");
-        // read-only: no locking, no writing
         verify(productRepository, never()).lockAllById(any());
         verify(slotRepository, never()).lockById(any());
         verify(orderRepository, never()).save(any());
     }
 
-    /** A preview must be able to show it: missing stock is a group's problem, not an exception. */
     @Test
     void previewFlagsItemsOverStock() {
         List<OrderGroupPreviewResource> groups =
@@ -430,16 +413,8 @@ class OrderServiceTest {
         assertThat(groupOf(groups, FARMER_B).items().getFirst().stockQuantity()).isEqualTo(15);
     }
 
-    /**
-     * The price a customer previews must be the same price they'll actually be charged at order
-     * time — the resolved availability price for the nearest date, not the product's base price. A
-     * weekly stock template can charge more or less than the base price on a given weekday.
-     */
     @Test
     void previewShowsThePriceForTheResolvedDateNotTheProductsBasePrice() {
-        // doReturn, not when(...).thenReturn(...): the setUp() stub is an answer that runs on
-        // invocation, including the recording call inside when(...) itself, which would NPE on a
-        // null argument there.
         doReturn(
                         Map.of(
                                 RAU_MUONG,
@@ -469,10 +444,6 @@ class OrderServiceTest {
         assertThat(groups.getFirst().items().getFirst().status()).isEqualTo("sold_out");
     }
 
-    /**
-     * C5-12: soft-deleted / hidden / unavailable still stays in the stall's group, as problem
-     * `unavailable`.
-     */
     @Test
     void previewFlagsHiddenDeletedOrUnavailableProductsAsUnavailable() {
         products.get(RAU_MUONG).setHidden(true);
@@ -491,7 +462,6 @@ class OrderServiceTest {
         assertThat(groupOf(groups, FARMER_B).problems()).containsExactly("unavailable");
     }
 
-    /** C5-12: a product id not in the database → 400 VALIDATION_ERROR. */
     @Test
     void previewRejectsAProductThatDoesNotExist() {
         assertThatThrownBy(
@@ -499,9 +469,6 @@ class OrderServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    /**
-     * D-09: a suspended stall still shows in the cart so the customer sees why they cannot order.
-     */
     @Test
     void previewFlagsASuspendedStall() {
         farmers.get(FARMER_B).setApprovalStatus(ApprovalStatus.SUSPENDED);
@@ -512,10 +479,6 @@ class OrderServiceTest {
         assertThat(groups.getFirst().problems()).containsExactly("stall_suspended");
     }
 
-    /**
-     * C5-11: marketId/marketName are only filled in when the stall sells at exactly one market;
-     * markets always lists every one.
-     */
     @Test
     void previewListsTheMarketsOfEachStall() {
         List<OrderGroupPreviewResource> groups =
@@ -533,7 +496,6 @@ class OrderServiceTest {
                 .containsExactly(MARKET_ID, OTHER_MARKET_ID);
     }
 
-    /** C5-4 / D-13: an admin cannot buy, not even preview. */
     @Test
     void previewRefusesAnAdminAccount() {
         when(userRepository.findById(ADMIN_ID)).thenReturn(Optional.of(adminUser()));
@@ -542,10 +504,6 @@ class OrderServiceTest {
                 .isInstanceOf(AccessDeniedException.class);
     }
 
-    /**
-     * FR-125 (spec §4.5.5): a stall with a picked day is priced for exactly that day — price,
-     * stock, deal and best-before — the other stall for its nearest orderable day, as before.
-     */
     @Test
     void previewPricesAStallForTheDayItWillBePickedUp() {
         doReturn(
@@ -582,7 +540,6 @@ class OrderServiceTest {
         verify(availability).resolve(Map.of(BANH_CHUOI, new BigDecimal("35000")));
     }
 
-    /** The picked day has nothing of this product: 0 left, out of stock, base price. */
     @Test
     void previewFlagsAProductNotSoldOnThePickedDay() {
         doReturn(Map.of()).when(availability).onDate(eq(FARMER_A), any(), eq(SATURDAY));
@@ -602,7 +559,6 @@ class OrderServiceTest {
         assertThat(groups.getFirst().problems()).containsExactly("out_of_stock");
     }
 
-    /** A day without a deal: the fresh batch's promise, pickup day + shelf life − 1. */
     @Test
     void previewGivesTheFreshBestBeforeOnADayWithoutADeal() {
         products.get(RAU_MUONG).setShelfLifeDays(3);
@@ -630,7 +586,6 @@ class OrderServiceTest {
         assertThat(item.storageMode()).isEqualTo("room");
     }
 
-    /** Without pickupDates the preview is what it always was, plus the day's best-before. */
     @Test
     void previewWithoutPickupDatesKeepsTheNearestDay() {
         products.get(RAU_MUONG).setShelfLifeDays(3);
@@ -647,7 +602,6 @@ class OrderServiceTest {
         verify(availability, never()).onDate(anyLong(), any(), any());
     }
 
-    /** A day for a stall that is not in the cart changes nothing. */
     @Test
     void previewIgnoresADayForAStallNotInTheCart() {
         service.preview(
@@ -659,13 +613,6 @@ class OrderServiceTest {
         verify(availability, never()).onDate(anyLong(), any(), any());
     }
 
-    /**
-     * FR-125 fix round 1: the picked day itself cannot be booked (full, closed, past cutoff, or
-     * outside the lookahead — {@link ProductAvailabilityResolver#onDate} decides that; see
-     * ProductAvailabilityResolverTest). The resolver reports it the same way it reports "nothing of
-     * this product that day": an empty map. previewGroup must not invent a price for it — same "not
-     * available" problem as previewFlagsAProductNotSoldOnThePickedDay, never a silent price.
-     */
     @Test
     void previewFlagsALineWhosePickedDayIsNotOrderable() {
         doReturn(Map.of()).when(availability).onDate(eq(FARMER_A), any(), eq(SATURDAY));
@@ -685,8 +632,6 @@ class OrderServiceTest {
         assertThat(item.bestBefore()).isNull();
         assertThat(groups.getFirst().problems()).containsExactly("out_of_stock");
     }
-
-    // ---------- place ----------
 
     @Test
     void placeCreatesOneOrderPerGroup() {
@@ -712,10 +657,6 @@ class OrderServiceTest {
                         orders.get(0).getId(), orders.get(0).getId(), orders.get(1).getId());
     }
 
-    /**
-     * D-02: stock for that pickup date is deducted right when the order is `placed`, in the same
-     * transaction as the place-order call.
-     */
     @Test
     void placeDeductsStockInTheSameTransaction() throws Exception {
         service.place(CUSTOMER_ID, request(group(FARMER_A, SLOT_A, line(RAU_MUONG, 3))));
@@ -729,7 +670,6 @@ class OrderServiceTest {
                 .isTrue();
     }
 
-    /** Selling out a date's last batch does not touch Product.status — sold out is per date now. */
     @Test
     void placeDoesNotTouchProductStatusWhenADateSellsOut() {
         dailyStock(BANH_CHUOI, PICKUP, 2, "35000");
@@ -740,10 +680,6 @@ class OrderServiceTest {
         assertThat(products.get(BANH_CHUOI).getStatus()).isEqualTo(ProductStatus.AVAILABLE);
     }
 
-    /**
-     * Order 10, that date only has 3 left → 409; nothing is deducted (the transaction rolls back,
-     * and the service checks before deducting).
-     */
     @Test
     void placeRefusesWhenStockIsShort() {
         dailyStock(RAU_MUONG, PICKUP, 3, "12000");
@@ -759,9 +695,6 @@ class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-    /**
-     * No template covers that weekday → no daily-stock row is ever created → 409 (decision D-…).
-     */
     @Test
     void placeRefusesADateWithNoTemplate() {
         dailyStock.remove(RAU_MUONG + "@" + PICKUP);
@@ -782,7 +715,6 @@ class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-    /** booked_count counts orders, not items. */
     @Test
     void placeIncrementsBookedCount() {
         service.place(
@@ -796,9 +728,6 @@ class OrderServiceTest {
         assertThat(orders).extracting(Order::getSlotId).containsExactly(SLOT_A, SLOT_B);
     }
 
-    /**
-     * D-05: same cart, same pickup time, but each Farmer's cutoff is computed by their own hours.
-     */
     @Test
     void placeComputesCutoffFromTheFarmersOwnHours() {
         farmers.get(FARMER_A).setOrderCutoffHours(6);
@@ -813,13 +742,11 @@ class OrderServiceTest {
 
         assertThat(orders.get(0).getCutoffAt()).isEqualTo(LocalDateTime.of(2026, 9, 29, 1, 0));
         assertThat(orders.get(1).getCutoffAt()).isEqualTo(LocalDateTime.of(2026, 9, 28, 7, 0));
-        // contract: ISO 8601 UTC — 01:00 and 07:00 Vietnam time
         assertThat(placed)
                 .extracting(PlacedOrderResource::cutoffAt)
                 .containsExactly("2026-09-28T18:00:00Z", "2026-09-28T00:00:00Z");
     }
 
-    /** FR-038: the first history row — from NULL to placed, by the customer themself. */
     @Test
     void placeWritesTheFirstHistoryRow() {
         service.place(CUSTOMER_ID, aValidRequest());
@@ -832,10 +759,6 @@ class OrderServiceTest {
         assertThat(row.getChangedBy()).isEqualTo(CUSTOMER_ID);
     }
 
-    /**
-     * A Farmer changing the price, changing the name after the order → the old order row keeps the
-     * price actually charged for that pickup date.
-     */
     @Test
     void placeSnapshotsNameAndPrice() {
         service.place(CUSTOMER_ID, aValidRequest());
@@ -852,7 +775,6 @@ class OrderServiceTest {
         assertThat(item.getSubtotal()).isEqualByComparingTo("24000");
     }
 
-    /** FR-121 (spec §4.3): each line keeps the shelf-life promise as it stood at ordering time. */
     @Test
     void placeCopiesTheShelfLifePromiseOntoEachLine() {
         Product rau = products.get(RAU_MUONG);
@@ -872,10 +794,6 @@ class OrderServiceTest {
         assertThat(line.getListPrice()).isNull();
     }
 
-    /**
-     * FR-124 (spec §4.3, §4.5.5): a line bought on a deal day pays the deal price and keeps the
-     * price it replaced and that batch's own best-before, which is earlier than a fresh batch's.
-     */
     @Test
     void placeOnADealDayKeepsTheListPriceAndTheBatchBestBefore() {
         products.get(RAU_MUONG).setShelfLifeDays(3);
@@ -896,7 +814,6 @@ class OrderServiceTest {
         assertThat(orders.getFirst().getTotalAmount()).isEqualByComparingTo("14400");
     }
 
-    /** D-13 — hiding the button is not a control. The admin role must be blocked on the server. */
     @Test
     void placeRefusesAnAdminAccount() {
         when(userRepository.findById(ADMIN_ID)).thenReturn(Optional.of(adminUser()));
@@ -906,12 +823,6 @@ class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-    /**
-     * C5-2: every slot of the whole call is locked first (ascending id), then every daily-stock row
-     * of the whole call, in ascending (productId, date) order — the shared locking order for every
-     * write path, so no path deadlocks against another. Product is read unlocked now: nothing in
-     * the place-order path mutates a Product row anymore.
-     */
     @Test
     void placeLocksEverySlotBeforeAnyDailyStockRowInAscendingOrder() {
         service.place(
@@ -930,7 +841,6 @@ class OrderServiceTest {
         verify(productRepository).findAllById(any());
     }
 
-    /** C5-5: the slot must belong to the exact stall in the group. */
     @Test
     void placeRefusesASlotThatBelongsToAnotherStall() {
         assertThatThrownBy(
@@ -943,7 +853,6 @@ class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-    /** C5-5: a slot of the stall but at a different market than the one in the group. */
     @Test
     void placeRefusesASlotAtAnotherMarket() {
         OrderGroupInput atAnotherMarket =
@@ -959,7 +868,6 @@ class OrderServiceTest {
                 .isInstanceOf(SlotNotAvailableException.class);
     }
 
-    /** FR-060, FR-073: the slot exists, but its weekday was dropped after it was generated. */
     @Test
     void placeRefusesASlotOnAWeekdayTheMarketOrStallNoLongerOpens() {
         when(slotRepository.isOnOpenDay(SLOT_A)).thenReturn(false);
@@ -968,10 +876,6 @@ class OrderServiceTest {
                 .isInstanceOf(SlotNotAvailableException.class);
     }
 
-    /**
-     * C5-5: the stall has left the market (farmer_markets.is_active = FALSE) so a slot there does
-     * not accept orders.
-     */
     @Test
     void placeRefusesASlotAtAMarketTheStallHasLeft() {
         links.get(FM_A).setActive(false);
@@ -980,7 +884,6 @@ class OrderServiceTest {
                 .isInstanceOf(SlotNotAvailableException.class);
     }
 
-    /** C5-5: the Farmer has turned the slot off. */
     @Test
     void placeRefusesATurnedOffSlot() {
         slots.get(SLOT_A).setActive(false);
@@ -989,7 +892,6 @@ class OrderServiceTest {
                 .isInstanceOf(SlotNotAvailableException.class);
     }
 
-    /** C5-5: pickupDate must match the slot's own day. */
     @Test
     void placeRefusesASlotOnAnotherDay() {
         OrderGroupInput wrongDay =
@@ -1005,7 +907,6 @@ class OrderServiceTest {
                 .isInstanceOf(SlotNotAvailableException.class);
     }
 
-    /** D-01: an order always has a slot; a missing slotId → 409 SLOT_UNAVAILABLE. */
     @Test
     void placeRefusesAGroupWithoutASlot() {
         OrderGroupInput noSlot =
@@ -1016,10 +917,6 @@ class OrderServiceTest {
                 .isInstanceOf(SlotNotAvailableException.class);
     }
 
-    /**
-     * C5-5 / D-05: now ≥ cutoffAt → 409. A 15:00 slot today, a 6-hour cutoff → the deadline is
-     * exactly 09:00 = now: the exact cutoff moment already counts as late.
-     */
     @Test
     void placeRefusesAfterTheCutoff() {
         farmers.get(FARMER_A).setOrderCutoffHours(6);
@@ -1034,10 +931,6 @@ class OrderServiceTest {
         assertThat(slots.get(SLOT_A).getBookedCount()).isZero();
     }
 
-    /**
-     * C5-5 / D-09: a stall not approved or suspended does not accept new orders → 409
-     * STALL_UNAVAILABLE.
-     */
     @Test
     void placeRefusesAStallThatIsNotApproved() {
         farmers.get(FARMER_A).setApprovalStatus(ApprovalStatus.SUSPENDED);
@@ -1047,7 +940,6 @@ class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-    /** C5-12: a product that is hidden, deleted, unavailable, or gone → 409 OUT_OF_STOCK. */
     @Test
     void placeRefusesAProductThatCannotBeSold() {
         products.get(RAU_MUONG).setHidden(true);
@@ -1074,7 +966,6 @@ class OrderServiceTest {
         verify(orderRepository, never()).save(any());
     }
 
-    /** A product from another stall in the group → 400: a malformed request, not a conflict. */
     @Test
     void placeRefusesAProductOfAnotherStallInTheGroup() {
         assertThatThrownBy(
@@ -1086,8 +977,6 @@ class OrderServiceTest {
         assertThat(dailyStock.get(BANH_CHUOI + "@" + PICKUP).getQuantityAvailable()).isEqualTo(15);
     }
 
-    // ---------- order code (C5-6) ----------
-
     @Test
     void placeGivesEachOrderACodeOfTheAgreedShape() {
         List<PlacedOrderResource> placed = service.place(CUSTOMER_ID, aValidRequest());
@@ -1097,7 +986,6 @@ class OrderServiceTest {
         assertThat(orders.getFirst().getOrderCode()).isEqualTo(placed.getFirst().orderCode());
     }
 
-    /** A collision redraws, up to 5 times, before inserting. */
     @Test
     void orderCodeIsDrawnAgainWhenTaken() {
         OrderCodeGenerator codes = new OrderCodeGenerator(orderRepository, clock);

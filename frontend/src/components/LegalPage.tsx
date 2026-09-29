@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react';
 import { ButtonLink } from '@/components/ui/button';
 
-/** One block of a section, in reading order: a paragraph, a card of facts, or a card of "what we do not do". */
 export type LegalBlock =
   | { p: string }
   | { facts: { title?: string; items: [term: string, text: string][] } }
@@ -14,16 +13,11 @@ type LegalPageProps = {
   lead: string;
   meta: string;
   onThisPage: string;
-  /** Line under the table of contents pointing at the sibling page. */
   seeAlso: ReactNode;
   sections: LegalSection[];
   cta: { title: string; text: string; links: [label: string, to: string][] };
 };
 
-/**
- * Terms of service and Privacy policy share this layout: a sticky table of contents on the left from 1024px, numbered
- * sections on the right, and a closing card that points at the sibling page and Contact us.
- */
 const LegalPage = ({ title, lead, meta, onThisPage, seeAlso, sections, cta }: LegalPageProps) => (
   <div className="flex flex-col gap-8">
     <div className="flex max-w-155 flex-col gap-2">

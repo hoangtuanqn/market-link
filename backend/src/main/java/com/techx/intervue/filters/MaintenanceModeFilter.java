@@ -16,12 +16,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-/**
- * Site-wide maintenance mode. Runs right after JwtAuthFilter (so the role, if any, is already on
- * the SecurityContext) and before the authorization decision. Everyone but an already-authenticated
- * admin gets 503 while maintenance is on; the status endpoint and /api/v1/auth/** stay open so the
- * frontend can poll the status and an admin can still sign in.
- */
 @Component
 @RequiredArgsConstructor
 public class MaintenanceModeFilter extends OncePerRequestFilter {

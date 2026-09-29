@@ -6,7 +6,6 @@ const Hero = () => {
 
   return (
     <section className="about-hero-editorial">
-      {/* Display Title */}
       <h1 className="about-hero-display-title">
         {t('hero.titleLine1', 'Where Vietnamese Farmers Entrust Living Soil,')}
         <br />
@@ -15,7 +14,6 @@ const Hero = () => {
         </span>
       </h1>
 
-      {/* Lead Narrative */}
       <p className="about-hero-lead-text">
         {t(
           'intro',
@@ -23,7 +21,6 @@ const Hero = () => {
         )}
       </p>
 
-      {/* Action Buttons */}
       <div className="about-hero-cta-row">
         <ButtonLink to="/markets" className="about-hero-btn">
           {t('hero.exploreMarkets', 'Explore Weekend Markets →')}
@@ -37,9 +34,7 @@ const Hero = () => {
         </a>
       </div>
 
-      {/* Asymmetric 3-Frame Editorial Montage */}
       <div className="about-hero-montage">
-        {/* Frame Left */}
         <div className="about-montage-frame about-montage-left">
           <img
             className="about-montage-img"
@@ -51,7 +46,6 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Frame Center (Elevated) */}
         <div className="about-montage-frame about-montage-center">
           <img
             className="about-montage-img"
@@ -63,7 +57,6 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Frame Right */}
         <div className="about-montage-frame about-montage-right">
           <img
             className="about-montage-img"
@@ -76,7 +69,6 @@ const Hero = () => {
         </div>
       </div>
 
-      {/* Highlight Badges Ticker */}
       <div className="about-hero-ticker">
         <span className="about-ticker-pill">{t('hero.ticker1', '✨ Dawn-harvested produce')}</span>
         <span className="about-ticker-pill">{t('hero.ticker2', '🤝 100% Direct stall payment')}</span>

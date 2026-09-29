@@ -5,15 +5,7 @@ import { useThreadList } from '@/lib/chat/useChat';
 import { useSearchParams, useLocation } from 'react-router';
 import type { ConversationSummary } from '@/types/chat.types';
 
-/**
- * The shared body of both /messages pages (spec §9.3: Farmer reuses the EXACT SAME component as Customer, only the
- * shell differs).
- *
- * Below `md` it is TWO SEPARATE screens (spec §9.2): the list, tapping one opens the conversation, with a back button.
- * Squeezing two columns into 375px is unreadable.
- */
 type Props = {
-  /** The empty-state sentence, by role (see ThreadList). */
   emptyText?: string;
 };
 
@@ -25,7 +17,6 @@ export default function MessagesLayout({ emptyText }: Props) {
   const pinnedProductId = Number(params.get('product')) || undefined;
   const pinnedOrderId = Number(params.get('order')) || undefined;
 
-  // activeId so the hook keeps the open thread's badge at 0 (Review Focus #14)
   const { threads, loading, error, reload, hasMore, loadMore, loadingMore } = useThreadList(activeId);
 
   const fallback = (location.state as { thread?: ConversationSummary } | null)?.thread;

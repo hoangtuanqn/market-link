@@ -4,7 +4,6 @@ import LegalPage, { type LegalSection } from '@/components/LegalPage';
 import { LEGAL_UPDATED } from '@/constants/legal';
 import { formatDate } from '@/lib/format';
 
-/** Terms of service: what reserving, changing and paying at the stall mean for each side. Linked from registration. */
 const TermsPage = () => {
   const { t } = useTranslation('Terms');
   return (

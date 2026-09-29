@@ -6,18 +6,12 @@ import Helper from '@/utils/helper';
 type Props = {
   label: string;
   trigger: ReactNode;
-  /** The full page; the panel always has a "See all" link to it (a phone cannot hover). */
   to: string;
   children: ReactNode;
   buttonClassName?: string;
-  /** `data-tour` anchor for the first-visit guided tour (lib/onboarding.ts). */
   tourId?: string;
 };
 
-/**
- * The header's popover (spec §9.1): hover **and** click/keyboard, Esc or clicking outside closes it, `aria-expanded` on
- * the button. Panel `shadow-pop`, `z-50` — above the header (`z-40`).
- */
 export function Popover({ label, trigger, to, children, buttonClassName, tourId }: Props) {
   const { t } = useTranslation('common');
   const [open, setOpen] = useState(false);
@@ -25,7 +19,6 @@ export function Popover({ label, trigger, to, children, buttonClassName, tourId 
   const button = useRef<HTMLButtonElement>(null);
   const panelId = useId();
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // Open because the mouse hovered in: clicking the icon at that point leaves it open, does not close it
   const hovering = useRef(false);
 
   useEffect(() => {
@@ -47,7 +40,6 @@ export function Popover({ label, trigger, to, children, buttonClassName, tourId 
     };
   }, [open]);
 
-  // Moving the mouse from the button to the panel crosses a small gap: wait one beat before closing
   const enter = () => {
     if (closeTimer.current) clearTimeout(closeTimer.current);
     hovering.current = true;

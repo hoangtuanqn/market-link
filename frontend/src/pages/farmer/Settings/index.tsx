@@ -1,10 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import SettingsPanel from '@/components/settings/SettingsPanel';
 
-/**
- * Farmer settings, inside the stall panel shell: only the shared panel. The stall's own selling settings live where
- * they take effect: the order cutoff on Stall & pickup (FR-067), slot length and orders per slot in Generate slots.
- */
 const FarmerSettingsPage = () => {
   const { t } = useTranslation('FarmerSettings');
   return (

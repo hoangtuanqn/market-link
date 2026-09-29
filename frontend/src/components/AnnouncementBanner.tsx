@@ -8,7 +8,6 @@ const AnnouncementBanner = ({
   onDismiss,
 }: {
   announcement: AnnouncementType;
-  /** Called additionally on close (e.g. remember it so it does not show next time). */
   onDismiss?: () => void;
 }) => {
   const { t } = useTranslation();
@@ -17,7 +16,6 @@ const AnnouncementBanner = ({
 
   return (
     <div role="status" className="bg-board text-on-board border-board-muted border-b-[1.5px]">
-      {/* same container and left edge as the header */}
       <div className="mx-auto flex max-w-(--size-container) items-center gap-3 px-4 py-3 md:px-6">
         <MegaphoneIcon className="text-accent flex-none" />
         <div className="min-w-0 flex-1">

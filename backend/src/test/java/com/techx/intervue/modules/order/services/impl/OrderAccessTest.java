@@ -37,14 +37,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.access.AccessDeniedException;
 
-/**
- * Review focus #3 — the examiner will change the {id} in the URL. Every path into an order must
- * return 403 when the order does not belong to the caller, even when the order exists. 404 is not
- * acceptable either: it reveals that the order exists.
- *
- * <p>Today (per the Clock) is 26/09/2026, 09:00 Vietnam time. The repository is a plain mock: the
- * real SQL is proven by a manual check (curl) after seeding, not here.
- */
 class OrderAccessTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -139,7 +131,6 @@ class OrderAccessTest {
                 .isInstanceOf(OrderNotYoursException.class);
     }
 
-    /** A different farmer_id -> OrderNotYoursException. */
     @Test
     void farmerCannotReadAnOrderPlacedAtAnotherStall() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -149,7 +140,6 @@ class OrderAccessTest {
                 .isInstanceOf(OrderNotYoursException.class);
     }
 
-    /** Does not throw, summary.orderCode is right. */
     @Test
     void theOwningCustomerCanRead() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -160,7 +150,6 @@ class OrderAccessTest {
         assertThat(detail.summary().orderCode()).isEqualTo("ML-20260926-ABCD");
     }
 
-    /** Does not throw. */
     @Test
     void theOwningFarmerCanRead() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -169,10 +158,6 @@ class OrderAccessTest {
         assertThat(service.detail(FARMER_USER_ID, ORDER_ID)).isNotNull();
     }
 
-    /**
-     * The Farmer needs to know whom to call when the customer does not show up; a customer needs
-     * nothing about other customers.
-     */
     @Test
     void onlyTheFarmerSeesTheCustomerBlock() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -182,7 +167,6 @@ class OrderAccessTest {
         assertThat(service.detail(CUSTOMER_ID, ORDER_ID).customer()).isNull();
     }
 
-    /** A placed order, cutoffAt = yesterday -> canCancel false, canModify false. */
     @Test
     void canCancelIsFalseOnceCutoffHasPassed() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -200,13 +184,6 @@ class OrderAccessTest {
         assertThat(detail.canModify()).isFalse();
     }
 
-    // ---------- beyond the brief's 6 tests ----------
-
-    /**
-     * D-13: a Farmer also buys — reads an order they placed at ANOTHER STALL (the order's
-     * farmerUserId ≠ the caller) like a normal buyer: not this order's Farmer, so no customer
-     * block.
-     */
     @Test
     void aFarmerCanReadTheirOwnPurchaseAsABuyer() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -218,11 +195,6 @@ class OrderAccessTest {
         assertThat(detail.canCancel()).isTrue();
     }
 
-    /**
-     * Buying at one's own stall (the order's customer_id and farmer_profiles.user_id are the SAME
-     * userId): the caller is both the buyer and the owning Farmer at once — both roles hold on one
-     * response. The order is still placed, the cutoff still in the future.
-     */
     @Test
     void aFarmerBuyingAtTheirOwnStallSeesBothTheCustomerBlockAndCanCancel() {
         when(orderQueries.findDetail(ORDER_ID))
@@ -235,7 +207,6 @@ class OrderAccessTest {
         assertThat(detail.canModify()).isTrue();
     }
 
-    /** An order id that does not exist → 404 (OrderNotFoundException), not 403: nothing leaks. */
     @Test
     void detailThrowsNotFoundForAnOrderThatDoesNotExist() {
         when(orderQueries.findDetail(ORDER_ID)).thenReturn(Optional.empty());
@@ -244,14 +215,12 @@ class OrderAccessTest {
                 .isInstanceOf(OrderNotFoundException.class);
     }
 
-    /** An unknown status on GET /orders → 400 (whitelisted through OrderStatus.valueOf, R-04). */
     @Test
     void myOrdersRejectsAnUnknownStatus() {
         assertThatThrownBy(() -> service.myOrders(CUSTOMER_ID, "bogus", 1, 10))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    /** An unknown status on GET /farmer/orders → 400, same whitelist rule. */
     @Test
     void farmerOrdersRejectsAnUnknownStatus() {
         when(farmerRepository.findByUserId(FARMER_USER_ID))
@@ -261,7 +230,6 @@ class OrderAccessTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    /** A FARMER-role account without farmer_profiles (inconsistent data) → fail-closed 403. */
     @Test
     void farmerOrdersRefusesAnAccountWithoutAStallProfile() {
         when(farmerRepository.findByUserId(FARMER_USER_ID)).thenReturn(Optional.empty());
@@ -270,10 +238,6 @@ class OrderAccessTest {
                 .isInstanceOf(AccessDeniedException.class);
     }
 
-    /**
-     * FR-065: the Farmer's order list must carry the customer's name so the chat "order pin" can
-     * show who placed it, without a separate lookup.
-     */
     @Test
     void listRowsCarryTheCustomerNameForTheStall() {
         assertThat(OrderQueryRepository.FARMER_ORDERS_SQL)

@@ -17,9 +17,6 @@ import org.mockito.ArgumentCaptor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/**
- * FR-102: there is no admin sign-up API, so the first admin account must be created by the seed.
- */
 class AdminSeederTest {
 
     private static final String EMAIL = "admin@marketlink.vn";
@@ -65,7 +62,6 @@ class AdminSeederTest {
         assertThat(admin.getPhone()).isEqualTo(PHONE);
     }
 
-    /** The password must go through PasswordEncoder, otherwise authenticate() never matches. */
     @Test
     void storesThePasswordHashedSoLoginMatchesIt() {
         when(userRepository.existsByEmail(EMAIL)).thenReturn(false);
@@ -77,10 +73,6 @@ class AdminSeederTest {
         assertThat(passwordEncoder.matches(PASSWORD, admin.getPasswordHash())).isTrue();
     }
 
-    /**
-     * Runs on every startup: changing the admin password in the DB then restarting is not
-     * overwritten again.
-     */
     @Test
     void doesNothingWhenTheAdminEmailAlreadyExists() {
         when(userRepository.existsByEmail(EMAIL)).thenReturn(true);
@@ -90,10 +82,6 @@ class AdminSeederTest {
         verify(userRepository, never()).save(any());
     }
 
-    /**
-     * users.phone is UNIQUE: inserting over another account's number would make the backend die at
-     * startup, far more costly than skipping a dev convenience.
-     */
     @Test
     void skipsWhenThePhoneBelongsToAnotherAccount() {
         when(userRepository.existsByEmail(EMAIL)).thenReturn(false);

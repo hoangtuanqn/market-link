@@ -20,11 +20,6 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @AllArgsConstructor
 public class RefreshTokenService implements RefreshTokenServiceInterface {
-    /**
-     * Two tabs refresh with one cookie: the request that arrives later sees the token was just
-     * rotated. Within this window only reject, do not treat it as theft (do not revoke all of the
-     * user's tokens).
-     */
     static final Duration ROTATION_GRACE = Duration.ofSeconds(30);
 
     private JwtServiceInterface jwtService;
@@ -43,7 +38,7 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
         String tokenHash = utils.hash(token);
         RefreshToken entity =
                 RefreshToken.builder()
-                        .tokenHash(tokenHash) // hashed token
+                        .tokenHash(tokenHash)
                         .userId(userId)
                         .expiryDate(
                                 Instant.now()
@@ -56,11 +51,6 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
         return new IssuedToken(token, entity.getId());
     }
 
-    /**
-     * FR-003: exchange the old refresh token for a new one (rotation). Reusing an old token →
-     * treated as stolen, revoke all of the user's tokens. dontRollbackOn so that revocation is not
-     * rolled back with the exception.
-     */
     @Override
     @Transactional(dontRollbackOn = BadCredentialsException.class)
     public RefreshResult rotateToken(String rawToken) {
@@ -80,11 +70,6 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
                 existing.getUserId(), newToken.rawToken(), existing.isRememberMe());
     }
 
-    /**
-     * FR-006: revoke the refresh token on logout. Only revoke the token of that user themself
-     * (R-06). A token that does not exist or is already revoked is skipped so calling logout
-     * several times still succeeds.
-     */
     @Override
     @Transactional
     public void revokeToken(String rawToken, Long userId) {
@@ -109,14 +94,12 @@ public class RefreshTokenService implements RefreshTokenServiceInterface {
                 log.warn("Refresh token was just rotated, rejected without revoking the user.");
                 throw new BadCredentialsException("Refresh token is not valid.");
             }
-            // revoke every refresh token of the user
             repository.revokeAllRefreshTokenByUser(entity.getUserId());
             log.error("Refresh token reuse detected, revoked all tokens of the user.");
             throw new BadCredentialsException("Refresh token is not valid.");
         }
     }
 
-    /** A token revoked by rotation (not by logout) and just rotated. */
     private static boolean isJustRotated(RefreshToken entity) {
         return entity.getReplacedByTokenId() != null
                 && entity.getUpdatedAt() != null

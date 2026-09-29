@@ -36,20 +36,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.ObjectProvider;
 import org.springframework.stereotype.Service;
 
-/**
- * FR-090/091 with Claude: a manual tool-use loop. Claude reads the question, calls the read-only
- * tools in {@link AssistantTools} (catalogue lookups and the user-guide search that grounds how-to
- * answers), and writes the reply from what they return. The loop is bounded by {@code
- * maxToolRounds}; the last round forbids tools so a text answer always comes back.
- *
- * <p>Errors from the Claude API are not handled here: they propagate to {@link ChatService}, which
- * falls back to the keyword engine.
- */
 @Slf4j
 @Service
 public class ClaudeAssistant {
 
-    /** Tool names joined for the chat_messages.intent column (VARCHAR 50), prefixed "AI:". */
     private static final int INTENT_COLUMN = 50;
 
     private static final String REFUSAL_REPLY =
@@ -61,10 +51,6 @@ public class ClaudeAssistant {
         "Chủ nhật", "Thứ Hai", "Thứ Ba", "Thứ Tư", "Thứ Năm", "Thứ Sáu", "Thứ Bảy"
     };
 
-    /**
-     * Stable across requests so it can be cached together with the tool list. Anything that changes
-     * per request (today's date) goes in a second block after the cache breakpoint.
-     */
     static final String SYSTEM_PROMPT =
             """
             You are the MarketLink assistant. MarketLink lets customers in Ho Chi Minh City \
@@ -116,10 +102,6 @@ public class ClaudeAssistant {
             - Result cards with links are shown under your reply, so do not paste URLs.
             """;
 
-    /**
-     * Appended to the cached system prefix, so each audience gets its own cache entry. Kept short:
-     * the tool list already tells Claude what it can do, this says who it is talking to.
-     */
     private static final Map<AssistantAudience, String> AUDIENCE_PROMPT =
             Map.of(
                     AssistantAudience.CUSTOMER,
@@ -197,12 +179,6 @@ public class ClaudeAssistant {
         this.clock = clock;
     }
 
-    /**
-     * @param reply the text shown to the user
-     * @param intent FR-092 intent of the first tool called, UNKNOWN when none was needed
-     * @param loggedIntent what is stored in chat_messages.intent, e.g. "AI:search_products"
-     * @param results result cards from every tool call, deduplicated
-     */
     public record AiReply(
             String reply,
             ChatIntent intent,
@@ -223,11 +199,6 @@ public class ClaudeAssistant {
         return properties.enabled() && client.getIfAvailable() != null;
     }
 
-    /**
-     * Answers one user message.
-     *
-     * @param history earlier messages of this session and account, oldest first
-     */
     public AiReply reply(
             List<ChatMessage> history,
             String userMessage,
@@ -267,8 +238,6 @@ public class ClaudeAssistant {
             if (!said.isEmpty()) {
                 writtenBesideTools = said;
             }
-            // Keep the whole assistant turn (text + tool_use blocks), then answer every tool_use
-            // in a single user message
             conversation.add(response.toParam());
             List<ContentBlockParam> results = new ArrayList<>();
             for (ContentBlock block : response.content()) {
@@ -301,7 +270,6 @@ public class ClaudeAssistant {
                             .contentOfBlockParams(results)
                             .build());
         }
-        // Unreachable: the last round forbids tools, so it always ends with text
         throw new IllegalStateException("Assistant loop ended without a reply");
     }
 
@@ -327,17 +295,11 @@ public class ClaudeAssistant {
                         .messages(conversation);
         AssistantTools.definitionsFor(audience).forEach(builder::addTool);
         if (lastRound) {
-            // Out of tool rounds: the tools stay declared (earlier tool_use blocks refer to them)
-            // but Claude must now answer with what it has
             builder.toolChoice(ToolChoiceNone.builder().build());
         }
         return builder.build();
     }
 
-    /**
-     * Today, the time now and the dates of the next 7 days, tomorrow named as such, so "this
-     * Saturday" is looked up rather than computed: the model gets calendar arithmetic wrong.
-     */
     String today() {
         LocalDateTime now = LocalDateTime.now(clock);
         LocalDate date = now.toLocalDate();
@@ -355,10 +317,6 @@ public class ClaudeAssistant {
         return text.append('.').toString();
     }
 
-    /**
-     * "FRIDAY 02/10/2026 (Thứ Sáu, day_of_week 5)". The Vietnamese name is spelled out because the
-     * model read "day_of_week 5" as "thứ 5", which is Thursday, and called Friday "Thứ Năm".
-     */
     private static String dayLine(LocalDate date) {
         int dayOfWeek = date.getDayOfWeek().getValue() % 7;
         return date.getDayOfWeek()
@@ -371,10 +329,6 @@ public class ClaudeAssistant {
                 + ")";
     }
 
-    /**
-     * Stored history → Claude messages. The API needs the first message to come from the user, so a
-     * leading bot message (a greeting) is dropped; consecutive same-role messages are allowed.
-     */
     static List<MessageParam> toParams(List<ChatMessage> history) {
         List<MessageParam> out = new ArrayList<>();
         for (ChatMessage m : history) {
@@ -394,17 +348,12 @@ public class ClaudeAssistant {
         return MessageParam.builder().role(role).content(content).build();
     }
 
-    @SuppressWarnings("unchecked") // tool input is always a JSON object
+    @SuppressWarnings("unchecked")
     private static Map<String, Object> inputOf(ToolUseBlock use) {
         Map<String, Object> input = use._input().convert(Map.class);
         return input == null ? Map.of() : input;
     }
 
-    /**
-     * The final turn's text. When that turn is empty, the answer is what Claude wrote beside its
-     * last tool call: with a button on offer it often says everything there, then ends the turn
-     * with no content.
-     */
     private static String textOf(Message response, String writtenBesideTools) {
         String reply = joinedText(response);
         if (reply.isEmpty()) {
@@ -426,11 +375,6 @@ public class ClaudeAssistant {
         return value.length() <= INTENT_COLUMN ? value : value.substring(0, INTENT_COLUMN);
     }
 
-    /**
-     * What the person is looking at, appended after the cache breakpoint because it changes per
-     * request. Only shaped values reach this: a route pattern and a record reference, both
-     * validated on the request. There is nothing here a person could have typed.
-     */
     private static String onScreen(PageContext page) {
         if (page == null || page.page() == null || page.page().isBlank()) {
             return "";

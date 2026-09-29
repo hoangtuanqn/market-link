@@ -39,10 +39,6 @@ public class StallService implements StallServiceInterface {
     private static final int MIN_CUTOFF_HOURS = 1;
     private static final int MAX_CUTOFF_HOURS = 72;
 
-    /**
-     * Enough for every stall of a market in one pass — the market page does not paginate the Farmer
-     * list.
-     */
     private static final int AT_MARKET_LIMIT = 200;
 
     private final FarmerProfileRepository farmerProfileRepository;
@@ -63,10 +59,6 @@ public class StallService implements StallServiceInterface {
                 safeSize);
     }
 
-    /**
-     * D-09: for customers, a stall that is not approved / is suspended simply does not exist — 404,
-     * without revealing the reason.
-     */
     @Override
     public StallDetailResource publicDetail(long farmerId) {
         FarmerProfile profile =
@@ -120,13 +112,10 @@ public class StallService implements StallServiceInterface {
             throw new MarketAlreadyJoinedException();
         }
         if (link == null) {
-            // Never sold here before
             link = new FarmerMarket();
             link.setFarmerId(profile.getId());
             link.setMarketId(request.marketId());
         }
-        // Left and came back: turn the old row back on so historical slots/orders still point to
-        // the right place
         link.setActive(true);
         link.setStallCode(blankToNull(request.stallCode()));
         BigDecimal lat =
@@ -226,10 +215,6 @@ public class StallService implements StallServiceInterface {
         return queryRepository.search(null, marketId, day, 0, AT_MARKET_LIMIT).items();
     }
 
-    /**
-     * R-06: the profile is always looked up by the token's userId; there is no path that takes a
-     * farmerId from the request.
-     */
     private FarmerProfile mine(long userId) {
         return farmerProfileRepository
                 .findByUserId(userId)

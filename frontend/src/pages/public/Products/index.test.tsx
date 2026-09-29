@@ -47,7 +47,6 @@ describe('ProductsPage category filter (FR-020)', () => {
     >);
   });
 
-  /** The Home category tiles link to /products?category=ID: the list must open already filtered. */
   it('starts filtered by the category in the address', async () => {
     renderAt('/products?category=3');
 

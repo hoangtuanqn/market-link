@@ -63,7 +63,6 @@ class ChatServiceTest {
     void setUp() {
         knowledge = mock(ChatKnowledgeRepository.class);
         messages = mock(ChatMessageRepository.class);
-        // Thursday, 24/09/2026 Vietnam time
         Clock clock =
                 Clock.fixed(Instant.parse("2026-09-24T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
         availability = mock(ProductAvailabilityResolver.class);
@@ -100,10 +99,6 @@ class ChatServiceTest {
         verify(knowledge, times(0)).searchProducts(any(), any(), anyBoolean());
     }
 
-    /**
-     * Price and stock come from the nearest pickup date that still has stock (per-date stock,
-     * FR-063), not from products.price / products.stock_quantity.
-     */
     @Test
     void productDetailShowsTheNearestDatePriceInUsdAndStock() {
         when(knowledge.searchProducts("ca chua", null, true))
@@ -152,10 +147,6 @@ class ChatServiceTest {
         assertThat(reply.reply()).contains("mở cửa 06:00–11:00", "các ngày CN, T7");
     }
 
-    /**
-     * The keyword engine answers in the language of the question, like the Claude assistant does
-     * (test run 28/09, G10). Market and stall names stay as they are.
-     */
     @Test
     void anEnglishQuestionIsStillAnsweredInEnglish() {
         ChatReplyResource reply = ask("Ben Thanh market hours");
@@ -261,8 +252,6 @@ class ChatServiceTest {
                         tuple(ChatMessage.ROLE_USER, "GREETING", 42L, SESSION),
                         tuple(ChatMessage.ROLE_BOT, "GREETING", 42L, SESSION));
     }
-
-    // ---------------------------------------------------------------- Claude assistant
 
     @Test
     void signedInCustomerIsAnsweredByTheAssistantAndToolsAreLogged() {

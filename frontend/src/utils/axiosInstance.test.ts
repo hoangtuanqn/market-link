@@ -14,9 +14,6 @@ describe('watchForAccountDeactivated', () => {
   });
 
   it('clears the session, stashes the server message for the next page, and redirects home', async () => {
-    // The redirect that follows is a full document navigation — it tears down React (and any toast
-    // shown now) before it can paint. Stashing across the reload, instead of toasting here, is what
-    // lets AccountDeactivatedToastSync show it once the new page has actually mounted.
     Session.save({ accessToken: 'stale-token', user: { id: 1 } as never }, false);
     Cart.add({ productId: 1, name: 'Tomato', unit: 'kg', price: 1.5, max: 5, farmerId: 7, stallName: 'Cô Tư' }, 1);
     const assignSpy = vi.fn();
@@ -27,8 +24,6 @@ describe('watchForAccountDeactivated', () => {
       statusText: 'Unauthorized',
       headers: {},
       config: {} as never,
-      // The real envelope (ApiResource): `message` sits at the root, and ErrorResource carries only
-      // `code` + `details`. Reading `data.error.message` is what made the banner say "undefined".
       data: {
         success: false,
         message: 'Your account has been deactivated. Reason: No-shows.',
@@ -39,7 +34,6 @@ describe('watchForAccountDeactivated', () => {
     await expect(watchForAccountDeactivated(error)).rejects.toBe(error);
 
     expect(Session.getAccessToken()).toBeNull();
-    // FR-006: signed out for good, so the cart does not wait for the next person on this browser
     expect(Cart.lines()).toEqual([]);
     expect(BlockedNotice.peek()).toEqual({
       kind: 'account',
@@ -74,8 +68,6 @@ describe('watchForStallSuspended', () => {
   });
 
   it('stashes the reason and redirects to the pending screen, without clearing the session', async () => {
-    // D-09: a suspended stall stays signed in so the Farmer can still finish orders already
-    // accepted — unlike an account ban, this must never sign them out.
     Session.save({ accessToken: 'still-valid', user: { id: 1 } as never }, false);
     const assignSpy = vi.fn();
     vi.stubGlobal('location', { ...window.location, assign: assignSpy });
@@ -118,7 +110,6 @@ describe('watchForStallSuspended', () => {
   });
 });
 
-/** The refresh a 401 triggers: only a real rejection of /auth/refresh ends the session (FR-003). */
 describe('refresh after a 401', () => {
   const originalAdapter = privateApi.defaults.adapter;
 
@@ -129,7 +120,6 @@ describe('refresh after a 401', () => {
     sessionStorage.clear();
   });
 
-  /** The original request always answers 401, so the interceptor goes through /auth/refresh. */
   const expiredAccessToken = () => {
     privateApi.defaults.adapter = (config: InternalAxiosRequestConfig) =>
       Promise.reject(

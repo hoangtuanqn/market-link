@@ -4,7 +4,6 @@ import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { FormStep } from '@/components/ui/form-step';
 
-/** One box per commitment: its id, the copy key under `step3`, and the key of its hint. */
 const COMMITMENTS = [
   { id: 't1', label: 'step3.true', hint: 'step3.trueHint' },
   { id: 't2', label: 'step3.present', hint: 'step3.presentHint' },
@@ -19,7 +18,6 @@ type CommitmentsStepProps = {
   onSaveAndLeave: () => void;
 };
 
-/** Step 3: the three commitments, then send — or keep a draft and finish later. */
 const CommitmentsStep = ({ ticks, termsError, isSubmitting, onTick, onSaveAndLeave }: CommitmentsStepProps) => {
   const { t } = useTranslation('CustomerBecomeFarmer');
   return (

@@ -28,7 +28,6 @@ describe('About page credits (FR-082)', () => {
 
   it('names the currency the prices are actually in', () => {
     about();
-    // lib/format.ts is locked to USD; the credits line used to say Vietnamese dong.
     expect(screen.getByText(/US dollars/)).toBeInTheDocument();
     expect(screen.queryByText(/Vietnamese đồng/i)).not.toBeInTheDocument();
   });
@@ -36,12 +35,6 @@ describe('About page credits (FR-082)', () => {
 
 const LOCALES = { de, en, es, fr, id, ja, ko, th, vi, zh };
 
-/**
- * The dollar, written the way each language writes it. Matching on the word rather than banning "đồng" outright,
- * because Vietnamese says "đồng hồ 24 giờ" for the 24-hour clock in the very same sentence.
- *
- * Key and shape parity across languages is covered once for every namespace in src/i18n/locales.test.ts.
- */
 const DOLLAR: Record<keyof typeof LOCALES, string> = {
   de: 'US-Dollar',
   en: 'US dollars',

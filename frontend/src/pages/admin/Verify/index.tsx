@@ -18,11 +18,6 @@ type Alert = { title: string; text: string };
 
 const CODE_REGEX = /^\d{6}$/;
 
-/**
- * FR-008 — step 2 of admin sign-in (prototype admin/verify.html). The password step does not issue a session, it only
- * returns an mfaToken (lives 5 minutes, single use) through router state; going in directly or pressing F5 goes back to
- * the sign-in page. 5 wrong tries → the backend locks for 15 minutes.
- */
 const AdminVerifyPage = () => {
   const { t } = useTranslation('AdminVerify');
   const pending = useLocation().state as PendingMfa | null;
@@ -85,7 +80,6 @@ const AdminVerifyPage = () => {
           setAlert({ title: t('alert.locked'), text: message });
           break;
         case 'MFA_TOKEN_INVALID':
-          // over 5 minutes or the token was already used: the password must be entered again
           Notification.error({ text: message });
           navigate(ADMIN_LOGIN_PATH, { replace: true });
           break;

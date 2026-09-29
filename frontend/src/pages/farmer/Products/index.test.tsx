@@ -96,11 +96,9 @@ describe('FarmerProductsPage — near-expiry deals', () => {
     expect(screen.getByRole('button', { name: 'Near-expiry deal for Trứng vịt' })).toHaveTextContent(
       'Near-expiry deal',
     );
-    // Non-regression (drift D7): dev's FR-063 per-date Adjust button must survive the new column.
     expect(screen.getAllByRole('button', { name: 'Adjust' })).toHaveLength(1);
   });
 
-  /** Every row has its own deal button, so each one needs a name that says which product it is for. */
   it('names each deal button after its product', async () => {
     vi.mocked(ProductApi.mine).mockResolvedValue([
       product(1, 'Trứng vịt', '2026-10-03'),
@@ -122,7 +120,6 @@ describe('FarmerProductsPage — near-expiry deals', () => {
 });
 
 describe('FarmerProductsPage — not orderable yet', () => {
-  /** FR-062/FR-063: a product on sale with no pickup day open (no weekly stock yet) says so and links to the fix. */
   it('points a product with no open pickup day to the weekly stock', async () => {
     renderPage();
 
@@ -133,7 +130,6 @@ describe('FarmerProductsPage — not orderable yet', () => {
 });
 
 describe('FarmerProductsPage — restore from trash', () => {
-  /** #214 clears the weekly stock on delete, so a restored product cannot be ordered until it is set again. */
   it('warns that a restored product needs its weekly stock again', async () => {
     vi.mocked(ProductApi.mineDeleted).mockResolvedValue([product(9, 'Trứng cút')]);
     renderPage();
@@ -146,7 +142,6 @@ describe('FarmerProductsPage — restore from trash', () => {
 });
 
 describe('FarmerProductsPage — adjust one day', () => {
-  /** FR-063: the server only takes a price above $0 for a day; $0 used to be sent and came back as a vague error. */
   it('asks for a price above $0 under the price field and sends nothing', async () => {
     renderPage();
 

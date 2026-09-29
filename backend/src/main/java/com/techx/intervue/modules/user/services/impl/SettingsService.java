@@ -14,9 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-/**
- * the id comes from the access token so users can only read / edit their own preferences (R-06).
- */
 @Service
 @RequiredArgsConstructor
 public class SettingsService implements SettingsServiceInterface {
@@ -26,10 +23,6 @@ public class SettingsService implements SettingsServiceInterface {
 
     private final UserSettingsRepository repository;
 
-    /**
-     * null when the user never saved: the frontend then keeps the choices already on the device
-     * instead of resetting them to made-up defaults.
-     */
     @Override
     @Transactional(readOnly = true)
     public SettingsResource get(Long userId) {
@@ -56,10 +49,6 @@ public class SettingsService implements SettingsServiceInterface {
         return toResource(repository.save(row));
     }
 
-    /**
-     * extras is free-form per role, so only the shape is checked: keys like "note.orderReady",
-     * short values.
-     */
     private static Map<String, String> checkedExtras(Map<String, String> extras) {
         Map<String, String> out = new LinkedHashMap<>();
         if (extras == null) {

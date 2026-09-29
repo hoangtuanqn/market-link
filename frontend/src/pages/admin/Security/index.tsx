@@ -33,12 +33,6 @@ const StatusPill = ({ on }: { on: boolean }) => {
   );
 };
 
-/**
- * FR-008 — an admin turns two-step verification on / off (prototype admin/security.html). First-time setup (QR code,
- * confirm code, recovery codes) lives on its own page (/admin/setup-2fa, mandatory right after an admin's first
- * sign-in) — this page only manages an already-decided state: regenerate codes, turn off, or turn back on by going to
- * the setup page again.
- */
 const AdminSecurityPage = () => {
   const { t } = useTranslation('AdminSecurity');
   const navigate = useNavigate();
@@ -49,7 +43,6 @@ const AdminSecurityPage = () => {
   const [dialogError, setDialogError] = useState<string>();
   const [busy, setBusy] = useState(false);
 
-  // only setState in a promise callback (the initial state is already loading)
   const fetchStatus = useCallback(() => {
     MfaApi.status()
       .then((response) => setStatus({ kind: 'ready', data: response.data }))

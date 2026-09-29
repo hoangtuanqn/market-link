@@ -12,7 +12,6 @@ const ok = (data: unknown) => ({ data: { success: true, message: 'OK', data, tim
 describe('FarmerApi', () => {
   beforeEach(() => vi.clearAllMocks());
 
-  /** The instance's 10 s timeout would cut off a 40 MB video on a phone connection. */
   it('uploads a Farmer application video without the default timeout', async () => {
     vi.mocked(privateApi.post).mockResolvedValue(ok({ url: '/u/v.mp4' }));
 

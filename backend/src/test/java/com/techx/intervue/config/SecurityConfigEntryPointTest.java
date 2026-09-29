@@ -13,10 +13,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 
-/**
- * QA E2E v2 BUG-003: calling a signed-in route with no access token said "Something went wrong on
- * our side", which reads like a server fault. It must be a plain 401 telling the user to sign in.
- */
 class SecurityConfigEntryPointTest {
 
     private final ObjectMapper objectMapper = new ObjectMapper().findAndRegisterModules();

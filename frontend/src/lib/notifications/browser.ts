@@ -1,11 +1,6 @@
 import NotificationApi from '@/api-requests/notification.requests';
 import type { NotificationFrame } from '@/types/notification.types';
 
-/**
- * An operating system notification through the service worker (/sw.js). registration.showNotification works even when
- * the tab is hidden and on Android Chrome (new Notification() does not). The same tag → several tabs calling it still
- * leave just one notification.
- */
 export type BrowserPermission = NotificationPermission | 'unsupported';
 
 export const isSupported = () =>
@@ -48,7 +43,6 @@ export const showOsNotification = async (f: NotificationFrame) => {
 
 let audio: AudioContext | null = null;
 
-/** A short "ting" sound, no audio file needed. If the browser blocks sound before any user gesture, skip it. */
 export const beep = () => {
   try {
     audio ??= new AudioContext();
@@ -72,11 +66,6 @@ const fromBase64Url = (value: string) => {
   return Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
 };
 
-/**
- * N3 — register Web Push for this browser and send it to the server (receive notifications even after the tab is
- * closed). Only runs once permission is granted and the server has a VAPID key; calling it many times is still just one
- * row (the server upserts by endpoint).
- */
 export const syncPushSubscription = async () => {
   if (!pushSupported() || permission() !== 'granted') return;
   try {
@@ -94,10 +83,6 @@ export const syncPushSubscription = async () => {
   }
 };
 
-/**
- * Sign out: this machine stops receiving Web Push of the account that just left (shared machine). Call it while the
- * session is still valid.
- */
 export const dropPushSubscription = async () => {
   if (!pushSupported()) return;
   try {

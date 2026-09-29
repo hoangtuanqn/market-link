@@ -21,9 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-053 — {@code GET /farmer/reviews}, {@code POST /farmer/reviews/{id}/response} (contract §8).
- */
 @RestController
 @RequestMapping("/api/v1/farmer/reviews")
 @PreAuthorize("hasRole('FARMER')")
@@ -32,7 +29,6 @@ public class FarmerReviewController extends BaseController {
 
     private final ReviewServiceInterface reviews;
 
-    /** The stall's own review inbox: of the stall itself and of every one of its products. */
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<ReviewResource>>> mine(
             @AuthenticationPrincipal CustomUserDetails user,

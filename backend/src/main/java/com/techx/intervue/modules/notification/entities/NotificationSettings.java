@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Sound and quiet hours (HH:mm, Asia/Ho_Chi_Minh time) of one person. */
 @Entity
 @Getter
 @Setter

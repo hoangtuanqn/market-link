@@ -3,14 +3,6 @@ package com.techx.intervue.modules.geo.requests;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-/**
- * An address as the form sends it (FR-001, FR-073). Which parts are required depends on the country
- * and on who the address is for; AddressService checks that, the annotations only bound the lengths
- * to the columns of V20260927002.
- *
- * <p>Vietnam: provinceCode + wardCode + streetName (+ addressLine, the house number). Other
- * countries: regionName + cityName + addressLine.
- */
 public record AddressPartsRequest(
         @NotBlank(message = "Choose a country.") @Size(max = 2) String countryCode,
         @Size(max = 5) String provinceCode,

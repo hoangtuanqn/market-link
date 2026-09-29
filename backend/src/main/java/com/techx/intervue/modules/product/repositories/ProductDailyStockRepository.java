@@ -16,14 +16,6 @@ public interface ProductDailyStockRepository extends JpaRepository<ProductDailyS
 
     Optional<ProductDailyStock> findByProductIdAndStockDate(Long productId, LocalDate stockDate);
 
-    /**
-     * Creates the row for (product, date) if it doesn't exist yet, seeded from the template
-     * matching {@code dayOfWeek} that is still active; no matching template inserts nothing at all
-     * — that date simply is not orderable (see
-     * docs/superpowers/specs/2026-09-26-product-daily-stock-design.md). Safe when two transactions
-     * call this at the same time thanks to UNIQUE(product_id, stock_date): whoever gets there first
-     * wins, the other is a no-op (ON DUPLICATE KEY UPDATE id = id changes nothing).
-     */
     @Modifying
     @Transactional
     @Query(
@@ -41,13 +33,6 @@ public interface ProductDailyStockRepository extends JpaRepository<ProductDailyS
             @Param("stockDate") LocalDate stockDate,
             @Param("dayOfWeek") int dayOfWeek);
 
-    /**
-     * Locks the row by its natural key, in the same call that reads it. Deliberately not "find,
-     * then lock by id" — an earlier unlocked find in the same transaction would let Hibernate's
-     * first-level cache hand back the entity it already loaded instead of the value this lock just
-     * read, so a transaction that had to wait for the lock could still act on stale data once it
-     * unblocks.
-     */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query(
             "select d from ProductDailyStock d where d.productId = :productId and d.stockDate ="
@@ -55,11 +40,6 @@ public interface ProductDailyStockRepository extends JpaRepository<ProductDailyS
     Optional<ProductDailyStock> lockByProductIdAndStockDate(
             @Param("productId") Long productId, @Param("stockDate") LocalDate stockDate);
 
-    /**
-     * Locks every row of one product from {@code from} on, nearest date first — the same (product,
-     * date) order placing an order locks in (C5-2). Like {@link #lockByProductIdAndStockDate}, it
-     * must run before anything in the transaction reads these rows without a lock.
-     */
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query(
             "select d from ProductDailyStock d where d.productId = :productId and d.stockDate >="

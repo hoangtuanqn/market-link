@@ -12,12 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * Market images (Admin > Markets), stored through {@link FileStorageServiceInterface} shared with
- * avatars — no per-user directory needed since only an Admin can call it
- * (AdminMarketImageController). File names are always generated (UUID); the client's name is never
- * used.
- */
 @Service
 public class MarketImageUploadService {
 
@@ -61,11 +55,6 @@ public class MarketImageUploadService {
         }
     }
 
-    /**
-     * Content-Type is only the client's claim: used to reject unaccepted types early, while the
-     * real type (and the file extension) is concluded from the magic bytes — same as avatars and
-     * Farmer application images.
-     */
     private static String photoExtension(String contentType, byte[] bytes) {
         if (!IMAGE_TYPES.contains(contentType)) {
             throw new InvalidFieldException("file", "Photos must be JPEG, PNG or WEBP.");

@@ -34,7 +34,6 @@ const send = async (text: string) => {
   await userEvent.click(screen.getByRole('button', { name: 'Send' }));
 };
 
-/** ChatRequest.PageContext on the server: absent, or a route pattern of 1 to 64 characters. */
 const PAGE_THE_SERVER_ACCEPTS = /^[a-z/:-]{1,64}$/;
 
 describe('AssistantChat', () => {

@@ -8,12 +8,6 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.math.BigDecimal;
 
-/**
- * Body of POST/PUT /api/v1/farmer/products (contract §5, FR-062, FR-121). {@code shelfLifeGuideId}
- * is required once the category has storage groups; {@code storageMode} null means room temperature
- * when there is no group. A shelf life longer than the suggestion needs {@code
- * acknowledgeLongerShelfLife = true}.
- */
 public record ProductRequest(
         @NotNull(message = "Category is required.") Long categoryId,
         @NotBlank(message = "Product name is required.") @Size(max = 150) String name,

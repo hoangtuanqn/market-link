@@ -8,15 +8,9 @@ import ConversationApi from '@/api-requests/conversation.requests';
 import { Button } from '@/components/ui/button';
 import { isAxiosError } from 'axios';
 
-/**
- * FR-114, spec §9.5. Only a Customer can open a thread (a Farmer keeps Customer permissions too — FR-005); the server
- * checks again.
- */
 type Props = {
   farmerId: number;
-  /** Pre-pins a product (product page). */
   productId?: number;
-  /** Pre-pins an order (order detail page, FR-114). The server only accepts an order of this exact customer and stall. */
   orderId?: number;
 };
 
@@ -30,7 +24,6 @@ export default function MessageStallButton({ farmerId, productId, orderId }: Pro
 
   const open = async () => {
     if (!user) {
-      // Login reads the return destination from state.from, same as RequireAuth and FavoriteButton
       const state: LoginRedirectState = { from: location.pathname + location.search };
       navigate('/login', { state });
       return;

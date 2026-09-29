@@ -20,7 +20,6 @@ import QualityReports from './QualityReports';
 type Filter = 'all' | 'needs' | 'replied' | 'stall' | 'products';
 type Tab = 'reviews' | 'spoiled';
 
-/** Chip labels are `filter.<id>` in FarmerReviews.json. */
 const FILTERS: { id: Filter; countable?: boolean }[] = [
   { id: 'all', countable: true },
   { id: 'needs', countable: true },
@@ -31,11 +30,9 @@ const FILTERS: { id: Filter; countable?: boolean }[] = [
 
 const NO_REVIEWS: ReviewDto[] = [];
 
-/** FR-053 — reviews of the stall and its products, with a reply the customer sees under theirs. */
 const FarmerReviewsPage = () => {
   const { t, i18n } = useTranslation('FarmerReviews');
   const { t: tc } = useTranslation();
-  // The tab lives in the address, so the spoilage notifications (/farmer/reviews?tab=spoiled) open it
   const [searchParams, setSearchParams] = useSearchParams();
   const tab: Tab = searchParams.get('tab') === 'spoiled' ? 'spoiled' : 'reviews';
   const setTab = (next: Tab) => setSearchParams(next === 'spoiled' ? { tab: 'spoiled' } : {}, { replace: true });
@@ -162,7 +159,6 @@ const FarmerReviewsPage = () => {
                         <Button variant="secondary" size="sm" onClick={() => setOpenReply(r.id)}>
                           {t('action.reply')}
                         </Button>
-                        {/* FR-093: the assistant drafts the reply; the Farmer still types it into the box and posts it. */}
                         <AskAssistant question={tAssistant('assistant.ask.review', { rating: r.rating })} />
                       </>
                     )

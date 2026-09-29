@@ -43,7 +43,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-/** FR-122 (spec §4.4.1, §8): a customer reports a spoiled line of a completed order. */
 class CustomerQualityReportServiceTest {
 
     private static final long CUSTOMER = 1L;
@@ -52,7 +51,6 @@ class CustomerQualityReportServiceTest {
     private static final long ORDER_ID = 21L;
     private static final long ITEM_ID = 501L;
 
-    /** 10:00 on Tuesday 06/10/2026 in Ho Chi Minh City. */
     private static final Clock CLOCK =
             Clock.fixed(Instant.parse("2026-10-06T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
 
@@ -78,8 +76,6 @@ class CustomerQualityReportServiceTest {
                 new CustomerQualityReportService(
                         orders, orderItems, reports, farmers, photos, notifications, CLOCK);
 
-        // Picked up Saturday 03/10, 5 days in the fridge against a suggestion of 3: good until
-        // the end of Wednesday 07/10
         order = new Order();
         order.setId(ORDER_ID);
         order.setOrderCode("ML-20260920-0007");
@@ -159,7 +155,6 @@ class CustomerQualityReportServiceTest {
                                                         .equals("ML-20260920-0007")));
     }
 
-    /** Spec §8: a report is judged by the promise on the order line, not by today's product. */
     @Test
     void theReportCopiesThePromiseFromTheOrderLine() {
         service.report(CUSTOMER, ORDER_ID, ITEM_ID, spoiledOn(LocalDate.of(2026, 10, 5)));
@@ -169,7 +164,6 @@ class CustomerQualityReportServiceTest {
         assertThat(r.getExtendedByDays()).isEqualTo(2);
     }
 
-    /** Spec §4.4.1: extended and spoiled before its date → every admin is told. */
     @Test
     void anExtendedLineThatSpoiledEarlyReachesTheAdmins() {
         service.report(CUSTOMER, ORDER_ID, ITEM_ID, spoiledOn(LocalDate.of(2026, 10, 5)));
@@ -185,7 +179,6 @@ class CustomerQualityReportServiceTest {
                                                 && e.params().get("days").equals("2")));
     }
 
-    /** Spec §4.4.1: other reports still reach the queue, but nobody is pushed a notification. */
     @Test
     void aLineWithinItsSuggestionDoesNotReachTheAdmins() {
         line.setShelfLifeExtended(false);
@@ -207,7 +200,6 @@ class CustomerQualityReportServiceTest {
         verify(notifications, never()).notifyAdmins(any());
     }
 
-    /** R-06 before anything else: someone else's order is a 403 whatever its state. */
     @Test
     void someoneElsesOrderIs403() {
         order.setStatus(OrderStatus.READY);
@@ -237,7 +229,6 @@ class CustomerQualityReportServiceTest {
                 .isInstanceOf(ReportedItemNotFoundException.class);
     }
 
-    /** Spec §8: an order that is not completed yet is a 409. */
     @Test
     void anOrderThatIsNotCompletedIs409() {
         order.setStatus(OrderStatus.READY);
@@ -252,7 +243,6 @@ class CustomerQualityReportServiceTest {
                 .isInstanceOf(ReportNeedsCompletedOrderException.class);
     }
 
-    /** Spec §8: a line placed before the promise existed has nothing to report against. */
     @Test
     void aLineWithoutAGoodUntilDateCannotBeReported() {
         line.setBestBefore(null);
@@ -282,7 +272,6 @@ class CustomerQualityReportServiceTest {
         verify(reports, never()).save(any());
     }
 
-    /** Today is 06/10: good until 04/10 is still open (until 06/10), 03/10 closed on 05/10. */
     @Test
     void theWindowClosesTwoDaysAfterTheGoodUntilDate() {
         line.setBestBefore(LocalDate.of(2026, 10, 4));
@@ -331,7 +320,6 @@ class CustomerQualityReportServiceTest {
                 .isEqualTo("spoiledOn");
     }
 
-    /** Review Focus #4: only a photo this customer uploaded is accepted. */
     @Test
     void somebodyElsesPhotoIs400() {
         String other = "/uploads/quality-report-photos/8-3f2a1b4c-5d6e-4f70-8a9b-0c1d2e3f4a5b.jpg";

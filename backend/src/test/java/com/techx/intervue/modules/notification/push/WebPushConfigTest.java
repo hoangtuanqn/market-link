@@ -18,13 +18,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
-/**
- * VAPID keys: if present, return the public key to the FE; if absent, push is off and the app still
- * runs.
- */
 class WebPushConfigTest {
 
-    /** Keys used only in tests (generated with node:crypto, not used in any environment). */
     static final String TEST_PUBLIC =
             "BAJRU6LAEB4OYdOQmHWcmZNCew5snsHaZkQLKvLX3P0LbjWvYmM9SIeyv0jUnZd2LDcJxZvEJC-RkhZjCLaOwFQ";
 

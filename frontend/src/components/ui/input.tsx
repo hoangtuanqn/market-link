@@ -7,15 +7,10 @@ type FieldProps = InputHTMLAttributes<HTMLInputElement> & {
   label: string;
   error?: string;
   hint?: string;
-  /** A label for screen readers only — a search box with a placeholder is already clear enough to sighted people. */
   hideLabel?: boolean;
   containerClassName?: string;
 };
 
-/**
- * Labelled input: required mark, hint or error line, focus ring (design system `.ml-field` + `.ml-input`).
- * type="password" gets an extra eye button to show / hide the password.
- */
 export function Field({
   id,
   label,
@@ -45,8 +40,6 @@ export function Field({
       className={Helper.cn(
         'text-body text-ink placeholder:text-ink-muted bg-surface-raised focus-visible:border-focus focus-visible:outline-focus min-h-11 w-full rounded-sm border-[1.5px] px-3 focus-visible:outline-2 focus-visible:outline-offset-1',
         isPassword && 'pr-11',
-        // Exclusive, not layered: Helper.cn only joins strings, so a resting border left in place would win over the
-        // error border on whichever utility Tailwind happens to emit last.
         error ? 'border-danger' : 'border-line-strong hover:border-ink-muted',
         className,
       )}
@@ -99,15 +92,12 @@ export function Field({
 type SelectFieldProps = SelectHTMLAttributes<HTMLSelectElement> & {
   label: string;
   options: string[] | { value: string; label: string }[];
-  /** Hide the label visually when it's already shown by a surrounding row (kept for screen readers). */
   hideLabel?: boolean;
-  /** Same error / hint line as `Field`; the error wins when both are given. */
   error?: string;
   hint?: string;
   containerClassName?: string;
 };
 
-/** Labelled select (design system `.ml-field` + `.ml-input`). */
 export function SelectField({
   id,
   label,

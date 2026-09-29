@@ -2,11 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { ChevronRightIcon } from '@/components/icons';
 
-/**
- * The "Password & security" frame on the Account page: the whole frame is one button, clicking opens the separate
- * change-password page (/account/password). The link is relative to the path, so placing this frame on another page
- * makes it open `<that page>/password`.
- */
 const PasswordCard = () => {
   const { t } = useTranslation('CustomerAccount');
   return (

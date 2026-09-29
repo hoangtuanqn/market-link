@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.security.access.AccessDeniedException;
 
-/** FR-040, FR-014 — favourite stalls, products and markets. */
 class FavoriteServiceTest {
 
     private static final long USER_ID = 7L;
@@ -111,11 +110,6 @@ class FavoriteServiceTest {
         return new FavoriteRequest("product", null, PRODUCT_ID, null);
     }
 
-    /**
-     * Per-date stock (FR-063): a product still listed at an approved stall but sold out on every
-     * pickup date ahead is not available — the same rule as the FR-041 restock alert, never
-     * products.stock_quantity.
-     */
     @Test
     void listMarksAProductSoldOutOnEveryDateUnavailable() {
         when(query.list(USER_ID, null)).thenReturn(List.of(resource(FAVORITE_ID)));
@@ -135,7 +129,6 @@ class FavoriteServiceTest {
                 .satisfies(f -> assertThat(f.available()).isTrue());
     }
 
-    /** A second click on the heart returns the same favourite — no second row, no 409. */
     @Test
     void addIsIdempotent() {
         when(favorites.findByCustomerIdAndTargetTypeAndTargetId(
@@ -170,7 +163,6 @@ class FavoriteServiceTest {
         assertThat(saved.getValue().getMarketId()).isNull();
     }
 
-    /** targetType "farmer" but a productId → 400: the id must match the type, and only one id. */
     @Test
     void addRejectsMismatchedTargetTypeAndId() {
         assertThatThrownBy(
@@ -188,7 +180,6 @@ class FavoriteServiceTest {
         verify(favorites, never()).saveAndFlush(any());
     }
 
-    /** Only what the public can see can be favourited: a hidden product is 404. */
     @Test
     void addRejectsAHiddenProduct() {
         when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(product(true)));
@@ -198,7 +189,6 @@ class FavoriteServiceTest {
         verify(favorites, never()).saveAndFlush(any());
     }
 
-    /** R-06: someone else's favourite → 403 even though it exists. */
     @Test
     void removeAnotherUsersFavoriteIs403() {
         when(favorites.findById(FAVORITE_ID)).thenReturn(Optional.of(existing(99L)));
@@ -208,9 +198,6 @@ class FavoriteServiceTest {
         verify(favorites, never()).delete(any());
     }
 
-    /**
-     * The type filter is a whitelist (the SQL itself is checked in FavoriteQueryRepositoryTest).
-     */
     @Test
     void listFiltersByTargetType() {
         service.list(USER_ID, "product");
@@ -224,7 +211,6 @@ class FavoriteServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    /** D-13: admin accounts do not keep favourites — 403 from the server. */
     @Test
     void adminCannotAddFavorites() {
         assertThatThrownBy(() -> service.add(ADMIN_ID, aProduct()))

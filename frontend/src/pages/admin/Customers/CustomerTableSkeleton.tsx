@@ -2,10 +2,6 @@ import { useTranslation } from 'react-i18next';
 
 const SKELETON_ROWS = 5;
 
-/**
- * CustomerTableSkeleton mirrors the Customer table structure with identical column widths and row heights to prevent
- * layout shift during loading.
- */
 const CustomerTableSkeleton = () => {
   const { t } = useTranslation();
 
@@ -15,12 +11,10 @@ const CustomerTableSkeleton = () => {
       className="border-line-strong bg-surface-raised flex min-h-[380px] w-full flex-1 animate-pulse flex-col overflow-hidden rounded-md border-[1.5px]"
     >
       <span className="sr-only">{t('notify.list.loading')}</span>
-      {/* Caption bar */}
       <div className="border-line-strong border-b-[1.5px] p-3 px-4">
         <div className="bg-surface-sunken h-5 w-32 rounded-sm" />
       </div>
 
-      {/* Table Header */}
       <div className="bg-surface-sunken/60 border-line-strong grid grid-cols-[minmax(220px,2fr)_120px_100px_120px_120px] items-center gap-4 border-b-[1.5px] px-4 py-2.5">
         <div className="bg-surface-sunken h-3.5 w-24 rounded-sm" />
         <div className="bg-surface-sunken h-3.5 w-16 rounded-sm" />
@@ -29,14 +23,12 @@ const CustomerTableSkeleton = () => {
         <div className="bg-surface-sunken h-3.5 w-20 justify-self-end rounded-sm" />
       </div>
 
-      {/* Rows */}
       <div className="flex flex-1 flex-col">
         {Array.from({ length: SKELETON_ROWS }, (_, i) => (
           <div
             key={i}
             className="border-line grid grid-cols-[minmax(220px,2fr)_120px_100px_120px_120px] items-center gap-4 border-b px-4 py-3 last:border-b-0"
           >
-            {/* Customer with Avatar */}
             <div className="flex items-center gap-3">
               <div className="bg-surface-sunken size-9 shrink-0 rounded-full" />
               <div className="flex min-w-0 flex-1 flex-col gap-1.5">
@@ -45,16 +37,12 @@ const CustomerTableSkeleton = () => {
               </div>
             </div>
 
-            {/* Joined */}
             <div className="bg-surface-sunken h-4 w-20 rounded-sm" />
 
-            {/* Orders */}
             <div className="bg-surface-sunken h-4 w-6 justify-self-end rounded-sm" />
 
-            {/* Status */}
             <div className="bg-surface-sunken h-6 w-20 rounded-full" />
 
-            {/* Action */}
             <div className="bg-surface-sunken h-8.5 w-24 justify-self-end rounded-sm" />
           </div>
         ))}

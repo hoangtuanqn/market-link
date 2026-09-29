@@ -24,13 +24,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-125 on real MySQL (spec §4.5.4, §9): GET /deals keeps only deal days customers can still order
- * for — a free slot before its cutoff, an approved stall, a listed product on sale, stock left,
- * inside the 14-day window — nearest day first, then the biggest discount. Rolled back after each
- * test. The shared dev database may hold seeded deals, so unfiltered results are narrowed to this
- * test's products.
- */
 @SpringBootTest
 @Transactional
 class DealSearchIntegrationTest {
@@ -67,10 +60,8 @@ class DealSearchIntegrationTest {
         stall = fx.farmer(fx.user("farmer", "Deal seller", "x"), "Deal stall", "approved");
         long suspended =
                 fx.farmer(fx.user("farmer", "Held seller", "x"), "Held stall", "suspended");
-        // A free 07:00 slot on every day from today+2 to today+13
         fx.sellsEveryDay(stall, market);
         fx.sellsEveryDay(suspended, market);
-        // The stall is also at the other market, on D1's weekday only
         long link =
                 insert(
                         "INSERT INTO farmer_markets (farmer_id, market_id) VALUES (?, ?)",
@@ -85,7 +76,6 @@ class DealSearchIntegrationTest {
                         + " pickup_start_time, pickup_end_time) VALUES (?, ?, '07:00', '10:00')",
                 link,
                 weekday(D1));
-        // FULL_DAY's only slot has no room left
         jdbc.update(
                 "UPDATE pickup_slots s JOIN farmer_markets fm ON fm.id = s.farmer_market_id"
                         + " SET s.booked_count = s.max_orders"
@@ -121,9 +111,6 @@ class DealSearchIntegrationTest {
         deal(held, D1, 5, 50);
     }
 
-    /**
-     * Full slot, outside the window, hidden, paused, deleted, sold out, suspended stall: left out.
-     */
     @Test
     void keepsOnlyDealDaysCustomersCanStillOrderNearestDayFirstThenTheBiggestDiscount() {
         assertThat(found(criteria(null, null, null, null, 1, 50)))
@@ -139,7 +126,6 @@ class DealSearchIntegrationTest {
         assertThat(page.items()).extracting(DealResource::productId).containsOnly(eggs);
     }
 
-    /** marketId keeps a day only when the stall is at that market on that weekday. */
     @Test
     void filtersByTheMarketTheStallIsAtThatDay() {
         PageResource<DealResource> page =
@@ -184,7 +170,6 @@ class DealSearchIntegrationTest {
         assertThat(d.marketNames())
                 .containsExactly("Deals market " + fx.tag, "Deals other market " + fx.tag);
         assertThat(d.storageMode()).isEqualTo("room");
-        // On D2's weekday the stall is only at the first market
         assertThat(
                         deals.search(criteria(null, null, null, eggs, 2, 1))
                                 .items()
@@ -209,7 +194,6 @@ class DealSearchIntegrationTest {
         return date.getDayOfWeek().getValue() % 7;
     }
 
-    /** $2.00 a kg, with an active template (the public catalogue needs one). */
     private long product(long farmerId, long categoryId, String name) {
         long id = fx.product(farmerId, categoryId, name, 2);
         fx.everyDayTemplate(farmerId, id, 20);
@@ -217,7 +201,6 @@ class DealSearchIntegrationTest {
         return id;
     }
 
-    /** Packed three days before the day, good until the day after it. */
     private void deal(long productId, LocalDate day, int quantity, int percent) {
         BigDecimal list = new BigDecimal("2.00");
         BigDecimal price =

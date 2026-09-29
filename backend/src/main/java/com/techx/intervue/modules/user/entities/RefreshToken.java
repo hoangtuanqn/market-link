@@ -41,7 +41,6 @@ public class RefreshToken {
     @Builder.Default
     private boolean revoked = false;
 
-    /** false: signed in without choosing "Remember me" → session cookie. */
     @Column(name = "remember_me", nullable = false)
     @Builder.Default
     private boolean rememberMe = true;

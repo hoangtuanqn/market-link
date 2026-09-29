@@ -40,7 +40,6 @@ class SettingsServiceTest {
     void returnsNothingWhenNothingIsSaved() {
         when(repository.findById(7L)).thenReturn(Optional.empty());
 
-        // null, not made-up defaults: the client keeps the language / theme already on the device
         assertThat(service.get(7L)).isNull();
         verify(repository, never()).save(any());
     }

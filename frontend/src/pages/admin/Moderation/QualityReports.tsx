@@ -22,7 +22,6 @@ import Notification from '@/utils/notification';
 const FILTERS = ['needs', 'open', 'decided'] as const;
 type Filter = (typeof FILTERS)[number];
 
-/** Spec §4.4.3: "Needs a decision" = open, an extended shelf life, spoiled before its date. */
 const QUERY: Record<Filter, AdminQualityFilter> = {
   needs: { status: 'open', escalated: true, pageSize: 50 },
   open: { status: 'open', pageSize: 50 },
@@ -31,13 +30,6 @@ const QUERY: Record<Filter, AdminQualityFilter> = {
 
 type Deciding = { report: QualityReportDto; kind: 'confirm' | 'dismiss' };
 
-/**
- * FR-123 — the admin's spoiled-produce queue: the report, the promise on the order, the stall's reply and its strikes,
- * then "Not the stall's fault" (note required) or "Confirm violation". A decided card stays where it is, so the
- * "Suspend stall" link shows at once when the stall reached 3 strikes (Ruling 7). The shared facts (the "Extended +N
- * days" chip, the problem/note line and the photo) come from QualityReportFacts (Ruling R14-1), reused from the
- * farmer's own report card.
- */
 export default function QualityReports() {
   const { t } = useTranslation('AdminModeration');
   const { t: tc } = useTranslation();
@@ -73,7 +65,6 @@ export default function QualityReports() {
       Notification.success({ text: t('quality.done') });
       setDeciding(null);
     } catch (error) {
-      // Another admin decided this report first: the queue is stale, not the note. Reload it instead of a field error.
       if (isAxiosError(error) && error.response?.status === 409) {
         Notification.info({ text: t('quality.alreadyDecided') });
         setDeciding(null);

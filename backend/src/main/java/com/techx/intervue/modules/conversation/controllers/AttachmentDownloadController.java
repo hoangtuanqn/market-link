@@ -22,17 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-115, spec §8.2. Returns a binary file so it is NOT wrapped in ApiResource — a deliberate
- * exception to the envelope convention, like every file-download endpoint. On errors
- * ConversationExceptionHandler still returns the normal envelope.
- *
- * <p>Cache-Control private: private images, a shared proxy must not keep them.
- *
- * <p>FR-115 §5: videos play through a short-lived signed link (stream-url → stream) because a video
- * element cannot send the Authorization header. /stream is the only public route here; the link's
- * signature stands in for the token.
- */
 @RestController
 @RequestMapping("/api/v1/attachments")
 @AllArgsConstructor
@@ -43,8 +32,6 @@ public class AttachmentDownloadController extends BaseController {
     @GetMapping("/{id}")
     public ResponseEntity<Resource> download(
             @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails me) {
-        // Admins take a separate path (spec §8.3): narrower, only open for messages that were
-        // reported, and logged.
         AttachmentServiceInterface.StoredFile file =
                 isAdmin(me)
                         ? attachmentService.readAsAdmin(me.getId(), id)
@@ -64,12 +51,6 @@ public class AttachmentDownloadController extends BaseController {
         return ok(attachmentService.streamUrl(me.getId(), isAdmin(me), id), "OK");
     }
 
-    /**
-     * Public (SecurityConfig): the signed parameters are the credentials. Every part is read as
-     * text and a missing or mangled one is the same 403 as a forged signature, never a 400. Spring
-     * answers a Range request for a Resource body with 206 by itself, which is what lets the player
-     * seek without downloading the whole file.
-     */
     @GetMapping("/{id}/stream")
     public ResponseEntity<Resource> stream(
             @PathVariable Long id,
@@ -106,11 +87,6 @@ public class AttachmentDownloadController extends BaseController {
         }
     }
 
-    /**
-     * A deliberate consequence: an admin who is ALSO a customer in some thread takes the admin
-     * branch and cannot view their own private image there if the message has not been reported. A
-     * trade-off in the right direction — the admin's boundary is narrower, never wider.
-     */
     private static boolean isAdmin(CustomUserDetails me) {
         return me.getAuthorities().stream().anyMatch(a -> "ROLE_ADMIN".equals(a.getAuthority()));
     }

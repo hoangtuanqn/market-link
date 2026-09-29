@@ -7,10 +7,6 @@ import { GOOGLE_OAUTH_STATE_KEY } from '@/constants/oauth';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-/**
- * Step 1 of Google sign-in: generate a random `state`, keep it in sessionStorage, get the sign-in URL from the backend
- * and send the page to Google. Google returns to /auth/google/callback (see pages/GoogleCallback).
- */
 const GoogleLoginButton = () => {
   const { t } = useTranslation('Login');
   const [isRedirecting, setIsRedirecting] = useState(false);

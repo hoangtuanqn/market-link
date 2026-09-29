@@ -1,7 +1,6 @@
 import i18n from '@/i18n';
 import { VIETNAM, type AddressErrors, type AddressParts } from '@/types/address.types';
 
-/** Column sizes of V20260927002; the server's AddressPartsRequest has the same limits. */
 const MAX = { streetName: 100, addressLine: 60, regionName: 60, cityName: 60 } as const;
 
 const VIETNAM_PARTS = ['provinceCode', 'wardCode', 'streetName'] as const;
@@ -9,10 +8,6 @@ const FOREIGN_PARTS = ['regionName', 'cityName'] as const;
 
 const text = (value: string | undefined) => value?.trim().replace(/\s+/g, ' ') ?? '';
 
-/**
- * The address as it will be sent: parts trimmed, empty ones left out, and parts of the other kind of address dropped (a
- * ward means nothing once the country is Japan).
- */
 export function cleanAddress(parts: AddressParts): AddressParts {
   const countryCode = text(parts.countryCode).toUpperCase();
   const keep = countryCode === VIETNAM ? VIETNAM_PARTS : FOREIGN_PARTS;
@@ -24,7 +19,6 @@ export function cleanAddress(parts: AddressParts): AddressParts {
   return out;
 }
 
-/** Client-side copy of AddressService's rules, so the form answers before a round trip (FR-001, FR-073). */
 export function validateAddress(parts: AddressParts, { lineRequired = true } = {}): AddressErrors {
   const a = cleanAddress(parts);
   const errors: AddressErrors = {};
@@ -52,10 +46,6 @@ export function validateAddress(parts: AddressParts, { lineRequired = true } = {
   return errors;
 }
 
-/**
- * Server errors arrive as `addressParts.wardCode`; the fields know them as `wardCode`. An error about the address as a
- * whole (`addressParts`) is shown on the first field, the country.
- */
 export function addressErrorsFrom(fieldErrors: Record<string, string>): AddressErrors {
   const errors: AddressErrors = {};
   for (const [field, message] of Object.entries(fieldErrors)) {
@@ -66,7 +56,6 @@ export function addressErrorsFrom(fieldErrors: Record<string, string>): AddressE
   return errors;
 }
 
-/** Whether two addresses would save the same thing — for "nothing changed" on the profile form. */
 export function sameAddress(a: AddressParts | undefined, b: AddressParts | undefined): boolean {
   if (!a || !b) return !a && !b;
   return JSON.stringify(cleanAddress(a)) === JSON.stringify(cleanAddress(b));

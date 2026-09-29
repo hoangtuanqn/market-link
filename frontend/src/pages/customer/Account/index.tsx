@@ -8,10 +8,6 @@ import PasswordCard from './PasswordCard';
 import ProfileForm from './ProfileForm';
 import SellCard from './SellCard';
 
-/**
- * Profile editing and change password are proposals, not SRS requirements (feature catalog). Photo and details share
- * one card; "Password & security" opens its own page (/account/password, PR #125).
- */
 const CustomerAccountPage = () => {
   const { t } = useTranslation('CustomerAccount');
   const logout = useLogout();
@@ -22,12 +18,9 @@ const CustomerAccountPage = () => {
         <p className="text-body">{t('intro')}</p>
       </div>
 
-      {/* The "Sell at MarketLink" item is moved to the top to draw more attention */}
       <SellCard />
 
-      {/* Two-column layout: the left, sticky column holds Profile Photo & Details; the right column holds Achievements, Password, Sign out */}
       <div className="grid items-start gap-6 lg:grid-cols-[400px_minmax(0,1fr)]">
-        {/* Left column: sticky profile card */}
         <aside className="lg:sticky lg:top-20">
           <Card className="flex flex-col gap-6 p-6">
             <AvatarCard />
@@ -36,7 +29,6 @@ const CustomerAccountPage = () => {
           </Card>
         </aside>
 
-        {/* Right column: sections that scroll independently */}
         <div className="flex flex-col gap-6">
           <AchievementsCard />
 

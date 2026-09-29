@@ -96,7 +96,6 @@ class FarmerDailyStockServiceTest {
                 .isInstanceOf(ProductNotYoursException.class);
     }
 
-    /** No template covers that weekday → materialize inserts nothing → nothing to override. */
     @Test
     void overrideRejectsADateWithNoTemplate() {
         approvedStall();
@@ -136,10 +135,6 @@ class FarmerDailyStockServiceTest {
         verify(dailyStock).save(row);
     }
 
-    /**
-     * {@code unitPrice} null in the request keeps the row's existing price, only the quantity
-     * changes.
-     */
     @Test
     void overrideKeepsExistingPriceWhenRequestPriceIsNull() {
         approvedStall();
@@ -156,10 +151,6 @@ class FarmerDailyStockServiceTest {
         assertThat(result.unitPrice()).isEqualByComparingTo("12000");
     }
 
-    /**
-     * FR-041: putting stock back on a sold-out date can make the product orderable again — the
-     * customers who favourited it are told, the same way a weekly template gaining a day does.
-     */
     @Test
     void overrideReportsWhetherTheProductBecameOrderable() {
         approvedStall();
@@ -176,10 +167,6 @@ class FarmerDailyStockServiceTest {
         verify(restock).afterChange(any(Product.class), eq(false), eq(true));
     }
 
-    /**
-     * FR-124: an explicit price for the day ends its near-expiry deal, so the percent shown on
-     * /deals always matches what customers pay.
-     */
     @Test
     void overrideWithAPriceEndsTheDeal() {
         approvedStall();
@@ -200,7 +187,6 @@ class FarmerDailyStockServiceTest {
         assertThat(row.hasDeal()).isFalse();
     }
 
-    /** Changing only the quantity keeps the deal and its price. */
     @Test
     void overrideWithoutAPriceKeepsTheDeal() {
         approvedStall();

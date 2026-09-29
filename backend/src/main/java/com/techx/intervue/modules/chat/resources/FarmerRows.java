@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-/** Rows the Farmer tools return (FR-093). Read-only projections, never entities. */
 public final class FarmerRows {
 
     private FarmerRows() {}
@@ -23,7 +22,6 @@ public final class FarmerRows {
             String status,
             int itemCount) {}
 
-    /** One line of an order, as it was priced when the order was placed. */
     public record OrderItemRow(
             String productName, int quantity, String unit, BigDecimal subtotal) {}
 
@@ -50,10 +48,6 @@ public final class FarmerRows {
             LocalDate createdOn,
             boolean answered) {}
 
-    /**
-     * FR-093: everything the Overview banner says, in one row. Counted for one pickup date so the
-     * numbers match what the Farmer is about to work through.
-     */
     public record BriefingRow(
             long ordersToday,
             long waitingToBeAccepted,

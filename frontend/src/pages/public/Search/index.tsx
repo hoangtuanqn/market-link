@@ -25,13 +25,11 @@ const SCOPES = ['all', 'market', 'farmer', 'product'] as const;
 type Scope = (typeof SCOPES)[number];
 const FETCH_SIZE = 50;
 
-/** The market facet's "no filter" value. */
 const ALL_MARKETS = 'all';
 
 type Results = { markets: MarketType[]; farmers: StallCardData[]; products: ProductType[] };
 const NO_RESULTS: Results = { markets: [], farmers: [], products: [] };
 
-/** FR-023 — search across markets, stalls and products at once, with results on a map. */
 const SearchPage = () => {
   const { t } = useTranslation('Search');
   const { t: tc } = useTranslation();
@@ -41,27 +39,20 @@ const SearchPage = () => {
 
   const [draftScope, setDraftScope] = useState(scopeParam);
   const [draftQ, setDraftQ] = useState(q);
-  // The coming week from today; the search starts on today (FR-021).
   const [week] = useState(() => nextSevenDays());
   const [day, setDay] = useState(() => week[0].dow);
   const [sort, setSort] = useState<(typeof SORTS)[number]>('best');
-  // The scope picked in the search box opens the matching result tab; a tab clicked afterwards holds until the next
-  // search (a new scope or keyword).
   const scopeTab: Scope = (SCOPES as readonly string[]).includes(scopeParam) ? (scopeParam as Scope) : 'all';
   const [tabPick, setTabPick] = useState<{ search: string; tab: Scope } | null>(null);
   const searchKey = `${scopeParam}:${q}`;
   const tab = tabPick?.search === searchKey ? tabPick.tab : scopeTab;
   const setTab = (next: Scope) => setTabPick({ search: searchKey, tab: next });
-  // The facets live in the URL next to the keyword. Kept in component state they would survive neither Back
-  // nor a reload nor a link sent to someone else, while the keyword did — the results would change with no
-  // visible cause.
   const categoryParam = searchParams.get('category');
   const categoryId = categoryParam === null || categoryParam === '' ? null : Number(categoryParam);
   const band = bandOf(searchParams.get('price'));
   const priceBand: PriceBand = band.value;
   const marketFilter = searchParams.get('market') ?? ALL_MARKETS;
 
-  /** Replaces one facet in the URL, leaving the keyword, the scope and the other facets alone. */
   const setFacet = (key: 'category' | 'price' | 'market', value: string) => {
     const next = new URLSearchParams(searchParams);
     if (value === '' || value === ALL_MARKETS || value === 'any') next.delete(key);
@@ -71,14 +62,12 @@ const SearchPage = () => {
 
   const anyFacet = categoryId !== null || priceBand !== 'any' || marketFilter !== ALL_MARKETS;
 
-  /** Drops all three facets in one go, keeping the keyword and the scope that found these results. */
   const clearFacets = () => {
     const next = new URLSearchParams(searchParams);
     for (const key of ['category', 'price', 'market']) next.delete(key);
     setSearchParams(next, { replace: true });
   };
 
-  // The facet lists are small and shared with /products; they load once and do not depend on the keyword.
   const { state: categoriesLoad } = useRequest('categories', () => CatalogApi.listCategories());
   const { state: facetMarketsLoad } = useRequest('facet-markets', () =>
     CatalogApi.listMarkets({ pageSize: 50 }).then((result) => result.items),
@@ -88,18 +77,14 @@ const SearchPage = () => {
 
   const onSubmit = (e: FormEvent) => {
     e.preventDefault();
-    // Keep the facets: a new keyword narrows the same filtered view, it does not reset it.
     const next = new URLSearchParams(searchParams);
     next.set('scope', draftScope);
     next.set('q', draftQ.trim());
     setSearchParams(next);
   };
 
-  // One round to the three public lists (contract §3, §4, §5), all filtered by the same keyword and day.
-  // "Nearest" needs a location the page does not ask for, so it sorts like "best match" until it does.
   const keyword = q.trim();
   const marketId = marketFilter === ALL_MARKETS ? undefined : Number(marketFilter);
-  // "See all stalls" (/search?scope=farmer) has no keyword: list every stall selling that day instead of asking for one
   const browseStalls = keyword === '' && scopeTab === 'farmer';
   const { state: load, retry } = useRequest(
     `search:${browseStalls ? 'stalls' : ''}:${keyword}:${day}:${sort}:${categoryId ?? ''}:${priceBand}:${marketFilter}`,
@@ -125,20 +110,15 @@ const SearchPage = () => {
                 sort: sort === 'price' ? 'price_asc' : sort === 'rating' ? 'rating' : 'newest',
               }),
             ]).then(([markets, stalls, products]) => ({
-              // A market has no category and no price, so only the market facet can narrow this list, and it does so
-              // here rather than on the server: /markets takes no marketId, the market *is* the result.
               markets: marketId == null ? markets.items : markets.items.filter((m) => m.id === marketId),
               farmers: stalls.items.map((s) => toStallCard(s, 0, '')),
               products: products.items,
             })),
   );
   const results = load.kind === 'ready' ? load.data : NO_RESULTS;
-  // Browsing stalls has only stall results, so the other tabs would only ever say "nothing called “”"
   const shownTab: Scope = browseStalls ? 'farmer' : tab;
   const total = results.markets.length + results.farmers.length + results.products.length;
 
-  // FR-023 asks for results on a map. Products have no coordinates of their own, so a product match is
-  // represented by the stall selling it, which is the place you would actually travel to.
   const mapMarkers = useMemo<MapMarker[]>(() => {
     const pins: MapMarker[] = results.markets.map((m) => ({
       lat: m.lat,
@@ -304,8 +284,6 @@ const SearchPage = () => {
               {(shownTab === 'all' || shownTab === 'farmer') && (
                 <section className="flex flex-col gap-4">
                   <h2 className="text-h3">{t('tabs.farmer')}</h2>
-                  {/* A stall has no category of its own, so the category facet cannot narrow this list. Left
-                      unsaid, the stall count next to a narrowed product list reads as a bug. */}
                   {categoryId !== null && <p className="text-small text-ink-muted m-0">{t('stallsNotByCategory')}</p>}
                   {results.farmers.length ? (
                     <div className="grid grid-cols-1 gap-6 md:grid-cols-2">

@@ -11,11 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-/**
- * FR-072: the "your account was deactivated / is active again" letters, in the customer's own
- * language and in the same branded shell as the FR-009 sign-up email. MailTemplates HTML-escapes
- * every value, so an admin's free-text reason can never inject markup.
- */
 @Component
 public class AccountStatusMail {
 
@@ -40,7 +35,6 @@ public class AccountStatusMail {
 
     public record Content(String subject, String html, String text) {}
 
-    /** {@code until} null = a permanent ban. */
     public Content deactivated(String fullName, String reason, Instant until, String language) {
         Locale locale = localeOf(language);
         String subject = text("accountDeactivated.subject", locale);

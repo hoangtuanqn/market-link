@@ -50,7 +50,6 @@ const renderEdit = () =>
     </MemoryRouter>,
   );
 
-/** What the stall still has for the order's pickup day: 2 more water spinach, and the tomatoes are sold out. */
 const leftForTheDay = [
   {
     farmerId: 15,
@@ -93,10 +92,6 @@ beforeEach(() => {
 });
 
 describe('CustomerOrderEditPage', () => {
-  /**
-   * PUT /orders/{id}/items only takes the items (contract §7): a note field here would be thrown away without a word,
-   * so the page must not offer one — least of all one pre-filled with sample text.
-   */
   it('offers no note the server cannot store', async () => {
     renderEdit();
 
@@ -115,10 +110,6 @@ describe('CustomerOrderEditPage', () => {
     ]);
   });
 
-  /**
-   * FR-035, D-07: the server lets a line go up by what the stall still has for the order's pickup day (409 OUT_OF_STOCK
-   * beyond). The stepper stops there, instead of 20 above the order with a made-up "20 left".
-   */
   it('lets a line go up only by what the stall still has for the pickup day', async () => {
     renderEdit();
 

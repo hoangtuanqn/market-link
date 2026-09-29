@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-123 — the admin's spoilage queue and decisions (spec §4.4.3, §6). Admin only. */
 @RestController
 @RequestMapping("/api/v1/admin/quality-reports")
 @PreAuthorize("hasRole('ADMIN')")

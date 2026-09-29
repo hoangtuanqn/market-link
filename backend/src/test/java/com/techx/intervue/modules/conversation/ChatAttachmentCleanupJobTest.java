@@ -61,7 +61,6 @@ class ChatAttachmentCleanupJobTest {
         verify(attachments, never()).deleteAll(anyList());
     }
 
-    /** One file that failed to delete must not hold back the whole batch. */
     @Test
     @SuppressWarnings("unchecked")
     void keepsGoingWhenOneFileCannotBeDeleted() {

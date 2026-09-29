@@ -10,10 +10,6 @@ import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
-/**
- * FR-063: a weekday's default price must be above $0, like the product price and a one-day
- * adjustment; a $0 template price used to be accepted and then refilled that weekday for free.
- */
 class StockTemplateRequestTest {
 
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();

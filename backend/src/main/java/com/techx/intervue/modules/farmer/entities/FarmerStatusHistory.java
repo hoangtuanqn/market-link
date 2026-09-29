@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-071: one suspend/reinstate. {@code changedBy} is null when the cron lifted it. */
 @Entity
 @Getter
 @Setter

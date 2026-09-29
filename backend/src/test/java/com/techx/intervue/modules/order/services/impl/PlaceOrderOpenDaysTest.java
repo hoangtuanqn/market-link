@@ -24,17 +24,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-032, FR-060, FR-073 on real MySQL: a slot generated ahead of time can no longer be booked once
- * the admin stops holding the market on that weekday, or the stall takes that weekday out of its
- * operating days. Orders already placed on such a slot are not touched; only new bookings stop.
- * Rolled back after each test.
- */
 @SpringBootTest
 @Transactional
 class PlaceOrderOpenDaysTest {
 
-    /** Far enough ahead that no default cutoff (12 hours) has passed. */
     private static final LocalDate PICKUP =
             LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).plusDays(3);
 
@@ -77,7 +70,6 @@ class PlaceOrderOpenDaysTest {
                         "INSERT INTO farmer_markets (farmer_id, market_id) VALUES (?, ?)",
                         farmerId,
                         marketId);
-        // The market is held and the stall attends on the pickup weekday
         insert(
                 "INSERT INTO market_operating_days (market_id, day_of_week) VALUES (?, ?)",
                 marketId,
@@ -113,7 +105,6 @@ class PlaceOrderOpenDaysTest {
         assertThat(service.place(customerId, request())).hasSize(1);
     }
 
-    /** FR-073: the admin no longer holds the market on the pickup weekday. */
     @Test
     void aSlotOnAWeekdayTheMarketIsNoLongerHeldCannotBeBooked() {
         jdbc.update("DELETE FROM market_operating_days WHERE market_id = ?", marketId);
@@ -123,7 +114,6 @@ class PlaceOrderOpenDaysTest {
         assertThat(bookedCount()).isZero();
     }
 
-    /** FR-060: the stall took the pickup weekday out of its operating days at this market. */
     @Test
     void aSlotOnAWeekdayTheStallNoLongerAttendsCannotBeBooked() {
         jdbc.update("DELETE FROM farmer_operating_days WHERE farmer_market_id = ?", farmerMarketId);
@@ -133,14 +123,10 @@ class PlaceOrderOpenDaysTest {
         assertThat(bookedCount()).isZero();
     }
 
-    /**
-     * Orders placed before the day was dropped stay usable: the customer can still edit and cancel
-     * them, because only a new booking goes through the open-day check.
-     */
     @Test
     void anOrderAlreadyPlacedCanStillBeEditedAndCancelledWhenTheDayIsDropped() {
         long orderId = service.place(customerId, request()).get(0).orderId();
-        entityManager.flush(); // the booked slot is written at commit; the check below reads SQL
+        entityManager.flush();
         jdbc.update("DELETE FROM market_operating_days WHERE market_id = ?", marketId);
         jdbc.update("DELETE FROM farmer_operating_days WHERE farmer_market_id = ?", farmerMarketId);
 

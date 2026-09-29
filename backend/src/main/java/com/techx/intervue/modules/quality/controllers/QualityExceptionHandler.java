@@ -27,11 +27,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
-/**
- * 400/403/404/409 for the spoilage module (FR-122, FR-123), same envelope as the review and product
- * handlers. Every controller of the module must be listed here, or its errors reach Tomcat as a 500
- * (QualityExceptionHandlerScopeTest).
- */
 @RestControllerAdvice(
         assignableTypes = {
             QualityReportPhotoController.class,
@@ -52,7 +47,6 @@ public class QualityExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
     }
 
-    /** No body, malformed JSON, an unknown problem value or a query value of the wrong type. */
     @ExceptionHandler({
         HttpMessageNotReadableException.class,
         MethodArgumentTypeMismatchException.class
@@ -70,7 +64,6 @@ public class QualityExceptionHandler {
                 List.of(field(e.getField(), e.getMessage())));
     }
 
-    /** Spec §8: a photo of another type is a 400 here, like every other upload of the app. */
     @ExceptionHandler(UnsupportedImageTypeException.class)
     ResponseEntity<ApiResource<Void>> unsupportedImage(UnsupportedImageTypeException e) {
         return error(
@@ -80,11 +73,6 @@ public class QualityExceptionHandler {
                 List.of(field("file", e.getMessage())));
     }
 
-    /**
-     * The "file" part is missing or misnamed, or the multipart body itself is broken — same message
-     * QualityReportPhotoService uses for an empty file, same shape as
-     * AuthExceptionHandler#badUpload (AvatarController).
-     */
     @ExceptionHandler({MissingServletRequestPartException.class, MultipartException.class})
     ResponseEntity<ApiResource<Void>> badUpload(Exception e) {
         return error(
@@ -94,7 +82,6 @@ public class QualityExceptionHandler {
                 List.of(field("file", "Choose a photo to upload.")));
     }
 
-    /** The order or the line is not there → 404, without saying which. */
     @ExceptionHandler({
         OrderNotFoundException.class,
         ReportedItemNotFoundException.class,
@@ -104,13 +91,11 @@ public class QualityExceptionHandler {
         return error(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), List.of());
     }
 
-    /** R-06: someone else's order → 403, never 404 (the order is real). */
     @ExceptionHandler({OrderNotYoursException.class, QualityReportNotYoursException.class})
     ResponseEntity<ApiResource<Void>> notYours(RuntimeException e) {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), List.of());
     }
 
-    /** Spec §8: reporting before the order is completed is a 409. */
     @ExceptionHandler(ReportNeedsCompletedOrderException.class)
     ResponseEntity<ApiResource<Void>> notCompleted(ReportNeedsCompletedOrderException e) {
         return error(HttpStatus.CONFLICT, "ORDER_NOT_COMPLETED", e.getMessage(), List.of());
@@ -126,13 +111,11 @@ public class QualityExceptionHandler {
         return error(HttpStatus.CONFLICT, "ALREADY_REPORTED", e.getMessage(), List.of());
     }
 
-    /** Spec §4.4.2, §4.4.3: a decided report is final. */
     @ExceptionHandler(ReportAlreadyDecidedException.class)
     ResponseEntity<ApiResource<Void>> alreadyDecided(ReportAlreadyDecidedException e) {
         return error(HttpStatus.CONFLICT, "REPORT_ALREADY_DECIDED", e.getMessage(), List.of());
     }
 
-    /** {@code @PreAuthorize} wrong role, or an account without a stall → 403. */
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> forbidden(AccessDeniedException e) {
         return error(
@@ -142,7 +125,6 @@ public class QualityExceptionHandler {
                 List.of());
     }
 
-    /** Last net for two requests at once: the UNIQUE keys of V20260928014. */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());

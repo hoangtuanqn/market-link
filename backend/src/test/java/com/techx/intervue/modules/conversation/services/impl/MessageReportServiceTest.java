@@ -94,7 +94,6 @@ class MessageReportServiceTest {
         assertThat(saved.getValue().getNote()).isNull();
     }
 
-    /** Review Focus #3. */
     @Test
     void reportingTheSameMessageTwiceIsRefused() {
         when(reports.existsByMessageIdAndReportedBy(101L, 7L)).thenReturn(true);
@@ -109,9 +108,6 @@ class MessageReportServiceTest {
         verify(reports, never()).save(any(MessageReport.class));
     }
 
-    /**
-     * Spec §8.5: a sender cannot delete a message, so they cannot report their own message either.
-     */
     @Test
     void youCannotReportYourOwnMessage() {
         assertThatThrownBy(
@@ -136,11 +132,6 @@ class MessageReportServiceTest {
         verify(reports, never()).save(any(MessageReport.class));
     }
 
-    /**
-     * The permission check must run BEFORE the "already hidden" check. Otherwise an outsider gets
-     * 404 for a hidden message and 403 for a visible one — i.e. they could guess the moderation
-     * state of a message they have no right to know exists.
-     */
     @Test
     void anOutsiderGetsForbiddenEvenWhenTheMessageIsAlreadyHidden() {
         when(messages.findById(101L)).thenReturn(Optional.of(messageFrom(3L, NOW)));
@@ -167,7 +158,6 @@ class MessageReportServiceTest {
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
-    /** A hidden message has already disappeared from the list; there is nothing left to report. */
     @Test
     void anAlreadyHiddenMessageIsNotFoundForAMember() {
         when(messages.findById(101L)).thenReturn(Optional.of(messageFrom(3L, NOW)));

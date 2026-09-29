@@ -29,11 +29,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * POST /api/v1/orders/preview, POST /api/v1/orders, GET /api/v1/orders, GET /api/v1/orders/{id}
- * (contract §7) — FR-030…033, 036, 065. D-13 / C5-4: customer and farmer can both buy and view;
- * admin is blocked here and also in the service.
- */
 @RestController
 @RequestMapping("/api/v1/orders")
 @PreAuthorize("hasAnyRole('CUSTOMER','FARMER')")
@@ -42,7 +37,6 @@ public class OrderController extends BaseController {
 
     private final OrderServiceInterface orderService;
 
-    /** Which orders the cart will be split into; each order's problems live in {@code problems}. */
     @PostMapping("/preview")
     public ResponseEntity<ApiResource<OrderPreviewResource>> preview(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -50,7 +44,6 @@ public class OrderController extends BaseController {
         return ok(new OrderPreviewResource(orderService.preview(user.getId(), request)), "");
     }
 
-    /** Place the whole cart: one order per group. Out of stock, slot full, past cutoff → 409. */
     @PostMapping
     public ResponseEntity<ApiResource<PlacedOrdersResource>> place(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -60,7 +53,6 @@ public class OrderController extends BaseController {
                 "Your order has been placed.");
     }
 
-    /** The caller's own orders as the buyer (D-13: a Farmer also buys), newest first. */
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<OrderListItemResource>>> mine(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -70,10 +62,6 @@ public class OrderController extends BaseController {
         return ok(orderService.myOrders(user.getId(), status, page, pageSize), "");
     }
 
-    /**
-     * Only the order's buyer, the Farmer who owns it, or an admin (D-04, read-only oversight) can
-     * read it (R-06); anyone else gets 403, even when the id exists (Review focus #3).
-     */
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('CUSTOMER','FARMER','ADMIN')")
     public ResponseEntity<ApiResource<OrderDetailResource>> detail(
@@ -81,21 +69,12 @@ public class OrderController extends BaseController {
         return ok(orderService.detail(user.getId(), id), "");
     }
 
-    /**
-     * FR-034 — only the buyer can cancel their own order, before the cutoff. Wrong owner → 403;
-     * wrong status → 409 INVALID_TRANSITION; past the cutoff → 409 CUTOFF_PASSED (C5-18).
-     */
     @PatchMapping("/{id}/cancel")
     public ResponseEntity<ApiResource<OrderDetailResource>> cancel(
             @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {
         return ok(orderService.cancel(user.getId(), id), "Order cancelled.");
     }
 
-    /**
-     * FR-035 — change quantities or drop items before the cutoff, never add a new product (D-07).
-     * Stock changes by exactly the difference; an {@code accepted} order goes back to {@code
-     * placed}.
-     */
     @PutMapping("/{id}/items")
     public ResponseEntity<ApiResource<OrderDetailResource>> modifyItems(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -104,10 +83,6 @@ public class OrderController extends BaseController {
         return ok(orderService.modifyItems(user.getId(), id, request), "Order updated.");
     }
 
-    /**
-     * FR-037 — the old order's lines as a suggested cart (contract §7); creates nothing. Lines that
-     * can no longer be bought are left out and quantities are capped at current stock.
-     */
     @PostMapping("/{id}/reorder")
     public ResponseEntity<ApiResource<List<CartLine>>> reorder(
             @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {

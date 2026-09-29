@@ -16,7 +16,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** An account's display preferences; valid values are in UpdateSettingsRequest. */
 @Entity
 @Getter
 @Setter

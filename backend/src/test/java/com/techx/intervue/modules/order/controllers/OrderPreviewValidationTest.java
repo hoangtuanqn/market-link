@@ -18,10 +18,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
-/**
- * FR-125: POST /orders/preview checks every {@code pickupDates} entry before the service reads it,
- * so a malformed cart is a 400 VALIDATION_ERROR rather than a 500.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = "app.chat.rabbitmq.host=")
 class OrderPreviewValidationTest {

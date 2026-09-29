@@ -25,18 +25,14 @@ const badge =
   'bg-accent text-on-accent absolute top-0.75 right-px grid h-4.5 min-w-4.5 place-items-center rounded-full px-1 text-[11px] font-bold tabular-nums';
 
 type HeaderProps = {
-  /** 'customer' also covers a Farmer away from their stall panel (README, "Two shells"). */
   variant?: 'guest' | 'customer';
   userName?: string;
   userEmail?: string;
   avatarUrl?: string;
-  /** Your own achievement tier: a ring around the image on the header and the drawer. */
   tier?: Tier;
   role?: RoleType;
   settingsTo?: string;
-  /** Inbox by role: Customer /messages, Farmer /farmer/messages. */
   messagesTo?: string;
-  /** The notifications page of the signed-in role (Farmer: /farmer/notifications). */
   notificationsTo?: string;
   cartCount?: number;
   unreadCount?: number;
@@ -100,7 +96,6 @@ const Header = ({
             >
               <SearchIcon />
             </Link>
-            {/* Messages and notifications are two separate icons, not merged (chat spec §9.1) */}
             {signedIn && (
               <Popover
                 label={chatUnread ? t('header.messagesUnread', { count: chatUnread }) : t('header.messages')}

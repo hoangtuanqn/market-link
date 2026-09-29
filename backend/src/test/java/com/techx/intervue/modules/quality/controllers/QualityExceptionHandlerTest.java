@@ -23,7 +23,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
-/** The spoilage module's error codes (spec §4.4, §8): 400 input, 403 owner, 404, 409 state. */
 class QualityExceptionHandlerTest {
 
     private final QualityExceptionHandler handler = new QualityExceptionHandler();
@@ -34,7 +33,6 @@ class QualityExceptionHandlerTest {
         assertThat(r.getBody().getError().getCode()).isEqualTo(code);
     }
 
-    /** Spec §8: a photo of another type is a 400 on the file field, like the other uploads. */
     @Test
     void aPhotoOfAnotherTypeIs400OnTheFileField() {
         ResponseEntity<ApiResource<Void>> r =
@@ -56,11 +54,6 @@ class QualityExceptionHandlerTest {
                 .containsExactly("The photo must be 5 MB or smaller.");
     }
 
-    /**
-     * Same guard as AuthExceptionHandler#badUpload (AvatarController): a missing/misnamed "file"
-     * part, or a multipart body Spring could not parse at all, is the same 400 the service itself
-     * gives for an empty file — not a raw Tomcat/Spring error that bypasses ApiResource.
-     */
     @Test
     void aMissingOrBrokenUploadIs400OnTheFileField() {
         ResponseEntity<ApiResource<Void>> missingPart =
@@ -112,7 +105,6 @@ class QualityExceptionHandlerTest {
         assertError(handler.notFound(new ReportedItemNotFoundException()), 404, "NOT_FOUND");
     }
 
-    /** Review Focus #3: two sends at the same moment — the UNIQUE key answers 409, not 500. */
     @Test
     void aDuplicateReportRaceIs409() {
         assertError(
@@ -142,7 +134,6 @@ class QualityExceptionHandlerTest {
                 "REPORT_ALREADY_DECIDED");
     }
 
-    /** Review Focus #1: a second strike for the same report hits UNIQUE — 409, not 500. */
     @Test
     void aSecondStrikeForTheSameReportIs409() {
         assertError(

@@ -16,7 +16,6 @@ const variants: Record<Variant, string> = {
   ghost: 'bg-transparent text-brand underline-offset-4 hover:underline',
   onboard: 'bg-transparent text-on-board shadow-[inset_0_0_0_1.5px_var(--board-muted)]',
   danger: 'bg-surface-raised text-danger shadow-[inset_0_0_0_1.5px_var(--danger)] hover:bg-danger-bg',
-  // `.ml-btn-danger-fill`: the confirm button of a dangerous dialog. The design system sets no hover for it.
   dangerFill: 'bg-danger text-on-danger',
   success:
     'bg-status-ready-bg text-status-ready-ink shadow-[inset_0_0_0_1.5px_var(--brand)] hover:bg-brand hover:text-on-brand',
@@ -24,9 +23,6 @@ const variants: Record<Variant, string> = {
 
 const sizes: Record<Size, string> = {
   md: 'min-h-11 text-[15px]',
-  // 44px on a touch screen (Apple HIG, WCAG 2.5.5), back to the compact 36px from md up where a
-  // pointer does the aiming. "Add to cart" on a product card is a `sm` button, so this is the size
-  // a shopper hits most often on a phone.
   sm: 'min-h-11 text-small md:min-h-9',
 };
 
@@ -47,12 +43,10 @@ export function Button({
   return <button type={type} className={buttonClass({ variant, size, className })} {...rest} />;
 }
 
-/** Internal route rendered as a button. */
 export function ButtonLink({ variant, size, className, ...rest }: StyleProps & LinkProps) {
   return <Link className={buttonClass({ variant, size, className })} {...rest} />;
 }
 
-/** External URL rendered as a button, opened in a new tab. */
 export function ButtonAnchor({
   variant,
   size,

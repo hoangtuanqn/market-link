@@ -19,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Runs on real MySQL like MessageRepositoryTest — foreign keys are really enforced. */
 @SpringBootTest
 @Transactional
 class MessageAttachmentRepositoryTest {
@@ -114,18 +113,10 @@ class MessageAttachmentRepositoryTest {
                 .build();
     }
 
-    /**
-     * MessageService checks "image not yet attached to any message" with an unlocked
-     * read-then-write. Two requests sending the same attachmentId at the same time both see
-     * messageId == null, both create a message, and the later one overwrites — leaving an image
-     * bubble with no image forever. The UNIQUE constraint is the real backstop.
-     */
     @Test
     void oneAttachmentCannotBeClaimedByTwoMessages() {
         User customer = user(RoleType.CUSTOMER);
         User farmer = user(RoleType.FARMER);
-        // Two messages in the SAME thread: a pair of users has exactly one conversation
-        // (uq_conversation_pair), so two threads cannot be built.
         Conversation thread =
                 conversations.saveAndFlush(Conversation.between(customer.getId(), farmer.getId()));
         Long first = messageIn(thread, customer);
@@ -138,9 +129,6 @@ class MessageAttachmentRepositoryTest {
         MessageAttachment b = upload("f-second", customer.getId(), Instant.now());
         b.setMessageId(first);
 
-        // After a constraint error the Hibernate session cannot be used further — the "attach to
-        // another message is
-        // still fine" case is in a separate test below.
         assertThatThrownBy(() -> attachments.saveAndFlush(b))
                 .isInstanceOf(DataIntegrityViolationException.class);
         assertThat(second).isNotNull();
@@ -172,8 +160,6 @@ class MessageAttachmentRepositoryTest {
         attachments.saveAndFlush(upload("g-one", uploaderId, Instant.now()));
         attachments.saveAndFlush(upload("h-two", uploaderId, Instant.now()));
 
-        // UNIQUE on a nullable column: MySQL allows many NULLs, so images waiting to be sent do not
-        // collide
         assertThat(
                         attachments.findByMessageIdIsNullAndCreatedAtBefore(
                                 Instant.now().plusSeconds(60)))

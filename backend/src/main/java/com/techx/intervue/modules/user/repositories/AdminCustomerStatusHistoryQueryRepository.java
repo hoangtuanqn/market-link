@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/** FR-072: the deactivate/reactivate audit trail for one customer, newest first. */
 @Repository
 @RequiredArgsConstructor
 public class AdminCustomerStatusHistoryQueryRepository {

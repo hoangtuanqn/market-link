@@ -13,9 +13,6 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 
-/**
- * Spec 7.2 / 7.4. Endpoint /ws, plain WebSocket (no SockJS), every outgoing event goes per user.
- */
 @Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
@@ -37,20 +34,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        // The reason for rejection (bad token, wrong destination) goes into the message header of
-        // the ERROR frame
         registry.setErrorHandler(errorHandler);
         registry.addEndpoint(ENDPOINT)
                 .setAllowedOriginPatterns(allowedOrigins.toArray(String[]::new));
     }
 
-    /** Track open sockets so ChatSessionSweeper can close revoked sessions. */
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
         registration.addDecoratorFactory(sessionRegistry);
     }
 
-    /** Spec 7.3: the JWT is checked at the CONNECT frame, not at the handshake. */
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(authInterceptor);
@@ -69,9 +62,6 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     .setClientPasscode(r.password())
                     .setSystemLogin(r.user())
                     .setSystemPasscode(r.password())
-                    // Without these two lines /user/queue/* only reaches people connected to the
-                    // same instance
-                    // (spec 7.2)
                     .setUserDestinationBroadcast("/topic/unresolved-user")
                     .setUserRegistryBroadcast("/topic/user-registry");
             log.info("Chat realtime: STOMP relay via RabbitMQ at {}:{}", r.host(), r.stompPort());

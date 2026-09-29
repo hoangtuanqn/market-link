@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** Site-wide maintenance mode: a single row (id = 1), seeded by the migration. */
 @Entity
 @Getter
 @Setter

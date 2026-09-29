@@ -18,11 +18,6 @@ const snoozed = () => {
   }
 };
 
-/**
- * FR-042 — after sign-in, invite turning on browser notifications. The browser's permission box only shows on clicking
- * Turn on (Safari requires a gesture; Chrome hides the box after repeated denials). "Later" asks again only after 7
- * days.
- */
 const NotificationPermissionBanner = () => {
   const { t } = useTranslation();
   const { isLoggedIn } = useSession();

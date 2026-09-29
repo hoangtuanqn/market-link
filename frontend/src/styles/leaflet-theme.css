@@ -1,8 +1,3 @@
-/*
- * Leaflet + OpenStreetMap skin for the MarketLink map frame (D-12).
- * Ported from docs/prototype/prototype.css (`.pt-map`), scoped to `.ml-map` so it only dresses our own frames.
- * Reads tokens only; no hex. Not generated from the design system, so it is safe to edit by hand.
- */
 @import 'leaflet/dist/leaflet.css';
 
 .ml-map {
@@ -55,8 +50,6 @@
   background: var(--surface-raised);
   color: var(--ink);
   border-color: var(--line-strong);
-  /* Leaflet ships 30px zoom controls; 44px is the floor for a finger (Apple HIG, WCAG 2.5.5).
-     line-height keeps the +/- glyph centred at the new size. */
   width: 44px;
   height: 44px;
   line-height: 44px;
@@ -65,7 +58,6 @@
   background: transparent;
   border: 0;
 }
-/* "Map tiles need a connection", sitting over the frame rather than replacing it. */
 .ml-map-note {
   position: absolute;
   z-index: 500;
@@ -78,7 +70,6 @@
   font-size: 13px;
 }
 
-/* Dark theme: dim the OpenStreetMap tiles so the map does not glare next to dark surfaces. */
 :root[data-theme='dark'] .ml-map .leaflet-tile {
   filter: brightness(0.72) contrast(1.06) saturate(0.82);
 }

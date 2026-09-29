@@ -50,7 +50,6 @@ class LocalFileStorageServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
-    /** FR-115: a video is copied from the upload's temp file, never read into memory. */
     @Test
     void storeFileCopiesAFileIntoPlace(@TempDir Path elsewhere) throws Exception {
         Path source = Files.write(elsewhere.resolve("upload.part"), new byte[] {4, 5, 6});

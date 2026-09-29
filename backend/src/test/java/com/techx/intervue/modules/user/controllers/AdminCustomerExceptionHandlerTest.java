@@ -8,11 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-/**
- * FR-072 review fix: {@code AdminCustomerService.deactivate} throws {@link InvalidFieldException}
- * for a blank reason or a past {@code until}, but this controller had no handler for it — the error
- * fell through to {@code /error} and came back as a 500/401, not the 400 the plan requires.
- */
 class AdminCustomerExceptionHandlerTest {
 
     private final AdminCustomerExceptionHandler handler = new AdminCustomerExceptionHandler();

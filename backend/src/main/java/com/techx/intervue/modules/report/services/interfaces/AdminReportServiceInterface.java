@@ -9,7 +9,6 @@ import com.techx.intervue.resources.PageResource;
 import java.time.LocalDate;
 import java.util.List;
 
-/** FR-070/075 — platform-wide dashboard and reports (contract §10). */
 public interface AdminReportServiceInterface {
 
     AdminDashboardResource dashboard();
@@ -27,6 +26,5 @@ public interface AdminReportServiceInterface {
             int page,
             int pageSize);
 
-    /** FR-075: the best-selling products platform-wide, completed orders only. */
     List<TopProductResource> topProducts(LocalDate from, LocalDate to, int limit);
 }

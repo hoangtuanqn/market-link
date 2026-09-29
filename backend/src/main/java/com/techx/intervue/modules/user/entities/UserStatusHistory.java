@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-072: one deactivate/reactivate. {@code changedBy} is null when the system (cron) did it. */
 @Entity
 @Getter
 @Setter

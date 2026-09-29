@@ -16,7 +16,6 @@ import { clampRange } from './reports.helpers';
 import ReportsSkeleton from './ReportsSkeleton';
 
 const pad = (n: number) => String(n).padStart(2, '0');
-/** A Date → "yyyy-MM-dd" for the `from`/`to` query params (contract's date-only format, not the reader's Settings). */
 const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
 const today = new Date();
@@ -25,11 +24,6 @@ const DEFAULT_TO = ymd(new Date(today.getFullYear(), today.getMonth() + 1, 0));
 
 const TOP_LIMIT = 10;
 
-/**
- * FR-075 — orders and revenue across the platform, split by market, and the Farmers and products that sell the most.
- * Revenue is the total of completed orders, paid to the stalls rather than through MarketLink. The two totals up top
- * come from the platform dashboard and are not scoped to the date range below (the server does not date-filter them).
- */
 const AdminReportsPage = () => {
   const { t } = useTranslation('AdminReports');
   const { t: tAssistant } = useTranslation('common');

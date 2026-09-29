@@ -81,13 +81,6 @@ class StockTemplateServiceTest {
         when(farmers.findByUserId(USER_ID)).thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
     }
 
-    // ---- list ----
-
-    /**
-     * FR-071: reading the weekly plan used to be allowed while suspended. D-09 is stricter — a
-     * suspended Farmer sees only their old orders — so this screen closes with the rest of the
-     * selling panel.
-     */
     @Test
     void listIsRefusedWhileTheStallIsSuspended() {
         when(farmers.findByUserId(USER_ID))
@@ -95,8 +88,6 @@ class StockTemplateServiceTest {
 
         assertThatThrownBy(() -> service.list(USER_ID)).isInstanceOf(StallSuspendedException.class);
     }
-
-    // ---- replace ----
 
     @Test
     void replaceRejectsStallNotApproved() {
@@ -107,7 +98,6 @@ class StockTemplateServiceTest {
         verify(templates, never()).replaceAll(any(), any());
     }
 
-    /** Review focus #3, áp dụng cho FR-063: đổi productId trên body → 403, không phải 404. */
     @Test
     void replaceRejectsProductNotOwnedByFarmer() {
         approvedStall();
@@ -148,11 +138,6 @@ class StockTemplateServiceTest {
         verify(templates).replaceAll(FARMER_ID, request.items());
     }
 
-    /**
-     * FR-041: a product with zero templates is never orderable (decision D-02 redesign). Adding its
-     * first template can take it from "never orderable" to orderable — a restock event, told to
-     * whoever favourited the product.
-     */
     @Test
     void replaceTellsTheRestockNotifierWhenAProductGainsItsFirstOrderableDate() {
         approvedStall();
@@ -166,11 +151,6 @@ class StockTemplateServiceTest {
         verify(restock).afterChange(product, false, true);
     }
 
-    /**
-     * {@code afterChange} is always called with both booleans, the same convention as {@code
-     * ProductService} and {@code OrderService} — {@link RestockNotifier} itself decides whether
-     * "already orderable before" means staying quiet.
-     */
     @Test
     void replaceCallsAfterChangeEvenWhenNothingReallyChanged() {
         approvedStall();
@@ -184,11 +164,6 @@ class StockTemplateServiceTest {
         verify(restock).afterChange(product, true, true);
     }
 
-    /**
-     * FR-062/FR-063: the days that already have a daily-stock row follow the new template. Their
-     * rows are locked before the restock check reads them (C5-2), and followed after the new set is
-     * written.
-     */
     @Test
     void replaceLocksTheDaysFirstThenMakesThemFollowTheNewTemplate() {
         approvedStall();
@@ -213,7 +188,6 @@ class StockTemplateServiceTest {
                         Map.of(6, new DailyStockTemplateSync.DayPlan(50, null)));
     }
 
-    /** A product left out of the request lost every weekday: its booked days stop selling too. */
     @Test
     void replaceAlsoMakesAProductDroppedFromTheRequestFollow() {
         approvedStall();

@@ -17,10 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * The admin's two context queries (spec §8.3) do NOT filter hidden_at, quite unlike the two queries
- * that MessageService.list uses — an admin must be able to see the message they just hid.
- */
 @SpringBootTest
 @Transactional
 class MessageRepositoryContextTest {
@@ -64,7 +60,6 @@ class MessageRepositoryContextTest {
                                 thread.getId(), middle, PageRequest.of(0, 5)))
                 .extracting(Message::getId)
                 .containsExactly(before);
-        // Whereas the ordinary user's query drops it
         assertThat(
                         messages.findByConversationIdAndIdLessThanAndHiddenAtIsNullOrderByIdDesc(
                                 thread.getId(), middle, PageRequest.of(0, 5)))

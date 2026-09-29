@@ -4,10 +4,6 @@ import { stockDay } from '@/components/stockDay';
 
 type BestBeforeLineProps = { bestBefore?: string | null; storageMode?: StorageMode | null };
 
-/**
- * FR-121: "Good until end of Sun 04/10 · Fridge 0–5 °C" under an order line. Lines placed before the promise existed
- * have no date and show nothing.
- */
 const BestBeforeLine = ({ bestBefore, storageMode }: BestBeforeLineProps) => {
   const { t } = useTranslation();
   const day = stockDay(bestBefore);

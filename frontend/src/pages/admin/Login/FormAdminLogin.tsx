@@ -14,11 +14,6 @@ import { splitLoginResult } from '@/utils/mfa';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
 
-/**
- * FR-004 — admin sign-in. Shares POST /auth/login with Customer/Farmer but sends requiredRole = admin: an account that
- * is not an admin gets 403 ROLE_NOT_ALLOWED from the backend before any token is issued, so the session already in the
- * browser (the refresh cookie) is not overwritten. The real block is still the 403 at each admin API (FR-005).
- */
 const FormAdminLogin = () => {
   const { t } = useTranslation('AdminLogin');
   const [email, setEmail] = useState('');
@@ -38,7 +33,6 @@ const FormAdminLogin = () => {
 
     setIsSubmitting(true);
     try {
-      // No "Remember me": the admin session only lives for this browser session
       const response = await AuthApi.login({
         email: email.trim(),
         password,
@@ -47,7 +41,6 @@ const FormAdminLogin = () => {
       });
       const { pending, session } = splitLoginResult(response.data, false);
       if (pending) {
-        // FR-008: two-step verification is on → no session yet, go to the code entry screen
         navigate(ADMIN_VERIFY_PATH, { state: pending });
         return;
       }
@@ -65,7 +58,6 @@ const FormAdminLogin = () => {
         return;
       }
       if (Helper.getErrorCode(error) === 'LOGIN_LOCKED') {
-        // FR-003: too many wrong passwords — say in the reader's language how long to wait
         const minutes = Math.max(1, Math.ceil((Helper.getRetryAfterSeconds(error) ?? 900) / 60));
         Notification.error({ text: t('form.tooMany', { count: minutes }) });
         return;

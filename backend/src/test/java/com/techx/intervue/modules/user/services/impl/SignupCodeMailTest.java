@@ -39,7 +39,6 @@ class SignupCodeMailTest {
         return mail.build(new IssuedSignupCode(pending, "004821"));
     }
 
-    /** Review Focus #2: the code keeps its leading zeros in every part of the mail. */
     @ParameterizedTest
     @ValueSource(strings = {"en", "vi", "zh", "ja", "ko", "fr", "es", "de", "th", "id"})
     void everyLanguageHasTheWholeMail(String language) {

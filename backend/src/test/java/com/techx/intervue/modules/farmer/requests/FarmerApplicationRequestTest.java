@@ -12,11 +12,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-/**
- * Fields that take a URL sent by the client must be blocked here, not left to the DB: when the
- * column is narrower than the value sent Hibernate throws DataIntegrityViolationException, that
- * error falls through to /error and the FE reads it as 401 (session ended) instead of 400.
- */
 class FarmerApplicationRequestTest {
 
     private static ValidatorFactory factory;
@@ -48,7 +43,6 @@ class FarmerApplicationRequestTest {
                 .collect(java.util.stream.Collectors.toSet());
     }
 
-    /** video_path is VARCHAR(255). */
     @Test
     void videoUrlLongerThanTheColumnIsRejected() {
         assertThat(invalidFields(with(null, "https://x/" + "a".repeat(250)))).contains("videoUrl");
@@ -60,10 +54,6 @@ class FarmerApplicationRequestTest {
                 .isEmpty();
     }
 
-    /**
-     * Images are the only evidence the admin looks at to approve: the form requires at least one
-     * image, and so does the server.
-     */
     @Test
     void anApplicationWithoutPhotosIsRejected() {
         assertThat(invalidFields(with(null, null))).contains("photoUrls");
@@ -76,10 +66,6 @@ class FarmerApplicationRequestTest {
                 .anyMatch(field -> field.startsWith("photoUrls"));
     }
 
-    /**
-     * photo_paths is TEXT, but each URL still needs a ceiling — an arbitrary string is not
-     * accepted.
-     */
     @Test
     void aPhotoUrlLongerThanTheColumnIsRejected() {
         assertThat(invalidFields(with(List.of("https://x/" + "a".repeat(250)), null)))

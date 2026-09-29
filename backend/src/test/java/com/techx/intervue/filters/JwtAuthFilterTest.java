@@ -125,12 +125,6 @@ class JwtAuthFilterTest {
         assertThat(SecurityContextHolder.getContext().getAuthentication()).isNotNull();
     }
 
-    /**
-     * FR-008: sign-in hands an admin who has never set up two-step verification a working session,
-     * so the SPA can drive the setup screen. Without a marker on that session, the token opens
-     * every admin endpoint to anyone calling the API directly — the mandatory step guards the
-     * screens only. SecurityConfig turns this authority into a 403 on /api/v1/admin/**.
-     */
     @Test
     void adminWhoHasNotSetUpMfaIsMarkedPending() throws Exception {
         when(sessionCache.get(1L)).thenReturn(new SessionData("a@b.c", Set.of(RoleType.ADMIN)));
@@ -151,7 +145,6 @@ class JwtAuthFilterTest {
         assertThat(authorities()).contains("ROLE_ADMIN").doesNotContain("MFA_SETUP_PENDING");
     }
 
-    /** A customer has no row in admin_mfa either; the marker is for admins only. */
     @Test
     void customerIsNeverMarkedPending() throws Exception {
         when(sessionCache.get(1L)).thenReturn(new SessionData("a@b.c", Set.of(RoleType.CUSTOMER)));

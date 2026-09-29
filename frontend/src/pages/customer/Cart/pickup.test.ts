@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import type { SlotDto } from '@/api-requests/stall.requests';
 import { NO_CHOICE, pickupOf, todayInHcmc } from './pickup';
 
-/** A 07:00 slot at a market; `full` takes every place. */
 const at = (marketId: number, slotDate: string, full = false): SlotDto => ({
   slotId: marketId * 100 + Number(slotDate.slice(-2)),
   farmerMarketId: marketId,
@@ -29,7 +28,6 @@ describe('pickupOf', () => {
     ]);
 
     expect(p).toMatchObject({ marketId: 1, days: ['2026-10-01', '2026-10-02'], pricedDay: '2026-10-01' });
-    // Another market still offers it, so the deal day is not gone
     expect(p.goneDealDays).toEqual([]);
   });
 

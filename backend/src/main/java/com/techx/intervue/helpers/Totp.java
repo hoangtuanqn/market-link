@@ -9,17 +9,11 @@ import java.util.OptionalLong;
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- * TOTP per RFC 6238: HMAC-SHA1, 6 digits, 30-second step — exactly the defaults of Google/Microsoft
- * Authenticator. Written by hand instead of adding a library because it only takes a few dozen
- * lines and can be tested with the RFC's sample vectors.
- */
 public final class Totp {
 
     public static final int DIGITS = 6;
     public static final int PERIOD_SECONDS = 30;
 
-    /** Accept the previous and next step to compensate for phone clock drift. */
     private static final int ALLOWED_DRIFT_STEPS = 1;
 
     private static final int MODULO = 1_000_000;
@@ -31,7 +25,6 @@ public final class Totp {
         return Math.floorDiv(instant.getEpochSecond(), PERIOD_SECONDS);
     }
 
-    /** The 6-digit code for one time step (RFC 4226 §5.3, dynamic truncation). */
     public static String code(byte[] secret, long step) {
         byte[] hash = hmacSha1(secret, ByteBuffer.allocate(Long.BYTES).putLong(step).array());
         int offset = hash[hash.length - 1] & 0x0f;
@@ -43,11 +36,6 @@ public final class Totp {
         return String.format("%0" + DIGITS + "d", binary % MODULO);
     }
 
-    /**
-     * The time step that matches the code (within ±1 step around {@code now}), empty if it does not
-     * match. The caller guards against reuse by accepting only a step greater than the one already
-     * used.
-     */
     public static OptionalLong match(byte[] secret, String code, Instant now) {
         if (code == null || !code.matches("\\d{" + DIGITS + "}")) {
             return OptionalLong.empty();
@@ -58,8 +46,6 @@ public final class Totp {
                 step <= current + ALLOWED_DRIFT_STEPS;
                 step++) {
             byte[] expected = code(secret, step).getBytes(StandardCharsets.US_ASCII);
-            // constant-time comparison, does not leak the number of correct digits through response
-            // time
             if (MessageDigest.isEqual(expected, given)) {
                 return OptionalLong.of(step);
             }
@@ -67,7 +53,6 @@ public final class Totp {
         return OptionalLong.empty();
     }
 
-    /** Base32 without padding (RFC 4648) — the key format that authenticator apps accept. */
     public static String base32(byte[] data) {
         StringBuilder out = new StringBuilder((data.length * 8 + 4) / 5);
         int buffer = 0;
@@ -92,7 +77,6 @@ public final class Totp {
             mac.init(new SecretKeySpec(key, "HmacSHA1"));
             return mac.doFinal(message);
         } catch (GeneralSecurityException e) {
-            // HmacSHA1 is available in every JDK
             throw new IllegalStateException("HmacSHA1 is not available", e);
         }
     }

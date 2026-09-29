@@ -12,11 +12,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-/**
- * FR-008, FR-094: which assistant a caller gets comes from the authenticated principal alone. An
- * admin who still owes the mandatory two-step setup is kept out of /api/v1/admin/** by
- * SecurityConfig, and must not read the same data through the admin assistant's tools either.
- */
 class ChatControllerTest {
 
     private final ChatServiceInterface service = mock(ChatServiceInterface.class);

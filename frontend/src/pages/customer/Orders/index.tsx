@@ -12,7 +12,6 @@ import type { OrderType } from '@/types/order.types';
 const UPCOMING_STATUSES = new Set(['placed', 'accepted', 'ready']);
 const PAST_STATUSES = new Set(['completed', 'declined', 'cancelled']);
 
-/** FR-033 FR-036 FR-037 — orders grouped Upcoming / Past / All, filterable by stall. */
 const CustomerOrdersPage = () => {
   const { t } = useTranslation('CustomerOrders');
   const { t: tc } = useTranslation();

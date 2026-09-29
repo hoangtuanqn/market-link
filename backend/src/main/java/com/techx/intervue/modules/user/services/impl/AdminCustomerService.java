@@ -24,13 +24,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-072. Deactivating sets {@code users.status = inactive}, stores the reason/expiry, revokes the
- * refresh token (DB) and the live Redis session (JwtAuthFilter rejects the access token on the very
- * next request), writes a {@code user_status_history} row, and — only for a permanent ban — cancels
- * the customer's open orders (Task 5). Reactivating (manual or the auto-reactivate cron, Task 4)
- * clears the reason/expiry and goes through this exact same method, so the two never diverge.
- */
 @Service
 @AllArgsConstructor
 public class AdminCustomerService implements AdminCustomerServiceInterface {
@@ -79,12 +72,6 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
         return queries.findOne(userId).orElseThrow(CustomerNotFoundException::new);
     }
 
-    /**
-     * DB work first (status, refresh-token revoke, history, order cancellation — all rolled back
-     * together on failure); the Redis session kick and the email only run after commit — a failed
-     * permanent-ban order cancellation must not leave the customer signed out and emailed for a
-     * deactivation that never actually took effect.
-     */
     private void deactivate(
             User user, String reason, Instant until, Long actorId, UserStatus from) {
         if (reason == null || reason.isBlank()) {
@@ -153,13 +140,11 @@ public class AdminCustomerService implements AdminCustomerServiceInterface {
     @Transactional(readOnly = true)
     public PageResource<AdminCustomerStatusHistoryResource> statusHistory(
             long userId, int page, int pageSize) {
-        detail(userId); // 404s for a missing or non-customer id, same rule as every other endpoint
-        // here
+        detail(userId);
         return statusHistoryQueries.search(
                 userId, Math.max(1, page), Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize)));
     }
 
-    /** Only the two values of contract §10; {@code suspended} is not an admin action here. */
     private static UserStatus parseStatus(String status) {
         String s = status == null ? "" : status.trim().toLowerCase(Locale.ROOT);
         return switch (s) {

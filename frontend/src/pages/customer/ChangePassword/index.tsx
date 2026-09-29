@@ -12,7 +12,6 @@ import Session from '@/utils/session';
 
 type FormErrors = Partial<Record<'currentPassword' | 'newPassword' | 'confirmPassword', string>>;
 
-/** Same password rules as sign-up / reset password (the backend's RegisterRules). */
 const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 72;
 
@@ -31,12 +30,6 @@ const validate = (t: TFunction<'CustomerAccount'>, current: string, next: string
   return errors;
 };
 
-/**
- * The change-password page (/account/password), opened from the "Password & security" frame on the Account page.
- * Rendered within AuthLayout (no Header/Footer) for consistency with sign-in and sign-up flows. After the change the
- * backend signs out every device (including this one), so the FE clears the session and sends the user to the sign-in
- * page.
- */
 const ChangePasswordPage = () => {
   const { t } = useTranslation('CustomerAccount');
   const navigate = useNavigate();
@@ -46,7 +39,6 @@ const ChangePasswordPage = () => {
   const [errors, setErrors] = useState<FormErrors>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // On entering the page put the cursor in the first box, so they can type right away
   useEffect(() => {
     document.getElementById('currentPassword')?.focus();
   }, []);
@@ -68,7 +60,6 @@ const ChangePasswordPage = () => {
       Notification.success({ text: response.message || t('password.changed') });
       navigate('/login', { replace: true });
     } catch (error) {
-      // 400: the current password is wrong / the new password is invalid → error under the input
       setErrors(Helper.getFieldErrors(error));
       Notification.error({
         text: Helper.getErrorMessage(error, t('password.failed')),
@@ -85,7 +76,6 @@ const ChangePasswordPage = () => {
           <p className="text-small text-ink-muted">{t('password.intro')}</p>
         </div>
 
-        {/* Tell the password manager which account the password belongs to */}
         <input
           type="email"
           name="username"

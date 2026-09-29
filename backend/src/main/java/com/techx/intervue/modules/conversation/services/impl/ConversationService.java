@@ -65,21 +65,12 @@ public class ConversationService implements ConversationServiceInterface {
         User target = requireUser(targetId, "Stall not found.");
         policy.assertCanStart(me);
 
-        // An old thread is returned even when the stall has been suspended (spec 8.1, D-09: still
-        // readable;
-        // sending more makes send() return 409). The "is the stall open" policy only guards
-        // CREATING new ones.
         Conversation pair = Conversation.between(meId, target.getId());
         Conversation conversation =
                 conversations
                         .findByUserAIdAndUserBId(pair.getUserAId(), pair.getUserBId())
                         .orElseGet(
                                 () -> {
-                                    // The §8.4 limit counts NEW threads. open() is idempotent (spec
-                                    // §6.1), so reopening an existing thread does not use up a slot
-                                    // — if calls were counted
-                                    // the FE opening the chat frame a few dozen times would lock
-                                    // itself out.
                                     rateLimiter.check(
                                             meId, ChatRateLimiterInterface.Action.CONVERSATION);
                                     policy.assertCanBeMessaged(target);
@@ -132,9 +123,6 @@ public class ConversationService implements ConversationServiceInterface {
         return users.findById(id).orElseThrow(() -> new EntityNotFoundException(message));
     }
 
-    /**
-     * One query for the whole page; an empty list does not hit the DB (JPQL "in ()" is an error).
-     */
     private Map<Long, Long> unreadFor(Long meId, Collection<Conversation> page) {
         if (page.isEmpty()) {
             return Map.of();
@@ -153,9 +141,6 @@ public class ConversationService implements ConversationServiceInterface {
                 .collect(Collectors.toMap(User::getId, Function.identity()));
     }
 
-    /**
-     * The stall profiles of the people on the page, one query; whoever is not a Farmer has none.
-     */
     private Map<Long, FarmerProfile> stallsOf(Collection<Long> userIds) {
         if (userIds.isEmpty()) {
             return Map.of();

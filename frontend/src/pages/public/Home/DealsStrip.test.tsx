@@ -49,7 +49,6 @@ describe('DealsStrip', () => {
     expect(DealApi.list).toHaveBeenCalledWith({ pageSize: 4 });
   });
 
-  /** Only a teaser: nothing at all when there is no deal (the /deals page has the full states). */
   it('shows nothing when there is no deal', async () => {
     vi.mocked(DealApi.list).mockResolvedValue({ items: [], page: 1, pageSize: 4, total: 0 });
     const { container } = renderStrip();

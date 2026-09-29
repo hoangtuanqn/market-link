@@ -9,10 +9,6 @@ type ErrorShellProps = {
   children: ReactNode;
 };
 
-/**
- * Minimal, distraction-free frame for error screens (404 Not Found, 403 Forbidden). Excludes the main navigation header
- * and mega footer while preserving brand identity and providing helpful quick actions.
- */
 const ErrorShell = ({ children }: ErrorShellProps) => {
   const { t } = useTranslation();
 

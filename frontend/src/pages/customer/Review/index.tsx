@@ -14,11 +14,9 @@ import { formatDate, units } from '@/lib/format';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-/** 403 (someone else's order) and 404 read the same to the customer: the order is not theirs to review. */
 const isGone = (error: unknown) =>
   isAxiosError(error) && (error.response?.status === 403 || error.response?.status === 404);
 
-/** FR-050 FR-051 D-10 — one review per order for the stall, and one per product in it. */
 const CustomerReviewPage = () => {
   const { t } = useTranslation('CustomerReview');
   const { t: tc } = useTranslation();
@@ -60,10 +58,6 @@ const CustomerReviewPage = () => {
   const data = state.data;
   const order = toOrder(data);
 
-  /**
-   * FR-050 — a review belongs to a finished purchase, so the form only exists once the order is completed. Hiding the
-   * link on the ticket is not enough: this page is reachable by typing the URL.
-   */
   if (order.status !== 'completed') {
     return (
       <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">

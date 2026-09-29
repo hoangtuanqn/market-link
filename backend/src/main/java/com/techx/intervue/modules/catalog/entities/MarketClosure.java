@@ -12,10 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * One day a market does not open despite falling on its usual schedule (V20260926014). No official
- * FR yet.
- */
 @Entity
 @Getter
 @Setter
@@ -36,10 +32,6 @@ public class MarketClosure {
     @Column(name = "reason", length = 255)
     private String reason;
 
-    /**
-     * 'move' | 'contact' | 'cancel' — checked in the service, not an enum, to match how
-     * FarmerProfile already validates status by String (AdminFarmerController).
-     */
     @Column(name = "handling", nullable = false, length = 20)
     private String handling;
 

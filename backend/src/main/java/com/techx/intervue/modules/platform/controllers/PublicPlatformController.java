@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** Whether the site is open right now — read by every visitor before anything else loads. */
 @RestController
 @RequestMapping("/api/v1/platform")
 @AllArgsConstructor

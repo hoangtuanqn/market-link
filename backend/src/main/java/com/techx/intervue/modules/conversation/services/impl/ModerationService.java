@@ -35,15 +35,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-116, spec §8.3. How much an admin can read is decided by the message_reports table, not by the
- * role.
- */
 @Service
 @RequiredArgsConstructor
 public class ModerationService implements ModerationServiceInterface {
 
-    /** Enough to recognize which message, not enough to read the whole mailbox. */
     static final int PREVIEW_LENGTH = 80;
 
     static final String IMAGE_PREVIEW = "Photo";
@@ -52,7 +47,6 @@ public class ModerationService implements ModerationServiceInterface {
 
     static final String UNKNOWN_USER = "Unknown user";
 
-    /** Spec §8.3: "at most 5 messages immediately before and 5 immediately after". */
     static final int CONTEXT_RADIUS = 5;
 
     private final MessageReportRepository reports;
@@ -99,7 +93,7 @@ public class ModerationService implements ModerationServiceInterface {
                 new ArrayList<>(
                         messages.findByConversationIdAndIdLessThanOrderByIdDesc(
                                 reported.getConversationId(), reported.getId(), window));
-        Collections.reverse(before); // the query returns new→old, display is old→new
+        Collections.reverse(before);
         List<Message> after =
                 messages.findByConversationIdAndIdGreaterThanOrderByIdAsc(
                         reported.getConversationId(), reported.getId(), window);
@@ -136,8 +130,6 @@ public class ModerationService implements ModerationServiceInterface {
         }
 
         Instant now = clock.instant();
-        // Idempotent: when two admins work the same queue, the one who hid FIRST is accountable;
-        // overwriting would erase that audit trail.
         if (!message.isHidden()) {
             message.setHiddenAt(now);
             message.setHiddenBy(adminId);
@@ -149,8 +141,6 @@ public class ModerationService implements ModerationServiceInterface {
                             .orElseThrow(
                                     () -> new EntityNotFoundException("Conversation not found."));
             refreshPreviewAfterHiding(thread, messageId);
-            // Only publish once committed, like MessageService: do not publish a change that could
-            // roll back
             TransactionHelper.afterCommit(() -> events.messageHidden(thread, messageId));
         }
         reports.findByMessageId(messageId)
@@ -159,11 +149,6 @@ public class ModerationService implements ModerationServiceInterface {
         return toModerated(message, true);
     }
 
-    /**
-     * The thread list and the chat header show the last message's preview. When the hidden message
-     * is the newest one still shown, fall back to the newest visible message before it, or to no
-     * preview when none is left, so the hidden text stops showing there.
-     */
     private void refreshPreviewAfterHiding(Conversation thread, Long hiddenId) {
         Message stillShown =
                 messages
@@ -191,15 +176,10 @@ public class ModerationService implements ModerationServiceInterface {
         MessageReport report =
                 reports.findById(reportId)
                         .orElseThrow(() -> new EntityNotFoundException("Report not found."));
-        // markHandledBy skips itself when status != NEW, so calling it again changes nothing
         report.markHandledBy(adminId, ReportStatus.REVIEWED, clock.instant());
         return MessageReportResource.from(report);
     }
 
-    /**
-     * `reported` is true for the central message, and also for any context message that has its own
-     * report — Task 7 uses this flag to decide whether the admin may see the image.
-     */
     private ModeratedMessageResource toModerated(Message m, boolean isCentre) {
         boolean photo = m.getKind() == MessageKind.IMAGE;
         boolean video = m.getKind() == MessageKind.VIDEO;
@@ -218,10 +198,6 @@ public class ModerationService implements ModerationServiceInterface {
                 m.getCreatedAt());
     }
 
-    /**
-     * The image of one reported message, for the admin to open through GET /attachments/{id}. Rare,
-     * so it is asked for per message.
-     */
     private Long attachmentIdOf(Long messageId) {
         return attachments.findByMessageIdIn(List.of(messageId)).stream()
                 .findFirst()
@@ -244,7 +220,6 @@ public class ModerationService implements ModerationServiceInterface {
                 report.getCreatedAt());
     }
 
-    /** A deactivated account still has a row in users (FR-072), so this is a defensive branch. */
     private String nameOf(Long userId) {
         return users.findById(userId).map(User::getFullName).orElse(UNKNOWN_USER);
     }

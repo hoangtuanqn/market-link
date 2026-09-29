@@ -12,5 +12,4 @@ public record SettingsResource(
         String dateFormat,
         String clock,
         String preferredMarket,
-        /* notifications and each role's own block: saved, no feature uses them yet */
         Map<String, String> extras) {}

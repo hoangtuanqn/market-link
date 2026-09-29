@@ -7,12 +7,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.StompSubProtocolErrorHandler;
 
-/**
- * By default Spring puts the message of MessageDeliveryException ("Failed to send message to
- * ExecutorSubscribableChannel…") into the ERROR frame; the client cannot tell "token expired,
- * refresh and reconnect" from "do not try again". Here we take our own root cause when it is an
- * authentication / authorization error.
- */
 @Component
 public class StompErrorHandler extends StompSubProtocolErrorHandler {
 

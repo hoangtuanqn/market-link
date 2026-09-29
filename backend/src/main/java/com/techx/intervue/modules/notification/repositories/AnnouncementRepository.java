@@ -15,10 +15,6 @@ public interface AnnouncementRepository extends JpaRepository<Announcement, Long
 
     Page<Announcement> findAllByOrderByCreatedAtDescIdDesc(Pageable pageable);
 
-    /**
-     * Public banner: active, within the time window (null = unbounded on that side) and belonging
-     * to one of the audiences the viewer can see.
-     */
     @Query(
             """
             select a from Announcement a

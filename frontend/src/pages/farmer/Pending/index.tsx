@@ -10,19 +10,6 @@ import useRequest from '@/hooks/useRequest';
 import useSession from '@/hooks/useSession';
 import { formatDate } from '@/lib/format';
 
-/**
- * FR-071 — what a Farmer sees before approval, once rejected, or once suspended. `approved` never renders here: the
- * Farmer already has the full dashboard, so this route sends them there instead.
- *
- * The application (`GET /farmer/apply`) is the source of truth for `approvalStatus`, the stall name, contact, and the
- * reject/suspend reason: it answers for an account still on the `customer` role, which is every Farmer who has not yet
- * been approved. `GET /farmer/profile` is Farmer-role only and 403s for that same account (checked against the live
- * API), so it is read only as a bonus for the one extra fact it has that the application does not — the first market —
- * and its absence never blocks the page. In practice that bonus only ever loads for a _suspended_ account (they were
- * approved once, so they already hold the Farmer role); `pending` and `rejected` are normally intercepted by
- * `RequireAuth` before this route is even reached, since those accounts are still customers, but this page still
- * handles them defensively for a stale session or a direct link.
- */
 const FarmerPendingPage = () => {
   const { t } = useTranslation('FarmerPending');
   const { t: tc } = useTranslation();
@@ -43,7 +30,6 @@ const FarmerPendingPage = () => {
   }
 
   const application = appLoad.data.data;
-  // A Farmer account always has an application on record; if it is somehow missing there is nothing to review yet.
   if (!application) {
     return <Navigate to="/become-farmer" replace />;
   }

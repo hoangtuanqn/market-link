@@ -14,11 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
-/**
- * Personal achievements — not in the SRS, requested by the LEAD (26/09/2026). Computed on every
- * call from the orders table, the tier is stored nowhere, so changing thresholds in app.tiers takes
- * effect immediately.
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -33,8 +28,6 @@ public class AchievementService implements AchievementServiceInterface {
         try {
             stats = repository.statsFor(List.of(userId)).getOrDefault(userId, OrderStats.EMPTY);
         } catch (DataAccessException e) {
-            // The orders table does not exist or the DB failed: still return the Account page, do
-            // not expose a 500
             log.warn("Order stats unavailable for user {}", userId, e);
             return unavailable();
         }

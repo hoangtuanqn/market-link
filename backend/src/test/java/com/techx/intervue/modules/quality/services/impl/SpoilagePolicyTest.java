@@ -9,13 +9,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-/**
- * FR-122, FR-123 (spec §9): the rule table that the frontend twin (lib/spoilage.test.ts) repeats
- * with the same numbers.
- */
 class SpoilagePolicyTest {
 
-    /** Review Focus #5: the last day of the window still counts, the next one does not. */
     @ParameterizedTest(name = "good until {0}, today {1} -> open={2}")
     @CsvSource({
         "2026-10-05,2026-10-03,true",
@@ -51,7 +46,6 @@ class SpoilagePolicyTest {
                 .isEqualTo(before);
     }
 
-    /** Spec §4.4.1: only an extended shelf life that failed early reaches the admins. */
     @ParameterizedTest(name = "extended={0}, before={1} -> admins told={2}")
     @CsvSource({"true,true,true", "true,false,false", "false,true,false", "false,false,false"})
     void onlyAnExtendedShelfLifeThatFailedEarlyReachesTheAdmins(
@@ -75,7 +69,6 @@ class SpoilagePolicyTest {
                 .isNull();
     }
 
-    /** Spec §4.4.4: the lock ends when the third newest strike turns 90 days old. */
     @Test
     void theThirdNewestStrikeDecidesWhenTheLockEnds() {
         assertThat(

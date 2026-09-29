@@ -19,10 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
-/**
- * FR-008-adjacent: site-wide maintenance mode. Verifies both the admin toggle and the actual
- * enforcement (MaintenanceModeFilter) — a 503 for everyone but an authenticated admin.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = "app.chat.rabbitmq.host=")
 class PlatformStatusControllerTest {
@@ -47,7 +43,6 @@ class PlatformStatusControllerTest {
 
     @AfterEach
     void tearDown() {
-        // A test that fails mid-way must never leave maintenance mode on for every other test.
         statuses.findById(1)
                 .ifPresent(
                         row -> {
@@ -103,7 +98,6 @@ class PlatformStatusControllerTest {
         HttpResponse<String> asAdmin = api.send("GET", "/api/v1/notifications", admin, null);
         assertThat(asAdmin.statusCode()).as(asAdmin.body()).isEqualTo(200);
 
-        // the status endpoint itself must stay reachable so the frontend can poll it
         HttpResponse<String> status = api.send("GET", "/api/v1/platform/status", null, null);
         assertThat(status.statusCode()).as(status.body()).isEqualTo(200);
 

@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-/** Runs on real MySQL, the same shape as MarketOperatingDayRepositoryTest. */
 @SpringBootTest
 @Transactional
 class MarketImageRepositoryTest {

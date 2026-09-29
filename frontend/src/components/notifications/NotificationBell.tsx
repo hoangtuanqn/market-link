@@ -4,7 +4,6 @@ import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import { Popover } from '@/components/ui/popover';
 import NotificationsPreview from '@/components/notifications/NotificationsPreview';
 
-/** The bell in the header of the Farmer and Admin areas (DashboardShell), the real unread count from NotificationStore. */
 const NotificationBell = ({ to }: { to: string }) => {
   const { t } = useTranslation('common');
   const unread = useUnreadNotifications();

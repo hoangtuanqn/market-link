@@ -8,10 +8,6 @@ vi.mock('@/api-requests/settings.requests', () => ({
 vi.mock('@/components/notifications/NotificationSettingsCard', () => ({ default: () => null }));
 
 describe('FarmerSettingsPage', () => {
-  /**
-   * The Selling defaults were saved but nothing read them: the order cutoff lives on Stall & pickup and Generate slots
-   * asks for its own length and capacity, so the page must not offer defaults that change nothing.
-   */
   it('offers no selling defaults and says where the stall settings live', () => {
     render(<FarmerSettingsPage />);
 

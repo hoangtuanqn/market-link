@@ -10,7 +10,6 @@ type QtyStepperProps = {
   onChange: (value: number) => void;
 };
 
-/** Plus/minus stepper with the stock left underneath (design system `.ml-qty`). */
 const QtyStepper = ({ value, max, unit, plural, min = 1, onChange }: QtyStepperProps) => {
   const { t } = useTranslation();
   const note =

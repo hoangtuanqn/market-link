@@ -6,7 +6,6 @@ import type { ProductType } from '@/types/product.types';
 
 type FreshProductsProps = {
   products: ProductType[];
-  /** True while the request is out (FR-084). */
   loading?: boolean;
 };
 

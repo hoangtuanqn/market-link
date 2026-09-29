@@ -44,7 +44,6 @@ const report = (patch: Partial<QualityReportDto> = {}): QualityReportDto => ({
   ...patch,
 });
 
-// Typed explicitly: a bare object literal would infer `extensionLockedUntil: null`, rejecting the string the lock test passes.
 const NO_STRIKES: ShelfLifeStandingDto = { activeViolations: 0, limit: 3, windowDays: 90, extensionLockedUntil: null };
 
 const page = (items: QualityReportDto[], standing = NO_STRIKES): FarmerQualityReportsDto => ({
@@ -52,7 +51,6 @@ const page = (items: QualityReportDto[], standing = NO_STRIKES): FarmerQualityRe
   reports: { items, page: 1, pageSize: 50, total: items.length },
 });
 
-// R13-2: LoadError's help text renders a react-router <Link to="/feedback">, which throws outside a Router.
 const renderList = () =>
   render(
     <MemoryRouter>

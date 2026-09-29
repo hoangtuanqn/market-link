@@ -15,18 +15,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * Slots a customer may see: of a stall still selling at a market that is still open, on a weekday
- * both the market and the stall still open ({@link PickupSlotRepository#OPEN_DAYS}), and still
- * before their cutoff (start − the stall's order_cutoff_hours, the same rule placing an order
- * enforces with 409 CUTOFF_PASSED). JdbcTemplate because market_id is needed from farmer_markets in
- * the same read; every value goes through parameters (R-04).
- */
 @Repository
 @RequiredArgsConstructor
 public class SlotQueryRepository {
 
-    /** The single definition of "a slot a customer can still book", shared by both reads below. */
     private static final String BOOKABLE_FROM =
             """
             FROM pickup_slots s
@@ -51,11 +43,6 @@ public class SlotQueryRepository {
                     ORDER BY s.slot_date, s.start_time, fm.market_id
                     """;
 
-    /**
-     * Dates a customer can still order for, per stall: at least one slot with room left that is
-     * still before its cutoff — the same conditions as {@link #PUBLIC_SLOTS} plus a free place,
-     * i.e. what placing an order accepts.
-     */
     public static final String ORDERABLE_DATES =
             "SELECT DISTINCT fm.farmer_id, s.slot_date\n"
                     + BOOKABLE_FROM
@@ -66,7 +53,6 @@ public class SlotQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
 
-    /** Stall id → the dates between {@code from} and {@code to} it can still take an order for. */
     public Map<Long, Set<LocalDate>> orderableDates(
             Collection<Long> farmerIds, LocalDate from, LocalDate to, LocalDateTime now) {
         Map<Long, Set<LocalDate>> out = new HashMap<>();

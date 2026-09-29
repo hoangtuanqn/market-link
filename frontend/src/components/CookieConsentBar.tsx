@@ -13,13 +13,6 @@ const alreadyDecided = () => {
   }
 };
 
-/**
- * A one-time disclosure, not a live toggle: MarketLink sets no advertising or analytics cookies today
- * (docs/prototype/public/privacy.html #sessions), so Accept and Decline both just record the visitor's choice and
- * dismiss the bar — neither changes what loads. Wiring Decline to something real (gating the Leaflet/ OpenStreetMap
- * map, self-hosting the two Google Fonts) is a separate decision the prototype already flags as undecided
- * (docs/prototype/todos.js) — this component only covers the disclosure itself.
- */
 const CookieConsentBar = () => {
   const { t } = useTranslation();
   const [hidden, setHidden] = useState(alreadyDecided);

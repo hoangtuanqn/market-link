@@ -15,7 +15,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
-/** FR-124: the deal errors keep the envelope and the codes of spec §4.5.3. */
 class DealHttpMappingTest {
 
     private final ProductExceptionHandler handler = new ProductExceptionHandler();
@@ -36,9 +35,6 @@ class DealHttpMappingTest {
                 "EXPIRED_BEFORE_PICKUP");
     }
 
-    /**
-     * A day that no longer takes orders conflicts with the current state → 409, like a full slot.
-     */
     @Test
     void aDayCustomersCanNoLongerOrderIs409() {
         assertError(
@@ -47,7 +43,6 @@ class DealHttpMappingTest {
                 "DATE_NOT_ORDERABLE");
     }
 
-    /** "2026-13-40" as {date}: the envelope with 400, not Spring's default error body. */
     @Test
     void aValueOfTheWrongTypeIs400() {
         assertError(
@@ -56,10 +51,6 @@ class DealHttpMappingTest {
                 "VALIDATION_ERROR");
     }
 
-    /**
-     * The module's handler must cover the new controller, or its errors escape as 500 (the bug
-     * ConversationExceptionHandlerScopeTest pins for another module).
-     */
     @Test
     void theFarmerDealControllerIsCoveredAndIsForFarmersOnly() {
         List<Class<?>> covered =
@@ -73,7 +64,6 @@ class DealHttpMappingTest {
                 .isEqualTo("hasRole('FARMER')");
     }
 
-    /** The public controller: covered by the module's handler, and no role rule. */
     @Test
     void theDealsControllerIsCoveredAndPublic() {
         List<Class<?>> covered =

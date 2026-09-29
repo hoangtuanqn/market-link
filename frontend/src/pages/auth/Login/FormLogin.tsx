@@ -35,24 +35,19 @@ const FormLogin = () => {
       const response = await AuthApi.login({ email: email.trim(), password, rememberMe });
       const { pending, session } = splitLoginResult(response.data, rememberMe);
       if (pending) {
-        // FR-008: an admin with two-step verification on signing in here → must also go through the code entry screen
         navigate(ADMIN_VERIFY_PATH, { state: pending });
         return;
       }
-      // With "Remember me" → keep the session after the browser closes; without → only for this browser session
       Session.save(session, rememberMe);
 
       Notification.success({ text: response.message || t('toast.signedIn') });
-      // If RequireAuth sent them here, go back to the page they had open
       navigate((location.state as LoginRedirectState | null)?.from ?? '/', { replace: true });
     } catch (error) {
       if (Helper.getErrorCode(error) === 'LOGIN_LOCKED') {
-        // FR-003: too many wrong passwords — say in the reader's language how long to wait
         const minutes = Math.max(1, Math.ceil((Helper.getRetryAfterSeconds(error) ?? 900) / 60));
         Notification.error({ text: t('toast.tooMany', { count: minutes }) });
         return;
       }
-      // 400: per-field errors (VALIDATION_ERROR) → shown under the input; 401/403: the backend's general message
       setErrors(Helper.getFieldErrors(error));
       Notification.error({ text: Helper.getErrorMessage(error, t('toast.failed')) });
     } finally {

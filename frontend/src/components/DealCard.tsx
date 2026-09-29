@@ -9,10 +9,6 @@ import { stockDay } from './stockDay';
 import { Button } from './ui/button';
 import { Card } from './ui/card';
 
-/**
- * FR-125 — one product on a near-expiry deal for one pickup day (spec §4.5.4): both prices, the day, until when it
- * stays good and what is left. Adding it to the cart remembers the day, so the cart starts on it (§4.5.5).
- */
 const DealCard = ({ deal }: { deal: DealDto }) => {
   const { t } = useTranslation();
   const addDeal = useAddDeal();

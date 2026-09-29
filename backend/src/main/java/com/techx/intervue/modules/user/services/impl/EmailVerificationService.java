@@ -26,12 +26,6 @@ import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-/**
- * FR-009: a sign-up only becomes an account after the 6-digit code mailed to its address is typed
- * in, from the browser that filled in the form (it holds the signup token). Limits: one code per
- * minute, 5 codes per address and 20 per IP per hour, 5 tries per code (spec
- * 2026-09-28-email-verification-design §5).
- */
 @Service
 @RequiredArgsConstructor
 public class EmailVerificationService implements EmailVerificationServiceInterface {
@@ -53,7 +47,6 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
         return email.trim().toLowerCase(Locale.ROOT);
     }
 
-    /** The mail goes out in one of the 10 UI languages; "fr-CA" → "fr", anything else → "en". */
     public static String normalizeLanguage(String language) {
         if (language == null) return "en";
         String base = language.trim().toLowerCase(Locale.ROOT);
@@ -68,10 +61,8 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
         Optional<PendingSignup> waiting = store.findPending(email);
         long cooldownLeft = store.cooldownSecondsLeft(email);
         if (waiting.isPresent() && holdsToken(waiting.get(), signupToken)) {
-            // The same browser corrects its form: it keeps its token
             PendingSignup corrected = form.withTokenHash(waiting.get().tokenHash());
             if (cooldownLeft > 0) {
-                // Within the minute: keep the corrected details, send no second mail
                 store.savePending(corrected, pendingTtl());
                 long codeLeft = store.codeSecondsLeft(email);
                 return new SignupStartedResource(
@@ -86,12 +77,9 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
             return freshStart(email, signupToken);
         }
         if (waiting.isPresent() && cooldownLeft > 0) {
-            // Another browser's sign-up is waiting for this address: it is not replaced mid-minute
             throw new SignupRateLimitedException(cooldownLeft);
         }
         enforceSendLimits(email, clientIp);
-        // A new form (or one replacing a sign-up started elsewhere) gets a new token, so the old
-        // browser can no longer finish it; the old code must not finish it either
         String token = newToken();
         store.deleteCode(email);
         store.savePending(form.withTokenHash(tokenHashUtil.hash(token)), pendingTtl());
@@ -134,10 +122,8 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
     @Override
     public VerifiedSignup verify(String email, String code, String signupToken) {
         String normalized = normalizeEmail(email);
-        // Checked before counting a try: without the token nobody can guess at this sign-up's code
         PendingSignup pending = waitingFor(normalized, signupToken);
         String expected = store.findCode(normalized).orElseThrow(SignupCodeExpiredException::new);
-        // Count the try before comparing, so parallel requests cannot all slip under the limit
         int used = store.countAttempt(normalized);
         if (used > config.getMaxAttempts()) {
             store.deleteCode(normalized);
@@ -149,10 +135,8 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
             throw new SignupCodeInvalidException(left);
         }
         long secondsLeft = store.codeSecondsLeft(normalized);
-        // GETDEL: of two requests with the right code, only one goes on to create the account
         String taken = store.takeCode(normalized).orElseThrow(SignupCodeExpiredException::new);
         if (!sameHash(taken, expected)) {
-            // A newer code arrived in between: put it back, the typed one is stale
             store.saveCode(normalized, taken, Duration.ofSeconds(Math.max(1, secondsLeft)));
             throw new SignupCodeExpiredException();
         }
@@ -173,15 +157,10 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
                 Duration.ofSeconds(verified.codeSecondsLeft()));
     }
 
-    /** Package-private so a test can pin a code with leading zeros. */
     String generateCode() {
         return String.format(Locale.ROOT, "%06d", secureRandom.nextInt(1_000_000));
     }
 
-    /**
-     * IP first: one IP cycling through many addresses stays under each per-address limit, yet still
-     * fills the mail queue (same order as FR-007).
-     */
     private void enforceSendLimits(String email, String clientIp) {
         Duration window = Duration.ofSeconds(config.getWindowSeconds());
         SendCount byIp = store.countIpSend(clientIp, window);
@@ -194,14 +173,12 @@ public class EmailVerificationService implements EmailVerificationServiceInterfa
         }
     }
 
-    /** Only the request that wins the cooldown (SET NX) queues a mail, so two submits send one. */
     private void queueCode(String email) {
         if (store.startCooldown(email, Duration.ofSeconds(config.getResendCooldownSeconds()))) {
             jobQueue.enqueue(JOB_SEND_CODE, Map.of("email", email));
         }
     }
 
-    /** The waiting sign-up, only for the browser holding its token; anyone else sees it as gone. */
     private PendingSignup waitingFor(String email, String signupToken) {
         return store.findPending(email)
                 .filter(pending -> holdsToken(pending, signupToken))

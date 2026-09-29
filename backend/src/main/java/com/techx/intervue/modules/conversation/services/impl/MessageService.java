@@ -42,13 +42,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class MessageService implements MessageServiceInterface {
 
-    /** Matches VARCHAR(160) of conversations.last_message_text. */
     static final int PREVIEW_LENGTH = 160;
 
-    /** Do not let the client pull the whole history at once. */
     static final int MAX_PAGE = 50;
 
-    /** Preview of an image message in the thread list — there is no text to show. */
     static final String IMAGE_PREVIEW = "Photo";
 
     static final String VIDEO_PREVIEW = "Video";
@@ -86,14 +83,10 @@ public class MessageService implements MessageServiceInterface {
         User other = requireUser(conversation.otherMember(meId));
         policy.assertCanSend(me, other);
 
-        // R-06: a pinned order must belong to exactly these two people, checked BEFORE writing the
-        // message
         if (request.orderId() != null) {
             requireOrderOfThisPair(conversation, request.orderId());
         }
 
-        // R-06: check the file BEFORE writing the message, so a file that is not yours does not
-        // create an empty message
         MessageAttachment attachment =
                 carriesMedia(kind)
                         ? requireOwnUnusedAttachment(meId, request.attachmentId(), kind)
@@ -117,28 +110,15 @@ public class MessageService implements MessageServiceInterface {
         }
 
         conversation.noteNewMessage(threadPreview(kind, body), now);
-        // The sender has of course read up to here; the other person's unread is counted from their
-        // own marker.
         conversation.markRead(meId, now);
         conversations.save(conversation);
 
         MessageResource resource = MessageResource.from(saved, attachment);
-        // Only publish once committed: Plan 2 plugs STOMP into this seam and must not publish a row
-        // that does not yet
-        // exist.
         TransactionHelper.afterCommit(() -> events.messageCreated(conversation, resource));
-        // Replying means having read up to here: the other side sees "seen" without us calling
-        // /read.
         TransactionHelper.afterCommit(() -> events.conversationRead(conversation, meId, now));
         return resource;
     }
 
-    /**
-     * FR-114: the order must belong to the customer in the thread, bought at the stall of the
-     * Farmer in the thread. orders.farmer_id is farmer_profiles.id, not users.id, so the stall
-     * owner must be looked up before comparing. Only READS the order module; there is no path that
-     * creates or edits an order from chat.
-     */
     private void requireOrderOfThisPair(Conversation conversation, Long orderId) {
         Order order =
                 orders.findById(orderId)
@@ -157,11 +137,6 @@ public class MessageService implements MessageServiceInterface {
         }
     }
 
-    /**
-     * The file must be your own and not yet attached to any message — spec §8.2. Its real type
-     * (read from its bytes at upload) must match the kind, so a client cannot label a photo as a
-     * video or the reverse.
-     */
     private MessageAttachment requireOwnUnusedAttachment(
             Long meId, Long attachmentId, MessageKind kind) {
         MessageAttachment attachment =
@@ -196,7 +171,6 @@ public class MessageService implements MessageServiceInterface {
                                 conversationId, page)
                         : messages.findByConversationIdAndIdLessThanAndHiddenAtIsNullOrderByIdDesc(
                                 conversationId, before, page);
-        // One query for the whole page, no N+1
         List<Long> mediaIds =
                 found.stream().filter(m -> carriesMedia(m.getKind())).map(Message::getId).toList();
         Map<Long, MessageAttachment> byMessage =
@@ -215,7 +189,6 @@ public class MessageService implements MessageServiceInterface {
         return kind == MessageKind.IMAGE || kind == MessageKind.VIDEO;
     }
 
-    /** Package-private: ModerationService recomputes the preview after hiding the last message. */
     static String threadPreview(MessageKind kind, String body) {
         return switch (kind) {
             case IMAGE -> IMAGE_PREVIEW;

@@ -2,13 +2,6 @@ import { useEffect, useState } from 'react';
 
 export type GreetingPeriod = 'morning' | 'afternoon' | 'evening';
 
-/**
- * Calculates current greeting period ('morning' | 'afternoon' | 'evening') based on user's local device/country time:
- *
- * - 05:00 - 11:59: morning
- * - 12:00 - 17:59: afternoon
- * - 18:00 - 04:59: evening
- */
 export function getGreetingPeriod(date: Date = new Date()): GreetingPeriod {
   const hour = date.getHours();
   if (hour >= 5 && hour < 12) {

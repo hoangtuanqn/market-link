@@ -1,11 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Card } from './ui/card';
 
-/**
- * Loading state for a list of MarketCards (FR-084). Market cards carry no photo: they are a 1fr/auto grid of name +
- * save, day cells, meta and actions. The skeleton mirrors that grid so the page does not change shape when the data
- * lands.
- */
 const MarketCardSkeleton = ({ count = 3 }: { count?: number }) => {
   const { t } = useTranslation();
   return (

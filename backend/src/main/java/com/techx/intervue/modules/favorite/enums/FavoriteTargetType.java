@@ -5,7 +5,6 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** What a favourite points at (contract §9). JSON and the ENUM column use the lowercase value. */
 public enum FavoriteTargetType {
     FARMER,
     PRODUCT,
@@ -16,7 +15,6 @@ public enum FavoriteTargetType {
         return name().toLowerCase(Locale.ROOT);
     }
 
-    /** "product" → PRODUCT; anything else → IllegalArgumentException (400). */
     public static FavoriteTargetType parse(String raw) {
         for (FavoriteTargetType t : values()) {
             if (t.value().equals(raw)) {

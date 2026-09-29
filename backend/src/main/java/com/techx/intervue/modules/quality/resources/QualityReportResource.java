@@ -2,12 +2,6 @@ package com.techx.intervue.modules.quality.resources;
 
 import java.time.Instant;
 
-/**
- * FR-122, FR-123: one spoilage report as the stall and the admin read it. Dates are "yyyy-MM-dd";
- * {@code …At} are instants. {@code stallStatus} is the stall's approval status (the admin's
- * "Suspend stall" button needs {@code approved}); {@code stallActiveStrikes} counts the stall's
- * strikes of the last 90 days.
- */
 public record QualityReportResource(
         Long id,
         Long orderId,

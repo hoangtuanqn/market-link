@@ -43,17 +43,6 @@ public class StockTemplateService implements StockTemplateServiceInterface {
         return templates.findResourcesByFarmerId(profile.getId());
     }
 
-    /**
-     * FR-041: a product with zero templates is never orderable, on any date (the per-date-stock
-     * redesign). Adding a farmer's first template for a product can take it from "never orderable"
-     * to orderable — a restock event. {@code wasOrderable} is captured per distinct product in
-     * {@code request.items()} before the old templates are wiped, then compared to the same check
-     * after {@code replaceAll} writes the new set.
-     *
-     * <p>FR-062/FR-063: the pickup days that already have a row follow the new set too ({@link
-     * DailyStockTemplateSync}), also for a product left out of the request altogether. Their rows
-     * are locked first, before the restock check reads them (C5-2).
-     */
     @Override
     @Transactional
     public List<StockTemplateResource> replace(long userId, StockTemplateRequest request) {
@@ -75,7 +64,6 @@ public class StockTemplateService implements StockTemplateServiceInterface {
             touched.put(item.productId(), product);
         }
 
-        // Read before replaceAll wipes these rows
         Map<Long, Map<Integer, DailyStockTemplateSync.DayPlan>> oldByProduct = new HashMap<>();
         templates.findByFarmerIdAndActiveTrue(profile.getId()).stream()
                 .collect(Collectors.groupingBy(WeeklyStockTemplate::getProductId))
@@ -123,14 +111,10 @@ public class StockTemplateService implements StockTemplateServiceInterface {
         return templates.findResourcesByFarmerId(profile.getId());
     }
 
-    /** R-06: hồ sơ luôn tra theo userId của token; không có đường nào nhận farmerId từ request. */
-    /** D-09: the weekly stock screen, read or written, closes while the stall is suspended. */
     private FarmerProfile mine(long userId) {
         FarmerProfile profile =
                 farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
         StallSuspensionMessage.assertUsable(profile);
         return profile;
     }
-
-    /** D-09 / contract §4: chưa duyệt hoặc bị đình chỉ thì mọi thao tác ghi lịch tuần bị chặn. */
 }

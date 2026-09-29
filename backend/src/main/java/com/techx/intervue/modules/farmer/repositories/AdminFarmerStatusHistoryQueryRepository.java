@@ -11,7 +11,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/** FR-071: the suspend/reinstate audit trail for one stall, newest first. */
 @Repository
 @RequiredArgsConstructor
 public class AdminFarmerStatusHistoryQueryRepository {

@@ -7,19 +7,11 @@ import Helper from '@/utils/helper';
 
 type ApplicationHistoryProps = {
   entries: FarmerApplicationAttemptType[];
-  /**
-   * Status labels are supplied by the calling page: the Admin reads "Waiting for approval", the applicant reads
-   * "Pending" — the same state said two ways, so it is not gathered here.
-   */
   statusLabel: (status: FarmerApproval) => string;
 };
 
 const fileUrl = (path: string) => `${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}${path}`;
 
-/**
- * Farmer application history: every submission is a card with its content at that time, the outcome and the rejection
- * reason. Shared by the applicant's page and the Admin's review page, so both sides see the same thing.
- */
 export function ApplicationHistory({ entries, statusLabel }: ApplicationHistoryProps) {
   const { t } = useTranslation();
 
