@@ -13,9 +13,18 @@ const OUT = path.join(__dirname, '..', 'db', 'seed-extended.sql');
 
 // --- Helpers ---
 const esc = s => s.replace(/'/g, "''");
-const rnd = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+// Seeded (mulberry32), so running the generator again writes the same data: adding a product photo later changes
+// only its image_url instead of reshuffling every stall code, schedule and order already loaded somewhere.
+let seed = 20260929;
+const random = () => {
+  seed = (seed + 0x6d2b79f5) | 0;
+  let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+  t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+  return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+};
+const rnd = (min, max) => Math.floor(random() * (max - min + 1)) + min;
 const pick = arr => arr[rnd(0, arr.length - 1)];
-const shuffle = arr => arr.sort(() => Math.random() - 0.5);
+const shuffle = arr => arr.sort(() => random() - 0.5);
 
 // Vietnamese name parts
 const ho = ['Nguyễn','Trần','Lê','Phạm','Hoàng','Huỳnh','Phan','Vũ','Võ','Đặng','Bùi','Đỗ','Hồ','Ngô','Dương','Lý','Cao','Trịnh','Đinh','Lương','Mai','Tô','Châu','Tạ','Từ'];
@@ -87,65 +96,65 @@ const newFarmerStalls = [
 // same ~25,000 VND to the dollar as db/seed.sql.
 const newProducts = {
   11: [
-    { name: 'Rau cải bó xôi', desc: 'Cải bó xôi hữu cơ, lá non.', price: 1.00, unit: 'bunch', stock: 40 },
-    { name: 'Rau xà lách Iceberg', desc: 'Xà lách giòn, trồng sạch.', price: 0.70, unit: 'kg', stock: 35 },
-    { name: 'Cải thìa', desc: 'Cải thìa baby, nấu canh ngọt.', price: 0.60, unit: 'bunch', stock: 50 },
-    { name: 'Rau má', desc: 'Rau má tươi, xay sinh tố.', price: 0.50, unit: 'bunch', stock: 30 },
+    { name: 'Rau cải bó xôi', desc: 'Cải bó xôi hữu cơ, lá non.', price: 1.00, unit: 'bunch', stock: 40, img: 'rau-cai-bo-xoi', fallback: 'cai-kale' },
+    { name: 'Rau xà lách Iceberg', desc: 'Xà lách giòn, trồng sạch.', price: 0.70, unit: 'kg', stock: 35, img: 'xa-lach-iceberg', fallback: 'xa-lach-lo-lo' },
+    { name: 'Cải thìa', desc: 'Cải thìa baby, nấu canh ngọt.', price: 0.60, unit: 'bunch', stock: 50, img: 'cai-thia', fallback: 'cai-ngot' },
+    { name: 'Rau má', desc: 'Rau má tươi, xay sinh tố.', price: 0.50, unit: 'bunch', stock: 30, img: 'rau-ma', fallback: null },
   ],
   12: [
-    { name: 'Chôm chôm', desc: 'Chôm chôm nhãn Bến Tre, ngọt lịm.', price: 1.40, unit: 'kg', stock: 60 },
-    { name: 'Mận An Phước', desc: 'Mận hồng đào, giòn ngọt.', price: 1.60, unit: 'kg', stock: 25 },
-    { name: 'Nhãn lồng', desc: 'Nhãn lồng Hưng Yên cơm dày.', price: 2.20, unit: 'kg', stock: 30 },
-    { name: 'Măng cụt', desc: 'Măng cụt Lái Thiêu tím đậm.', price: 2.60, unit: 'kg', stock: 20 },
-    { name: 'Vú sữa', desc: 'Vú sữa Lò Rèn Vĩnh Kim.', price: 1.80, unit: 'kg', stock: 15 },
+    { name: 'Chôm chôm', desc: 'Chôm chôm nhãn Bến Tre, ngọt lịm.', price: 1.40, unit: 'kg', stock: 60, img: 'chom-chom', fallback: null },
+    { name: 'Mận An Phước', desc: 'Mận hồng đào, giòn ngọt.', price: 1.60, unit: 'kg', stock: 25, img: 'man-an-phuoc', fallback: null },
+    { name: 'Nhãn lồng', desc: 'Nhãn lồng Hưng Yên cơm dày.', price: 2.20, unit: 'kg', stock: 30, img: 'nhan-long', fallback: null },
+    { name: 'Măng cụt', desc: 'Măng cụt Lái Thiêu tím đậm.', price: 2.60, unit: 'kg', stock: 20, img: 'mang-cut', fallback: null },
+    { name: 'Vú sữa', desc: 'Vú sữa Lò Rèn Vĩnh Kim.', price: 1.80, unit: 'kg', stock: 15, img: 'vu-sua', fallback: null },
   ],
   13: [
-    { name: 'Tôm sú', desc: 'Tôm sú biển tươi sống, size 20 con/kg.', price: 11.20, unit: 'kg', stock: 20 },
-    { name: 'Cá thu', desc: 'Cá thu một nắng Phan Thiết.', price: 7.20, unit: 'kg', stock: 15 },
-    { name: 'Mực ống', desc: 'Mực ống tươi, đánh bắt đêm.', price: 8.80, unit: 'kg', stock: 10 },
-    { name: 'Nghêu', desc: 'Nghêu lụa Bến Tre, sạch cát.', price: 1.80, unit: 'kg', stock: 40 },
+    { name: 'Tôm sú', desc: 'Tôm sú biển tươi sống, size 20 con/kg.', price: 11.20, unit: 'kg', stock: 20, img: 'tom-su', fallback: null },
+    { name: 'Cá thu', desc: 'Cá thu một nắng Phan Thiết.', price: 7.20, unit: 'kg', stock: 15, img: 'ca-thu', fallback: null },
+    { name: 'Mực ống', desc: 'Mực ống tươi, đánh bắt đêm.', price: 8.80, unit: 'kg', stock: 10, img: 'muc-ong', fallback: null },
+    { name: 'Nghêu', desc: 'Nghêu lụa Bến Tre, sạch cát.', price: 1.80, unit: 'kg', stock: 40, img: 'ngheu', fallback: null },
   ],
   14: [
-    { name: 'Gà ta nguyên con', desc: 'Gà ta thả vườn 1.5–2 kg.', price: 6.40, unit: 'kg', stock: 15 },
-    { name: 'Vịt cỏ', desc: 'Vịt cỏ nuôi đồng, thịt chắc.', price: 4.80, unit: 'kg', stock: 10 },
-    { name: 'Ức gà', desc: 'Ức gà lọc xương, đóng gói sạch.', price: 3.80, unit: 'kg', stock: 25 },
-    { name: 'Trứng gà ta', desc: 'Trứng gà ta thả vườn Bình Dương.', price: 2.00, unit: 'tray of 30', stock: 30 },
+    { name: 'Gà ta nguyên con', desc: 'Gà ta thả vườn 1.5–2 kg.', price: 6.40, unit: 'kg', stock: 15, img: 'ga-ta-nguyen-con', fallback: null },
+    { name: 'Vịt cỏ', desc: 'Vịt cỏ nuôi đồng, thịt chắc.', price: 4.80, unit: 'kg', stock: 10, img: 'vit-co', fallback: null },
+    { name: 'Ức gà', desc: 'Ức gà lọc xương, đóng gói sạch.', price: 3.80, unit: 'kg', stock: 25, img: 'uc-ga', fallback: null },
+    { name: 'Trứng gà ta', desc: 'Trứng gà ta thả vườn Bình Dương.', price: 2.00, unit: 'tray of 30', stock: 30, img: 'trung-ga-ta', fallback: 'trung-ga-tha-vuon' },
   ],
   15: [
-    { name: 'Đậu phộng rang', desc: 'Đậu phộng rang tỏi ớt, giòn rụm.', price: 2.40, unit: 'kg', stock: 30 },
-    { name: 'Hạt điều rang muối', desc: 'Hạt điều Bình Phước A+, rang muối.', price: 8.80, unit: 'kg', stock: 15 },
-    { name: 'Cà phê rang xay', desc: 'Cà phê Robusta Đắk Lắk, rang mộc.', price: 6.00, unit: 'kg', stock: 20 },
-    { name: 'Gạo ST25', desc: 'Gạo ST25 Sóc Trăng, thơm dẻo.', price: 1.40, unit: 'kg', stock: 50 },
-    { name: 'Đậu đen', desc: 'Đậu đen xanh lòng, nấu chè.', price: 1.60, unit: 'kg', stock: 25 },
+    { name: 'Đậu phộng rang', desc: 'Đậu phộng rang tỏi ớt, giòn rụm.', price: 2.40, unit: 'kg', stock: 30, img: 'dau-phong-rang', fallback: null },
+    { name: 'Hạt điều rang muối', desc: 'Hạt điều Bình Phước A+, rang muối.', price: 8.80, unit: 'kg', stock: 15, img: 'hat-dieu-rang-muoi', fallback: null },
+    { name: 'Cà phê rang xay', desc: 'Cà phê Robusta Đắk Lắk, rang mộc.', price: 6.00, unit: 'kg', stock: 20, img: 'ca-phe-rang-xay', fallback: null },
+    { name: 'Gạo ST25', desc: 'Gạo ST25 Sóc Trăng, thơm dẻo.', price: 1.40, unit: 'kg', stock: 50, img: 'gao-st25', fallback: null },
+    { name: 'Đậu đen', desc: 'Đậu đen xanh lòng, nấu chè.', price: 1.60, unit: 'kg', stock: 25, img: 'dau-den', fallback: null },
   ],
   16: [
-    { name: 'Bánh flan caramel', desc: 'Bánh flan mềm mịn, caramel đắng nhẹ.', price: 0.60, unit: 'jar', stock: 40 },
-    { name: 'Chè khúc bạch', desc: 'Chè khúc bạch vải thiều.', price: 0.80, unit: 'jar', stock: 30 },
-    { name: 'Bánh tiramisu hộp', desc: 'Tiramisu cà phê, hộp 2 người.', price: 3.40, unit: 'jar', stock: 12 },
-    { name: 'Cookies socola', desc: 'Cookies socola chip, bơ thật.', price: 2.60, unit: 'jar', stock: 20 },
+    { name: 'Bánh flan caramel', desc: 'Bánh flan mềm mịn, caramel đắng nhẹ.', price: 0.60, unit: 'jar', stock: 40, img: 'banh-flan-caramel', fallback: null },
+    { name: 'Chè khúc bạch', desc: 'Chè khúc bạch vải thiều.', price: 0.80, unit: 'jar', stock: 30, img: 'che-khuc-bach', fallback: null },
+    { name: 'Bánh tiramisu hộp', desc: 'Tiramisu cà phê, hộp 2 người.', price: 3.40, unit: 'jar', stock: 12, img: 'banh-tiramisu', fallback: null },
+    { name: 'Cookies socola', desc: 'Cookies socola chip, bơ thật.', price: 2.60, unit: 'jar', stock: 20, img: 'cookies-socola', fallback: 'banh-quy-bo' },
   ],
   17: [
-    { name: 'Nấm linh chi đỏ', desc: 'Nấm linh chi đỏ Lâm Đồng sấy khô.', price: 14.00, unit: 'kg', stock: 8 },
-    { name: 'Nấm hương khô', desc: 'Nấm hương rừng Lâm Đồng.', price: 11.20, unit: 'kg', stock: 10 },
-    { name: 'Nấm đùi gà', desc: 'Nấm đùi gà tươi, thịt chắc.', price: 2.20, unit: 'kg', stock: 25 },
+    { name: 'Nấm linh chi đỏ', desc: 'Nấm linh chi đỏ Lâm Đồng sấy khô.', price: 14.00, unit: 'kg', stock: 8, img: 'nam-linh-chi-do', fallback: null },
+    { name: 'Nấm hương khô', desc: 'Nấm hương rừng Lâm Đồng.', price: 11.20, unit: 'kg', stock: 10, img: 'nam-huong-kho', fallback: 'nam-dong-co-tuoi' },
+    { name: 'Nấm đùi gà', desc: 'Nấm đùi gà tươi, thịt chắc.', price: 2.20, unit: 'kg', stock: 25, img: 'nam-dui-ga', fallback: 'nam-bao-ngu' },
   ],
   18: [
-    { name: 'Súp lơ trắng', desc: 'Súp lơ trắng Đà Lạt, bông to.', price: 1.20, unit: 'kg', stock: 30 },
-    { name: 'Atiso', desc: 'Atiso tươi Đà Lạt, nấu canh.', price: 1.80, unit: 'kg', stock: 20 },
-    { name: 'Bắp cải tím', desc: 'Bắp cải tím Đà Lạt, làm salad.', price: 1.00, unit: 'kg', stock: 25 },
-    { name: 'Cà rốt baby', desc: 'Cà rốt baby Đà Lạt, ăn sống.', price: 1.40, unit: 'kg', stock: 40 },
-    { name: 'Đậu Hà Lan', desc: 'Đậu Hà Lan tươi, bóc vỏ.', price: 2.00, unit: 'kg', stock: 15 },
+    { name: 'Súp lơ trắng', desc: 'Súp lơ trắng Đà Lạt, bông to.', price: 1.20, unit: 'kg', stock: 30, img: 'sup-lo-trang', fallback: 'bong-cai-xanh' },
+    { name: 'Atiso', desc: 'Atiso tươi Đà Lạt, nấu canh.', price: 1.80, unit: 'kg', stock: 20, img: 'atiso', fallback: null },
+    { name: 'Bắp cải tím', desc: 'Bắp cải tím Đà Lạt, làm salad.', price: 1.00, unit: 'kg', stock: 25, img: 'bap-cai-tim', fallback: null },
+    { name: 'Cà rốt baby', desc: 'Cà rốt baby Đà Lạt, ăn sống.', price: 1.40, unit: 'kg', stock: 40, img: 'ca-rot-baby', fallback: 'ca-rot' },
+    { name: 'Đậu Hà Lan', desc: 'Đậu Hà Lan tươi, bóc vỏ.', price: 2.00, unit: 'kg', stock: 15, img: 'dau-ha-lan', fallback: null },
   ],
   19: [
-    { name: 'Sữa dê tươi', desc: 'Sữa dê tươi thanh trùng Long An.', price: 2.60, unit: 'litre', stock: 20 },
-    { name: 'Sữa chua dê', desc: 'Sữa chua dê nhà làm, hũ 120ml.', price: 0.70, unit: 'jar', stock: 50 },
-    { name: 'Phô mai dê', desc: 'Phô mai dê soft, hộp 200g.', price: 4.80, unit: 'jar', stock: 10 },
+    { name: 'Sữa dê tươi', desc: 'Sữa dê tươi thanh trùng Long An.', price: 2.60, unit: 'litre', stock: 20, img: 'sua-de-tuoi', fallback: 'sua-tuoi-thanh-trung' },
+    { name: 'Sữa chua dê', desc: 'Sữa chua dê nhà làm, hũ 120ml.', price: 0.70, unit: 'jar', stock: 50, img: 'sua-chua-de', fallback: 'sua-chua-nha-lam' },
+    { name: 'Phô mai dê', desc: 'Phô mai dê soft, hộp 200g.', price: 4.80, unit: 'jar', stock: 10, img: 'pho-mai-de', fallback: 'pho-mai-tuoi' },
   ],
   20: [
-    { name: 'Khô cá lóc', desc: 'Khô cá lóc Châu Đốc, phơi nắng.', price: 8.00, unit: 'kg', stock: 15 },
-    { name: 'Khô cá sặc', desc: 'Khô cá sặc bướm An Giang.', price: 7.20, unit: 'kg', stock: 12 },
-    { name: 'Mắm cá linh', desc: 'Mắm cá linh truyền thống.', price: 3.20, unit: 'litre', stock: 20 },
-    { name: 'Tôm khô', desc: 'Tôm khô loại 1 Cà Mau.', price: 14.00, unit: 'kg', stock: 8 },
+    { name: 'Khô cá lóc', desc: 'Khô cá lóc Châu Đốc, phơi nắng.', price: 8.00, unit: 'kg', stock: 15, img: 'kho-ca-loc', fallback: null },
+    { name: 'Khô cá sặc', desc: 'Khô cá sặc bướm An Giang.', price: 7.20, unit: 'kg', stock: 12, img: 'kho-ca-sac', fallback: null },
+    { name: 'Mắm cá linh', desc: 'Mắm cá linh truyền thống.', price: 3.20, unit: 'litre', stock: 20, img: 'mam-ca-linh', fallback: null },
+    { name: 'Tôm khô', desc: 'Tôm khô loại 1 Cà Mau.', price: 14.00, unit: 'kg', stock: 8, img: 'tom-kho', fallback: null },
   ],
 };
 
@@ -350,15 +359,24 @@ ON DUPLICATE KEY UPDATE stall_name = '${esc('Rau sạch Tài Hóc Môn')}', appr
 `;
 
 // 2. New products for new farmers
+// A product shows its own photo once db/seed-images/products/<img>.jpg exists (prompts in
+// db/seed-images/PROMPTS.md), until then a photo of the same kind of product, or none: the card then shows the
+// category name, which reads better than the wrong fruit.
+const PRODUCT_IMAGES = path.join(__dirname, '..', 'db', 'seed-images', 'products');
+const imageOf = p => {
+  const slug = fs.existsSync(path.join(PRODUCT_IMAGES, `${p.img}.jpg`)) ? p.img : p.fallback;
+  return slug ? `'/uploads/product-images/${slug}.jpg'` : 'NULL';
+};
 sql += `-- ===== 2. NEW PRODUCTS =====\n`;
 for (const [farmN, prods] of Object.entries(newProducts)) {
   const catSlug = newFarmerStalls.find(f => f.n === Number(farmN)).cat;
   for (const p of prods) {
-    sql += `INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, '${esc(p.name)}', '${esc(p.desc)}', ${p.price.toFixed(2)}, '${p.unit}', ${p.stock}, 'available', FALSE
+    const image = imageOf(p);
+    sql += `INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, '${esc(p.name)}', '${esc(p.desc)}', ${p.price.toFixed(2)}, '${p.unit}', ${p.stock}, 'available', FALSE, ${image}
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = '${catSlug}'
 WHERE u.email = 'farmer${farmN}@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = '${esc(p.desc)}', price = ${p.price.toFixed(2)}, stock_quantity = ${p.stock};\n`;
+ON DUPLICATE KEY UPDATE description = '${esc(p.desc)}', price = ${p.price.toFixed(2)}, stock_quantity = ${p.stock}, image_url = ${image};\n`;
   }
   sql += '\n';
 }
