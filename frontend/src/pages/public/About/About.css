@@ -845,18 +845,52 @@
 /* ---------------- 8. ELITE ENGINEERING TEAM SHOWCASE ---------------- */
 .about-team-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 24px;
   align-items: stretch;
 }
+.about-team-grid > .about-dev-card:nth-child(1) {
+  grid-column: 1 / span 2;
+}
+.about-team-grid > .about-dev-card:nth-child(2) {
+  grid-column: 3 / span 2;
+}
+.about-team-grid > .about-dev-card:nth-child(3) {
+  grid-column: 5 / span 2;
+}
+.about-team-grid > .about-dev-card:nth-child(4) {
+  grid-column: 2 / span 2;
+}
+.about-team-grid > .about-dev-card:nth-child(5) {
+  grid-column: 4 / span 2;
+}
+
 @media (max-width: 1024px) {
   .about-team-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+  .about-team-grid > .about-dev-card:nth-child(1),
+  .about-team-grid > .about-dev-card:nth-child(2),
+  .about-team-grid > .about-dev-card:nth-child(3),
+  .about-team-grid > .about-dev-card:nth-child(4) {
+    grid-column: span 1;
+  }
+  .about-team-grid > .about-dev-card:nth-child(5) {
+    grid-column: 1 / -1;
+    max-width: 480px;
+    width: 100%;
+    margin: 0 auto;
   }
 }
 @media (max-width: 640px) {
   .about-team-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .about-team-grid > .about-dev-card:nth-child(5) {
+    grid-column: auto;
+    max-width: none;
+    margin: 0;
   }
 }
 
@@ -918,12 +952,15 @@
 .cover-lead {
   background: linear-gradient(135deg, #1a3418 0%, #2a4f26 50%, #152613 100%);
 }
+.cover-devops,
 .cover-be1 {
   background: linear-gradient(135deg, #142c3d 0%, #214863 50%, #0f202b 100%);
 }
+.cover-be,
 .cover-be2 {
   background: linear-gradient(135deg, #382414 0%, #563720 50%, #24160b 100%);
 }
+.cover-fe,
 .cover-fe1 {
   background: linear-gradient(135deg, #3d1c27 0%, #5c2b3c 50%, #281119 100%);
 }

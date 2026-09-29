@@ -49,32 +49,27 @@
     "profiles": "<b>Tidak ada profil keluarga terpisah.</b> Satu akun bisa dipakai bersama di rumah. Sistem tidak membedakan orang di dalam satu akun."
   },
   "team": {
-    "title": "Tim",
-    "subtitle": "Enam orang, dibagi menurut bagian yang mereka pegang di repositori",
-    "namePending": "Nama menyusul",
+    "title": "Tim pengembang",
+    "subtitle": "Lima orang, dibagi berdasarkan tanggung jawab utama di repositori",
     "lead": {
-      "role": "Ketua tim",
-      "note": "Skema, kontrak API, dan dua belas keputusan yang menjadi pegangan anggota tim lainnya"
+      "role": "Arsitek Sistem & Pemimpin Tim",
+      "note": "Skema data, kontrak API, dan keputusan arsitektur inti dari proyek"
     },
-    "be1": {
-      "role": "Backend",
-      "note": "Masuk, peran, dan siklus hidup pesanan, dari dibuat hingga selesai"
+    "devops": {
+      "role": "DevOps & Infrastruktur",
+      "note": "Pipeline CI/CD, lingkungan Docker, penerapan Vercel SPA, dan keandalan sistem"
     },
-    "be2": {
-      "role": "Backend",
-      "note": "Produk, pasar, stok mingguan, laporan, dan data contoh untuk demo"
+    "be": {
+      "role": "Backend & Modul Utama",
+      "note": "Stan petani, jadwal pengambilan, siklus inventaris, dan manajemen data"
     },
-    "fe1": {
-      "role": "Frontend",
-      "note": "Sistem desain, halaman publik, peta, dan dasbor Customer"
-    },
-    "fe2": {
-      "role": "Frontend",
-      "note": "Dasbor Farmer dan Admin, serta semua formulir di produk"
+    "fe": {
+      "role": "Frontend & UI/UX",
+      "note": "Sistem desain, halaman publik, portal umpan balik, dan dasbor pelanggan"
     },
     "qa": {
-      "role": "Kualitas dan dokumen",
-      "note": "Daftar kebutuhan, data uji, dan dokumen yang menyertai pengumpulan"
+      "role": "QA & Dokumentasi",
+      "note": "Pelacakan persyaratan, skenario uji E2E, kepatuhan SRS, dan dokumen proyek"
     }
   },
   "stack": {
