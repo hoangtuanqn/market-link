@@ -727,11 +727,13 @@ public class OrderService implements OrderServiceInterface {
             }
             // No row and not raising: nothing was taken from this date, nothing to give back
             if (delta != 0 && row != null) {
-                boolean wasOrderable = orderableOn(p, row);
+                // FR-041: lowering a quantity gives stock back. Whether the product as a whole
+                // could be ordered, not just this date — the row is already locked, so the
+                // resolver reads it fresh.
+                boolean wasOrderable = p != null && restock.isOrderable(p);
                 row.setQuantityAvailable(row.getQuantityAvailable() - delta);
-                // FR-041: lowering a quantity gives stock back
                 if (p != null) {
-                    restock.afterChange(p, wasOrderable, orderableOn(p, row));
+                    restock.afterChange(p, wasOrderable, restock.isOrderable(p));
                 }
             }
 
@@ -768,6 +770,8 @@ public class OrderService implements OrderServiceInterface {
             orderRepository.save(order);
             orderRepository.flush();
         }
+        // D-07: the Farmer must look at the order again — an accepted one is back to placed
+        notifyFarmer(order, NotificationKind.ORDER_CHANGED, Map.of());
         return detail(userId, orderId);
     }
 
@@ -785,11 +789,6 @@ public class OrderService implements OrderServiceInterface {
      */
     private static boolean canRaiseBy(Product p, ProductDailyStock row, int delta) {
         return p != null && sellable(p) && row.getQuantityAvailable() >= delta;
-    }
-
-    /** Can be put in a cart today, on the one pickup date this daily-stock row is for. */
-    private static boolean orderableOn(Product p, ProductDailyStock row) {
-        return p != null && sellable(p) && row.getQuantityAvailable() > 0;
     }
 
     /**
@@ -892,9 +891,11 @@ public class OrderService implements OrderServiceInterface {
      * D-02 restored per pickup date: locks each item's {@code product_daily_stock} row by natural
      * key, ascending productId (every row here shares the order's one pickup date, so productId
      * alone gives C5-2's deterministic order), adds the ordered quantity back, and tells FR-041
-     * when that date's row crossed "cannot be ordered" → "can be ordered", for a product still
-     * listed and available. An unlocked {@code Product} read is enough here: this path never
-     * mutates the product row, only the daily-stock row.
+     * when the product crossed "no date can be ordered" → "some date can" ({@link
+     * RestockNotifier#isOrderable}). Units freed on a sold-out date while another date still had
+     * stock are no restock (reproduced: a cancelled order that bought out 04/10 alerted while 03/10
+     * had 27 left). An unlocked {@code Product} read is enough here: this path never mutates the
+     * product row, only the daily-stock row.
      *
      * <p>No row for that date means the order was placed before per-date stock existed (the seed's
      * orders, or a database migrated from the shared pool): nothing was taken from that date, so
@@ -917,10 +918,10 @@ public class OrderService implements OrderServiceInterface {
                 continue;
             }
             Product p = products.get(productId);
-            boolean wasOrderable = orderableOn(p, row);
+            boolean wasOrderable = p != null && restock.isOrderable(p);
             row.setQuantityAvailable(row.getQuantityAvailable() + qty.get(productId));
             if (p != null) {
-                restock.afterChange(p, wasOrderable, orderableOn(p, row));
+                restock.afterChange(p, wasOrderable, restock.isOrderable(p));
             }
         }
     }

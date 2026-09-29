@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +19,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.support.TransactionTemplate;
 
 /**
  * {@code materialize} is native SQL (INSERT ... SELECT ... ON DUPLICATE KEY) — syntax errors only
@@ -30,6 +33,7 @@ class ProductDailyStockRepositoryTest {
 
     @Autowired private ProductDailyStockRepository repository;
     @Autowired private JdbcTemplate jdbc;
+    @Autowired private PlatformTransactionManager transactions;
 
     private final String tag = UUID.randomUUID().toString().substring(0, 8);
     private Long categoryId;
@@ -173,6 +177,29 @@ class ProductDailyStockRepositoryTest {
     void theDatabaseRefusesADiscountAbove70() {
         assertThatThrownBy(() -> repository.saveAndFlush(dealDay(80)))
                 .isInstanceOf(DataIntegrityViolationException.class);
+    }
+
+    /**
+     * FR-062/FR-063: the rows a price or template change makes follow — from the given day on,
+     * nearest first (C5-2 lock order), never an earlier day.
+     */
+    @Test
+    void lockFromReturnsTheDaysFromThatDateOnNearestFirst() {
+        for (LocalDate date : List.of(MONDAY.plusDays(7), MONDAY, MONDAY.minusDays(1))) {
+            ProductDailyStock row = plainDay();
+            row.setStockDate(date);
+            repository.saveAndFlush(row);
+        }
+
+        List<LocalDate> dates =
+                new TransactionTemplate(transactions)
+                        .execute(
+                                status ->
+                                        repository.lockFrom(productId, MONDAY).stream()
+                                                .map(ProductDailyStock::getStockDate)
+                                                .toList());
+
+        assertThat(dates).containsExactly(MONDAY, MONDAY.plusDays(7));
     }
 
     private ProductDailyStock plainDay() {

@@ -210,6 +210,48 @@ class SlotServiceTest {
         assertThat(again).hasSize(4);
     }
 
+    /**
+     * FR-067: generating again with a shorter length only skipped windows starting at the same
+     * minute, so 60-minute slots got 30-minute ones laid over them (07:30–08:00 inside
+     * 07:00–08:00). A window that overlaps a slot still offered that day is now skipped.
+     */
+    @Test
+    void generateAgainWithAnotherLengthNeverOverlapsAnExistingSlot() {
+        operatingDays(0, "07:00", "09:00");
+        LocalDate sunday = LocalDate.of(2026, 10, 4);
+        service.generateSlots(USER_ID, generate(sunday, sunday));
+
+        List<SlotResource> again =
+                service.generateSlots(
+                        USER_ID, new GenerateSlotsRequest(FARMER_MARKET_ID, sunday, sunday, 30, 5));
+
+        assertThat(again)
+                .extracting(SlotResource::startTime, SlotResource::endTime)
+                .containsExactly(
+                        org.assertj.core.groups.Tuple.tuple("07:00", "08:00"),
+                        org.assertj.core.groups.Tuple.tuple("08:00", "09:00"));
+    }
+
+    /**
+     * FR-067: a slot left outside a moved time window is no longer offered (it is dropped by the
+     * open-day rule), so it does not stop the new window from getting its slots.
+     */
+    @Test
+    void generateAfterTheWindowMovedFillsTheNewWindow() {
+        operatingDays(0, "07:00", "09:00");
+        LocalDate sunday = LocalDate.of(2026, 10, 4);
+        service.generateSlots(USER_ID, generate(sunday, sunday));
+        operatingDays(0, "08:30", "10:30");
+
+        List<SlotResource> again = service.generateSlots(USER_ID, generate(sunday, sunday));
+
+        // 08:00–09:00 starts before 08:30, so it is not offered any more and does not block
+        // 08:30–09:30; both old slots stay in the table, untouched
+        assertThat(again)
+                .extracting(SlotResource::startTime)
+                .containsExactly("07:00", "08:00", "08:30", "09:30");
+    }
+
     @Test
     void generateRejectsRangeLongerThanSixtyDays() {
         operatingDays(0, "07:00", "11:00");

@@ -77,6 +77,10 @@ public class ProductQueryService implements ProductQueryServiceInterface {
      * template never get here — {@link ProductQueryRepository#VISIBILITY_FILTER} leaves them out in
      * the SQL, so the page and its total agree. A row is never dropped here: one whose template was
      * switched off in between shows as sold out.
+     *
+     * <p>FR-124: when that day is on a near-expiry deal, {@code price} stays the day's regular
+     * price (the deal's list price). The discount belongs to /deals, the product page's deal block
+     * and the cart, which name it; shown here it read as the product's normal price.
      */
     private List<ProductListItemResource> overlayAvailability(List<ProductListItemResource> items) {
         Map<Long, BigDecimal> basePrices =
@@ -94,7 +98,9 @@ public class ProductQueryService implements ProductQueryServiceInterface {
                             return a == null
                                     ? i.withAvailability(0, i.price(), null)
                                     : i.withAvailability(
-                                            a.quantity(), a.price(), a.date().toString());
+                                            a.quantity(),
+                                            a.deal() == null ? a.price() : a.deal().listPrice(),
+                                            a.date().toString());
                         })
                 .toList();
     }

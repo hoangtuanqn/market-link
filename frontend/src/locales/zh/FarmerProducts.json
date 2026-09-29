@@ -36,7 +36,7 @@
     "deleted": "已删除",
     "deletedText": "已删除 {{name}}。",
     "restored": "已恢复",
-    "restoredText": "已将 {{name}} 恢复到已暂停列表。",
+    "restoredText": "已将 {{name}} 恢复为暂停。重新上架前请再次设置每周库存。",
     "stockAdjusted": "已更新 {{day}} 的库存。"
   },
   "dialog": {
@@ -50,7 +50,8 @@
     "title": "恢复 {{name}}？",
     "cancel": "留在回收站",
     "confirm": "恢复商品",
-    "text": "商品将以“已暂停”状态恢复，以便您在重新上架前查看其库存和价格。"
+    "text": "商品将以“已暂停”状态恢复，以便您在重新上架前查看其库存和价格。",
+    "stockHint": "删除时已清空其每周库存，重新设置之前顾客无法下单。"
   },
   "error": {
     "noun": "您的商品"
@@ -74,7 +75,7 @@
     "confirm": "保存",
     "error": {
       "quantity": "请输入0或以上的整数。",
-      "price": "请输入0或以上的价格。"
+      "price": "请输入高于 $0 的价格，或留空。"
     }
   },
   "dealAction": "临期优惠",
@@ -131,5 +132,7 @@
       "notNearExpiry": "到那天为止，商品的{{shelfLife}}天保鲜期还剩一半以上。优惠仅适用于已过保鲜期一半的商品。",
       "expiredBeforePickup": "这批货到那天已不新鲜，无法在该日期出售。"
     }
-  }
+  },
+  "noNextDate": "暂无可下单的日子",
+  "checkWeeklyStock": "设置每周库存"
 }

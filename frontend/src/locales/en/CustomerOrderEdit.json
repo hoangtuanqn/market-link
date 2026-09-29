@@ -17,7 +17,7 @@
     "title": "After you save, the order goes back to Placed and {{stall}} approves it again.",
     "text": "Your stock stays reserved while they review. You get a notification when it is accepted."
   },
-  "help": "You can lower quantities or remove items here. To add something else from {{stall}}, place a new order. Quantities are capped at what the stall has left today.",
+  "help": "You can change quantities or remove items here until the cutoff. A line can go up by what {{stall}} still has for this pickup day. To add something else, place a new order.",
   "submit": "Send changes for approval",
   "discard": "Discard changes",
   "toast": {

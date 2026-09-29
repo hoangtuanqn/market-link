@@ -36,7 +36,7 @@
     "deleted": "Supprimé",
     "deletedText": "{{name}} supprimé.",
     "restored": "Restauré",
-    "restoredText": "{{name}} restauré dans la liste En pause.",
+    "restoredText": "{{name}} restauré en pause. Redéfinissez son stock hebdomadaire avant de le remettre en vente.",
     "stockAdjusted": "Stock mis à jour pour {{day}}."
   },
   "dialog": {
@@ -50,7 +50,8 @@
     "title": "Restaurer {{name}} ?",
     "cancel": "Garder dans la corbeille",
     "confirm": "Restaurer le produit",
-    "text": "Le produit sera restauré avec le statut « En pause » afin que vous puissiez vérifier son stock et son prix avant de le remettre en vente."
+    "text": "Le produit sera restauré avec le statut « En pause » afin que vous puissiez vérifier son stock et son prix avant de le remettre en vente.",
+    "stockHint": "Son stock hebdomadaire a été effacé à la suppression : les clients ne peuvent pas le commander tant que vous ne l’avez pas redéfini."
   },
   "error": {
     "noun": "vos produits"
@@ -74,7 +75,7 @@
     "confirm": "Enregistrer",
     "error": {
       "quantity": "Entrez un nombre entier de 0 ou plus.",
-      "price": "Entrez un prix de 0 ou plus."
+      "price": "Entrez un prix supérieur à 0 $, ou laissez vide."
     }
   },
   "dealAction": "Promo date proche",
@@ -131,5 +132,7 @@
       "notNearExpiry": "Plus de la moitié de sa durée de conservation de {{shelfLife}} jours reste ce jour-là. Les promos sont réservées aux produits ayant dépassé la moitié de leur durée de conservation.",
       "expiredBeforePickup": "Ce lot n'est plus bon ce jour-là, il ne peut donc pas être vendu pour cette date."
     }
-  }
+  },
+  "noNextDate": "Aucun jour ouvert à la commande",
+  "checkWeeklyStock": "Définir le stock hebdomadaire"
 }

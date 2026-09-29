@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
@@ -89,6 +90,9 @@ const FarmerOrdersPage = () => {
       Notification.success({ text: successText });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      // 409 (D-04): the order moved on elsewhere — the customer cancelled or changed it. Read the list again so the
+      // stale row and its buttons go away.
+      if (isAxiosError(error) && error.response?.status === 409) retry();
     } finally {
       setBusyId(null);
     }

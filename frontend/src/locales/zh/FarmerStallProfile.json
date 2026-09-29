@@ -51,7 +51,8 @@
     "notApproved": "摊位获批后即可设置市场、日期和取货时段。",
     "windowError": "{{market}}：请至少选择一天，且结束时间须晚于开始时间。",
     "joined": "已将{{name}}加入您的摊位。",
-    "left": "已将{{name}}从您的摊位移除。"
+    "left": "已将{{name}}从您的摊位移除。",
+    "codeError": "{{market}}：摊位编号最多 {{max}} 个字符。"
   },
   "map": {
     "yourStall": "你的摊位"

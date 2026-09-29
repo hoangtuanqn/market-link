@@ -20,6 +20,7 @@ const baseDto = (overrides: Partial<OrderDetailDto> = {}): OrderDetailDto => ({
     createdAt: '2026-09-26T08:00:00Z',
     customerId: 2,
     customerName: 'An',
+    reviewed: false,
   },
   items: [
     { productId: 1, productName: 'Tomato', unit: 'kg', unitPrice: 25000, quantity: 2, subtotal: 50000 },
@@ -142,6 +143,12 @@ describe('toOrderCard', () => {
       locked: true,
       items: [],
     });
+  });
+
+  /** FR-033: the list row says whether the order was reviewed, so a reviewed ticket no longer offers "Review". */
+  it('carries the reviewed flag of the list row', () => {
+    expect(toOrderCard({ ...baseDto().summary, status: 'completed', reviewed: true }).reviewed).toBe(true);
+    expect(toOrderCard({ ...baseDto().summary, status: 'completed', reviewed: false }).reviewed).toBe(false);
   });
 });
 

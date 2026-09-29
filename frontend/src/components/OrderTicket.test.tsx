@@ -59,6 +59,7 @@ describe('OrderTicket lines (FR-121)', () => {
         createdAt: '2026-09-27T03:00:00Z',
         customerId: 7,
         customerName: 'Khách',
+        reviewed: false,
       },
       items: [
         {

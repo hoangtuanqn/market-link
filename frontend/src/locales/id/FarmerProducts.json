@@ -36,7 +36,7 @@
     "deleted": "Dihapus",
     "deletedText": "{{name}} dihapus.",
     "restored": "Dipulihkan",
-    "restoredText": "{{name}} dipulihkan ke daftar Dijeda.",
+    "restoredText": "{{name}} dipulihkan sebagai dijeda. Atur lagi stok mingguannya sebelum dijual kembali.",
     "stockAdjusted": "Stok untuk {{day}} telah diperbarui."
   },
   "dialog": {
@@ -50,7 +50,8 @@
     "title": "Pulihkan {{name}}?",
     "cancel": "Tetap di tempat sampah",
     "confirm": "Pulihkan produk",
-    "text": "Produk akan dipulihkan dalam status “Dijeda” sehingga Anda dapat meninjau stok dan harganya sebelum mulai menjualnya lagi."
+    "text": "Produk akan dipulihkan dalam status “Dijeda” sehingga Anda dapat meninjau stok dan harganya sebelum mulai menjualnya lagi.",
+    "stockHint": "Stok mingguannya terhapus saat produk dihapus, jadi pelanggan belum bisa memesan sampai Anda mengaturnya lagi."
   },
   "error": {
     "noun": "produk Anda"
@@ -74,7 +75,7 @@
     "confirm": "Simpan",
     "error": {
       "quantity": "Masukkan bilangan bulat 0 atau lebih.",
-      "price": "Masukkan harga 0 atau lebih."
+      "price": "Masukkan harga di atas $0, atau biarkan kosong."
     }
   },
   "dealAction": "Diskon hampir kedaluwarsa",
@@ -131,5 +132,7 @@
       "notNearExpiry": "Pada hari itu, lebih dari separuh masa simpan {{shelfLife}} hari masih tersisa. Diskon hanya untuk produk yang sudah melewati separuh masa simpannya.",
       "expiredBeforePickup": "Batch ini sudah tidak baik lagi pada hari itu, jadi tidak dapat dijual untuk hari tersebut."
     }
-  }
+  },
+  "noNextDate": "Belum ada hari yang bisa dipesan",
+  "checkWeeklyStock": "Atur stok mingguan"
 }

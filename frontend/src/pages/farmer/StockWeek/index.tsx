@@ -80,6 +80,8 @@ const TemplateGrid = ({
   const { t: tc } = useTranslation();
   const [cells, setCells] = useState<Record<string, Cell>>(() => seedCells(initialTemplates));
   const [saving, setSaving] = useState(false);
+  // FR-063: the cell whose price the server would refuse ($0 or less), and the message said for it
+  const [badPrice, setBadPrice] = useState<{ key: string; message: string } | null>(null);
 
   const setCell = (productId: number, day: number, patch: Partial<Cell>) => {
     const key = cellKey(productId, day);
@@ -95,9 +97,18 @@ const TemplateGrid = ({
         const quantity = Number(cell.quantity);
         if (!Number.isFinite(quantity) || quantity <= 0) continue;
         const price = cell.price.trim() === '' ? null : Number(cell.price);
+        // The server only takes a weekday price above $0 (StockTemplateRequest); blank keeps the current price
+        if (price !== null && (!Number.isFinite(price) || price <= 0)) {
+          setBadPrice({
+            key: cellKey(p.id, day),
+            message: t('template.priceError', { product: p.name, day: dayName(day, 'long') }),
+          });
+          return;
+        }
         items.push({ productId: p.id, dayOfWeek: day, defaultQuantity: quantity, defaultPrice: price });
       }
     }
+    setBadPrice(null);
     setSaving(true);
     try {
       const rows = await StockTemplateApi.replace(items);
@@ -136,6 +147,7 @@ const TemplateGrid = ({
                 </td>
                 {DAYS.map((day) => {
                   const cell = cells[cellKey(p.id, day)] ?? { quantity: '', price: '' };
+                  const priceInvalid = badPrice?.key === cellKey(p.id, day);
                   return (
                     <td key={day} className={td}>
                       <div className="flex flex-col gap-1">
@@ -150,13 +162,18 @@ const TemplateGrid = ({
                         />
                         <input
                           type="number"
-                          min={0}
+                          min={0.01}
                           step={0.01}
                           value={cell.price}
                           onChange={(e) => setCell(p.id, day, { price: e.target.value })}
                           aria-label={t('aria.price', { product: p.name, day: dayName(day, 'long') })}
+                          aria-invalid={priceInvalid}
+                          aria-describedby={priceInvalid ? 'template-price-error' : undefined}
                           placeholder={t('defaultPricePlaceholder')}
-                          className="border-line text-ink-muted min-h-11 w-20 rounded-sm border px-2 text-right text-[12px] tabular-nums"
+                          className={
+                            'text-ink-muted min-h-11 w-20 rounded-sm border px-2 text-right text-[12px] tabular-nums ' +
+                            (priceInvalid ? 'border-danger' : 'border-line')
+                          }
                         />
                       </div>
                     </td>
@@ -167,6 +184,11 @@ const TemplateGrid = ({
           </tbody>
         </table>
       </Card>
+      {badPrice && (
+        <p id="template-price-error" role="alert" className="text-danger m-0 text-[13px]">
+          {badPrice.message}
+        </p>
+      )}
       <div className="flex flex-wrap items-center gap-3">
         <Button onClick={() => void save()} disabled={saving}>
           {t('template.save')}

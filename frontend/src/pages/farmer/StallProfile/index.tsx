@@ -18,6 +18,7 @@ import {
   NO_MARKETS,
   SERVER_FIELDS,
   settingsFrom,
+  STALL_CODE_MAX,
   STATUS_CLASS,
   type FormErrors,
   type MarketSettings,
@@ -137,6 +138,11 @@ const FarmerStallProfilePage = () => {
         Notification.error({ text: t('markets.windowError', { market: sm.marketName }) });
         return;
       }
+      // FR-060: checked before any request, so no market is saved halfway
+      if (s.code.trim().length > STALL_CODE_MAX) {
+        Notification.error({ text: t('markets.codeError', { market: sm.marketName, max: STALL_CODE_MAX }) });
+        return;
+      }
     }
     setSavingMarkets(true);
     try {
@@ -165,6 +171,10 @@ const FarmerStallProfilePage = () => {
       Notification.success({ title: t('saved'), text: t('markets.savedText') });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      // Markets saved before the failing one are on the server now: show what it holds, keep the typed edits
+      StallApi.myProfile()
+        .then((fresh) => mutate(() => fresh))
+        .catch(() => undefined);
     } finally {
       setSavingMarkets(false);
     }

@@ -8,7 +8,7 @@ import { Field } from '@/components/ui/input';
 import { dayList, dayName, formatClock } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import Notification from '@/utils/notification';
-import type { MarketSettings } from './constants';
+import { STALL_CODE_MAX, type MarketSettings } from './constants';
 
 type StallMarketCardProps = {
   sm: StallMarketDto;
@@ -43,6 +43,7 @@ const StallMarketCard = ({ sm, market: m, settings: s, withMap, onUpdate }: Stal
           id={`code${sm.farmerMarketId}`}
           label={t('markets.code')}
           value={s.code}
+          maxLength={STALL_CODE_MAX}
           onChange={(e) => onUpdate({ code: e.target.value })}
           hint={t('markets.codeHint')}
         />

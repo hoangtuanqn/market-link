@@ -120,3 +120,43 @@ describe('FarmerProductsPage — near-expiry deals', () => {
     expect(await screen.findByRole('dialog', { name: 'Near-expiry deal · Trứng vịt' })).toBeInTheDocument();
   });
 });
+
+describe('FarmerProductsPage — not orderable yet', () => {
+  /** FR-062/FR-063: a product on sale with no pickup day open (no weekly stock yet) says so and links to the fix. */
+  it('points a product with no open pickup day to the weekly stock', async () => {
+    renderPage();
+
+    await screen.findByRole('link', { name: 'Trứng gà ác' });
+    expect(screen.getByText('No day open to order')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Set weekly stock' })).toHaveAttribute('href', '/farmer/stock');
+  });
+});
+
+describe('FarmerProductsPage — restore from trash', () => {
+  /** #214 clears the weekly stock on delete, so a restored product cannot be ordered until it is set again. */
+  it('warns that a restored product needs its weekly stock again', async () => {
+    vi.mocked(ProductApi.mineDeleted).mockResolvedValue([product(9, 'Trứng cút')]);
+    renderPage();
+
+    await userEvent.click(await screen.findByRole('button', { name: /^Deleted/ }));
+    await userEvent.click(await screen.findByRole('button', { name: 'Restore' }));
+
+    expect(await screen.findByText(/Its weekly stock was cleared when it was deleted/)).toBeInTheDocument();
+  });
+});
+
+describe('FarmerProductsPage — adjust one day', () => {
+  /** FR-063: the server only takes a price above $0 for a day; $0 used to be sent and came back as a vague error. */
+  it('asks for a price above $0 under the price field and sends nothing', async () => {
+    renderPage();
+
+    await userEvent.click(await screen.findByRole('button', { name: 'Adjust' }));
+    const price = await screen.findByLabelText('Price for this day (optional)');
+    await userEvent.type(price, '0');
+    await userEvent.click(screen.getByRole('button', { name: 'Save' }));
+
+    expect(await screen.findByText('Enter a price above $0, or leave it blank.')).toBeInTheDocument();
+    expect(price).toHaveAttribute('aria-invalid', 'true');
+    expect(ProductApi.overrideDailyStock).not.toHaveBeenCalled();
+  });
+});

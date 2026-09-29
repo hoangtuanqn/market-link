@@ -97,7 +97,8 @@ class OrderAdminReadTest {
                 2,
                 "2026-09-26T02:00:00Z",
                 7L,
-                "Khách 7");
+                "Khách 7",
+                false);
     }
 
     private static OrderDetailRow order(long customerId, long farmerUserId) {

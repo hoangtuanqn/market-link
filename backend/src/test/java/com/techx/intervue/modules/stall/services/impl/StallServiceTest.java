@@ -90,6 +90,20 @@ class StallServiceTest {
     }
 
     /**
+     * FR-011: the booth code and the pin come from one farmer_markets row. MIN of each column on
+     * its own gave stall 4 the code A-20 with the latitude of B-15 (checked on MySQL 8.4 with the
+     * demo seed, where the new statement returns each stall's own row).
+     */
+    @Test
+    void searchTakesTheCodeAndThePinFromOneMarketRow() {
+        assertThat(StallQueryRepository.SEARCH_STALLS)
+                .doesNotContain("MIN(fm.stall_code)")
+                .doesNotContain("MIN(fm.stall_latitude)")
+                .doesNotContain("MIN(fm.stall_longitude)")
+                .contains("WHERE p.id = MIN(fm.id)) AS stall_code");
+    }
+
+    /**
      * D-09: only approved stalls show to customers. The SQL statement is a constant so read it
      * directly, needing no database.
      */

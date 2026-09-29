@@ -36,7 +36,7 @@
     "deleted": "Eliminado",
     "deletedText": "{{name}} eliminado.",
     "restored": "Restaurado",
-    "restoredText": "{{name}} restaurado a la lista de pausados.",
+    "restoredText": "{{name}} restaurado en pausa. Vuelve a configurar su stock semanal antes de ponerlo a la venta.",
     "stockAdjusted": "Existencias actualizadas para {{day}}."
   },
   "dialog": {
@@ -50,7 +50,8 @@
     "title": "¿Restaurar {{name}}?",
     "cancel": "Mantener en papelera",
     "confirm": "Restaurar producto",
-    "text": "El producto se restaurará en estado “Pausado” para que puedas revisar su stock y precio antes de ponerlo a la venta."
+    "text": "El producto se restaurará en estado “Pausado” para que puedas revisar su stock y precio antes de ponerlo a la venta.",
+    "stockHint": "Su stock semanal se borró al eliminarlo, así que los clientes no pueden pedirlo hasta que lo configures de nuevo."
   },
   "error": {
     "noun": "tus productos"
@@ -74,7 +75,7 @@
     "confirm": "Guardar",
     "error": {
       "quantity": "Ingrese un número entero de 0 o más.",
-      "price": "Ingrese un precio de 0 o más."
+      "price": "Ingrese un precio mayor que $0, o déjelo en blanco."
     }
   },
   "dealAction": "Oferta por vencer",
@@ -131,5 +132,7 @@
       "notNearExpiry": "Ese día todavía queda más de la mitad de su vida útil de {{shelfLife}} días. Las ofertas son solo para productos que ya pasaron la mitad de su vida útil.",
       "expiredBeforePickup": "Este lote ya no está en buen estado ese día, así que no se puede vender para esa fecha."
     }
-  }
+  },
+  "noNextDate": "Ningún día abierto a pedidos",
+  "checkWeeklyStock": "Configurar stock semanal"
 }

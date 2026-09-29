@@ -22,7 +22,8 @@
   "template": {
     "save": "Simpan templat",
     "savedText": "Templat tersimpan.",
-    "note": "Kosongkan jumlah suatu hari untuk melewatinya. Harga kosong memakai harga produk saat ini."
+    "note": "Kosongkan jumlah suatu hari untuk melewatinya. Harga kosong memakai harga produk saat ini.",
+    "priceError": "Masukkan harga di atas $0 untuk {{product}} pada {{day}}, atau biarkan kosong untuk memakai harga saat ini."
   },
   "empty": {
     "title": "Tambahkan produk dulu",

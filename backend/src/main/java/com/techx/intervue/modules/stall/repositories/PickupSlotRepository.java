@@ -16,9 +16,12 @@ public interface PickupSlotRepository extends JpaRepository<PickupSlot, Long> {
      * FR-032, FR-060, FR-073: a slot is only offered or booked while the market is still held on
      * its weekday ({@code market_operating_days}) and the stall still attends that weekday at that
      * market ({@code farmer_operating_days}). Slots are generated weeks ahead, so either side can
-     * drop a weekday after its slots exist. Both tables store 0 = Sunday … 6 = Saturday; MySQL's
-     * DAYOFWEEK is 1 = Sunday … 7 = Saturday. Needs the aliases {@code s} (pickup_slots) and {@code
-     * fm} (farmer_markets); {@link SlotQueryRepository} pastes the same fragment in.
+     * drop a weekday after its slots exist. The slot must also still fit inside the stall's time
+     * window for that weekday (FR-067): shortening or moving the window leaves the slots already
+     * generated outside it, and those no longer take bookings either. Both tables store 0 = Sunday
+     * … 6 = Saturday; MySQL's DAYOFWEEK is 1 = Sunday … 7 = Saturday. Needs the aliases {@code s}
+     * (pickup_slots) and {@code fm} (farmer_markets); {@link SlotQueryRepository} pastes the same
+     * fragment in.
      */
     String OPEN_DAYS =
             """
@@ -27,7 +30,9 @@ public interface PickupSlotRepository extends JpaRepository<PickupSlot, Long> {
                             AND mo.day_of_week = DAYOFWEEK(s.slot_date) - 1)
               AND EXISTS (SELECT 1 FROM farmer_operating_days od
                           WHERE od.farmer_market_id = fm.id
-                            AND od.day_of_week = DAYOFWEEK(s.slot_date) - 1)
+                            AND od.day_of_week = DAYOFWEEK(s.slot_date) - 1
+                            AND s.start_time >= od.pickup_start_time
+                            AND s.end_time <= od.pickup_end_time)
             """;
 
     List<PickupSlot> findByFarmerMarketIdAndSlotDateBetween(
@@ -51,7 +56,10 @@ public interface PickupSlotRepository extends JpaRepository<PickupSlot, Long> {
             nativeQuery = true)
     long countOnOpenDay(@Param("slotId") long slotId);
 
-    /** Whether the slot's weekday is still open for both its market and its stall (see above). */
+    /**
+     * Whether the slot's weekday is still open for both its market and its stall, inside the
+     * stall's time window (see above).
+     */
     default boolean isOnOpenDay(long slotId) {
         return countOnOpenDay(slotId) > 0;
     }

@@ -51,7 +51,8 @@
     "notApproved": "Märkte, Tage und Abholzeiten werden freigeschaltet, sobald ein Admin deinen Stand genehmigt hat.",
     "windowError": "{{market}}: wähle mindestens einen Tag und ein Ende nach dem Beginn.",
     "joined": "{{name}} zu deinem Stand hinzugefügt.",
-    "left": "{{name}} von deinem Stand entfernt."
+    "left": "{{name}} von deinem Stand entfernt.",
+    "codeError": "{{market}}: Der Standcode darf höchstens {{max}} Zeichen lang sein."
   },
   "map": {
     "yourStall": "Ihr Stand"

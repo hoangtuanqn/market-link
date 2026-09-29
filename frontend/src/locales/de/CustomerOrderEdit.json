@@ -17,7 +17,7 @@
     "title": "Nach dem Speichern geht die Bestellung zurück auf „Aufgegeben“, und {{stall}} gibt sie erneut frei.",
     "text": "Ihre Ware bleibt während der Prüfung reserviert. Sie erhalten eine Benachrichtigung, sobald sie angenommen wird."
   },
-  "help": "Hier können Sie Mengen verringern oder Artikel entfernen. Um etwas anderes von {{stall}} hinzuzufügen, geben Sie eine neue Bestellung auf. Die Mengen sind auf den heutigen Restbestand des Stands begrenzt.",
+  "help": "Hier können Sie bis zum Bestellschluss Mengen ändern oder Artikel entfernen. Eine Position lässt sich um das erhöhen, was {{stall}} für diesen Abholtag noch hat. Um etwas anderes hinzuzufügen, geben Sie eine neue Bestellung auf.",
   "submit": "Änderungen zur Freigabe senden",
   "discard": "Änderungen verwerfen",
   "toast": {

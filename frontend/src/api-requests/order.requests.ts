@@ -90,6 +90,8 @@ export type OrderListItemDto = {
   createdAt: string;
   customerId: number;
   customerName: string;
+  /** FR-033: the order already carries a review, so the customer's list does not offer "Review" again. */
+  reviewed: boolean;
 };
 
 /** One `order_items` line — name/price/unit as copied at order time (contract §7). */
@@ -166,6 +168,7 @@ export const toOrderCard = (dto: OrderListItemDto): OrderType => ({
   items: [],
   itemCount: dto.itemCount,
   total: dto.totalAmount,
+  reviewed: dto.reviewed,
   history: [],
 });
 

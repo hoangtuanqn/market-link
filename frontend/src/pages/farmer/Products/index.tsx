@@ -42,6 +42,7 @@ const FarmerProductsPage = () => {
   const [adjustQuantity, setAdjustQuantity] = useState('');
   const [adjustPrice, setAdjustPrice] = useState('');
   const [adjustError, setAdjustError] = useState<string | undefined>();
+  const [adjustPriceError, setAdjustPriceError] = useState<string | undefined>();
   const [busyId, setBusyId] = useState<number | null>(null);
   // FR-124: the product whose near-expiry deal dialog is open, and a counter that makes "On sale" read again
   const [dealTarget, setDealTarget] = useState<ProductType | null>(null);
@@ -83,21 +84,20 @@ const FarmerProductsPage = () => {
     setAdjustQuantity(String(p.nextLeft ?? 0));
     setAdjustPrice('');
     setAdjustError(undefined);
+    setAdjustPriceError(undefined);
   };
 
   const confirmAdjust = async () => {
     if (!adjustTarget?.nextDate) return;
     const quantity = Number(adjustQuantity);
-    if (!Number.isInteger(quantity) || quantity < 0) {
-      setAdjustError(t('adjustDialog.error.quantity'));
-      return;
-    }
     const price = adjustPrice.trim() === '' ? null : Number(adjustPrice);
-    if (price !== null && (!Number.isFinite(price) || price < 0)) {
-      setAdjustError(t('adjustDialog.error.price'));
-      return;
-    }
-    setAdjustError(undefined);
+    const quantityError = !Number.isInteger(quantity) || quantity < 0 ? t('adjustDialog.error.quantity') : undefined;
+    // The server only takes a price above $0 for a day (FarmerDailyStockRequest); blank keeps the current price
+    const priceError =
+      price !== null && (!Number.isFinite(price) || price <= 0) ? t('adjustDialog.error.price') : undefined;
+    setAdjustError(quantityError);
+    setAdjustPriceError(priceError);
+    if (quantityError || priceError) return;
     setBusyId(adjustTarget.id);
     try {
       await ProductApi.overrideDailyStock(adjustTarget.id, adjustTarget.nextDate, quantity, price);
@@ -193,9 +193,19 @@ const FarmerProductsPage = () => {
       align: 'num',
       render: (p) => {
         const day = stockDay(p.nextDate);
-        return p.status === 'available' && day
-          ? t('nextLeft', { day, qty: units(p.nextLeft ?? 0, p.unit, p.plural) })
-          : '—';
+        if (p.status === 'available' && day)
+          return t('nextLeft', { day, qty: units(p.nextLeft ?? 0, p.unit, p.plural) });
+        // FR-062/FR-063: on sale but no customer can order it — usually no weekly stock yet
+        if (p.status === 'available' && !p.hidden)
+          return (
+            <span className="text-small inline-flex flex-col items-end">
+              <span className="text-ink-muted">{t('noNextDate')}</span>
+              <Link to="/farmer/stock" className="text-brand underline-offset-2 hover:underline">
+                {t('checkWeeklyStock')}
+              </Link>
+            </span>
+          );
+        return '—';
       },
     },
     {
@@ -406,6 +416,7 @@ const FarmerProductsPage = () => {
         }
       >
         <p>{t('restoreDialog.text')}</p>
+        <p className="text-ink-muted text-[14px]">{t('restoreDialog.stockHint')}</p>
       </Dialog>
 
       <Dialog
@@ -438,10 +449,11 @@ const FarmerProductsPage = () => {
             id="adjust-price"
             label={t('adjustDialog.price')}
             type="number"
-            min={0}
+            min={0.01}
             step={0.01}
             placeholder={adjustTarget ? String(adjustTarget.price) : ''}
             hint={t('adjustDialog.priceHint')}
+            error={adjustPriceError}
             value={adjustPrice}
             onChange={(e) => setAdjustPrice(e.target.value)}
           />

@@ -26,6 +26,7 @@ const summary = {
   createdAt: '2026-09-25T02:00:00Z',
   customerId: 7,
   customerName: 'An',
+  reviewed: false,
 };
 
 const renderPin = () =>

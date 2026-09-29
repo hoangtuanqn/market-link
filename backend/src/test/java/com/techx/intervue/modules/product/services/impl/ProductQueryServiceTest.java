@@ -162,6 +162,37 @@ class ProductQueryServiceTest {
     }
 
     /**
+     * FR-124: a nearest day on a near-expiry deal keeps the regular price on the card (reproduced
+     * 29/09: a 35% deal on 03/10 listed a $0.50 product at $0.33 with nothing saying it was a
+     * deal).
+     */
+    @Test
+    void searchShowsTheRegularPriceWhenTheNearestDayIsOnADeal() {
+        when(repository.search(any(), anyString(), anyInt(), anyInt()))
+                .thenReturn(new PageResource<>(List.of(item(1L)), 1, 20, 1));
+        LocalDate saturday = LocalDate.of(2026, 10, 3);
+        when(availability.resolve(any()))
+                .thenReturn(
+                        Map.of(
+                                1L,
+                                new ProductAvailabilityResolver.Availability(
+                                        saturday,
+                                        12,
+                                        new BigDecimal("0.33"),
+                                        new ProductAvailabilityResolver.Deal(
+                                                new BigDecimal("0.50"),
+                                                35,
+                                                saturday.minusDays(3),
+                                                saturday.plusDays(1)))));
+
+        ProductListItemResource shown =
+                service.search(criteria("newest", null, null, 20)).items().getFirst();
+
+        assertThat(shown.price()).isEqualByComparingTo("0.50");
+        assertThat(shown.availableDate()).isEqualTo("2026-10-03");
+    }
+
+    /**
      * The total is the query's count of every matching product, not the size of this page — the
      * catalogue works out how many pages there are from it.
      */

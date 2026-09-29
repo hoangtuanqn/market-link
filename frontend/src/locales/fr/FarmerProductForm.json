@@ -31,7 +31,8 @@
   },
   "qty": {
     "label": "Quantité disponible cette semaine",
-    "error": "La quantité doit être de 0 ou plus. Utilisez Épuisé s’il n’en reste plus."
+    "error": "La quantité doit être de 0 ou plus. Utilisez Épuisé s’il n’en reste plus.",
+    "hint": "Simple chiffre de départ. Les clients commandent sur votre stock hebdomadaire, à définir après l’enregistrement."
   },
   "shelfLife": {
     "label": "Durée de conservation",
@@ -102,7 +103,8 @@
     "saved": "Enregistré",
     "savedText": "{{name}} enregistré.",
     "product": "Produit",
-    "deletedText": "{{name}} supprimé."
+    "deletedText": "{{name}} supprimé.",
+    "createdText": "{{name}} enregistré. Indiquez combien vous en apportez chaque jour de la semaine pour que les clients puissent commander."
   },
   "error": {
     "noun": "le produit"

@@ -1,13 +1,13 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import CustomerOrderEditPage from './index';
-import OrderApi, { type OrderDetailDto } from '@/api-requests/order.requests';
+import OrderApi, { type OrderDetailDto, type OrderGroupPreviewDto } from '@/api-requests/order.requests';
 
 vi.mock('@/api-requests/order.requests', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/api-requests/order.requests')>();
-  return { ...real, default: { get: vi.fn(), modifyItems: vi.fn() } };
+  return { ...real, default: { get: vi.fn(), modifyItems: vi.fn(), preview: vi.fn() } };
 });
 
 const detail = {
@@ -50,9 +50,46 @@ const renderEdit = () =>
     </MemoryRouter>,
   );
 
+/** What the stall still has for the order's pickup day: 2 more water spinach, and the tomatoes are sold out. */
+const leftForTheDay = [
+  {
+    farmerId: 15,
+    stallName: 'Vườn Út Hiền',
+    marketId: 1,
+    marketName: 'Thảo Điền Weekend Market',
+    orderCutoffHours: 12,
+    items: [
+      {
+        productId: 3,
+        name: 'Water spinach',
+        unit: 'bunch',
+        unitPrice: 0.5,
+        quantity: 3,
+        subtotal: 1.5,
+        stockQuantity: 2,
+        status: 'available',
+      },
+      {
+        productId: 4,
+        name: 'Cherry tomatoes',
+        unit: 'kg',
+        unitPrice: 0.8,
+        quantity: 1,
+        subtotal: 0.8,
+        stockQuantity: 0,
+        status: 'sold_out',
+      },
+    ],
+    subtotal: 2.3,
+    problems: ['out_of_stock'],
+    markets: [{ marketId: 1, marketName: 'Thảo Điền Weekend Market' }],
+  },
+] as OrderGroupPreviewDto[];
+
 beforeEach(() => {
   vi.mocked(OrderApi.get).mockReset().mockResolvedValue(detail);
   vi.mocked(OrderApi.modifyItems).mockReset().mockResolvedValue(detail);
+  vi.mocked(OrderApi.preview).mockReset().mockResolvedValue(leftForTheDay);
 });
 
 describe('CustomerOrderEditPage', () => {
@@ -76,5 +113,43 @@ describe('CustomerOrderEditPage', () => {
       { productId: 3, quantity: 3 },
       { productId: 4, quantity: 1 },
     ]);
+  });
+
+  /**
+   * FR-035, D-07: the server lets a line go up by what the stall still has for the order's pickup day (409 OUT_OF_STOCK
+   * beyond). The stepper stops there, instead of 20 above the order with a made-up "20 left".
+   */
+  it('lets a line go up only by what the stall still has for the pickup day', async () => {
+    renderEdit();
+
+    const [spinachUp, tomatoesUp] = await screen.findAllByRole('button', { name: 'Increase by 1' });
+    expect(OrderApi.preview).toHaveBeenCalledWith(
+      [
+        { productId: 3, quantity: 3 },
+        { productId: 4, quantity: 1 },
+      ],
+      [{ farmerId: 15, date: '2026-10-03' }],
+    );
+    await waitFor(() => expect(spinachUp).toBeEnabled());
+    expect(tomatoesUp).toBeDisabled();
+    await userEvent.click(spinachUp);
+    await userEvent.click(spinachUp);
+    expect(spinachUp).toBeDisabled();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Send changes for approval' }));
+    expect(OrderApi.modifyItems).toHaveBeenCalledWith(21, [
+      { productId: 3, quantity: 5 },
+      { productId: 4, quantity: 1 },
+    ]);
+  });
+
+  it('only lets lines go down while it cannot tell what is left', async () => {
+    vi.mocked(OrderApi.preview).mockRejectedValue(new Error('Network Error'));
+    renderEdit();
+
+    await screen.findByRole('button', { name: 'Send changes for approval' });
+    await waitFor(() => expect(OrderApi.preview).toHaveBeenCalled());
+    for (const up of screen.getAllByRole('button', { name: 'Increase by 1' })) expect(up).toBeDisabled();
+    expect(screen.getByText(/A line can go up by what Vườn Út Hiền still has for this pickup day/)).toBeInTheDocument();
   });
 });

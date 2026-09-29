@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
@@ -23,6 +24,7 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import LiveClock from './LiveClock';
 import ShelfLifeStrikes from './ShelfLifeStrikes';
+import { stockNow } from './stockNow';
 
 const TABS = [
   { id: 'new', label: 'tabs.new', status: 'placed' as OrderStatus },
@@ -74,6 +76,8 @@ const FarmerOverviewPage = () => {
       Notification.success({ text: successText });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      // 409 (D-04): the order moved on elsewhere — read the incoming orders again so the stale row goes away
+      if (isAxiosError(error) && error.response?.status === 409) retryOrders();
     } finally {
       setBusyId(null);
     }
@@ -175,8 +179,7 @@ const FarmerOverviewPage = () => {
   const dashboard = kpiLoad.kind === 'ready' ? kpiLoad.data : null;
   const briefing = briefingLoad.kind === 'ready' ? briefingLoad.data : null;
   const orders = ordersLoad.kind === 'ready' ? ordersLoad.data.items : [];
-  const stock =
-    stockLoad.kind === 'ready' ? [...stockLoad.data].sort((a, b) => a.stock - b.stock).slice(0, STOCK_ROWS) : [];
+  const stock = stockLoad.kind === 'ready' ? stockNow(stockLoad.data, STOCK_ROWS) : [];
   const best = bestLoad.kind === 'ready' ? bestLoad.data : [];
 
   return (
@@ -300,7 +303,7 @@ const FarmerOverviewPage = () => {
           ) : stockLoad.kind === 'error' ? (
             <LoadError noun={t('stock.noun')} onRetry={retryStock} />
           ) : stock.length ? (
-            <BarList rows={stock.map((p) => ({ label: p.name, value: p.stock }))} />
+            <BarList rows={stock} />
           ) : (
             <DataState title={t('stock.empty.title')} text={t('stock.empty.text')} />
           )}

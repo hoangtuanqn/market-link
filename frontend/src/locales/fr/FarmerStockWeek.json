@@ -22,7 +22,8 @@
   "template": {
     "save": "Enregistrer le modèle",
     "savedText": "Modèle enregistré.",
-    "note": "Laissez la quantité d’un jour vide pour le sauter. Un prix vide garde le prix actuel du produit."
+    "note": "Laissez la quantité d’un jour vide pour le sauter. Un prix vide garde le prix actuel du produit.",
+    "priceError": "Entrez un prix supérieur à 0 $ pour {{product}} le {{day}}, ou laissez vide pour garder le prix actuel."
   },
   "empty": {
     "title": "Ajoutez d’abord un produit",

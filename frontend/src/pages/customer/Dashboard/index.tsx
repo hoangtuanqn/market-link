@@ -15,6 +15,7 @@ import useRequest from '@/hooks/useRequest';
 import useSession from '@/hooks/useSession';
 import { nowLabel } from '@/lib/format';
 import type { OrderType } from '@/types/order.types';
+import { settledProducts } from './favoriteProducts';
 
 const UPCOMING_STATUSES = new Set(['placed', 'accepted', 'ready']);
 /** How many favourite products to preview in "New from favorites". */
@@ -55,7 +56,7 @@ const CustomerDashboardPage = () => {
 
   const favProductIds = productFavs.slice(0, FAV_PRODUCTS_SHOWN).map((f) => f.targetId);
   const { state: favProductsLoad } = useRequest(`dash-fav-products:${favProductIds.join(',')}`, () =>
-    Promise.all(favProductIds.map((id) => ProductApi.get(id))),
+    Promise.allSettled(favProductIds.map((id) => ProductApi.get(id))).then(settledProducts),
   );
   const newFromFavorites =
     favProductsLoad.kind === 'ready' ? favProductsLoad.data.map((dto) => toProduct(dto.product, dto.description)) : [];
