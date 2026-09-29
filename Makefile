@@ -6,8 +6,8 @@ COMPOSE_APP  := docker compose --profile app
 COMPOSE_PROD := docker compose -p market-link-prod --env-file .env.production -f docker-compose.yml -f docker-compose.prod.yml --profile app
 
 .DEFAULT_GOAL := help
-.PHONY: help vapid-keys check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init prod-seed \
-        format lint be-format be-test fe-install seed seed-images mysql redis clean submission
+.PHONY: help vapid-keys check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init prod-seed prod-seed-extended \
+        format lint be-format be-test fe-install seed seed-extended seed-images mysql redis clean submission
 
 help: ## Show the command list
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-12s\033[0m %s\n",$$1,$$2}'
@@ -82,6 +82,10 @@ prod-seed: ## Load db/seed.sql + demo photos into production (admin + demo accou
 		sh -c 'mkdir -p /app/uploads/market-images && tar -xf - -C /app/uploads/market-images'
 	@echo "Seed xong. Đổi mật khẩu admin (Demo@1234) ngay sau lần đăng nhập đầu."
 
+prod-seed-extended: ## Add db/seed-extended.sql on top of prod-seed: 6 months of stalls, customers, orders (password Demo@1234)
+	$(COMPOSE_PROD) exec -T mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"' < db/seed-extended.sql
+	@echo "Seed mở rộng xong. Mọi tài khoản mới cũng dùng Demo@1234."
+
 format: be-format ## Format all code (prettier + spotless) in the container
 	$(COMPOSE) exec frontend npx prettier --write .
 
@@ -104,6 +108,10 @@ fe-install: ## Reinstall frontend packages in the container (after changing pack
 seed: seed-images ## Load the demo data db/seed.sql (FR-100…102) — safe to run repeatedly
 	$(COMPOSE) exec -T mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"' < db/seed.sql
 	@echo "Seed xong."
+
+seed-extended: seed ## Add db/seed-extended.sql on top of seed: 6 months of stalls, customers, orders
+	$(COMPOSE) exec -T mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"' < db/seed-extended.sql
+	@echo "Seed mở rộng xong."
 
 seed-images: ## Copy demo photos from db/seed-images/ into the uploads volume (see db/seed-images/PROMPTS.md)
 	@mkdir -p backend/uploads/product-images backend/uploads/market-images

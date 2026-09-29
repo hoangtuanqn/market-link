@@ -132,3 +132,55 @@ Vietnamese wet-market atmosphere, softly blurred background, square 1:1 aspect r
 | `phan-hoa.jpg` | Phấn hoa | a small jar of golden bee pollen granules (phấn hoa) |
 | `sap-ong-nguyen-chat.jpg` | Sáp ong nguyên chất | a block of pure raw beeswax (sáp ong nguyên chất) on a wooden plate |
 | `mat-ong-hoa-nhan.jpg` | Mật ong hoa nhãn | a glass jar of light golden longan-flower honey (mật ong hoa nhãn) with a honey dipper |
+
+## Extended seed products (41)
+
+The stalls `db/seed-extended.sql` adds (`farmer11@` … `farmer20@`). Same product wrapper as above, only the
+`{subject}` changes. `scripts/generate-seed.js` picks a file up by its name: until it exists, the product shows the
+"temporary" photo in the last column, or no photo (the card then shows the category name). After adding files, run
+`node scripts/generate-seed.js`, reload `db/seed-extended.sql` (`make seed-extended`) and copy the photos
+(`make seed-images`).
+
+| Filename | Product | Subject | Temporary |
+|---|---|---|---|
+| `rau-cai-bo-xoi.jpg` | Rau cải bó xôi | a bunch of fresh young spinach (cải bó xôi) with dark green, slightly crinkled leaves and pink-tinged stems | `cai-kale` |
+| `xa-lach-iceberg.jpg` | Rau xà lách Iceberg | two round heads of crisp iceberg lettuce, one cut in half to show the pale tightly packed leaves | `xa-lach-lo-lo` |
+| `cai-thia.jpg` | Cải thìa | several heads of baby bok choy (cải thìa) with white spoon-shaped stems and glossy green leaves | `cai-ngot` |
+| `rau-ma.jpg` | Rau má | a bundle of fresh centella / pennywort (rau má) with small round scalloped leaves on thin stems | — |
+| `chom-chom.jpg` | Chôm chôm | a pile of bright red rambutans (chôm chôm) with green-tipped hairy skins, one peeled to show the white flesh | — |
+| `man-an-phuoc.jpg` | Mận An Phước | glossy bell-shaped pinkish-red Java rose apples (mận An Phước), one sliced to show the white crisp flesh | — |
+| `nhan-long.jpg` | Nhãn lồng | bunches of longan fruit (nhãn lồng) on their stems with tan skins, one peeled to show the translucent flesh | — |
+| `mang-cut.jpg` | Măng cụt | deep purple mangosteens (măng cụt) with green crowns, one opened to show the white segments | — |
+| `vu-sua.jpg` | Vú sữa | round glossy purple-green star apples (vú sữa Lò Rèn), one cut across to show the milky star-shaped center | — |
+| `tom-su.jpg` | Tôm sú | fresh raw black tiger prawns (tôm sú) with striped shells on crushed ice in a bamboo tray | — |
+| `ca-thu.jpg` | Cá thu | sun-dried "one-sun" Spanish mackerel steaks (cá thu một nắng) with silver skin, arranged on banana leaf | — |
+| `muc-ong.jpg` | Mực ống | fresh whole squid (mực ống) with translucent mottled skin on crushed ice | — |
+| `ngheu.jpg` | Nghêu | a basket of fresh live clams (nghêu lụa) with smooth cream-and-brown striped shells, slightly wet | — |
+| `ga-ta-nguyen-con.jpg` | Gà ta nguyên con | a whole cleaned free-range Vietnamese chicken (gà ta) with yellow skin, raw, on banana leaf | — |
+| `vit-co.jpg` | Vịt cỏ | a whole cleaned raw field duck (vịt cỏ) on banana leaf, pale skin, trussed with string | — |
+| `uc-ga.jpg` | Ức gà | fresh boneless skinless raw chicken breasts (ức gà) neatly arranged on a wooden board | — |
+| `trung-ga-ta.jpg` | Trứng gà ta | a paper tray of 30 small light-brown free-range chicken eggs (trứng gà ta) | `trung-ga-tha-vuon` |
+| `dau-phong-rang.jpg` | Đậu phộng rang | roasted peanuts with red skins tossed with fried garlic and chili (đậu phộng rang tỏi ớt) in a clay bowl | — |
+| `hat-dieu-rang-muoi.jpg` | Hạt điều rang muối | salted roasted cashew nuts (hạt điều rang muối), some still in their thin brown skins, in a woven basket | — |
+| `ca-phe-rang-xay.jpg` | Cà phê rang xay | a kraft paper bag of dark roasted ground Robusta coffee (cà phê rang xay) with whole beans and a phin filter beside it | — |
+| `gao-st25.jpg` | Gạo ST25 | a burlap sack of long-grain fragrant ST25 rice (gạo ST25) with a wooden scoop of white rice in front | — |
+| `dau-den.jpg` | Đậu đen | dried black beans with green centers (đậu đen xanh lòng) in a small woven basket and scattered on the table | — |
+| `banh-flan-caramel.jpg` | Bánh flan caramel | small glass jars of Vietnamese caramel flan (bánh flan) with a glossy dark caramel top, one spooned open | — |
+| `che-khuc-bach.jpg` | Chè khúc bạch | a glass jar of chè khúc bạch: white milk-jelly cubes with lychees and toasted almond slices in clear syrup | — |
+| `banh-tiramisu.jpg` | Bánh tiramisu hộp | a clear takeaway box of tiramisu for two, dusted with cocoa powder, one corner cut to show the layers | — |
+| `cookies-socola.jpg` | Cookies socola | a glass jar and a small stack of chocolate chip butter cookies (cookies socola), golden edges | `banh-quy-bo` |
+| `nam-linh-chi-do.jpg` | Nấm linh chi đỏ | dried glossy red-brown reishi mushrooms (nấm linh chi đỏ), a few whole caps and some slices | — |
+| `nam-huong-kho.jpg` | Nấm hương khô | dried shiitake mushrooms (nấm hương khô) with cracked brown caps in a bamboo basket | `nam-dong-co-tuoi` |
+| `nam-dui-ga.jpg` | Nấm đùi gà | fresh king oyster mushrooms (nấm đùi gà) with thick white stems and small brown caps | `nam-bao-ngu` |
+| `sup-lo-trang.jpg` | Súp lơ trắng | a large fresh white cauliflower head (súp lơ trắng) wrapped in its green leaves, one floret broken off | `bong-cai-xanh` |
+| `atiso.jpg` | Atiso | fresh green globe artichokes (atiso Đà Lạt) with tight layered bracts, one cut in half | — |
+| `bap-cai-tim.jpg` | Bắp cải tím | a head of purple cabbage (bắp cải tím), one half cut to show the violet-and-white inner layers | — |
+| `ca-rot-baby.jpg` | Cà rốt baby | a bundle of baby carrots (cà rốt baby) with their feathery green tops, washed and bright orange | `ca-rot` |
+| `dau-ha-lan.jpg` | Đậu Hà Lan | fresh green pea pods (đậu Hà Lan), some split open to show the round sweet peas | — |
+| `sua-de-tuoi.jpg` | Sữa dê tươi | glass bottles of fresh pasteurised goat milk (sữa dê tươi) with a small glass poured beside them | `sua-tuoi-thanh-trung` |
+| `sua-chua-de.jpg` | Sữa chua dê | small glass jars of plain goat-milk yogurt (sữa chua dê), one open with a wooden spoon | `sua-chua-nha-lam` |
+| `pho-mai-de.jpg` | Phô mai dê | a small round of fresh white goat cheese (phô mai dê) with a slice cut, herbs beside it | `pho-mai-tuoi` |
+| `kho-ca-loc.jpg` | Khô cá lóc | split sun-dried snakehead fish (khô cá lóc) with golden flesh, laid flat on a woven tray | — |
+| `kho-ca-sac.jpg` | Khô cá sặc | small whole sun-dried snakeskin gourami (khô cá sặc) with silvery skin, fanned out on a bamboo tray | — |
+| `mam-ca-linh.jpg` | Mắm cá linh | a glass jar of Mekong fermented linh fish (mắm cá linh) in brown brine, with sliced chilies | — |
+| `tom-kho.jpg` | Tôm khô | bright orange-red dried shrimp (tôm khô Cà Mau) in a small bamboo basket and scattered on the table | — |
