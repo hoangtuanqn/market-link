@@ -5,9 +5,7 @@
     "fullName": "Nombre completo",
     "phone": "Número de teléfono",
     "email": "Correo electrónico",
-    "emailHint": "Para iniciar sesión y recibir avisos de pedidos.",
-    "address": "Dirección",
-    "addressPlaceholder": "Calle, barrio, distrito",
+    "emailHint": "Para iniciar sesión y recibir avisos de pedidos. Le enviamos un código para confirmar que es tuyo.",
     "password": "Contraseña",
     "passwordHint": "De {{min}} a {{max}} caracteres.",
     "confirmPassword": "Repite la contraseña"
@@ -21,8 +19,8 @@
   "haveAccount": "Ya tengo una cuenta",
   "acceptFirst": "Acepta los términos para crear tu cuenta.",
   "sharedAccount": "Una cuenta se puede compartir en familia; el sistema no distingue a las personas dentro de una cuenta.",
+  "honeypot": "Deja este campo vacío",
   "toast": {
-    "created": "Cuenta creada.",
     "failed": "No se pudo crear tu cuenta. Inténtalo de nuevo."
   },
   "errors": {
@@ -33,11 +31,11 @@
     "emailRequired": "Escribe tu correo.",
     "emailInvalid": "Escribe un correo electrónico válido.",
     "emailMax": "El correo puede tener como máximo {{max}} caracteres.",
-    "addressRequired": "Escribe tu dirección.",
-    "addressMax": "La dirección puede tener como máximo {{max}} caracteres.",
     "passwordRequired": "Escribe tu contraseña.",
     "passwordLength": "La contraseña debe tener de {{min}} a {{max}} caracteres.",
     "confirmRequired": "Confirma tu contraseña.",
-    "confirmMismatch": "Las contraseñas no coinciden."
+    "confirmMismatch": "Las contraseñas no coinciden.",
+    "tooMany_one": "Se pidieron demasiados códigos para esta dirección o red. Inténtalo de nuevo en {{count}} minuto.",
+    "tooMany_other": "Se pidieron demasiados códigos para esta dirección o red. Inténtalo de nuevo en {{count}} minutos."
   }
 }

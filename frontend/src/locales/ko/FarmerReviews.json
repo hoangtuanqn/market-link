@@ -1,7 +1,7 @@
 {
   "title": "리뷰",
   "intro": "주문을 받아 간 고객들이 남긴 말이에요. 짧은 답글도 큰 도움이 돼요. 특히 낮은 평점에는 꼭 답해 주세요.",
-  "summary": "매대 {{stall}} · 상품 {{products}} · {{reviews}}",
+  "summary": "매대 {{stall}} · {{reviews}}",
   "reviewCount_one": "리뷰 {{count}}개",
   "reviewCount_other": "리뷰 {{count}}개",
   "noun": "reviews",
@@ -29,5 +29,29 @@
     "title": "아직 리뷰가 없어요",
     "text": "주문이 완료되면 고객이 매대와 구매한 상품을 리뷰할 수 있어요(D-10)."
   },
-  "note": "매대는 리뷰를 삭제할 수 없어요. 가이드라인을 어긴 리뷰는 신고하면 관리자가 판단해요(FR-074)."
+  "note": "매대는 리뷰를 삭제할 수 없어요. 가이드라인을 어긴 리뷰는 신고하면 관리자가 판단해요(FR-074).",
+  "tabs": {
+    "label": "리뷰와 손상 신고",
+    "reviews": "리뷰",
+    "spoiled": "손상 신고"
+  },
+  "spoiled": {
+    "intro": "고객은 수령 직후 상한 농산물을 신고할 수 있어요. 아는 내용을 답변해 주세요. 판단은 관리자가 해요.",
+    "noun": "손상 신고",
+    "emptyTitle": "손상 신고가 아직 없어요",
+    "emptyText": "고객이 매대의 주문 상품이 상했다고 신고하면 여기에 표시되어 답변할 수 있어요.",
+    "line": "주문 {{code}} · {{customer}}",
+    "dates": "수령 {{pickup}} · 유통기한 {{bestBefore}} · 상한 날 {{spoiled}} ({{when}})",
+    "photoAlt": "고객이 보낸 사진",
+    "replyLabel": "관리자에게 보낼 답변",
+    "replyPlaceholder": "어떻게 보관했는지, 포장할 때 무엇을 봤는지 적어 주세요.",
+    "save": "답변 저장",
+    "saved": "답변을 저장했어요.",
+    "yourReply": "당신의 답변: {{text}}",
+    "decisionNote": "관리자 메모: {{text}}",
+    "alreadyDecided": "이 신고는 이미 관리자가 판단했어요.",
+    "strikesText": "연장된 유통기한 상품에서 확인된 신고는 위반 1회예요. 90일 동안 위반이 3회면 연장이 잠겨요.",
+    "lockTitle": "{{date}}까지 유통기한 연장이 잠겼어요",
+    "lockText": "그때까지 상품은 권장 유통기한만 사용할 수 있어요."
+  }
 }

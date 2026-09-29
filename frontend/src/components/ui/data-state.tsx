@@ -15,20 +15,23 @@ type DataStateProps = {
    * the only thing in the content area — an empty list filling the whole page reads better than a small box.
    */
   fill?: boolean;
+  /** Explicitly centres the block contents and text. */
+  center?: boolean;
   className?: string;
 };
 
 /** A block's empty or error state (design system `.ml-state`, FR-084). */
-export function DataState({ variant = 'empty', title, text, action, fill, className }: DataStateProps) {
+export function DataState({ variant = 'empty', title, text, action, fill, center, className }: DataStateProps) {
   const error = variant === 'error';
+  const isCentered = fill || center;
   return (
     <div
       role={error ? 'alert' : undefined}
       className={Helper.cn(
         'flex flex-col gap-2 rounded-md p-6',
-        fill
-          ? 'min-h-80 w-full flex-1 items-center justify-center text-center'
-          : 'max-w-105 min-w-65 flex-1 items-start',
+        fill && 'min-h-80 w-full flex-1',
+        !fill && !className?.includes('max-w-') && !className?.includes('w-') && 'max-w-105 min-w-65 flex-1',
+        isCentered ? 'items-center justify-center text-center' : 'items-start text-left',
         error ? 'bg-danger-bg border-danger border-[1.5px]' : 'border-line-strong border-[1.5px] border-dashed',
         className,
       )}
@@ -36,12 +39,17 @@ export function DataState({ variant = 'empty', title, text, action, fill, classN
       <h3
         className={Helper.cn(
           'm-0 text-[17px] leading-tight font-bold',
+          isCentered && 'text-center',
           error ? 'text-danger' : 'font-hand text-[23px] leading-[1.15] font-normal',
         )}
       >
         {title}
       </h3>
-      <p className={Helper.cn('m-0 text-[14px]', error ? 'text-danger' : 'text-ink-muted')}>{text}</p>
+      <p
+        className={Helper.cn('m-0 text-[14px]', isCentered && 'text-center', error ? 'text-danger' : 'text-ink-muted')}
+      >
+        {text}
+      </p>
       {action}
     </div>
   );
@@ -88,7 +96,7 @@ export function LoadError({ noun, alt, onRetry, className }: LoadErrorProps) {
         <Trans
           t={t}
           i18nKey={alt ? 'loadError.helpAlt' : 'loadError.help'}
-          components={{ alt: <Slot node={alt} />, link: <Link to="/feedback" /> }}
+          components={{ alt: <Slot node={alt} />, a: <Link to="/feedback" /> }}
         />
       </p>
     </div>

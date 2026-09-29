@@ -1,8 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
-import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import MarketMap, { type MapMarker } from '@/components/MarketMap';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { DataState, LoadError } from '@/components/ui/data-state';
@@ -14,6 +13,7 @@ import { dayList, formatClock } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import MarketTableSkeleton from './MarketTableSkeleton';
 
 /** Contract §3 caps a page at 50; every market of the city fits in one call. */
 const FETCH_SIZE = 50;
@@ -28,6 +28,15 @@ const AdminMarketsPage = () => {
   const { t: tc } = useTranslation();
   const [removing, setRemoving] = useState<MarketType | null>(null);
   const [busy, setBusy] = useState(false);
+  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
+
+  useEffect(() => {
+    if (import.meta.env.MODE === 'test') return;
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const {
     state: load,
@@ -37,6 +46,7 @@ const AdminMarketsPage = () => {
     CatalogApi.listMarkets({ pageSize: FETCH_SIZE }).then((result) => result.items),
   );
   const markets = load.kind === 'ready' ? load.data : NO_MARKETS;
+  const showSkeleton = load.kind === 'loading' || initialLoading;
 
   const confirmRemove = async () => {
     if (!removing) return;
@@ -121,35 +131,39 @@ const AdminMarketsPage = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
         <ButtonLink to={`${ADMIN_MARKETS_PATH}/new`}>{t('action.add')}</ButtonLink>
       </div>
 
-      {load.kind === 'loading' ? (
-        <MarketCardSkeleton count={3} />
-      ) : load.kind === 'error' ? (
-        <LoadError noun={t('error.noun')} onRetry={retry} />
-      ) : markets.length ? (
-        <Table caption={t('caption', { count: markets.length })} columns={columns} rows={markets} />
+      {showSkeleton ? (
+        <MarketTableSkeleton />
       ) : (
-        <DataState fill title={t('empty.title')} text={t('empty.text')} />
-      )}
+        <>
+          {load.kind === 'error' ? (
+            <LoadError noun={t('error.noun')} onRetry={retry} />
+          ) : markets.length ? (
+            <Table caption={t('caption', { count: markets.length })} columns={columns} rows={markets} />
+          ) : (
+            <DataState fill title={t('empty.title')} text={t('empty.text')} />
+          )}
 
-      <section className="flex flex-col gap-3">
-        <h2 className="text-h3">{t('map.title')}</h2>
-        {markets.length ? (
-          <MarketMap label={t('map.label')} markers={markers} className="min-h-100" scrollWheelZoom={false} />
-        ) : (
-          <DataState
-            fill
-            title={t('map.empty.title')}
-            text={t('map.empty.text')}
-            action={<ButtonLink to={`${ADMIN_MARKETS_PATH}/new`}>{t('action.add')}</ButtonLink>}
-          />
-        )}
-      </section>
+          <section className="flex flex-col gap-3">
+            <h2 className="text-h3">{t('map.title')}</h2>
+            {markets.length ? (
+              <MarketMap label={t('map.label')} markers={markers} className="min-h-100" scrollWheelZoom={false} />
+            ) : (
+              <DataState
+                fill
+                title={t('map.empty.title')}
+                text={t('map.empty.text')}
+                action={<ButtonLink to={`${ADMIN_MARKETS_PATH}/new`}>{t('action.add')}</ButtonLink>}
+              />
+            )}
+          </section>
+        </>
+      )}
 
       <Dialog
         open={removing !== null}

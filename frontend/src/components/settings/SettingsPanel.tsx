@@ -8,7 +8,7 @@ import NotificationSettingsCard from '@/components/notifications/NotificationSet
 import { Card } from '@/components/ui/card';
 import { SelectField } from '@/components/ui/input';
 import useSettings from '@/hooks/useSettings';
-import { formatDate, formatTime, vnd } from '@/lib/format';
+import { formatDate, formatTime, money } from '@/lib/format';
 import SettingsStore, { LANGUAGES, type Settings, type Theme } from '@/lib/settings';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -16,12 +16,12 @@ import Notification from '@/utils/notification';
 export type SettingsRole = 'customer' | 'farmer' | 'admin';
 
 const SAMPLE_DATE = new Date(2026, 11, 31, 19, 0);
-const SAMPLE_PRICE = 45000;
+const SAMPLE_PRICE = 1.8;
 
 type SettingsPanelProps = {
   /** The page's role (pages still pass it; the notification categories now come from the API by role on the server). */
   role: SettingsRole;
-  /** A role's own block (Shopping / Selling defaults / Platform defaults), reads and edits the draft's extras. */
+  /** A role's own block (Shopping / Platform defaults), reads and edits the draft's extras. */
   children?: (draft: Settings, set: (patch: Partial<Settings>) => void) => ReactNode;
 };
 
@@ -53,6 +53,8 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
       SettingsStore.set(response.data ?? draft);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, t('settings.saveError')) });
+    } finally {
+      // A save that changes neither language nor format does not remount the page, so the button must reset here
       setSaving(false);
     }
   };
@@ -60,7 +62,7 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
   return (
     <div className="flex flex-col gap-6">
       <Card as="section" aria-labelledby="set-appearance" className="flex flex-col gap-4 p-6">
-        <h2 id="set-appearance" className="text-h3">
+        <h2 id="set-appearance" className="text-h3 text-ink font-bold">
           {t('settings.appearance')}
         </h2>
         <ul className="m-0 flex flex-col p-0">
@@ -85,7 +87,7 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
       </Card>
 
       <Card as="section" aria-labelledby="set-format" className="flex flex-col gap-4 p-6">
-        <h2 id="set-format" className="text-h3">
+        <h2 id="set-format" className="text-h3 text-ink font-bold">
           {t('settings.format')}
         </h2>
         <ul className="m-0 flex flex-col p-0">
@@ -135,7 +137,7 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
           {t('settings.preview', {
             date: withDraft(draft, () => formatDate(SAMPLE_DATE)),
             time: withDraft(draft, () => formatTime(SAMPLE_DATE)),
-            price: withDraft(draft, () => vnd(SAMPLE_PRICE)),
+            price: withDraft(draft, () => money(SAMPLE_PRICE)),
           })}
         </p>
       </Card>

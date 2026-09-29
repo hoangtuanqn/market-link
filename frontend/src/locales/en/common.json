@@ -11,14 +11,6 @@
     "language": "Language",
     "languageNote": "The language of menus, buttons and messages. Stall, product and place names stay as the stall wrote them.",
     "format": "Money, dates and units",
-    "currency": "Show prices in",
-    "currencyNote": "You always pay in Vietnamese đồng at the stall. Another currency is shown next to it for reading only, at fixed rates from {{date}}.",
-    "currencies": {
-      "VND": "₫ Vietnamese đồng only",
-      "USD": "₫ and $ US dollar",
-      "EUR": "₫ and € euro",
-      "JPY": "₫ and ¥ Japanese yen"
-    },
     "units": "Weights and volumes",
     "unitsNote": "Only converts units that measure something. A stall that sells by the bunch, the bulb or the tray keeps its own word.",
     "metric": "Metric · kg, g, litre",
@@ -53,15 +45,20 @@
     "orderOf": "Order {{index}} of {{of}}",
     "payAtPickup": "Pay at the stall on pickup"
   },
-  "chart": {
-    "showNumbers": "Show the numbers"
-  },
   "chat": {
     "assistant": "MarketLink assistant",
     "you": "You",
     "intent": "Intent: {{intent}}",
     "photoUnavailable": "This photo is not available.",
+    "previewPhoto": "Photo",
+    "previewVideo": "Video",
     "photoFrom": "Photo from {{name}}",
+    "videoFrom": "Video from {{name}}",
+    "playVideo": "Play video",
+    "loadingVideo": "Loading the video…",
+    "videoUnavailable": "This video is not available.",
+    "videoCantPlay": "This video cannot be played in this browser.",
+    "downloadVideo": "Download the video",
     "seen": "Seen",
     "loadingThreads": "Loading conversations…",
     "threadsErrorTitle": "We could not load your conversations",
@@ -72,8 +69,8 @@
     "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "{{count}} unread messages",
     "sendFailed": "Your message was not sent. Try again.",
-    "photoFailed": "The photo was not sent. Choose a JPEG, PNG or WebP under 5 MB.",
-    "attachPhoto": "Add a photo",
+    "mediaFailed": "The file was not sent. Choose a photo or a video under 50 MB.",
+    "attachMedia": "Add a photo or video",
     "draftLabel": "Write a message",
     "draftPlaceholder": "Write a message",
     "send": "Send",
@@ -101,8 +98,14 @@
     "unpin": "Remove",
     "productGone": "This product is no longer listed.",
     "tooFast": "You are sending too fast. Wait a moment and try again.",
-    "photoTooBig": "That photo is over 5 MB. Choose a smaller one.",
-    "photoType": "Choose a JPEG, PNG or WebP photo.",
+    "mediaTooBig": "That file is over 50 MB. Choose a smaller one.",
+    "mediaTooBigForServer": "That file is larger than the server accepts right now. Choose a smaller one.",
+    "mediaType": "Choose a photo (JPEG, PNG, WebP, GIF, AVIF or HEIC) or a video (MP4, MOV or WebM).",
+    "converting": "Converting the photo…",
+    "convertFailed": "This photo could not be converted. Save it as a JPEG and try again.",
+    "uploading": "Sending… {{percent}}%",
+    "uploadProgress": "Upload progress",
+    "cancelUpload": "Cancel",
     "moreThreads": "Load more conversations",
     "reportTitle": "Report this message",
     "reportWhy": "Why are you reporting it?",
@@ -132,6 +135,20 @@
   "errors": {
     "network": "Could not reach the server. Check your connection and try again."
   },
+  "accountDeactivated": {
+    "title": "Your account has been deactivated",
+    "generic": "An administrator deactivated this account, so you have been signed out.",
+    "whatNow": "You can still browse markets and produce as a visitor, but you cannot sign in or place orders while this is in effect.",
+    "contactIntro": "If you believe this is a mistake, contact us at",
+    "acknowledge": "I understand"
+  },
+  "stallSuspended": {
+    "title": "Your stall is suspended",
+    "generic": "An administrator suspended this stall, so it is hidden from customers for now.",
+    "whatNow": "Orders customers already placed still run to the end — please complete them. You cannot list produce, change stock or take new orders until the suspension is lifted.",
+    "contactIntro": "If you believe this is a mistake, contact us at",
+    "acknowledge": "I understand"
+  },
   "farmerNav": {
     "sections": "Sections",
     "navigation": "Farmer navigation",
@@ -141,17 +158,15 @@
     "collapse": "Collapse the sidebar",
     "approvedMarkets_one": "Approved · {{count}} market",
     "approvedMarkets_other": "Approved · {{count}} markets",
-    "changeMarket": "Change which market you are looking at",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Open navigation",
-    "searchPlaceholder": "Order code or customer",
     "yourAccount": "Your account",
     "today": "Today",
     "overview": "Overview",
-    "incomingOrders": "Incoming orders",
+    "incomingOrders": "Orders",
     "pickupSlots": "Pickup slots",
     "stock": "Stock",
-    "weekStock": "This week's stock",
+    "weekStock": "Weekly template",
     "products": "Products",
     "stall": "Stall",
     "stallPickup": "Stall & pickup",
@@ -171,6 +186,7 @@
     "shop": "Shop",
     "marketsNearYou": "Markets near you",
     "inSeason": "In season",
+    "deals": "Near-expiry deals",
     "marketMap": "Market map",
     "favoriteStalls": "Favorite stalls",
     "sell": "Sell",
@@ -187,6 +203,11 @@
     "mapDataFrom": "Map data {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Good morning",
+      "afternoon": "Good afternoon",
+      "evening": "Good evening"
+    },
     "cart": "Cart",
     "cartItems_one": "Cart, {{count}} item",
     "cartItems_other": "Cart, {{count}} items",
@@ -210,8 +231,8 @@
   "loadError": {
     "title": "We could not load the {{noun}}",
     "text": "The list did not come back this time. Nothing you saved or ordered is affected.",
-    "help": "This is usually the connection rather than anything you did. If trying again does not help, <link>tell us what happened</link> and we will look into it.",
-    "helpAlt": "This is usually the connection rather than anything you did. If trying again does not help, <alt />, or <link>tell us what happened</link> and we will look into it."
+    "help": "This is usually the connection rather than anything you did. If trying again does not help, <a>tell us what happened</a> and we will look into it.",
+    "helpAlt": "This is usually the connection rather than anything you did. If trying again does not help, <alt />, or <a>tell us what happened</a> and we will look into it."
   },
   "loading": {
     "markets": "Loading markets"
@@ -243,6 +264,7 @@
   "nav": {
     "markets": "Markets",
     "products": "Products",
+    "deals": "Deals",
     "map": "Map",
     "aboutUs": "About us",
     "myOrders": "My orders",
@@ -299,24 +321,16 @@
     "show": "Show password",
     "hide": "Hide password"
   },
-  "period": {
-    "length": "Period length",
-    "day": "Day",
-    "week": "Week",
-    "month": "Month",
-    "quarter": "Quarter",
-    "year": "Year",
-    "custom": "Custom",
-    "from": "From",
-    "to": "To",
-    "compareWith": "Compare with",
-    "cmpBefore": "The period before, same length",
-    "cmpLastYear": "The same period last year",
-    "cmpNone": "No comparison",
-    "comparedWith": "compared with <b>{{compare}}</b>, the same length"
-  },
   "price": {
     "was": "Was"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "Pick up {{day}} · good until end of {{until}} · {{qty}} left",
+    "added": {
+      "title": "Added to cart",
+      "text": "{{name}} at the deal price, for pickup on {{day}}."
+    }
   },
   "product": {
     "notThisWeek": "Not this week",
@@ -382,12 +396,9 @@
     "fullNameRequired": "Enter your full name.",
     "fullNameMax": "Full name can be at most {{max}} characters.",
     "phoneRequired": "Enter your phone number.",
-    "phoneInvalid": "Enter a valid Vietnamese mobile number (10 digits).",
-    "addressRequired": "Enter your address.",
-    "addressMax": "Address can be at most {{max}} characters."
+    "phoneInvalid": "Enter a valid Vietnamese mobile number (10 digits)."
   },
   "adminNav": {
-    "sections": "Admin sections",
     "overview": "Overview",
     "farmers": "Farmers",
     "customers": "Customers",
@@ -398,6 +409,7 @@
     "categories": "Categories",
     "announcements": "Announcements",
     "feedback": "Feedback",
+    "notifications": "Notifications",
     "settings": "Settings",
     "account": "Your account",
     "analytics": "Analytics",
@@ -407,18 +419,7 @@
     "navigation": "Admin navigation",
     "home": "MarketLink — Admin overview",
     "contextSub": "Platform · whole marketplace",
-    "userLine": "Admin · whole platform",
-    "searchPlaceholder": "Stall, customer or market"
-  },
-  "carousel": {
-    "roleCarousel": "carousel",
-    "roleSlide": "slide",
-    "slideOf": "{{n}} of {{total}}: {{topic}}",
-    "previous": "Previous slide",
-    "next": "Next slide",
-    "show": "Show slide {{n}}: {{topic}}",
-    "pause": "Pause the slideshow",
-    "play": "Play the slideshow"
+    "userLine": "Admin · whole platform"
   },
   "geo": {
     "denied": "You turned location off for this site. Change it in your browser’s site settings, or use an address instead.",
@@ -435,8 +436,8 @@
     "address": "An address",
     "addressNote": "A street or a landmark in Ho Chi Minh City.",
     "addressLabel": "Starting address",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "Street and district work best. House numbers are often missing from the map, and OpenStreetMap will ask you to pick a place when it cannot find one.",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "Street and ward work best. House numbers are often missing from the map, and OpenStreetMap will ask you to pick a place when it cannot find one.",
     "useSaved": "Use my saved address",
     "none": "I will type it on the map",
     "noneNote": "Opens OpenStreetMap with only the destination filled in.",
@@ -504,9 +505,25 @@
           "title": "Your stall application",
           "note": "When it is approved, declined, suspended or reopened"
         },
+        "orders": {
+          "title": "Orders",
+          "note": "When an order you placed or received changes status"
+        },
+        "favorites": {
+          "title": "Favorites",
+          "note": "When a product you saved is back in stock"
+        },
         "farmerApplications": {
           "title": "Farmer applications",
           "note": "When someone applies to sell on MarketLink"
+        },
+        "feedback": {
+          "title": "Feedback",
+          "note": "When someone sends a bug report, a suggestion or a question"
+        },
+        "qualityReports": {
+          "title": "Spoiled produce reports",
+          "note": "When produce with an extended shelf life is reported spoiled before its date"
         }
       },
       "sound": "Play a sound",
@@ -563,13 +580,40 @@
     "result": {
       "product": "Product",
       "market": "Market",
-      "farmer": "Stall"
+      "farmer": "Stall",
+      "order": "Order"
     },
     "suggest": {
       "find": "Where can I buy tomatoes this weekend?",
       "hours": "When is Bến Thành market open?",
       "stalls": "Which stalls are at Thảo Điền on Saturday?",
       "cancel": "How do I cancel an order?"
+    },
+    "action": {
+      "confirm": "Confirm",
+      "openPage": "Open the page",
+      "done": "Done",
+      "doneTitle": "Done",
+      "failedTitle": "Not done",
+      "failedText": "The change was refused. Open the page to see why.",
+      "accept_order": "Accept order {{label}}?",
+      "decline_order": "Decline order {{label}}?",
+      "ready_order": "Mark order {{label}} ready?",
+      "complete_order": "Mark order {{label}} completed?",
+      "approve_farmer": "Approve {{label}}?",
+      "reject_farmer": "Reject {{label}}?",
+      "suspend_farmer": "Suspend {{label}}?"
+    },
+    "askAboutThis": "Ask the assistant",
+    "ask": {
+      "order": "Order {{code}}: what is in it, is it still before the cutoff, and should I accept it?",
+      "review": "Draft a short, honest reply to this {{rating}}-star review.",
+      "application": "Is this stall application complete, and is anything worth checking before I approve it?",
+      "reports": "Explain these numbers for {{from}} to {{to}}: which market is busiest, which one is quiet, and why.",
+      "cart": "Explain my cart: why is it split, what does each stall cost, and am I still in time for every cutoff?",
+      "announcement": "Draft a platform announcement. I will tell you what it is about.",
+      "product": "Write a short description and a hand-lettered tag note for {{name}}.",
+      "feedback": "Summarise the feedback inbox: what are people reporting, which messages are really the same problem, and what should I look at first?"
     }
   },
   "tour": {
@@ -648,8 +692,8 @@
         "body": "Set the time windows when customers can collect their orders at your stall."
       },
       "farmerStock": {
-        "title": "This week's stock",
-        "body": "Update how much of each product you can sell this week."
+        "title": "Weekly stock template",
+        "body": "Set how much of each product you usually bring on each weekday. It refills on its own every week."
       },
       "farmerProducts": {
         "title": "Products",
@@ -677,16 +721,132 @@
       },
       "farmerSettings": {
         "title": "Settings",
-        "body": "Change language, currency and your selling defaults."
+        "body": "Change the theme, language, date and unit formats, and your notifications."
       },
       "farmerDone": {
         "title": "Your stall is ready",
-        "body": "Start by checking this week's stock and your pickup slots."
+        "body": "Start by checking your weekly stock template and your pickup slots."
       },
       "dashboardMenu": {
         "title": "Menu",
         "body": "Open the menu to reach every section of the panel."
       }
     }
+  },
+  "address": {
+    "legend": "Address",
+    "country": "Country",
+    "province": "Province or city",
+    "ward": "Ward or commune",
+    "street": "Street",
+    "addressLine": "House number and details",
+    "addressLineOptional": "House number (if any)",
+    "addressLinePlaceholder": "12, or 12/3A",
+    "region": "State or province",
+    "city": "City",
+    "choose": {
+      "country": "Choose a country",
+      "province": "Choose a province or city",
+      "ward": "Choose a ward or commune"
+    },
+    "wardNeedsProvince": "Choose the province first.",
+    "loading": "Loading…",
+    "loadFailed": "Could not load this list.",
+    "retry": "Try again",
+    "streetPlaceholder": "Start typing, e.g. Lê Lợi",
+    "streetHint": "Pick a suggestion, or keep what you typed if your street is not listed.",
+    "useTyped": "Use “{{text}}”",
+    "noSuggestions": "No suggestions — what you typed will be used.",
+    "suggestions": "Street suggestions",
+    "current": "Current address: {{address}}. Choose it again below to save changes.",
+    "vietnamOnly": "Markets are in Vietnam.",
+    "errors": {
+      "countryRequired": "Choose a country.",
+      "provinceRequired": "Choose a province or city.",
+      "wardRequired": "Choose a ward or commune.",
+      "streetRequired": "Enter the street.",
+      "lineRequired": "Enter the house number and details.",
+      "regionRequired": "Enter the state or province.",
+      "cityRequired": "Enter the city.",
+      "tooLong": "Keep this under {{max}} characters."
+    }
+  },
+  "reasons": {
+    "pick": "Pick one or more",
+    "note": "Anything to add",
+    "noteOptional": "Anything to add (optional)",
+    "preview": "They will read: “{{text}}”",
+    "length": "{{used}} of {{max}} characters.",
+    "reject": {
+      "incompleteInfo": "Your stall details are incomplete",
+      "unclearPhotos": "The photos are unclear or not of your farm",
+      "unreachable": "We could not reach you on your phone number",
+      "notFarmProduce": "What you plan to sell is not farm produce",
+      "duplicate": "This stall is already registered"
+    },
+    "suspend": {
+      "complaints": "Repeated complaints from customers",
+      "notAsDescribed": "Produce did not match its listing",
+      "missedPickups": "The stall was not there at pickup time",
+      "rulesBroken": "The platform rules were broken",
+      "ownerRequest": "At the stall owner’s request",
+      "shelfLifeViolations": "Shelf-life violations"
+    },
+    "deactivate": {
+      "noShows": "Repeatedly ordered and did not collect",
+      "abusiveMessages": "Abusive or spam messages",
+      "fakeAccount": "Fake or duplicate account",
+      "fakeReviews": "Fake reviews",
+      "ownerRequest": "At the account owner’s request"
+    }
+  },
+  "cookieConsent": {
+    "label": "Cookie notice",
+    "text": "We use essential cookies to keep you signed in and your cart working. We set no advertising or analytics cookies. <a>Privacy policy</a>.",
+    "decline": "Decline",
+    "accept": "Accept"
+  },
+  "banDuration": {
+    "label": "Duration",
+    "permanent": "Permanent",
+    "temporary": "Temporary",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "specificTime": "Or pick an exact end time"
+  },
+  "storageMode": {
+    "room": "Room temperature",
+    "chilled": "Fridge 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Good until end of {{day}} · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "Bruised or crushed",
+      "mold": "Mold",
+      "smell": "Smells off",
+      "wilted": "Wilted or dried out",
+      "other": "Something else"
+    },
+    "problemWithNote": "{{problem}} · “{{note}}”",
+    "status": {
+      "open": "Waiting for a decision",
+      "confirmed": "Confirmed by an admin",
+      "dismissed": "Not the stall's fault"
+    },
+    "extended_one": "Extended +{{count}} day",
+    "extended_other": "Extended +{{count}} days",
+    "beforePromise": "before its date",
+    "afterPromise": "after its date",
+    "strikes": "Shelf-life strikes: {{count}} of {{limit}} in {{days}} days"
+  },
+  "gallery": {
+    "label": "Photos of {{name}}",
+    "previous": "Previous photo",
+    "next": "Next photo",
+    "goTo": "Go to photo {{n}}",
+    "slide": "{{n}} of {{total}}",
+    "photoAlt": "{{name}}, photo {{n}}"
   }
 }

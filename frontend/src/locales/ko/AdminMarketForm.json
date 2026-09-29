@@ -3,7 +3,6 @@
   "crumbNew": "추가",
   "crumbEdit": "수정",
   "titleNew": "새 장터",
-  "city": "호찌민시",
   "metaStalls": "가게 {{stalls}}개",
   "missing": {
     "title": "이 장터는 더 이상 없습니다",
@@ -11,16 +10,12 @@
   },
   "field": {
     "name": "장터 이름",
-    "address": "주소",
-    "district": "구",
-    "city": "도시",
     "days": "여는 요일",
     "open": "여는 시각",
     "close": "닫는 시각",
     "lat": "위도",
     "lng": "경도",
     "lngHint": "핀을 끌어도 됩니다. 지도 데이터는 OpenStreetMap입니다.",
-    "notes": "가게에 남기는 메모",
     "images": "사진"
   },
   "images": {
@@ -59,7 +54,6 @@
     "announced": "공지 완료",
     "notYet": "아직",
     "noneYet": "아직 없음",
-    "noReason": "기재 없음",
     "byAdminToday": "관리자 · 오늘",
     "col": {
       "date": "날짜",

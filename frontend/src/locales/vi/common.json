@@ -11,14 +11,6 @@
     "language": "Ngôn ngữ",
     "languageNote": "Ngôn ngữ của menu, nút và thông báo. Tên sạp, sản phẩm và địa điểm giữ nguyên như sạp đã viết.",
     "format": "Tiền, ngày và đơn vị",
-    "currency": "Hiển thị giá bằng",
-    "currencyNote": "Bạn luôn trả bằng đồng Việt Nam tại sạp. Tiền tệ khác chỉ hiện bên cạnh để tham khảo, theo tỷ giá cố định ngày {{date}}.",
-    "currencies": {
-      "VND": "Chỉ ₫ đồng Việt Nam",
-      "USD": "₫ và $ đô la Mỹ",
-      "EUR": "₫ và € euro",
-      "JPY": "₫ và ¥ yên Nhật"
-    },
     "units": "Khối lượng và thể tích",
     "unitsNote": "Chỉ đổi những đơn vị đo lường. Sạp bán theo bó, theo củ hay theo khay thì giữ nguyên cách gọi của sạp.",
     "metric": "Hệ mét · kg, g, lít",
@@ -53,15 +45,20 @@
     "orderOf": "Đơn {{index}} / {{of}}",
     "payAtPickup": "Trả tiền tại sạp khi nhận hàng"
   },
-  "chart": {
-    "showNumbers": "Xem số liệu"
-  },
   "chat": {
     "assistant": "Trợ lý MarketLink",
     "you": "Bạn",
     "intent": "Ý định: {{intent}}",
     "photoUnavailable": "Không xem được ảnh này.",
+    "previewPhoto": "Ảnh",
+    "previewVideo": "Video",
     "photoFrom": "Ảnh của {{name}}",
+    "videoFrom": "Video của {{name}}",
+    "playVideo": "Phát video",
+    "loadingVideo": "Đang tải video…",
+    "videoUnavailable": "Video này không còn xem được.",
+    "videoCantPlay": "Trình duyệt này không phát được video này.",
+    "downloadVideo": "Tải video về",
     "seen": "Đã xem",
     "loadingThreads": "Đang tải cuộc trò chuyện…",
     "threadsErrorTitle": "Không tải được danh sách trò chuyện",
@@ -72,8 +69,8 @@
     "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "{{count}} tin chưa đọc",
     "sendFailed": "Tin nhắn chưa gửi được. Thử lại nhé.",
-    "photoFailed": "Ảnh chưa gửi được. Chọn ảnh JPEG, PNG hoặc WebP dưới 5 MB.",
-    "attachPhoto": "Thêm ảnh",
+    "mediaFailed": "Chưa gửi được tệp. Chọn ảnh hoặc video dưới 50 MB.",
+    "attachMedia": "Thêm ảnh hoặc video",
     "draftLabel": "Viết tin nhắn",
     "draftPlaceholder": "Viết tin nhắn",
     "send": "Gửi",
@@ -101,8 +98,14 @@
     "unpin": "Bỏ ghim",
     "productGone": "Sản phẩm này không còn được bán.",
     "tooFast": "Bạn gửi nhanh quá. Đợi một chút rồi thử lại.",
-    "photoTooBig": "Ảnh lớn hơn 5 MB. Chọn ảnh nhỏ hơn.",
-    "photoType": "Chọn ảnh JPEG, PNG hoặc WebP.",
+    "mediaTooBig": "Tệp này lớn hơn 50 MB. Chọn tệp nhỏ hơn.",
+    "mediaTooBigForServer": "Tệp này lớn hơn mức máy chủ đang cho phép. Chọn tệp nhỏ hơn.",
+    "mediaType": "Chọn ảnh (JPEG, PNG, WebP, GIF, AVIF hoặc HEIC) hoặc video (MP4, MOV hoặc WebM).",
+    "converting": "Đang chuyển đổi ảnh…",
+    "convertFailed": "Không chuyển đổi được ảnh này. Lưu lại dạng JPEG rồi thử lại.",
+    "uploading": "Đang gửi… {{percent}}%",
+    "uploadProgress": "Tiến độ tải lên",
+    "cancelUpload": "Huỷ",
     "moreThreads": "Xem thêm cuộc trò chuyện",
     "reportTitle": "Báo cáo tin nhắn này",
     "reportWhy": "Vì sao bạn báo cáo?",
@@ -141,17 +144,15 @@
     "collapse": "Thu gọn thanh bên",
     "approvedMarkets_one": "Đã duyệt · {{count}} chợ",
     "approvedMarkets_other": "Đã duyệt · {{count}} chợ",
-    "changeMarket": "Đổi chợ đang xem",
     "roleStall": "Nhà vườn · {{stall}}",
     "openNavigation": "Mở điều hướng",
-    "searchPlaceholder": "Mã đơn hoặc tên khách",
     "yourAccount": "Tài khoản của bạn",
     "today": "Hôm nay",
     "overview": "Tổng quan",
-    "incomingOrders": "Đơn mới đến",
+    "incomingOrders": "Đơn hàng",
     "pickupSlots": "Khung giờ nhận hàng",
     "stock": "Hàng",
-    "weekStock": "Hàng tuần này",
+    "weekStock": "Mẫu hằng tuần",
     "products": "Sản phẩm",
     "stall": "Sạp",
     "stallPickup": "Sạp & nhận hàng",
@@ -171,6 +172,7 @@
     "shop": "Mua",
     "marketsNearYou": "Chợ gần bạn",
     "inSeason": "Đang vào mùa",
+    "deals": "Giảm giá sắp hết hạn",
     "marketMap": "Bản đồ chợ",
     "favoriteStalls": "Sạp yêu thích",
     "sell": "Bán",
@@ -187,6 +189,11 @@
     "mapDataFrom": "Dữ liệu bản đồ {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Chào buổi sáng",
+      "afternoon": "Chào buổi chiều",
+      "evening": "Chào buổi tối"
+    },
     "cart": "Giỏ hàng",
     "cartItems_one": "Giỏ hàng, {{count}} món",
     "cartItems_other": "Giỏ hàng, {{count}} món",
@@ -210,8 +217,8 @@
   "loadError": {
     "title": "Chưa tải được {{noun}}",
     "text": "Lần này danh sách chưa về. Những gì bạn đã lưu hoặc đã đặt không bị ảnh hưởng.",
-    "help": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <link>hãy cho chúng tôi biết chuyện gì xảy ra</link> và chúng tôi sẽ xem xét.",
-    "helpAlt": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <alt />, hoặc <link>cho chúng tôi biết chuyện gì xảy ra</link> và chúng tôi sẽ xem xét."
+    "help": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <a>hãy cho chúng tôi biết chuyện gì xảy ra</a> và chúng tôi sẽ xem xét.",
+    "helpAlt": "Thường là do kết nối chứ không phải do bạn. Nếu thử lại vẫn không được, <alt />, hoặc <a>cho chúng tôi biết chuyện gì xảy ra</a> và chúng tôi sẽ xem xét."
   },
   "loading": {
     "markets": "Đang tải danh sách chợ"
@@ -243,6 +250,7 @@
   "nav": {
     "markets": "Chợ",
     "products": "Sản phẩm",
+    "deals": "Giảm giá",
     "map": "Bản đồ",
     "aboutUs": "Về chúng tôi",
     "myOrders": "Đơn của tôi",
@@ -299,24 +307,16 @@
     "show": "Hiện mật khẩu",
     "hide": "Ẩn mật khẩu"
   },
-  "period": {
-    "length": "Độ dài kỳ",
-    "day": "Ngày",
-    "week": "Tuần",
-    "month": "Tháng",
-    "quarter": "Quý",
-    "year": "Năm",
-    "custom": "Tuỳ chọn",
-    "from": "Từ",
-    "to": "Đến",
-    "compareWith": "So sánh với",
-    "cmpBefore": "Kỳ trước, cùng độ dài",
-    "cmpLastYear": "Cùng kỳ năm ngoái",
-    "cmpNone": "Không so sánh",
-    "comparedWith": "so với <b>{{compare}}</b>, cùng độ dài"
-  },
   "price": {
     "was": "Giá cũ"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "Nhận {{day}} · dùng tốt đến hết {{until}} · còn {{qty}}",
+    "added": {
+      "title": "Đã thêm vào giỏ",
+      "text": "{{name}} với giá giảm, nhận ngày {{day}}."
+    }
   },
   "product": {
     "notThisWeek": "Tuần này không bán",
@@ -382,12 +382,9 @@
     "fullNameRequired": "Nhập họ và tên của bạn.",
     "fullNameMax": "Họ và tên tối đa {{max}} ký tự.",
     "phoneRequired": "Nhập số điện thoại của bạn.",
-    "phoneInvalid": "Nhập số di động Việt Nam hợp lệ (10 chữ số).",
-    "addressRequired": "Nhập địa chỉ của bạn.",
-    "addressMax": "Địa chỉ tối đa {{max}} ký tự."
+    "phoneInvalid": "Nhập số di động Việt Nam hợp lệ (10 chữ số)."
   },
   "adminNav": {
-    "sections": "Các mục quản trị",
     "overview": "Tổng quan",
     "farmers": "Nhà vườn",
     "customers": "Khách hàng",
@@ -398,6 +395,7 @@
     "categories": "Danh mục",
     "announcements": "Thông báo",
     "feedback": "Góp ý",
+    "notifications": "Thông báo",
     "settings": "Cài đặt",
     "account": "Tài khoản của bạn",
     "analytics": "Phân tích",
@@ -407,18 +405,7 @@
     "navigation": "Điều hướng quản trị",
     "home": "MarketLink — Tổng quan quản trị",
     "contextSub": "Nền tảng · toàn bộ chợ",
-    "userLine": "Quản trị viên · toàn nền tảng",
-    "searchPlaceholder": "Sạp, khách hàng hoặc chợ"
-  },
-  "carousel": {
-    "roleCarousel": "băng trình chiếu",
-    "roleSlide": "trang chiếu",
-    "slideOf": "{{n}} / {{total}}: {{topic}}",
-    "previous": "Trang trước",
-    "next": "Trang sau",
-    "show": "Xem trang {{n}}: {{topic}}",
-    "pause": "Tạm dừng trình chiếu",
-    "play": "Phát trình chiếu"
+    "userLine": "Quản trị viên · toàn nền tảng"
   },
   "geo": {
     "denied": "Bạn đã tắt vị trí cho trang này. Hãy bật lại trong cài đặt trang web của trình duyệt, hoặc dùng một địa chỉ.",
@@ -435,8 +422,8 @@
     "address": "Một địa chỉ",
     "addressNote": "Một con đường hoặc địa danh ở TP. Hồ Chí Minh.",
     "addressLabel": "Địa chỉ xuất phát",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "Nhập tên đường và quận là tốt nhất. Bản đồ thường thiếu số nhà, và OpenStreetMap sẽ nhờ bạn chọn một địa điểm khi không tìm thấy.",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "Nhập tên đường và phường là tốt nhất. Bản đồ thường thiếu số nhà, và OpenStreetMap sẽ nhờ bạn chọn một địa điểm khi không tìm thấy.",
     "useSaved": "Dùng địa chỉ đã lưu",
     "none": "Tôi sẽ nhập trên bản đồ",
     "noneNote": "Mở OpenStreetMap với chỉ điểm đến được điền sẵn.",
@@ -504,9 +491,25 @@
           "title": "Đơn đăng ký sạp",
           "note": "Khi đơn được duyệt, bị từ chối, bị tạm khoá hoặc mở lại"
         },
+        "orders": {
+          "title": "Đơn hàng",
+          "note": "Khi đơn bạn đặt hoặc đơn sạp nhận được đổi trạng thái"
+        },
+        "favorites": {
+          "title": "Món yêu thích",
+          "note": "Khi món bạn đã lưu có hàng trở lại"
+        },
         "farmerApplications": {
           "title": "Đơn đăng ký nhà vườn",
           "note": "Khi có người đăng ký bán hàng trên MarketLink"
+        },
+        "feedback": {
+          "title": "Góp ý",
+          "note": "Khi có người gửi báo lỗi, đề xuất hoặc câu hỏi"
+        },
+        "qualityReports": {
+          "title": "Báo hàng hư",
+          "note": "Khi khách báo hư món có hạn dùng do sạp kéo dài, trước hạn đã hứa"
         }
       },
       "sound": "Phát âm thanh",
@@ -563,13 +566,40 @@
     "result": {
       "product": "Sản phẩm",
       "market": "Chợ",
-      "farmer": "Gian hàng"
+      "farmer": "Gian hàng",
+      "order": "Đơn hàng"
     },
     "suggest": {
       "find": "Cuối tuần này mua cà chua ở đâu?",
       "hours": "Chợ Bến Thành mở cửa mấy giờ?",
       "stalls": "Thứ 7 chợ Thảo Điền có gian hàng nào?",
       "cancel": "Làm sao để huỷ đơn hàng?"
+    },
+    "action": {
+      "confirm": "Xác nhận",
+      "openPage": "Mở trang",
+      "done": "Đã xong",
+      "doneTitle": "Đã xong",
+      "failedTitle": "Chưa thực hiện được",
+      "failedText": "Thay đổi bị từ chối. Mở trang để xem lý do.",
+      "accept_order": "Nhận đơn {{label}}?",
+      "decline_order": "Từ chối đơn {{label}}?",
+      "ready_order": "Đánh dấu đơn {{label}} sẵn sàng?",
+      "complete_order": "Đánh dấu đơn {{label}} hoàn tất?",
+      "approve_farmer": "Duyệt {{label}}?",
+      "reject_farmer": "Từ chối {{label}}?",
+      "suspend_farmer": "Tạm ngưng {{label}}?"
+    },
+    "askAboutThis": "Hỏi trợ lý",
+    "ask": {
+      "order": "Đơn {{code}}: có những gì, còn trước giờ chốt không, tôi có nên nhận không?",
+      "review": "Soạn giúp tôi một lời đáp ngắn và thành thật cho đánh giá {{rating}} sao này.",
+      "application": "Hồ sơ đăng ký sạp này đã đủ chưa, có gì đáng kiểm tra trước khi tôi duyệt không?",
+      "reports": "Giải thích giúp các số liệu từ {{from}} đến {{to}}: chợ nào đông nhất, chợ nào đang ế, và vì sao.",
+      "cart": "Giải thích giúp giỏ của tôi: vì sao bị tách, mỗi sạp hết bao nhiêu, tôi còn kịp giờ chốt của từng sạp không?",
+      "announcement": "Soạn giúp tôi một thông báo toàn sàn. Tôi sẽ nói nội dung.",
+      "product": "Viết giúp tôi mô tả ngắn và dòng chữ tay trên thẻ cho {{name}}.",
+      "feedback": "Tóm tắt hộp góp ý: mọi người đang báo gì, những mục nào thực ra cùng một vấn đề, và tôi nên xem cái nào trước?"
     }
   },
   "tour": {
@@ -648,8 +678,8 @@
         "body": "Đặt các khung giờ khách có thể đến gian hàng nhận đơn."
       },
       "farmerStock": {
-        "title": "Tồn kho tuần này",
-        "body": "Cập nhật số lượng mỗi sản phẩm bạn có thể bán trong tuần."
+        "title": "Mẫu hàng hằng tuần",
+        "body": "Đặt số lượng mỗi sản phẩm bạn thường mang đến vào từng ngày trong tuần. Mẫu tự làm đầy lại mỗi tuần."
       },
       "farmerProducts": {
         "title": "Sản phẩm",
@@ -677,16 +707,146 @@
       },
       "farmerSettings": {
         "title": "Cài đặt",
-        "body": "Đổi ngôn ngữ, tiền tệ và các mặc định bán hàng."
+        "body": "Đổi giao diện, ngôn ngữ, định dạng ngày và đơn vị, cùng các thông báo."
       },
       "farmerDone": {
         "title": "Gian hàng đã sẵn sàng",
-        "body": "Hãy bắt đầu bằng việc kiểm tra tồn kho tuần này và khung giờ nhận hàng."
+        "body": "Hãy bắt đầu bằng việc kiểm tra mẫu hằng tuần và khung giờ nhận hàng."
       },
       "dashboardMenu": {
         "title": "Menu",
         "body": "Mở menu để tới mọi mục của trang quản lý."
       }
     }
+  },
+  "address": {
+    "legend": "Địa chỉ",
+    "country": "Quốc gia",
+    "province": "Tỉnh / thành phố",
+    "ward": "Phường / xã",
+    "street": "Đường",
+    "addressLine": "Số nhà và chi tiết",
+    "addressLineOptional": "Số nhà (nếu có)",
+    "addressLinePlaceholder": "12, hoặc 12/3A",
+    "region": "Tỉnh / bang",
+    "city": "Thành phố",
+    "choose": {
+      "country": "Chọn quốc gia",
+      "province": "Chọn tỉnh / thành phố",
+      "ward": "Chọn phường / xã"
+    },
+    "wardNeedsProvince": "Chọn tỉnh / thành phố trước.",
+    "loading": "Đang tải…",
+    "loadFailed": "Không tải được danh sách này.",
+    "retry": "Thử lại",
+    "streetPlaceholder": "Gõ tên đường, ví dụ Lê Lợi",
+    "streetHint": "Chọn một gợi ý, hoặc giữ nguyên chữ đã gõ nếu đường của bạn không có trong danh sách.",
+    "useTyped": "Dùng “{{text}}”",
+    "noSuggestions": "Không có gợi ý — sẽ dùng đúng chữ bạn đã gõ.",
+    "suggestions": "Gợi ý tên đường",
+    "current": "Địa chỉ hiện tại: {{address}}. Chọn lại bên dưới để lưu thay đổi.",
+    "vietnamOnly": "Chợ phải ở Việt Nam.",
+    "errors": {
+      "countryRequired": "Chọn quốc gia.",
+      "provinceRequired": "Chọn tỉnh / thành phố.",
+      "wardRequired": "Chọn phường / xã.",
+      "streetRequired": "Nhập tên đường.",
+      "lineRequired": "Nhập số nhà và chi tiết.",
+      "regionRequired": "Nhập tỉnh / bang.",
+      "cityRequired": "Nhập thành phố.",
+      "tooLong": "Tối đa {{max}} ký tự."
+    }
+  },
+  "reasons": {
+    "pick": "Chọn một hoặc nhiều lý do",
+    "note": "Ghi thêm",
+    "noteOptional": "Ghi thêm (không bắt buộc)",
+    "preview": "Họ sẽ đọc: “{{text}}”",
+    "length": "{{used}}/{{max}} ký tự.",
+    "reject": {
+      "incompleteInfo": "Thông tin sạp chưa đầy đủ",
+      "unclearPhotos": "Ảnh không rõ hoặc không phải ảnh vườn của bạn",
+      "unreachable": "Chúng tôi không liên lạc được qua số điện thoại của bạn",
+      "notFarmProduce": "Mặt hàng định bán không phải nông sản",
+      "duplicate": "Sạp này đã được đăng ký"
+    },
+    "suspend": {
+      "complaints": "Khách khiếu nại nhiều lần",
+      "notAsDescribed": "Hàng không đúng như mô tả",
+      "missedPickups": "Sạp vắng mặt khi khách đến nhận hàng",
+      "rulesBroken": "Vi phạm quy định của nền tảng",
+      "ownerRequest": "Theo yêu cầu của chủ sạp",
+      "shelfLifeViolations": "Vi phạm hạn dùng"
+    },
+    "deactivate": {
+      "noShows": "Đặt hàng nhiều lần nhưng không đến nhận",
+      "abusiveMessages": "Nhắn tin xúc phạm hoặc spam",
+      "fakeAccount": "Tài khoản giả hoặc trùng lặp",
+      "fakeReviews": "Đánh giá gian lận",
+      "ownerRequest": "Theo yêu cầu của chủ tài khoản"
+    }
+  },
+  "cookieConsent": {
+    "label": "Thông báo cookie",
+    "text": "MarketLink dùng cookie thiết yếu để giữ bạn đăng nhập và giỏ hàng hoạt động. Không có cookie quảng cáo hay theo dõi nào. <a>Chính sách quyền riêng tư</a>.",
+    "decline": "Từ chối",
+    "accept": "Đồng ý"
+  },
+  "banDuration": {
+    "label": "Thời hạn",
+    "permanent": "Vĩnh viễn",
+    "temporary": "Tạm thời",
+    "days_one": "{{count}} ngày",
+    "days_other": "{{count}} ngày",
+    "specificTime": "Hoặc chọn một thời điểm cụ thể"
+  },
+  "accountDeactivated": {
+    "title": "Tài khoản của bạn đã bị vô hiệu hoá",
+    "generic": "Quản trị viên đã vô hiệu hoá tài khoản này, nên bạn đã bị đăng xuất.",
+    "whatNow": "Bạn vẫn có thể xem chợ và nông sản với tư cách khách, nhưng không thể đăng nhập hay đặt hàng trong thời gian này.",
+    "contactIntro": "Nếu bạn cho rằng đây là nhầm lẫn, hãy liên hệ",
+    "acknowledge": "Tôi đã hiểu"
+  },
+  "stallSuspended": {
+    "title": "Sạp của bạn đã bị tạm ngừng",
+    "generic": "Quản trị viên đã tạm ngừng sạp này, nên hiện khách hàng không nhìn thấy sạp nữa.",
+    "whatNow": "Những đơn khách đã đặt vẫn phải hoàn tất — vui lòng hoàn thành các đơn đó. Bạn không thể đăng sản phẩm, thay đổi tồn kho hay nhận đơn mới cho đến khi lệnh tạm ngừng được gỡ bỏ.",
+    "contactIntro": "Nếu bạn cho rằng đây là nhầm lẫn, hãy liên hệ",
+    "acknowledge": "Tôi đã hiểu"
+  },
+  "storageMode": {
+    "room": "Nhiệt độ thường",
+    "chilled": "Ngăn mát 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Dùng tốt đến hết {{day}} · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "Úng/dập",
+      "mold": "Mốc",
+      "smell": "Có mùi",
+      "wilted": "Héo/khô",
+      "other": "Khác"
+    },
+    "problemWithNote": "{{problem}} · “{{note}}”",
+    "status": {
+      "open": "Chờ admin xử lý",
+      "confirmed": "Admin đã xác nhận",
+      "dismissed": "Không phải lỗi sạp"
+    },
+    "extended_one": "Kéo dài +{{count}} ngày",
+    "extended_other": "Kéo dài +{{count}} ngày",
+    "beforePromise": "trước hạn",
+    "afterPromise": "sau hạn",
+    "strikes": "Lỗi hạn dùng: {{count}}/{{limit}} trong {{days}} ngày"
+  },
+  "gallery": {
+    "label": "Ảnh {{name}}",
+    "previous": "Ảnh trước",
+    "next": "Ảnh sau",
+    "goTo": "Xem ảnh {{n}}",
+    "slide": "{{n}} / {{total}}",
+    "photoAlt": "{{name}}, ảnh {{n}}"
   }
 }

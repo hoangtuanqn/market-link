@@ -6,10 +6,15 @@ import org.springframework.http.ResponseCookie;
 public class CookieHelper {
     public static final String REFRESH_TOKEN_COOKIE = "refresh_token";
 
-    public static ResponseCookie buildRefreshTokenCookie(String token, Duration maxAge) {
+    /**
+     * secure = app.cookie.secure (AuthConfig). Browsers drop a Secure cookie sent over plain HTTP
+     * on any host but localhost, so it is only turned off for a deployment without HTTPS.
+     */
+    public static ResponseCookie buildRefreshTokenCookie(
+            String token, Duration maxAge, boolean secure) {
         return ResponseCookie.from(REFRESH_TOKEN_COOKIE, token)
                 .httpOnly(true)
-                .secure(true)
+                .secure(secure)
                 .sameSite("Strict")
                 .path("/")
                 .maxAge(maxAge)
@@ -21,12 +26,12 @@ public class CookieHelper {
      * = true: lives for maxAge.
      */
     public static ResponseCookie buildRefreshTokenCookie(
-            String token, Duration maxAge, boolean rememberMe) {
+            String token, Duration maxAge, boolean rememberMe, boolean secure) {
         return rememberMe
-                ? buildRefreshTokenCookie(token, maxAge)
+                ? buildRefreshTokenCookie(token, maxAge, secure)
                 : ResponseCookie.from(REFRESH_TOKEN_COOKIE, token)
                         .httpOnly(true)
-                        .secure(true)
+                        .secure(secure)
                         .sameSite("Strict")
                         .path("/")
                         .build();

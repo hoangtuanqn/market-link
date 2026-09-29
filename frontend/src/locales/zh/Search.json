@@ -12,6 +12,21 @@
     "submit": "搜索"
   },
   "day": "市集日",
+  "filters": {
+    "category": "类别",
+    "allCategories": "所有类别",
+    "market": "市集",
+    "allMarkets": "所有市集",
+    "price": "单价",
+    "clear": "清除筛选"
+  },
+  "price": {
+    "any": "不限价格",
+    "low": "低于 {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "高于 {{high}}"
+  },
+  "stallsNotByCategory": "类别不会筛选摊位——摊位没有类别。它作用于下方的商品。",
   "sort": "排序",
   "sorts": {
     "best": "最相关",
@@ -34,6 +49,8 @@
   },
   "results_one": "{{day}}“{{q}}”的 {{count}} 个结果",
   "results_other": "{{day}}“{{q}}”的 {{count}} 个结果",
+  "stallsOn_one": "{{day}}有 {{count}} 个摊位营业",
+  "stallsOn_other": "{{day}}有 {{count}} 个摊位营业",
   "noStalls": "没有匹配的摊位。",
   "noProducts": "没有匹配的商品。",
   "noMarket": {

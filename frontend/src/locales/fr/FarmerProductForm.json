@@ -26,27 +26,49 @@
     "text": "<b>{{price}}</b> sur l’étiquette · <b>{{left}}</b> restants · qui en commande un voit <b>{{one}}</b>"
   },
   "price": {
-    "label": "Prix en ₫",
+    "label": "Prix en $",
     "hint": "Affiché ainsi : {{price}}."
   },
   "qty": {
     "label": "Quantité disponible cette semaine",
-    "error": "La quantité doit être de 0 ou plus. Utilisez Épuisé s’il n’en reste plus."
+    "error": "La quantité doit être de 0 ou plus. Utilisez Épuisé s’il n’en reste plus.",
+    "hint": "Simple chiffre de départ. Les clients commandent sur votre stock hebdomadaire, à définir après l’enregistrement."
   },
   "shelfLife": {
-    "label": "Shelf life (days)",
-    "hint": "This category is usually {{min}}–{{max}} days.",
-    "error": "Enter a whole number of 1 or more.",
-    "warningTitle": "Outside the usual range",
-    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+    "label": "Durée de conservation",
+    "group": "Groupe de conservation",
+    "pickGroup": "Choisissez un groupe",
+    "examples": "Par exemple : {{examples}}",
+    "storage": "Mode de conservation",
+    "suggested_one": "suggéré {{count}} jour",
+    "suggested_other": "suggéré {{count}} jours",
+    "days_one": "{{count}} jour",
+    "days_other": "{{count}} jours",
+    "decrease": "Un jour de moins",
+    "increase": "Un jour de plus",
+    "peers_one": "Les autres étals fixent en général {{count}} jour",
+    "peers_other": "Les autres étals fixent en général {{count}} jours",
+    "shorter": "Plus court que la suggestion. Les clients voient exactement ce nombre.",
+    "longerTitle_one": "{{count}} jour de plus que la suggestion ({{suggested}}, {{storage}})",
+    "longerTitle_other": "{{count}} jours de plus que la suggestion ({{suggested}}, {{storage}})",
+    "ackLabel": "Je garantis que le produit se conserve encore {{days}} jours avec ce mode de conservation ({{storage}}). Si un client signale qu'il est abîmé avant, l'admin peut enregistrer une infraction pour l'étal.",
+    "ackRequired": "Cochez la promesse pour enregistrer une durée plus longue.",
+    "tooLong_one": "Au plus {{count}} jour pour ce groupe.",
+    "tooLong_other": "Au plus {{count}} jours pour ce groupe.",
+    "locked": "Votre étal ne peut pas dépasser la suggestion jusqu’au {{date}} : il a atteint 3 infractions de conservation en 90 jours.",
+    "overLock_one": "Votre étal ne peut pas dépasser la suggestion pour le moment. Réduisez-la à {{count}} jour.",
+    "overLock_other": "Votre étal ne peut pas dépasser la suggestion pour le moment. Réduisez-la à {{count}} jours.",
+    "saveBlocked": "Cochez la promesse ci-dessus pour enregistrer.",
+    "saveNeedsGroup": "Choisissez un groupe de conservation ci-dessus pour enregistrer.",
+    "saveNeedsGroups": "Rechargez les groupes de conservation ci-dessus pour enregistrer.",
+    "loading": "Chargement des groupes de conservation",
+    "fallback": "Cette catégorie n'a pas encore de groupe de conservation. Elle se garde en général {{min}}–{{max}} jours.",
+    "groupGone": "Le groupe utilisé par ce produit n'est plus proposé. Choisissez-en un autre.",
+    "noun": "groupes de conservation"
   },
   "desc": {
     "label": "Description",
     "hint": "Affichée sur la page du produit. Dites comment il est cultivé et comment le conserver."
-  },
-  "flag": {
-    "label": "Petite mention sur la carte",
-    "hint": "Facultatif, écrit à la main sur l’étiquette : « Frais du jour », « Cuit à 5 h »."
   },
   "status": {
     "label": "Statut",
@@ -62,7 +84,11 @@
     "uploading": "Envoi en cours",
     "uploadInProgress": "Attendez la fin de l'envoi de la photo avant d'enregistrer.",
     "alt": "Photo du produit",
-    "hint": "JPEG, PNG ou WEBP, 8 Mo maximum. En gros plan, à la lumière naturelle, sur du bois ou du papier."
+    "hint": "JPEG, PNG ou WEBP, 8 Mo maximum. En gros plan, à la lumière naturelle, sur du bois ou du papier.",
+    "error": {
+      "tooLarge": "La photo doit faire 8 Mo ou moins.",
+      "type": "Les photos doivent être au format JPEG, PNG ou WEBP."
+    }
   },
   "save": "Enregistrer le produit",
   "add": "Ajouter le produit",
@@ -77,7 +103,8 @@
     "saved": "Enregistré",
     "savedText": "{{name}} enregistré.",
     "product": "Produit",
-    "deletedText": "{{name}} supprimé."
+    "deletedText": "{{name}} supprimé.",
+    "createdText": "{{name}} enregistré. Indiquez combien vous en apportez chaque jour de la semaine pour que les clients puissent commander."
   },
   "error": {
     "noun": "le produit"
@@ -88,6 +115,6 @@
   },
   "errors": {
     "required": "Ce champ est obligatoire.",
-    "price": "Le prix doit être supérieur ou égal à 0."
+    "price": "Le prix doit être supérieur à 0."
   }
 }

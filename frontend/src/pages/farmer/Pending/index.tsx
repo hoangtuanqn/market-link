@@ -66,9 +66,12 @@ const FarmerPendingPage = () => {
     <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
       <div className="flex flex-col gap-2">
         <p className="text-overline text-ink-muted m-0">
-          {t('overline', { stall: application.stallName, date: registeredOn })}
+          {t(application.approvalStatus === 'suspended' ? 'overline.suspended' : 'overline.registered', {
+            stall: application.stallName,
+            date: registeredOn,
+          })}
         </p>
-        <h1 className="font-hand text-h1">{title}</h1>
+        <h1 className="text-h1 text-ink font-bold">{title}</h1>
       </div>
 
       {application.approvalStatus === 'pending' && (
@@ -84,7 +87,7 @@ const FarmerPendingPage = () => {
                 <Trans
                   t={t}
                   i18nKey="now.details"
-                  components={{ link: <Link to="/farmer/stall" className="text-brand underline" /> }}
+                  components={{ a: <Link to="/farmer/stall" className="text-brand underline" /> }}
                 />
               </li>
               <li>{t('now.pin')}</li>
@@ -148,7 +151,7 @@ const FarmerPendingPage = () => {
               <Trans
                 t={t}
                 i18nKey="reinstate.text"
-                components={{ link: <Link to="/contact" className="text-brand underline" /> }}
+                components={{ a: <Link to="/contact" className="text-brand underline" /> }}
               />
             </p>
           </Card>

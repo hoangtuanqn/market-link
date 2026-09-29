@@ -1,23 +1,30 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useParams } from 'react-router';
-import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
+import { Link, useParams, useSearchParams } from 'react-router';
+import AskAssistant from '@/components/assistant/AskAssistant';
+import AdminFarmerApi, { type AdminFarmerStatusHistoryDto } from '@/api-requests/admin-farmer.requests';
 import { Banner } from '@/components/ui/banner';
+import BanDurationPicker, { type BanDuration } from '@/components/BanDurationPicker';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import { DataState } from '@/components/ui/data-state';
+import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
+import { Table, type TableColumn } from '@/components/ui/table';
 import { ApplicationHistory } from '@/components/ApplicationHistory';
 import { ReasonField } from '@/components/ReasonField';
 import { VideoThumb } from '@/components/VideoThumb';
 import { APPROVAL_STATUS_META, REASON_MAX } from '@/constants/approvalStatus';
+import { composeReason, emptyReason, isReasonCode, type ReasonValue } from '@/lib/reasons';
+import { STRIKE_WINDOW_DAYS, STRIKES_TO_LOCK } from '@/lib/spoilage';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import { ADMIN_FARMERS_PATH } from '@/constants/nav';
-import { formatDate } from '@/lib/format';
+import { cutoffLabel, formatDate } from '@/lib/format';
+import useRequest from '@/hooks/useRequest';
 import type { AdminFarmerDetailType } from '@/types/farmer.types';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import FarmerDetailSkeleton from './FarmerDetailSkeleton';
 
 type Status = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; data: AdminFarmerDetailType };
 type DialogKind = 'approve' | 'reject' | 'suspend' | 'reinstate';
@@ -33,6 +40,7 @@ const fileUrl = (path: string) => `${import.meta.env.VITE_API_URL ?? 'http://loc
 /** §6.2, §7, §8 — an Admin views the detail of a Farmer application, approves/rejects/suspends/reinstates. */
 const AdminFarmerDetailPage = () => {
   const { t } = useTranslation('AdminFarmerDetail');
+  const { t: tAssistant } = useTranslation('common');
   // the dialogs, status, rejection reason and toast are shared with the list page
   const { t: tf } = useTranslation('AdminFarmers');
   const { id } = useParams<{ id: string }>();
@@ -40,13 +48,59 @@ const AdminFarmerDetailPage = () => {
   const [busy, setBusy] = useState(false);
   const [dialog, setDialog] = useState<DialogKind | null>(null);
   /** One reason used for both reject and suspend — only one dialog can be open at a time. */
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [reasonError, setReasonError] = useState<string>();
+  const [searchParams, setSearchParams] = useSearchParams();
+  // FR-123: the spoiled-report queue links here with ?suspend=<reason> to open the suspend dialog pre-filled, once
+  const presetSuspend = useRef(searchParams.get('suspend'));
+  // Kept fresh on every render instead of in fetchDetail's own dependency array (M-3 fix): in react-router 8.4,
+  // useSearchParams memoizes its setter on location.search, so depending on setSearchParams directly would make
+  // fetchDetail change identity the moment the "suspend" param is stripped below, re-running the fetch effect and
+  // firing a second GET that can race the first and overwrite a fast "Suspend stall" click with stale data.
+  const setSearchParamsRef = useRef(setSearchParams);
+  useEffect(() => {
+    setSearchParamsRef.current = setSearchParams;
+  }, [setSearchParams]);
+  const [duration, setDuration] = useState<BanDuration>({ kind: 'permanent' });
+  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
+
+  const { state: historyLoad, retry: retryHistory } = useRequest(`admin-farmer-history:${id}`, () =>
+    id ? AdminFarmerApi.statusHistory(Number(id), 1, 20) : Promise.reject(new Error('not a farmer id')),
+  );
+
+  useEffect(() => {
+    if (import.meta.env.MODE === 'test') return;
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   // only setState in a promise callback (the initial state is already loading)
   const fetchDetail = useCallback(() => {
     AdminFarmerApi.detail(Number(id))
-      .then((response) => setStatus({ kind: 'ready', data: response.data }))
+      .then((response) => {
+        setStatus({ kind: 'ready', data: response.data });
+        const code = presetSuspend.current;
+        presetSuspend.current = null;
+        if (code && isReasonCode('suspend', code)) {
+          // Consumed: drop it from the address (keeping any other params) so a reload, or opening the same link
+          // again, does not reopen the dialog (FR-123 fix round 1).
+          setSearchParamsRef.current(
+            (prev) => {
+              const next = new URLSearchParams(prev);
+              next.delete('suspend');
+              return next;
+            },
+            { replace: true },
+          );
+          if (response.data.approvalStatus === 'approved') {
+            setReason({ codes: [code], note: '' });
+            setReasonError(undefined);
+            setDialog('suspend');
+          }
+        }
+      })
       .catch(() => setStatus({ kind: 'error' }));
   }, [id]);
 
@@ -58,8 +112,9 @@ const AdminFarmerDetailPage = () => {
   };
 
   const openDialog = (kind: DialogKind) => {
-    setReason('');
+    setReason(emptyReason());
     setReasonError(undefined);
+    setDuration({ kind: 'permanent' });
     setDialog(kind);
   };
 
@@ -83,12 +138,13 @@ const AdminFarmerDetailPage = () => {
   const confirmDialog = async () => {
     if (!dialog) return;
     // The server requires a reason for both (@NotBlank, at most 255) — block it here so the admin does not lose the dialog.
-    const written = reason.trim();
+    const written = dialog === 'reject' || dialog === 'suspend' ? composeReason(dialog, reason) : '';
     if (dialog === 'reject' || dialog === 'suspend') {
       if (!written) return setReasonError(tf(`${dialog}.required`));
       if (written.length > REASON_MAX) return setReasonError(tf(`${dialog}.tooLong`, { max: REASON_MAX }));
       setReasonError(undefined);
     }
+    const until = dialog === 'suspend' && duration.kind === 'temporary' ? duration.until : null;
     setBusy(true);
     try {
       const response =
@@ -97,10 +153,11 @@ const AdminFarmerDetailPage = () => {
           : dialog === 'reject'
             ? await AdminFarmerApi.reject(Number(id), written)
             : dialog === 'suspend'
-              ? await AdminFarmerApi.suspend(Number(id), written)
+              ? await AdminFarmerApi.suspend(Number(id), written, until)
               : await AdminFarmerApi.reinstate(Number(id));
       setStatus({ kind: 'ready', data: response.data });
       setDialog(null);
+      if (dialog === 'suspend' || dialog === 'reinstate') retryHistory();
       Notification.success({ text: tf(`toast.${DONE_TOAST[dialog]}`, { stall: response.data.stallName }) });
     } catch (error) {
       Notification.error({
@@ -120,15 +177,9 @@ const AdminFarmerDetailPage = () => {
         · {t('breadcrumb')}
       </p>
 
-      {status.kind === 'loading' && (
-        <Card aria-busy="true" className="flex flex-col gap-3 p-6">
-          <span className="sr-only">{t('loading')}</span>
-          <div className="bg-surface-sunken h-6 w-60 max-w-full rounded-sm" />
-          <div className="bg-surface-sunken h-32 w-full rounded-sm" />
-        </Card>
-      )}
+      {(status.kind === 'loading' || initialLoading) && <FarmerDetailSkeleton />}
 
-      {status.kind === 'error' && (
+      {!(status.kind === 'loading' || initialLoading) && status.kind === 'error' && (
         <DataState
           variant="error"
           title={t('loadError.title')}
@@ -141,7 +192,8 @@ const AdminFarmerDetailPage = () => {
         />
       )}
 
-      {status.kind === 'ready' &&
+      {!(status.kind === 'loading' || initialLoading) &&
+        status.kind === 'ready' &&
         (() => {
           const f = status.data;
           const meta = APPROVAL_STATUS_META[f.approvalStatus];
@@ -154,7 +206,11 @@ const AdminFarmerDetailPage = () => {
                     {t('sentOn', { date: formatDate(new Date(f.createdAt)) })}
                   </p>
                   <div className="flex items-center gap-4">
-                    <h1 className="text-h1">{f.stallName}</h1>
+                    <h1 className="text-h1 text-ink font-bold">{f.stallName}</h1>
+                    <AskAssistant
+                      question={tAssistant('assistant.ask.application')}
+                      record={{ type: 'farmer', ref: String(f.id) }}
+                    />
                     <span
                       className={Helper.cn(
                         'inline-flex w-fit items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold',
@@ -284,6 +340,55 @@ const AdminFarmerDetailPage = () => {
                       })}
                     </ol>
                   </section>
+
+                  <section className="flex flex-col gap-3">
+                    <h2 className="text-h2">{t('statusHistory.title')}</h2>
+                    {historyLoad.kind === 'loading' ? (
+                      <div className="border-line-strong bg-surface-raised min-h-[140px] w-full animate-pulse rounded-md border-[1.5px] p-6" />
+                    ) : historyLoad.kind === 'error' ? (
+                      <LoadError noun={t('statusHistory.noun')} onRetry={retryHistory} />
+                    ) : historyLoad.data.items.length ? (
+                      <Table
+                        columns={
+                          [
+                            {
+                              key: 'when',
+                              label: t('statusHistory.col.when'),
+                              render: (h) => cutoffLabel(h.changedAt),
+                            },
+                            {
+                              key: 'action',
+                              label: t('statusHistory.col.action'),
+                              render: (h) => t(`statusHistory.action.${h.toStatus}` as never),
+                            },
+                            {
+                              key: 'reason',
+                              label: t('statusHistory.col.reason'),
+                              render: (h) => h.reason ?? '—',
+                            },
+                            {
+                              key: 'until',
+                              label: t('statusHistory.col.until'),
+                              render: (h) => (h.until ? cutoffLabel(h.until) : '—'),
+                            },
+                            {
+                              key: 'by',
+                              label: t('statusHistory.col.by'),
+                              render: (h) => h.changedByName ?? t('statusHistory.system'),
+                            },
+                          ] satisfies TableColumn<AdminFarmerStatusHistoryDto>[]
+                        }
+                        rows={historyLoad.data.items}
+                      />
+                    ) : (
+                      <DataState
+                        center
+                        title={t('statusHistory.empty.title')}
+                        text={t('statusHistory.empty.text')}
+                        className="min-h-[140px] w-full max-w-none py-6"
+                      />
+                    )}
+                  </section>
                 </div>
 
                 <aside className="flex flex-col gap-4">
@@ -297,6 +402,23 @@ const AdminFarmerDetailPage = () => {
                       <dt className="text-ink-muted">{t('applicant.status')}</dt>
                       <dd className="m-0">{t(`accountStatus.${f.accountStatus}`)}</dd>
                     </dl>
+                  </Card>
+
+                  <Card className="flex flex-col gap-2 p-6">
+                    <h2 className="text-h3">{t('strikes.title')}</h2>
+                    <p className="text-[15px] font-bold">
+                      {t('strikes.count', {
+                        count: f.activeViolations,
+                        limit: STRIKES_TO_LOCK,
+                        days: STRIKE_WINDOW_DAYS,
+                      })}
+                    </p>
+                    <p className="text-small">
+                      {f.extensionLockedUntil
+                        ? t('strikes.locked', { date: formatDate(new Date(f.extensionLockedUntil)) })
+                        : t('strikes.clear')}
+                    </p>
+                    <p className="text-small text-ink-muted">{t('strikes.text')}</p>
                   </Card>
 
                   <Card className="flex flex-col gap-2 p-6">
@@ -332,6 +454,7 @@ const AdminFarmerDetailPage = () => {
         <div className="flex flex-col gap-3">
           {/* approving from the detail page says it more clearly: the role becomes Farmer, everything of the Customer is kept */}
           <p>{dialog === 'approve' ? t('approveText') : dialog ? tf(`${dialog}.text`) : ''}</p>
+          {dialog === 'suspend' && <BanDurationPicker value={duration} onChange={setDuration} />}
           {(dialog === 'reject' || dialog === 'suspend') && (
             <ReasonField
               kind={dialog}

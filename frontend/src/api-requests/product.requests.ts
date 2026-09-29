@@ -1,7 +1,9 @@
+import type { ShelfLifeDto, StorageMode } from '@/api-requests/shelf-life.requests';
 import type { StallSummaryDto } from '@/api-requests/stall.requests';
 import type { ApiResponse, PageType } from '@/types/api.types';
 import type { ProductStatus, ProductType } from '@/types/product.types';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
+import Session from '@/utils/session';
 
 /** One product in the list (contract §5). The `status` value keeps snake_case like the ENUM column. */
 export type ProductDto = {
@@ -22,9 +24,27 @@ export type ProductDto = {
   ratingCount: number;
   /** Days still fresh — no official FR yet, see migration V20260926016. */
   shelfLifeDays: number;
+  /** The pickup date ("yyyy-MM-dd") `stockQuantity`/`price` are for on public pages; null when none applies. */
+  availableDate?: string | null;
 };
 
 export type ReviewSummaryDto = { ratingAvg: number; ratingCount: number; histogram: number[] };
+
+/**
+ * One product_daily_stock row: the response of PATCH /farmer/products/{id}/daily-stock/{date} (FR-063), GET
+ * /farmer/products/{id}/daily-stock and PUT .../daily-stock/{date}/deal (FR-124). The four deal fields are null when
+ * that day carries no deal.
+ */
+export type DailyStockDto = {
+  productId: number;
+  stockDate: string;
+  quantityAvailable: number;
+  unitPrice: number;
+  listPrice: number | null;
+  discountPercent: number | null;
+  packedOn: string | null;
+  bestBefore: string | null;
+};
 
 /** GET /products/{id}: a product with its stall and review summary (real numbers from C8). */
 export type ProductDetailDto = {
@@ -32,6 +52,8 @@ export type ProductDetailDto = {
   description?: string | null;
   farmer: StallSummaryDto;
   reviewsSummary: ReviewSummaryDto;
+  /** FR-121: how it is kept and the stall's promise. */
+  shelfLife?: ShelfLifeDto | null;
 };
 
 /** A product as seen by the owning Farmer: adds the description and the admin's hide flag with its reason (FR-074). */
@@ -40,6 +62,14 @@ export type FarmerProductDto = {
   description?: string | null;
   hidden: boolean;
   hiddenReason?: string | null;
+  /** `GET /farmer/products` only: the nearest date a customer can still order for, null when none in 14 days. */
+  nextDate?: string | null;
+  /** Units left for `nextDate`; null when there is no date. */
+  nextDateAvailable?: number | null;
+  /** Units placed / accepted / ready orders hold for `nextDate`. */
+  nextDateReserved?: number | null;
+  /** One-product endpoints only: the stored shelf-life block for the edit form. */
+  shelfLife?: ShelfLifeDto | null;
 };
 
 export type ProductInput = {
@@ -51,6 +81,11 @@ export type ProductInput = {
   stockQuantity: number;
   imageUrl?: string;
   shelfLifeDays: number;
+  /** The chosen storage group (required once the category has groups). */
+  shelfLifeGuideId?: number;
+  storageMode?: StorageMode;
+  /** Must be true when shelfLifeDays is longer than the suggestion (FR-121). */
+  acknowledgeLongerShelfLife?: boolean;
 };
 
 export type ProductListParams = {
@@ -82,26 +117,37 @@ export const toProduct = (dto: ProductDto, description?: string | null): Product
   desc: description ?? undefined,
   imageUrl: dto.imageUrl ?? undefined,
   shelfLifeDays: dto.shelfLifeDays,
+  availableDate: dto.availableDate ?? undefined,
 });
 
-export const toFarmerProduct = (dto: FarmerProductDto): ProductType => ({
+const toFarmerProduct = (dto: FarmerProductDto): ProductType => ({
   ...toProduct(dto.item, dto.description),
   hidden: dto.hidden,
   hiddenReason: dto.hiddenReason ?? undefined,
+  nextDate: dto.nextDate ?? undefined,
+  nextLeft: dto.nextDateAvailable ?? undefined,
+  nextReserved: dto.nextDateReserved ?? undefined,
+  shelfLife: dto.shelfLife ?? undefined,
 });
+
+/**
+ * FR-078: these reads are public, but an admin still browses them from the admin screens while maintenance mode is on,
+ * and MaintenanceModeFilter only lets an authenticated admin through. Signed in → `privateApi` (token + refresh).
+ */
+const readApi = () => (Session.getRawUser() ? privateApi : publicApi);
 
 /** FR-020…023, FR-062, FR-064, FR-074 — products (docs/api-contract.md §5, §10). */
 class ProductApi {
   /** Public. `page` from 1, at most 50 per page; `sort` goes through a whitelist on the server. */
   static list = async (params: ProductListParams = {}) => {
-    const response = await publicApi.get<ApiResponse<PageType<ProductDto>>>('/products', { params });
+    const response = await readApi().get<ApiResponse<PageType<ProductDto>>>('/products', { params });
     const page = response.data.data;
     return { ...page, items: page.items.map((p) => toProduct(p)) };
   };
 
   /** Public. 404 `PRODUCT_NOT_FOUND` when missing, removed, hidden or the stall is not approved. */
   static get = async (id: number) => {
-    const response = await publicApi.get<ApiResponse<ProductDetailDto>>(`/products/${id}`);
+    const response = await readApi().get<ApiResponse<ProductDetailDto>>(`/products/${id}`);
     return response.data.data;
   };
 
@@ -134,6 +180,8 @@ class ProductApi {
     const response = await privateApi.post<ApiResponse<{ url: string }>>('/farmer/products/images', form, {
       // Drop the default application/json header so the browser sets multipart/form-data with the boundary itself.
       headers: { 'Content-Type': undefined },
+      // No timeout: the instance's 10 s would cut off a large photo on a phone connection.
+      timeout: 0,
     });
     return response.data.data.url;
   };
@@ -153,6 +201,20 @@ class ProductApi {
     await privateApi.delete<ApiResponse<null>>(`/farmer/products/${id}`);
   };
 
+  /** Farmer — soft-deleted products in trash. */
+  static mineDeleted = async () => {
+    const response = await privateApi.get<ApiResponse<PageType<FarmerProductDto>>>('/farmer/products/deleted', {
+      params: { pageSize: 50 },
+    });
+    return response.data.data.items.map(toFarmerProduct);
+  };
+
+  /** Farmer — restore a soft-deleted product back to unavailable status. */
+  static restore = async (id: number) => {
+    const response = await privateApi.post<ApiResponse<FarmerProductDto>>(`/farmer/products/${id}/restore`);
+    return toFarmerProduct(response.data.data);
+  };
+
   /** FR-064: sold_out / unavailable does not touch stock. */
   static setStatus = async (id: number, status: ProductStatus) => {
     const response = await privateApi.patch<ApiResponse<FarmerProductDto>>(`/farmer/products/${id}/status`, {
@@ -161,9 +223,29 @@ class ProductApi {
     return toFarmerProduct(response.data.data);
   };
 
+  /**
+   * FR-063 — adjusts one pickup date without touching the recurring weekly template. `unitPrice` null keeps that date's
+   * existing price. 400 if no template covers that weekday yet.
+   */
+  static overrideDailyStock = async (id: number, date: string, quantityAvailable: number, unitPrice: number | null) => {
+    const response = await privateApi.patch<ApiResponse<DailyStockDto>>(`/farmer/products/${id}/daily-stock/${date}`, {
+      quantityAvailable,
+      unitPrice,
+    });
+    return response.data.data;
+  };
+
   /** Admin — FR-074. The reason is shown to the Farmer in their list. */
   static adminHide = async (id: number, reason: string) => {
     await privateApi.patch<ApiResponse<null>>(`/admin/products/${id}/hide`, { reason });
+  };
+
+  /** Admin — FR-074. Hidden listings, newest change first, so each one can be found again and unhidden. */
+  static adminHidden = async () => {
+    const response = await privateApi.get<ApiResponse<PageType<FarmerProductDto>>>('/admin/products/hidden', {
+      params: { pageSize: 50 },
+    });
+    return response.data.data.items.map(toFarmerProduct);
   };
 
   static adminUnhide = async (id: number) => {

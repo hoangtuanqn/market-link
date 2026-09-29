@@ -2,7 +2,7 @@ import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from 'react';
 import { Link, type LinkProps } from 'react-router';
 import Helper from '@/utils/helper';
 
-type Variant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'onboard' | 'danger' | 'dangerFill';
+type Variant = 'primary' | 'secondary' | 'accent' | 'ghost' | 'onboard' | 'danger' | 'dangerFill' | 'success';
 type Size = 'md' | 'sm';
 
 const base =
@@ -18,11 +18,16 @@ const variants: Record<Variant, string> = {
   danger: 'bg-surface-raised text-danger shadow-[inset_0_0_0_1.5px_var(--danger)] hover:bg-danger-bg',
   // `.ml-btn-danger-fill`: the confirm button of a dangerous dialog. The design system sets no hover for it.
   dangerFill: 'bg-danger text-on-danger',
+  success:
+    'bg-status-ready-bg text-status-ready-ink shadow-[inset_0_0_0_1.5px_var(--brand)] hover:bg-brand hover:text-on-brand',
 };
 
 const sizes: Record<Size, string> = {
   md: 'min-h-11 text-[15px]',
-  sm: 'min-h-9 text-small',
+  // 44px on a touch screen (Apple HIG, WCAG 2.5.5), back to the compact 36px from md up where a
+  // pointer does the aiming. "Add to cart" on a product card is a `sm` button, so this is the size
+  // a shopper hits most often on a phone.
+  sm: 'min-h-11 text-small md:min-h-9',
 };
 
 type StyleProps = { variant?: Variant; size?: Size; className?: string };

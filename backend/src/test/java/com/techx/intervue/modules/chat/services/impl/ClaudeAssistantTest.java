@@ -15,10 +15,14 @@ import com.anthropic.models.messages.ContentBlockParam;
 import com.anthropic.models.messages.Message;
 import com.anthropic.models.messages.MessageCreateParams;
 import com.anthropic.models.messages.MessageParam;
+import com.anthropic.models.messages.TextBlockParam;
 import com.anthropic.services.blocking.MessageService;
 import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
+import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
+import com.techx.intervue.modules.chat.requests.ChatRequest.PageContext;
+import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
 import com.techx.intervue.modules.chat.services.impl.AssistantTools.ToolOutcome;
 import com.techx.intervue.modules.chat.services.impl.ClaudeAssistant.AiReply;
@@ -36,7 +40,7 @@ import org.springframework.beans.factory.ObjectProvider;
 class ClaudeAssistantTest {
 
     private static final ChatResultItem CARD =
-            new ChatResultItem("product", 9L, "Cà chua bi", "28000 ₫/kg · Vườn Út Hiền");
+            new ChatResultItem("product", 9L, "Cà chua bi", "$1.10/kg · Vườn Út Hiền");
 
     private MessageService messageService;
     private AssistantTools tools;
@@ -59,14 +63,15 @@ class ClaudeAssistantTest {
         assistant =
                 new ClaudeAssistant(
                         provider,
-                        new ChatbotAiProperties("key", "claude-haiku-4-5", 1024, 2, 10, 30),
+                        new ChatbotAiProperties(
+                                "key", "claude-haiku-4-5", 1024, 2, 10, 30, 60, 1500),
                         tools,
                         clock);
     }
 
     @Test
     void runsTheRequestedToolAndAnswersFromItsResult() {
-        when(tools.run(eq(AssistantTools.SEARCH_PRODUCTS), anyMap()))
+        when(tools.run(any(), eq(AssistantTools.SEARCH_PRODUCTS), anyMap()))
                 .thenReturn(
                         new ToolOutcome(
                                 "{\"products\":[]}",
@@ -76,15 +81,25 @@ class ClaudeAssistantTest {
         when(messageService.create(any(MessageCreateParams.class)))
                 .thenReturn(
                         toolUse("toolu_1", AssistantTools.SEARCH_PRODUCTS, "cà chua"),
-                        text("Cà chua bi 28.000 ₫/kg ở Vườn Út Hiền."));
+                        text("Cà chua bi $1.10/kg ở Vườn Út Hiền."));
 
-        AiReply reply = assistant.reply(List.of(), "tìm cà chua");
+        AiReply reply =
+                assistant.reply(
+                        List.of(),
+                        "tìm cà chua",
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null),
+                        null);
 
-        assertThat(reply.reply()).isEqualTo("Cà chua bi 28.000 ₫/kg ở Vườn Út Hiền.");
+        assertThat(reply.reply()).isEqualTo("Cà chua bi $1.10/kg ở Vườn Út Hiền.");
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
         assertThat(reply.loggedIntent()).isEqualTo("AI:search_products");
         assertThat(reply.results()).containsExactly(CARD);
-        verify(tools).run(AssistantTools.SEARCH_PRODUCTS, Map.of("keyword", "cà chua"));
+        // The context reaches the tool unchanged: this is what scopes a farmer tool to its stall.
+        verify(tools)
+                .run(
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null),
+                        AssistantTools.SEARCH_PRODUCTS,
+                        Map.of("keyword", "cà chua"));
 
         // The second request carries the assistant's tool_use turn and the matching tool_result
         List<MessageCreateParams> sent = sentParams(2);
@@ -96,7 +111,7 @@ class ClaudeAssistantTest {
 
     @Test
     void theLastRoundForbidsToolsSoAnAnswerAlwaysComesBack() {
-        when(tools.run(any(), anyMap()))
+        when(tools.run(any(), any(), anyMap()))
                 .thenReturn(new ToolOutcome("{}", false, ChatIntent.HELP, List.of()));
         when(messageService.create(any(MessageCreateParams.class)))
                 .thenAnswer(
@@ -107,7 +122,12 @@ class ClaudeAssistantTest {
                                     : toolUse("toolu_x", AssistantTools.SEARCH_GUIDE, "x");
                         });
 
-        AiReply reply = assistant.reply(List.of(), "làm sao để huỷ đơn");
+        AiReply reply =
+                assistant.reply(
+                        List.of(),
+                        "làm sao để huỷ đơn",
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null),
+                        null);
 
         assertThat(reply.reply()).isEqualTo("Đây là câu trả lời.");
         // maxToolRounds = 2 tool rounds, then one forced text round
@@ -116,9 +136,44 @@ class ClaudeAssistantTest {
         assertThat(sent.get(2).toolChoice().orElseThrow().isNone()).isTrue();
     }
 
+    /**
+     * With a button on offer, Claude often writes its answer beside the propose_* call and then
+     * ends the turn with nothing, so the person read the refusal line above a working button.
+     */
+    @Test
+    void anAnswerWrittenBesideTheLastToolCallIsKeptWhenTheFinalTurnIsEmpty() {
+        when(tools.run(any(), any(), anyMap()))
+                .thenReturn(
+                        new ToolOutcome("{}", false, ChatIntent.FARMER_AVAILABILITY, List.of()));
+        when(messageService.create(any(MessageCreateParams.class)))
+                .thenReturn(
+                        message(
+                                "tool_use",
+                                Map.of("type", "text", "text", "Nhấn nút bên dưới để duyệt."),
+                                Map.of(
+                                        "type",
+                                        "tool_use",
+                                        "id",
+                                        "toolu_1",
+                                        "name",
+                                        AssistantTools.PROPOSE_FARMER_DECISION,
+                                        "input",
+                                        Map.of("farmer_id", 17, "decision", "approve"))),
+                        message("end_turn"));
+
+        AiReply reply =
+                assistant.reply(
+                        List.of(),
+                        "Duyệt sạp Nông trại Chú Tư",
+                        new AssistantContext(AssistantAudience.ADMIN, 1L, null),
+                        null);
+
+        assertThat(reply.reply()).isEqualTo("Nhấn nút bên dưới để duyệt.");
+    }
+
     @Test
     void aToolErrorIsSentBackAsAnErrorResultAndDoesNotSetTheIntent() {
-        when(tools.run(any(), anyMap()))
+        when(tools.run(any(), any(), anyMap()))
                 .thenReturn(
                         new ToolOutcome(
                                 "{\"error\":\"No active market\"}",
@@ -130,7 +185,12 @@ class ClaudeAssistantTest {
                         toolUse("toolu_1", AssistantTools.SEARCH_PRODUCTS, "cà chua"),
                         text("Không có chợ đó."));
 
-        AiReply reply = assistant.reply(List.of(), "cà chua ở chợ X");
+        AiReply reply =
+                assistant.reply(
+                        List.of(),
+                        "cà chua ở chợ X",
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null),
+                        null);
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.UNKNOWN);
         List<ContentBlockParam> results =
@@ -142,7 +202,12 @@ class ClaudeAssistantTest {
     void aRefusalGetsAFixedPoliteReply() {
         when(messageService.create(any(MessageCreateParams.class))).thenReturn(message("refusal"));
 
-        AiReply reply = assistant.reply(List.of(), "…");
+        AiReply reply =
+                assistant.reply(
+                        List.of(),
+                        "…",
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null),
+                        null);
 
         assertThat(reply.loggedIntent()).isEqualTo("AI:refusal");
         assertThat(reply.reply()).contains("Sorry");
@@ -152,7 +217,12 @@ class ClaudeAssistantTest {
     void anAnswerWithoutToolsIsLoggedAsNone() {
         when(messageService.create(any(MessageCreateParams.class))).thenReturn(text("Xin chào!"));
 
-        AiReply reply = assistant.reply(List.of(), "xin chào");
+        AiReply reply =
+                assistant.reply(
+                        List.of(),
+                        "xin chào",
+                        new AssistantContext(AssistantAudience.CUSTOMER, 7L, null),
+                        null);
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.UNKNOWN);
         assertThat(reply.loggedIntent()).isEqualTo("AI:none");
@@ -162,14 +232,39 @@ class ClaudeAssistantTest {
     void todaysDateAndWeekdayAreGivenToClaude() {
         when(messageService.create(any(MessageCreateParams.class))).thenReturn(text("ok"));
 
-        assistant.reply(List.of(), "hôm nay chợ nào mở");
+        assistant.reply(
+                List.of(),
+                "hôm nay chợ nào mở",
+                new AssistantContext(AssistantAudience.CUSTOMER, 7L, null),
+                null);
 
         String system =
                 sentParams(1).getFirst().system().orElseThrow().asTextBlockParams().get(1).text();
         assertThat(system)
-                .contains("SUNDAY 27/09/2026 (day_of_week 0)")
+                .contains("SUNDAY 27/09/2026 (Chủ nhật, day_of_week 0)")
                 // "this Saturday" is looked up in the list, not computed by the model
-                .contains("SATURDAY 03/10/2026 (day_of_week 6)");
+                .contains("SATURDAY 03/10/2026 (Thứ Bảy, day_of_week 6)")
+                // Next to "day_of_week 5" the model called Friday "Thứ Năm", which is Thursday
+                .contains("FRIDAY 02/10/2026 (Thứ Sáu, day_of_week 5)");
+    }
+
+    @Test
+    void tomorrowAndTheTimeNowAreSpelledOutRatherThanLeftToTheModel() {
+        when(messageService.create(any(MessageCreateParams.class))).thenReturn(text("ok"));
+
+        assistant.reply(
+                List.of(),
+                "đơn này còn kịp cutoff không",
+                new AssistantContext(AssistantAudience.FARMER, 7L, 9L),
+                null);
+
+        String system =
+                sentParams(1).getFirst().system().orElseThrow().asTextBlockParams().get(1).text();
+        assertThat(system)
+                // 03:00 UTC is 10:00 in Ho Chi Minh City: enough to tell if a cutoff has passed
+                .contains("the time is 10:00")
+                // The 28/09 test run called a cutoff four days away "tomorrow evening"
+                .contains("Tomorrow is MONDAY 28/09/2026 (Thứ Hai, day_of_week 1)");
     }
 
     @Test
@@ -227,5 +322,50 @@ class ClaudeAssistantTest {
 
     private static ChatMessage chat(String role, String text) {
         return ChatMessage.builder().role(role).message(text).build();
+    }
+
+    // ------------------------------------------------- FR-093/094: what is on screen
+
+    /** Every system block of one request, joined, so a test can assert what Claude was told. */
+    private static List<com.anthropic.models.messages.TextBlockParam> systemBlocks(
+            MessageCreateParams params) {
+        return params.system().orElseThrow().asTextBlockParams();
+    }
+
+    private static String systemText(MessageCreateParams params) {
+        return systemBlocks(params).stream()
+                .map(TextBlockParam::text)
+                .reduce("", (a, b) -> a + "\n" + b);
+    }
+
+    @Test
+    void theScreenTheyAreOnIsPutInThePromptAndOnlyAfterTheCacheBreakpoint() {
+        when(messageService.create(any(MessageCreateParams.class))).thenReturn(text("Rồi."));
+
+        assistant.reply(
+                List.of(),
+                "đơn này sao rồi",
+                new AssistantContext(AssistantAudience.FARMER, 7L, 9L),
+                new PageContext("farmer/orders/:code", "order", "ML-1"));
+
+        String system = systemText(sentParams(1).get(0));
+        assertThat(system).contains("farmer/orders/:code").contains("looking at the order ML-1");
+        // And it tells Claude to look the row up rather than answer from this line.
+        assertThat(system).contains("never");
+        // The stable prefix keeps its own block, so the per-request part cannot spoil the cache.
+        assertThat(systemBlocks(sentParams(1).get(0))).hasSize(2);
+    }
+
+    @Test
+    void noScreenMeansNothingIsAddedToThePrompt() {
+        when(messageService.create(any(MessageCreateParams.class))).thenReturn(text("Rồi."));
+
+        assistant.reply(
+                List.of(),
+                "xin chào",
+                new AssistantContext(AssistantAudience.CUSTOMER, 7L, null),
+                null);
+
+        assertThat(systemText(sentParams(1).get(0))).doesNotContain("They are on the screen");
     }
 }

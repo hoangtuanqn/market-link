@@ -39,13 +39,19 @@
     "complete": "Mark completed",
     "view": "View"
   },
-  "greeting": "Morning, {{name}}",
-  "applyTemplate": "Apply weekly template",
+  "title": "Overview",
+  "editTemplate": "Edit weekly template",
   "addProduct": "Add product",
   "banner": {
     "title_one": "{{count}} order is waiting for you.",
     "title_other": "{{count}} orders are waiting for you.",
     "text": "Unapproved orders still hold stock. Accept or decline before the cutoff so customers can plan."
+  },
+  "strikes": {
+    "title": "Shelf-life strikes: {{count}} of {{limit}} in {{days}} days",
+    "text": "A confirmed spoiled report on an extended shelf life counts as a strike. 3 strikes lock longer shelf lives.",
+    "locked": "Longer shelf lives are locked until {{date}}.",
+    "link": "See the reports"
   },
   "kpi": {
     "noun": "your numbers",
@@ -67,7 +73,7 @@
   },
   "stock": {
     "title": "Stock now",
-    "link": "This week's stock",
+    "link": "Weekly template",
     "noun": "stock",
     "empty": {
       "title": "No products yet",
@@ -82,5 +88,19 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "Today at {{markets}}",
+    "titleNoMarket": "You are not at a market today",
+    "orders_one": "{{count}} order for today",
+    "orders_other": "{{count}} orders for today",
+    "waiting_one": "{{count}} still waiting for you to accept or decline",
+    "waiting_other": "{{count}} still waiting for you to accept or decline",
+    "cutoffPassed_one": "{{count}} of those is past its cutoff, so the customer can no longer change it",
+    "cutoffPassed_other": "{{count}} of those are past their cutoff, so customers can no longer change them",
+    "soldOut_one": "{{count}} product is marked sold out",
+    "soldOut_other": "{{count}} products are marked sold out",
+    "lowStock_one": "{{count}} product is running low",
+    "lowStock_other": "{{count}} products are running low"
   }
 }

@@ -1,9 +1,15 @@
 package com.techx.intervue.modules.user.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.tuple;
 
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
+import com.techx.intervue.modules.user.exceptions.LoginRateLimitedException;
 import com.techx.intervue.modules.user.exceptions.OAuthNotConfiguredException;
+import com.techx.intervue.modules.user.exceptions.SignupCodeExpiredException;
+import com.techx.intervue.modules.user.exceptions.SignupCodeInvalidException;
+import com.techx.intervue.modules.user.exceptions.SignupExpiredException;
+import com.techx.intervue.modules.user.exceptions.SignupRateLimitedException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.FieldErrorResource;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -12,6 +18,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.redis.RedisConnectionFailureException;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
 class AuthExceptionHandlerTest {
@@ -73,5 +80,49 @@ class AuthExceptionHandlerTest {
         assertThat(response.getBody().getError().getDetails())
                 .extracting(FieldErrorResource::getField)
                 .containsExactly("email", "phone");
+    }
+
+    @Test
+    void aWrongSignUpCodeCarriesTheTriesLeft() {
+        ResponseEntity<ApiResource<Void>> response =
+                handler.signupCodeInvalid(new SignupCodeInvalidException(3));
+
+        assertThat(response.getStatusCode().value()).isEqualTo(400);
+        assertThat(code(response)).isEqualTo("SIGNUP_CODE_INVALID");
+        assertThat(response.getBody().getError().getDetails())
+                .extracting(FieldErrorResource::getField, FieldErrorResource::getMessage)
+                .contains(tuple("attemptsLeft", "3"));
+    }
+
+    @Test
+    void usedUpCodesAndExpiredSignUpsHaveTheirOwnCodes() {
+        assertThat(code(handler.signupCodeExpired(new SignupCodeExpiredException())))
+                .isEqualTo("SIGNUP_CODE_EXPIRED");
+        ResponseEntity<ApiResource<Void>> gone =
+                handler.signupExpired(new SignupExpiredException());
+        assertThat(gone.getStatusCode().value()).isEqualTo(410);
+        assertThat(code(gone)).isEqualTo("SIGNUP_EXPIRED");
+    }
+
+    @Test
+    void tooManyCodesSaysWhenToTryAgain() {
+        ResponseEntity<ApiResource<Void>> response =
+                handler.signupRateLimited(new SignupRateLimitedException(42));
+
+        assertThat(response.getStatusCode().value()).isEqualTo(429);
+        assertThat(code(response)).isEqualTo("RATE_LIMITED");
+        assertThat(response.getHeaders().getFirst(HttpHeaders.RETRY_AFTER)).isEqualTo("42");
+    }
+
+    /** FR-003: too many wrong passwords → 429 with Retry-After and a readable wait. */
+    @Test
+    void tooManyWrongPasswordsSaysWhenToTryAgain() {
+        ResponseEntity<ApiResource<Void>> response =
+                handler.loginRateLimited(new LoginRateLimitedException(600));
+
+        assertThat(response.getStatusCode().value()).isEqualTo(429);
+        assertThat(code(response)).isEqualTo("LOGIN_LOCKED");
+        assertThat(response.getHeaders().getFirst(HttpHeaders.RETRY_AFTER)).isEqualTo("600");
+        assertThat(response.getBody().getMessage()).contains("10 minutes");
     }
 }

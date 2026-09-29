@@ -12,6 +12,21 @@
     "submit": "ค้นหา"
   },
   "day": "วันตลาดนัด",
+  "filters": {
+    "category": "หมวดหมู่",
+    "allCategories": "ทุกหมวดหมู่",
+    "market": "ตลาด",
+    "allMarkets": "ทุกตลาด",
+    "price": "ราคาต่อหน่วย",
+    "clear": "ล้างตัวกรอง"
+  },
+  "price": {
+    "any": "ทุกราคา",
+    "low": "ต่ำกว่า {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "มากกว่า {{high}}"
+  },
+  "stallsNotByCategory": "หมวดหมู่ไม่กรองแผง เพราะแผงไม่มีหมวดหมู่ ตัวกรองนี้ใช้กับสินค้าด้านล่าง",
   "sort": "เรียง",
   "sorts": {
     "best": "ตรงที่สุด",
@@ -34,6 +49,8 @@
   },
   "results_one": "{{count}} ผลลัพธ์สำหรับ “{{q}}” {{day}}",
   "results_other": "{{count}} ผลลัพธ์สำหรับ “{{q}}” {{day}}",
+  "stallsOn_one": "{{count}} แผงที่ขาย{{day}}",
+  "stallsOn_other": "{{count}} แผงที่ขาย{{day}}",
   "noStalls": "ไม่มีร้านที่ตรงกัน",
   "noProducts": "ไม่มีสินค้าที่ตรงกัน",
   "noMarket": {

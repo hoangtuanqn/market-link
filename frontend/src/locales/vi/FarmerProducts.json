@@ -3,25 +3,29 @@
   "intro": "Mọi thứ bạn có thể bày bán. Đánh dấu hết hàng khi sản phẩm bán hết trong ngày chợ, hoặc tạm dừng khi đang trái mùa.",
   "add": "Thêm sản phẩm",
   "filterAll": "Tất cả",
+  "filterDeleted": "Đã xoá",
   "status": {
     "available": "Đang bán",
     "sold_out": "Hết hàng",
-    "unavailable": "Tạm dừng"
+    "unavailable": "Tạm dừng",
+    "deleted": "Đã xoá"
   },
   "caption_one": "{{count}} sản phẩm",
   "caption_other": "{{count}} sản phẩm",
   "col": {
     "product": "Sản phẩm",
     "price": "Giá",
-    "left": "Còn trong tuần",
+    "left": "Ngày lấy gần nhất · còn",
     "reserved": "Đã giữ",
     "status": "Trạng thái"
   },
   "perUnit": "mỗi {{unit}}",
+  "nextLeft": "{{day}} · còn {{qty}}",
   "statusOf": "Trạng thái của {{name}}",
   "edit": "Sửa",
   "delete": "Xoá",
-  "footNote": "Xoá một sản phẩm sẽ gỡ nó khỏi danh mục; các đơn cũ vẫn giữ dòng hàng của mình. Ảnh: tỉ lệ 4:3, ánh sáng tự nhiên, trên nền gỗ hoặc giấy.",
+  "restore": "Khôi phục",
+  "footNote": "Xoá một sản phẩm sẽ đưa vào thùng rác và gỡ khỏi danh mục; các đơn cũ vẫn giữ dòng hàng của mình. Ảnh: tỉ lệ 4:3, ánh sáng tự nhiên, trên nền gỗ hoặc giấy.",
   "toast": {
     "statusSaved": "Đã lưu trạng thái",
     "status": {
@@ -30,14 +34,24 @@
       "unavailable": "Sản phẩm bị ẩn với khách cho đến khi bạn bật lại."
     },
     "deleted": "Đã xoá",
-    "deletedText": "Đã xoá {{name}}."
+    "deletedText": "Đã xoá {{name}}.",
+    "restored": "Đã khôi phục",
+    "restoredText": "Đã khôi phục {{name}} về Tạm dừng. Hãy đặt lại tồn kho hàng tuần trước khi bày bán lại.",
+    "stockAdjusted": "Đã cập nhật tồn kho cho {{day}}."
   },
   "dialog": {
     "title": "Xoá {{name}}?",
     "keep": "Giữ sản phẩm",
     "confirm": "Xoá sản phẩm",
-    "text": "Sản phẩm sẽ biến mất khỏi danh mục và khỏi mẫu của bạn. Các đơn đã có sản phẩm này không bị thay đổi.",
-    "pauseHint": "Muốn ngừng bán một thời gian, hãy chọn Tạm dừng."
+    "text": "Sản phẩm sẽ được chuyển vào thùng rác và biến mất khỏi danh mục. Bạn có thể khôi phục lại bất kỳ lúc nào từ tab Đã xoá.",
+    "pauseHint": "Muốn ngừng bán một thời gian mà không xoá, hãy chọn Tạm dừng."
+  },
+  "restoreDialog": {
+    "title": "Khôi phục {{name}}?",
+    "cancel": "Giữ trong thùng rác",
+    "confirm": "Khôi phục sản phẩm",
+    "text": "Sản phẩm sẽ được khôi phục về trạng thái “Tạm dừng” để bạn cập nhật tồn kho và giá bán trước khi bày bán lại.",
+    "stockHint": "Tồn kho hàng tuần của sản phẩm đã bị xoá khi xoá sản phẩm, nên khách chưa đặt được cho tới khi bạn đặt lại."
   },
   "error": {
     "noun": "sản phẩm của bạn"
@@ -46,5 +60,79 @@
   "empty": {
     "title": "Chưa có sản phẩm nào",
     "text": "Thêm sản phẩm đầu tiên là nó hiện ngay trên trang gian hàng của bạn."
-  }
+  },
+  "emptyDeleted": {
+    "title": "Thùng rác trống",
+    "text": "Không có sản phẩm nào trong thùng rác."
+  },
+  "adjust": "Điều chỉnh",
+  "adjustDialog": {
+    "title": "Điều chỉnh tồn kho cho {{day}}",
+    "quantity": "Số lượng còn lại",
+    "price": "Giá cho ngày này (không bắt buộc)",
+    "priceHint": "Để trống thì giữ giá hiện tại. Nhập giá ở đây cũng kết thúc giảm giá sắp hết hạn của ngày này.",
+    "cancel": "Hủy",
+    "confirm": "Lưu",
+    "error": {
+      "quantity": "Nhập số nguyên từ 0 trở lên.",
+      "price": "Nhập giá lớn hơn $0, hoặc để trống."
+    }
+  },
+  "dealAction": "Giảm giá sắp hết hạn",
+  "dealActionFor": "Giảm giá sắp hết hạn cho {{name}}",
+  "deals": {
+    "title_one": "Đang giảm giá ({{count}})",
+    "title_other": "Đang giảm giá ({{count}})",
+    "loading": "Đang tải hàng đang giảm giá",
+    "col": {
+      "product": "Sản phẩm",
+      "day": "Ngày nhận",
+      "discount": "Mức giảm",
+      "left": "Còn lại",
+      "until": "Dùng tốt đến"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}, giá gốc {{was}}",
+    "until_one": "Hết {{day}} ({{count}} ngày)",
+    "until_other": "Hết {{day}} ({{count}} ngày)",
+    "remove": "Bỏ giảm giá",
+    "removed": "Đã bỏ giảm giá",
+    "removedText": "{{name}} về lại giá thường cho {{day}}.",
+    "noun": "các mục giảm giá của bạn"
+  },
+  "dealDialog": {
+    "title": "Giảm giá sắp hết hạn · {{name}}",
+    "day": "Ngày nhận",
+    "qty": "Số lượng mang tới ({{unit}})",
+    "onSale": "hiện đang mở bán {{qty}}",
+    "packedOn": "Thu hoạch hoặc đóng gói ngày",
+    "result_one": "Dùng tốt đến hết {{until}} · khách còn {{count}} ngày (hạn {{shelfLife}} ngày)",
+    "result_other": "Dùng tốt đến hết {{until}} · khách còn {{count}} ngày (hạn {{shelfLife}} ngày)",
+    "discount": "Giảm",
+    "less": "Giảm bớt mức giảm",
+    "more": "Tăng mức giảm",
+    "suggested": "gợi ý {{percent}}%",
+    "price": "Giá",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "Đăng giảm giá",
+    "posting": "Đang đăng…",
+    "posted": "Đã đăng giảm giá",
+    "postedText": "{{name}} giảm {{percent}}% cho {{day}}.",
+    "loadingDays": "Đang tải các ngày nhận…",
+    "daysNoun": "các ngày nhận",
+    "noDays": {
+      "title": "Chưa có ngày nhận nào mở",
+      "text": "Trong 14 ngày tới khách chưa đặt được sản phẩm này cho ngày nào. Hãy xem lại lịch tồn kho tuần và các khung giờ nhận."
+    },
+    "why": {
+      "packedOn": "Nhập ngày thu hoạch hoặc đóng gói.",
+      "qty": "Mang tới ít nhất 1.",
+      "packedInFuture": "Ngày thu hoạch hoặc đóng gói không được sau hôm nay.",
+      "fresh": "Hàng hái đúng ngày nhận là hàng tươi, không cần giảm giá.",
+      "notNearExpiry": "Tới ngày đó hàng vẫn còn hơn nửa hạn dùng {{shelfLife}} ngày. Mục này chỉ dành cho hàng đã qua nửa hạn.",
+      "expiredBeforePickup": "Hàng hết hạn trước ngày nhận, nên không bán được cho ngày đó."
+    }
+  },
+  "noNextDate": "Chưa có ngày nào đặt được",
+  "checkWeeklyStock": "Đặt tồn kho hàng tuần"
 }

@@ -2,7 +2,9 @@ import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
+import AskAssistant from '@/components/assistant/AskAssistant';
 import OrderApi, { type OrderDetailDto, type OrderItemDto } from '@/api-requests/order.requests';
+import BestBeforeLine from '@/components/BestBeforeLine';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -11,7 +13,7 @@ import { LoadError } from '@/components/ui/data-state';
 import { Table, type TableColumn } from '@/components/ui/table';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import useRequest from '@/hooks/useRequest';
-import { cutoffLabel, perUnit, pickupLabel, units, vnd } from '@/lib/format';
+import { cutoffLabel, perUnit, pickupLabel, units, money } from '@/lib/format';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
@@ -26,6 +28,7 @@ const isGone = (error: unknown) =>
 const FarmerOrderDetailPage = () => {
   const { t, i18n } = useTranslation('FarmerOrderDetail');
   const { t: tc } = useTranslation();
+  const { t: tAssistant } = useTranslation('common');
   const { code } = useParams<{ code: string }>();
   const id = /^\d+$/.test(code ?? '') ? Number(code) : null;
 
@@ -74,6 +77,8 @@ const FarmerOrderDetailPage = () => {
       Notification.success({ title: successTitle, text: successText });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      // 409 (D-04): the order moved on elsewhere — read it again so the status and buttons are the current ones
+      if (isAxiosError(error) && error.response?.status === 409) retry();
     } finally {
       setBusy(false);
     }
@@ -87,11 +92,12 @@ const FarmerOrderDetailPage = () => {
         <>
           {i.productName}
           <span className="text-ink-muted mt-0.5 block text-[13px] font-normal">{perUnit(i.unitPrice, i.unit)}</span>
+          <BestBeforeLine bestBefore={i.bestBefore} storageMode={i.storageMode} />
         </>
       ),
     },
     { key: 'q', label: t('col.requested'), align: 'num', render: (i) => units(i.quantity, i.unit) },
-    { key: 't', label: t('col.amount'), align: 'num', render: (i) => vnd(i.subtotal) },
+    { key: 't', label: t('col.amount'), align: 'num', render: (i) => money(i.subtotal) },
   ];
 
   return (
@@ -106,13 +112,17 @@ const FarmerOrderDetailPage = () => {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-2">
           <p className="font-hand text-hand text-ink-muted">{t('cutoff', { cutoff: cutoffLabel(s.cutoffAt) })}</p>
-          <h1 className="font-hand text-h1">
+          <h1 className="text-h1 text-ink font-bold">
             {s.orderCode} · {order.customer?.fullName ?? '—'} ·{' '}
             {pickupLabel(s.pickupDate, `${s.pickupStart}–${s.pickupEnd}`)}
           </h1>
           <OrderStatusBadge status={s.status} />
         </div>
         <div className="flex flex-wrap gap-2">
+          <AskAssistant
+            question={tAssistant('assistant.ask.order', { code: s.orderCode })}
+            record={{ type: 'order', ref: s.orderCode }}
+          />
           {s.status === 'placed' && (
             <>
               <Button
@@ -162,7 +172,7 @@ const FarmerOrderDetailPage = () => {
             <Table columns={columns} rows={order.items} />
             <p className="border-line-strong flex justify-between gap-3 border-t pt-3 font-bold">
               <span>{t('items.total')}</span>
-              <span className="font-hand text-price">{vnd(total)}</span>
+              <span className="font-hand text-price">{money(total)}</span>
             </p>
           </section>
 
@@ -230,7 +240,7 @@ const FarmerOrderDetailPage = () => {
               <dt className="text-ink-muted">{t('pickup.slot')}</dt>
               <dd className="m-0">{pickupLabel(s.pickupDate, `${s.pickupStart}–${s.pickupEnd}`)}</dd>
               <dt className="text-ink-muted">{t('pickup.pay')}</dt>
-              <dd className="text-price m-0">{vnd(total)}</dd>
+              <dd className="text-price m-0">{money(total)}</dd>
             </dl>
           </Card>
         </aside>

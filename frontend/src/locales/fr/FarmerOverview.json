@@ -39,13 +39,19 @@
     "complete": "Marquer terminée",
     "view": "Voir"
   },
-  "greeting": "Bonjour, {{name}}",
-  "applyTemplate": "Appliquer le modèle hebdomadaire",
+  "title": "Vue d'ensemble",
+  "editTemplate": "Modifier le modèle hebdomadaire",
   "addProduct": "Ajouter un produit",
   "banner": {
-    "title_one": "{{count}} commande vous attend. {{closing}} d'entre elles se ferment demain à {{time}}.",
-    "title_other": "{{count}} commandes vous attendent. {{closing}} d'entre elles se ferment demain à {{time}}.",
+    "title_one": "{{count}} commande vous attend.",
+    "title_other": "{{count}} commandes vous attendent.",
     "text": "Les commandes non validées bloquent toujours du stock. Acceptez ou refusez avant la clôture pour que les clients puissent s'organiser."
+  },
+  "strikes": {
+    "title": "Infractions de conservation : {{count}}/{{limit}} en {{days}} jours",
+    "text": "Un signalement d’altération confirmé sur une durée de conservation prolongée compte comme une infraction. 3 infractions verrouillent les durées de conservation plus longues.",
+    "locked": "Les durées de conservation plus longues sont bloquées jusqu’au {{date}}.",
+    "link": "Voir les signalements"
   },
   "kpi": {
     "noun": "your numbers",
@@ -66,8 +72,8 @@
     }
   },
   "stock": {
-    "title": "Stock pour {{day}}",
-    "link": "Stock de la semaine",
+    "title": "Stock actuel",
+    "link": "Modèle hebdomadaire",
     "noun": "stock",
     "empty": {
       "title": "No products yet",
@@ -82,5 +88,19 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "Aujourd'hui à {{markets}}",
+    "titleNoMarket": "Vous n'êtes sur aucun marché aujourd'hui",
+    "orders_one": "{{count}} commande pour aujourd'hui",
+    "orders_other": "{{count}} commandes pour aujourd'hui",
+    "waiting_one": "{{count}} attend encore que vous l'acceptiez ou la refusiez",
+    "waiting_other": "{{count}} attendent encore que vous les acceptiez ou les refusiez",
+    "cutoffPassed_one": "{{count}} d'entre elles a dépassé sa limite, le client ne peut plus la modifier",
+    "cutoffPassed_other": "{{count}} d'entre elles ont dépassé leur limite, les clients ne peuvent plus les modifier",
+    "soldOut_one": "{{count}} produit est marqué épuisé",
+    "soldOut_other": "{{count}} produits sont marqués épuisés",
+    "lowStock_one": "{{count}} produit arrive à court",
+    "lowStock_other": "{{count}} produits arrivent à court"
   }
 }

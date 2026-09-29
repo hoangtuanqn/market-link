@@ -1,3 +1,4 @@
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
@@ -12,7 +13,7 @@ import { Pagination } from '@/components/ui/pagination';
 import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
 import useRequest from '@/hooks/useRequest';
-import { cutoffLabel, dayName, formatDayMonth, pickupLabel, vnd } from '@/lib/format';
+import { cutoffLabel, dayName, formatDayMonth, pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -89,6 +90,9 @@ const FarmerOrdersPage = () => {
       Notification.success({ text: successText });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      // 409 (D-04): the order moved on elsewhere — the customer cancelled or changed it. Read the list again so the
+      // stale row and its buttons go away.
+      if (isAxiosError(error) && error.response?.status === 409) retry();
     } finally {
       setBusyId(null);
     }
@@ -98,7 +102,11 @@ const FarmerOrdersPage = () => {
     {
       key: 'code',
       label: t('col.order'),
-      render: (r) => <Link to={`/farmer/orders/${r.orderId}`}>{r.orderCode}</Link>,
+      render: (r) => (
+        <Link to={`/farmer/orders/${r.orderId}`} className="text-brand font-bold underline">
+          {r.orderCode}
+        </Link>
+      ),
     },
     { key: 'who', label: t('col.customer'), render: (r) => r.customerName },
     {
@@ -108,7 +116,7 @@ const FarmerOrdersPage = () => {
     },
     { key: 'cut', label: t('col.cutoff'), render: (r) => cutoffLabel(r.cutoffAt) },
     { key: 'items', label: t('col.items'), align: 'num', render: (r) => r.itemCount },
-    { key: 'total', label: t('col.total'), align: 'num', render: (r) => vnd(r.totalAmount) },
+    { key: 'total', label: t('col.total'), align: 'num', render: (r) => money(r.totalAmount) },
     { key: 'st', label: t('col.status'), render: (r) => <OrderStatusBadge status={r.status} /> },
     {
       key: 'a',
@@ -180,7 +188,7 @@ const FarmerOrdersPage = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
         <form

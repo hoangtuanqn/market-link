@@ -39,13 +39,19 @@
     "complete": "Đánh dấu hoàn tất",
     "view": "Xem"
   },
-  "greeting": "Chào buổi sáng, {{name}}",
-  "applyTemplate": "Áp dụng mẫu tuần",
+  "title": "Tổng quan",
+  "editTemplate": "Sửa mẫu hằng tuần",
   "addProduct": "Thêm sản phẩm",
   "banner": {
     "title_one": "{{count}} đơn đang chờ bạn.",
     "title_other": "{{count}} đơn đang chờ bạn.",
     "text": "Đơn chưa duyệt vẫn giữ hàng. Nhận hoặc từ chối trước giờ chốt để khách còn sắp xếp."
+  },
+  "strikes": {
+    "title": "Lỗi hạn dùng: {{count}}/{{limit}} trong {{days}} ngày",
+    "text": "Báo hư được xác nhận trên món kéo dài hạn tính là một lỗi. Đủ 3 lỗi thì bị khoá kéo dài hạn dùng.",
+    "locked": "Sạp bị khoá kéo dài hạn dùng tới {{date}}.",
+    "link": "Xem các báo cáo"
   },
   "kpi": {
     "noun": "số liệu của bạn",
@@ -67,7 +73,7 @@
   },
   "stock": {
     "title": "Hàng còn hiện tại",
-    "link": "Hàng tuần này",
+    "link": "Mẫu hằng tuần",
     "noun": "hàng còn",
     "empty": {
       "title": "Chưa có sản phẩm nào",
@@ -82,5 +88,14 @@
       "title": "Chưa bán được gì",
       "text": "Sản phẩm bán chạy sẽ hiện ở đây khi có đơn hoàn tất."
     }
+  },
+  "briefing": {
+    "title": "Hôm nay ở {{markets}}",
+    "titleNoMarket": "Hôm nay bạn không bán ở chợ nào",
+    "orders_other": "{{count}} đơn cho hôm nay",
+    "waiting_other": "{{count}} đơn đang chờ bạn nhận hoặc từ chối",
+    "cutoffPassed_other": "{{count}} đơn trong số đó đã qua giờ chốt, khách không sửa được nữa",
+    "soldOut_other": "{{count}} sản phẩm đang để hết hàng",
+    "lowStock_other": "{{count}} sản phẩm sắp hết"
   }
 }

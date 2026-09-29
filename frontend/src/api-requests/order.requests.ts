@@ -1,3 +1,5 @@
+import type { ItemQualityReportDto } from '@/api-requests/quality-report.requests';
+import type { StorageMode } from '@/api-requests/shelf-life.requests';
 import type { ApiResponse, PageType } from '@/types/api.types';
 import type { OrderHistoryEntry, OrderStatus, OrderType } from '@/types/order.types';
 import type { ProductStatus } from '@/types/product.types';
@@ -5,6 +7,9 @@ import { privateApi } from '@/utils/axiosInstance';
 
 /** One cart line sent to the server: preview, place or edit an order (contract §7). */
 export type CartLineInput = { productId: number; quantity: number };
+
+/** FR-125: price this stall's lines for this pickup day ("yyyy-MM-dd"). */
+export type PickupDateInput = { farmerId: number; date: string };
 
 /** One order in a place call: one stall, one market, one slot (D-01). */
 export type OrderGroupInput = {
@@ -30,6 +35,12 @@ export type PreviewItemDto = {
   subtotal: number;
   stockQuantity: number;
   status: ProductStatus;
+  /** FR-125: the price before a near-expiry discount; set only when the priced day is on a deal. */
+  listPrice?: number | null;
+  discountPercent?: number | null;
+  /** The last good day of what the line would get ("yyyy-MM-dd"); null when no day applies. */
+  bestBefore?: string | null;
+  storageMode?: StorageMode | null;
 };
 
 /**
@@ -79,6 +90,8 @@ export type OrderListItemDto = {
   createdAt: string;
   customerId: number;
   customerName: string;
+  /** FR-033: the order already carries a review, so the customer's list does not offer "Review" again. */
+  reviewed: boolean;
 };
 
 /** One `order_items` line — name/price/unit as copied at order time (contract §7). */
@@ -89,6 +102,15 @@ export type OrderItemDto = {
   unitPrice: number;
   quantity: number;
   subtotal: number;
+  /** FR-121: the last good day ("yyyy-MM-dd"); null on lines placed before the promise existed. */
+  bestBefore?: string | null;
+  storageMode?: StorageMode | null;
+  /** FR-124: the price before a near-expiry discount; null when there was none. */
+  listPrice?: number | null;
+  /** FR-122: the customer's spoilage report on this line; null until reported. */
+  qualityReport?: ItemQualityReportDto | null;
+  /** `order_items.id` — the `{itemId}` of the report endpoint (FR-122). */
+  itemId?: number;
 };
 
 /**
@@ -146,6 +168,7 @@ export const toOrderCard = (dto: OrderListItemDto): OrderType => ({
   items: [],
   itemCount: dto.itemCount,
   total: dto.totalAmount,
+  reviewed: dto.reviewed,
   history: [],
 });
 
@@ -168,6 +191,8 @@ export const toOrder = (dto: OrderDetailDto): OrderType => ({
     name: i.productName,
     unit: i.unit,
     price: i.unitPrice,
+    bestBefore: i.bestBefore,
+    storageMode: i.storageMode,
   })),
   itemCount: dto.summary.itemCount,
   total: dto.summary.totalAmount,
@@ -183,12 +208,14 @@ export const toOrder = (dto: OrderDetailDto): OrderType => ({
  */
 class OrderApi {
   /**
-   * Which orders the cart will be split into; each order's issues live in `problems`, nothing is thrown. 400
+   * Which orders the cart will be split into; each order's issues live in `problems`, nothing is thrown. A stall listed
+   * in `pickupDates` is priced for that day, the others for their nearest orderable day (FR-125). 400
    * `VALIDATION_ERROR` when a `productId` does not exist.
    */
-  static preview = async (items: CartLineInput[]) => {
+  static preview = async (items: CartLineInput[], pickupDates: PickupDateInput[] = []) => {
     const response = await privateApi.post<ApiResponse<{ groups: OrderGroupPreviewDto[] }>>('/orders/preview', {
       items,
+      ...(pickupDates.length ? { pickupDates } : {}),
     });
     return response.data.data.groups;
   };

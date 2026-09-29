@@ -33,7 +33,7 @@
   },
   "error": {
     "noun": "mercados",
-    "alt": "el <link>mapa de mercados</link> se abre en su propia página"
+    "alt": "el <a>mapa de mercados</a> se abre en su propia página"
   },
   "pager": {
     "showing": "Mostrando {{from}}–{{to}} de {{total}}",
@@ -53,15 +53,6 @@
   "map": {
     "label": "Mapa de los mercados que coinciden",
     "note": "El mapa sigue los filtros y solo muestra los mercados de la lista."
-  },
-  "demo": {
-    "title": "Otros estados de esta lista (FR-084)",
-    "views": {
-      "loaded": "Con datos",
-      "loading": "Cargando",
-      "error": "Error"
-    },
-    "note": "El estado vacío se puede ver de verdad: elige <b>{{day}}</b> y la zona <b>{{area}}</b>. Indica lo que elegiste y ofrece una salida."
   },
   "location": {
     "measured": "Las distancias se miden desde donde estás.",

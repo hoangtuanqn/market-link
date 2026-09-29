@@ -51,7 +51,8 @@
     "notApproved": "Pasar, hari, dan jendela pengambilan terbuka setelah admin menyetujui kios Anda.",
     "windowError": "{{market}}: pilih minimal satu hari dan waktu selesai setelah waktu mulai.",
     "joined": "{{name}} ditambahkan ke kios Anda.",
-    "left": "{{name}} dihapus dari kios Anda."
+    "left": "{{name}} dihapus dari kios Anda.",
+    "codeError": "{{market}}: kode lapak paling banyak {{max}} karakter."
   },
   "map": {
     "yourStall": "Lapak Anda"

@@ -6,6 +6,7 @@ export type NavItem = { label: keyof (typeof common)['nav']; to: string };
 export const GUEST_NAV: NavItem[] = [
   { label: 'markets', to: '/markets' },
   { label: 'products', to: '/products' },
+  { label: 'deals', to: '/deals' },
   { label: 'map', to: '/map' },
   { label: 'aboutUs', to: '/about' },
 ];
@@ -14,16 +15,22 @@ export const GUEST_NAV: NavItem[] = [
 export const CUSTOMER_NAV: NavItem[] = [
   { label: 'markets', to: '/markets' },
   { label: 'products', to: '/products' },
+  { label: 'deals', to: '/deals' },
   { label: 'map', to: '/map' },
   { label: 'myOrders', to: '/orders' },
   { label: 'favorites', to: '/favorites' },
 ];
+
+/** FR-001 / FR-009: the sign-up form and the screen that takes the emailed code. */
+export const REGISTER_PATH = '/register/customer';
+export const VERIFY_EMAIL_PATH = '/register/verify';
 
 /** FR-004: the admin area is separate from the Customer/Farmer layout. */
 export const ADMIN_LOGIN_PATH = '/admin/login';
 export const ADMIN_HOME_PATH = '/admin';
 /** FR-008: step 2 of admin sign-in and the page to turn two-step verification on / off. */
 export const ADMIN_VERIFY_PATH = '/admin/verify';
+export const ADMIN_SETUP_2FA_PATH = '/admin/setup-2fa';
 export const ADMIN_SECURITY_PATH = '/admin/security';
 export const ADMIN_SETTINGS_PATH = '/admin/settings';
 /** FR-071/D-09: Admin views, approves, suspends a Farmer. */

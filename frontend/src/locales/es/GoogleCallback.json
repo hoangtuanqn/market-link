@@ -17,5 +17,8 @@
     "google": "Google no pudo iniciar tu sesión. Inténtalo de nuevo.",
     "invalidState": "Este intento de acceso no es válido. Empieza de nuevo desde la página de inicio de sesión.",
     "failed": "Falló el acceso con Google. Inténtalo de nuevo."
+  },
+  "deactivated": {
+    "browseAsVisitor": "Explorar como visitante"
   }
 }

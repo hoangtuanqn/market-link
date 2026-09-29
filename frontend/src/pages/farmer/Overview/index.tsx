@@ -1,6 +1,8 @@
+import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
+import ChatApi from '@/api-requests/chat.requests';
 import OrderApi, { type OrderDetailDto, type OrderListItemDto } from '@/api-requests/order.requests';
 import ProductApi from '@/api-requests/product.requests';
 import { FarmerReportApi } from '@/api-requests/report.requests';
@@ -16,12 +18,13 @@ import { Kpi } from '@/components/ui/kpi';
 import { Table, type TableColumn } from '@/components/ui/table';
 import Tabs from '@/components/ui/tabs';
 import useRequest from '@/hooks/useRequest';
-import useSession from '@/hooks/useSession';
-import { pickupLabel, vnd } from '@/lib/format';
+import { pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import LiveClock from './LiveClock';
+import ShelfLifeStrikes from './ShelfLifeStrikes';
+import { stockNow } from './stockNow';
 
 const TABS = [
   { id: 'new', label: 'tabs.new', status: 'placed' as OrderStatus },
@@ -41,13 +44,13 @@ const BEST_SELLER_LIMIT = 5;
 const FarmerOverviewPage = () => {
   const { t } = useTranslation('FarmerOverview');
   const { t: tc } = useTranslation();
-  const { user } = useSession();
   const [tab, setTab] = useState<TabId>('new');
   const [declineOrder, setDeclineOrder] = useState<{ orderId: number; orderCode: string } | null>(null);
   const [reason, setReason] = useState<DeclineReason>(DECLINE_REASONS[0]);
   const [busyId, setBusyId] = useState<number | null>(null);
 
   const { state: kpiLoad, retry: retryKpi } = useRequest('farmer-dash', () => FarmerReportApi.dashboard());
+  const { state: briefingLoad } = useRequest('farmer-briefing', () => ChatApi.farmerBriefing());
   const activeTab = TABS.find((x) => x.id === tab)!;
   const {
     state: ordersLoad,
@@ -73,6 +76,8 @@ const FarmerOverviewPage = () => {
       Notification.success({ text: successText });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+      // 409 (D-04): the order moved on elsewhere — read the incoming orders again so the stale row goes away
+      if (isAxiosError(error) && error.response?.status === 409) retryOrders();
     } finally {
       setBusyId(null);
     }
@@ -82,7 +87,11 @@ const FarmerOverviewPage = () => {
     {
       key: 'code',
       label: t('col.order'),
-      render: (r) => <Link to={`/farmer/orders/${r.orderId}`}>{r.orderCode}</Link>,
+      render: (r) => (
+        <Link to={`/farmer/orders/${r.orderId}`} className="text-brand font-bold underline">
+          {r.orderCode}
+        </Link>
+      ),
     },
     { key: 'who', label: t('col.customer'), render: (r) => r.customerName },
     {
@@ -91,7 +100,7 @@ const FarmerOverviewPage = () => {
       render: (r) => pickupLabel(r.pickupDate, `${r.pickupStart}–${r.pickupEnd}`),
     },
     { key: 'items', label: t('col.items'), align: 'num', render: (r) => r.itemCount },
-    { key: 'total', label: t('col.total'), align: 'num', render: (r) => vnd(r.totalAmount) },
+    { key: 'total', label: t('col.total'), align: 'num', render: (r) => money(r.totalAmount) },
     { key: 'st', label: t('col.status'), render: (r) => <OrderStatusBadge status={r.status} /> },
     {
       key: 'a',
@@ -168,9 +177,9 @@ const FarmerOverviewPage = () => {
   ];
 
   const dashboard = kpiLoad.kind === 'ready' ? kpiLoad.data : null;
+  const briefing = briefingLoad.kind === 'ready' ? briefingLoad.data : null;
   const orders = ordersLoad.kind === 'ready' ? ordersLoad.data.items : [];
-  const stock =
-    stockLoad.kind === 'ready' ? [...stockLoad.data].sort((a, b) => a.stock - b.stock).slice(0, STOCK_ROWS) : [];
+  const stock = stockLoad.kind === 'ready' ? stockNow(stockLoad.data, STOCK_ROWS) : [];
   const best = bestLoad.kind === 'ready' ? bestLoad.data : [];
 
   return (
@@ -180,21 +189,46 @@ const FarmerOverviewPage = () => {
           <p className="text-overline text-ink-muted m-0">
             <LiveClock />
           </p>
-          <h1 className="font-hand text-h1">{t('greeting', { name: user?.fullName ?? '' })}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <ButtonLink variant="secondary" to="/farmer/stock">
-            {t('applyTemplate')}
+            {t('editTemplate')}
           </ButtonLink>
           <ButtonLink to="/farmer/products/new">{t('addProduct')}</ButtonLink>
         </div>
       </div>
+
+      {briefingLoad.kind === 'ready' && briefing && (
+        <Banner
+          variant={briefing.cutoffAlreadyPassed > 0 ? 'warning' : 'info'}
+          title={
+            briefing.marketsToday.length > 0
+              ? t('briefing.title', { markets: briefing.marketsToday.join(', ') })
+              : t('briefing.titleNoMarket')
+          }
+        >
+          <ul className="m-0 flex list-disc flex-col gap-1 pl-4.5">
+            <li>{t('briefing.orders', { count: briefing.ordersToday })}</li>
+            {briefing.waitingToBeAccepted > 0 && (
+              <li>{t('briefing.waiting', { count: briefing.waitingToBeAccepted })}</li>
+            )}
+            {briefing.cutoffAlreadyPassed > 0 && (
+              <li>{t('briefing.cutoffPassed', { count: briefing.cutoffAlreadyPassed })}</li>
+            )}
+            {briefing.soldOutProducts > 0 && <li>{t('briefing.soldOut', { count: briefing.soldOutProducts })}</li>}
+            {briefing.lowStockProducts > 0 && <li>{t('briefing.lowStock', { count: briefing.lowStockProducts })}</li>}
+          </ul>
+        </Banner>
+      )}
 
       {dashboard && dashboard.pendingOrders > 0 && (
         <Banner variant="warning" title={t('banner.title', { count: dashboard.pendingOrders })}>
           {t('banner.text')}
         </Banner>
       )}
+
+      <ShelfLifeStrikes />
 
       {kpiLoad.kind === 'loading' ? (
         <MarketCardSkeleton count={4} />
@@ -218,13 +252,13 @@ const FarmerOverviewPage = () => {
             />
             <Kpi
               label={t('kpi.revenue')}
-              value={vnd(dashboard.revenueTotal)}
+              value={money(dashboard.revenueTotal)}
               href="/farmer/history"
               linkLabel={t('kpi.openHistory')}
             />
             <Kpi
               label={t('kpi.revenueMonth')}
-              value={vnd(dashboard.revenueThisMonth)}
+              value={money(dashboard.revenueThisMonth)}
               href="/farmer/history"
               linkLabel={t('kpi.openHistory')}
             />
@@ -269,7 +303,7 @@ const FarmerOverviewPage = () => {
           ) : stockLoad.kind === 'error' ? (
             <LoadError noun={t('stock.noun')} onRetry={retryStock} />
           ) : stock.length ? (
-            <BarList rows={stock.map((p) => ({ label: p.name, value: p.stock }))} />
+            <BarList rows={stock} />
           ) : (
             <DataState title={t('stock.empty.title')} text={t('stock.empty.text')} />
           )}

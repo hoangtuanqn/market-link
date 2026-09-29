@@ -13,9 +13,11 @@ import static org.mockito.Mockito.when;
 
 import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
+import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatMessageRepository;
+import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
 import com.techx.intervue.modules.chat.requests.ChatRequest;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
@@ -54,6 +56,7 @@ class ChatServiceTest {
     private ProductAvailabilityResolver availability;
     private ClaudeAssistant assistant;
     private AssistantRateLimiter assistantLimit;
+    private FarmerKnowledgeRepository farmerKnowledge;
     private ChatService service;
 
     @BeforeEach
@@ -66,8 +69,10 @@ class ChatServiceTest {
         availability = mock(ProductAvailabilityResolver.class);
         assistant = mock(ClaudeAssistant.class);
         assistantLimit = mock(AssistantRateLimiter.class);
+        farmerKnowledge = mock(FarmerKnowledgeRepository.class);
         when(assistant.enabled()).thenReturn(true);
-        when(assistantLimit.tryAcquire(any())).thenReturn(true);
+        when(assistantLimit.tryAcquirePlatform()).thenReturn(true);
+        when(assistantLimit.tryAcquire(any(), any())).thenReturn(true);
         service =
                 new ChatService(
                         new IntentClassifier(),
@@ -77,7 +82,9 @@ class ChatServiceTest {
                         availability,
                         assistant,
                         assistantLimit,
-                        new ChatbotAiProperties("key", "claude-haiku-4-5", 1024, 4, 10, 30));
+                        farmerKnowledge,
+                        new ChatbotAiProperties(
+                                "key", "claude-haiku-4-5", 1024, 4, 10, 30, 60, 1500));
         when(knowledge.activeMarkets()).thenReturn(List.of(BEN_THANH));
     }
 
@@ -98,31 +105,31 @@ class ChatServiceTest {
      * FR-063), not from products.price / products.stock_quantity.
      */
     @Test
-    void productDetailShowsTheNearestDatePriceInVndAndStock() {
+    void productDetailShowsTheNearestDatePriceInUsdAndStock() {
         when(knowledge.searchProducts("ca chua", null, true))
                 .thenReturn(
                         List.of(
                                 new ProductRow(
                                         10L,
                                         "Cà chua bi",
-                                        new BigDecimal("35000.00"),
+                                        new BigDecimal("1.40"),
                                         "kg",
                                         40,
                                         "available",
                                         3L,
                                         "Vườn Xanh",
                                         List.of("Chợ Bến Thành"))));
-        when(availability.resolve(Map.of(10L, new BigDecimal("35000.00"))))
+        when(availability.resolve(Map.of(10L, new BigDecimal("1.40"))))
                 .thenReturn(
                         Map.of(
                                 10L,
                                 new ProductAvailabilityResolver.Availability(
-                                        LocalDate.of(2026, 9, 28), 12, new BigDecimal("36000"))));
+                                        LocalDate.of(2026, 9, 28), 12, new BigDecimal("1.50"))));
 
         ChatReplyResource reply = ask("Cà chua giá bao nhiêu?");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.PRODUCT_DETAIL);
-        assertThat(reply.reply()).contains("36,000 ₫/kg", "12 kg left", "Vườn Xanh");
+        assertThat(reply.reply()).contains("$1.50/kg", "còn 12 kg", "Vườn Xanh");
         assertThat(reply.results()).extracting("type", "id").containsExactly(tuple("product", 10L));
     }
 
@@ -133,7 +140,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("tìm rau muống ở chợ Bến Thành");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
-        assertThat(reply.reply()).contains("\"rau muong\" at Chợ Bến Thành");
+        assertThat(reply.reply()).contains("\"rau muong\" ở Chợ Bến Thành");
         verify(knowledge).searchProducts("rau muong", 1L, false);
     }
 
@@ -142,7 +149,25 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("chợ Bến Thành mở cửa mấy giờ");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.MARKET_HOURS);
-        assertThat(reply.reply()).contains("06:00–11:00", "Sun, Sat");
+        assertThat(reply.reply()).contains("mở cửa 06:00–11:00", "các ngày CN, T7");
+    }
+
+    /**
+     * The keyword engine answers in the language of the question, like the Claude assistant does
+     * (test run 28/09, G10). Market and stall names stay as they are.
+     */
+    @Test
+    void anEnglishQuestionIsStillAnsweredInEnglish() {
+        ChatReplyResource reply = ask("Ben Thanh market hours");
+
+        assertThat(reply.intent()).isEqualTo(ChatIntent.MARKET_HOURS);
+        assertThat(reply.reply()).contains("opens 06:00–11:00, on Sun, Sat");
+    }
+
+    @Test
+    void aVietnameseGreetingGetsTheVietnameseHelp() {
+        assertThat(ask("xin chào").reply()).startsWith("Xin chào");
+        assertThat(ask("hello").reply()).startsWith("Hi, I am the MarketLink assistant");
     }
 
     @Test
@@ -162,7 +187,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("Thứ 7 có farmer nào ở chợ Bến Thành?");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.FARMER_AVAILABILITY);
-        assertThat(reply.reply()).contains("at Chợ Bến Thành on Sat", "Vườn Xanh", "06:00–10:00");
+        assertThat(reply.reply()).contains("ở Chợ Bến Thành vào T7", "Vườn Xanh", "T7 06:00–10:00");
     }
 
     @Test
@@ -183,7 +208,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("khung giờ lấy hàng của vuon xanh");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.PICKUP_WINDOW);
-        assertThat(reply.reply()).contains("Sun · Chợ Bến Thành · 07:00–09:30");
+        assertThat(reply.reply()).contains("CN · Chợ Bến Thành · 07:00–09:30");
     }
 
     @Test
@@ -212,7 +237,7 @@ class ChatServiceTest {
         ChatReplyResource reply = ask("tìm ' OR 1=1 --");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
-        assertThat(reply.reply()).contains("No products found");
+        assertThat(reply.reply()).contains("Không tìm thấy sản phẩm nào");
     }
 
     @Test
@@ -222,7 +247,7 @@ class ChatServiceTest {
 
         ChatReplyResource reply = ask("chợ nào họp chủ nhật");
 
-        assertThat(reply.reply()).isEqualTo(ChatService.DATA_UNAVAILABLE_REPLY);
+        assertThat(reply.reply()).contains("dữ liệu chợ");
         assertThat(reply.intent()).isEqualTo(ChatIntent.MARKET_HOURS);
     }
 
@@ -242,7 +267,7 @@ class ChatServiceTest {
     @Test
     void signedInCustomerIsAnsweredByTheAssistantAndToolsAreLogged() {
         ChatResultItem card = new ChatResultItem("product", 5L, "Cà chua", "25000 ₫/kg · Vườn A");
-        when(assistant.reply(any(), eq("tìm cà chua")))
+        when(assistant.reply(any(), eq("tìm cà chua"), any(), any()))
                 .thenReturn(
                         new ClaudeAssistant.AiReply(
                                 "Có 1 sản phẩm.",
@@ -250,7 +275,9 @@ class ChatServiceTest {
                                 "AI:search_products",
                                 List.of(card)));
 
-        ChatReplyResource reply = service.reply(new ChatRequest(SESSION, "tìm cà chua"), 42L, true);
+        ChatReplyResource reply =
+                service.reply(
+                        new ChatRequest(SESSION, "tìm cà chua"), 42L, AssistantAudience.CUSTOMER);
 
         assertThat(reply.reply()).isEqualTo("Có 1 sản phẩm.");
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
@@ -265,31 +292,36 @@ class ChatServiceTest {
 
     @Test
     void assistantFailureFallsBackToTheKeywordEngine() {
-        when(assistant.reply(any(), any())).thenThrow(new IllegalStateException("API down"));
+        when(assistant.reply(any(), any(), any(), any()))
+                .thenThrow(new IllegalStateException("API down"));
 
-        ChatReplyResource reply = service.reply(new ChatRequest(SESSION, "xin chào"), 42L, true);
+        ChatReplyResource reply =
+                service.reply(
+                        new ChatRequest(SESSION, "xin chào"), 42L, AssistantAudience.CUSTOMER);
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.GREETING);
-        assertThat(reply.reply()).isEqualTo(ChatService.GREETING_REPLY);
+        assertThat(reply.reply()).startsWith("Xin chào");
     }
 
     @Test
     void overTheHourlyCapTheKeywordEngineAnswersWithoutCallingClaude() {
-        when(assistantLimit.tryAcquire(42L)).thenReturn(false);
+        when(assistantLimit.tryAcquire(eq(42L), any())).thenReturn(false);
 
-        ChatReplyResource reply = service.reply(new ChatRequest(SESSION, "xin chào"), 42L, true);
+        ChatReplyResource reply =
+                service.reply(
+                        new ChatRequest(SESSION, "xin chào"), 42L, AssistantAudience.CUSTOMER);
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.GREETING);
-        verify(assistant, never()).reply(any(), any());
+        verify(assistant, never()).reply(any(), any(), any(), any());
     }
 
     @Test
     void guestsAndNonCustomerAccountsNeverReachClaude() {
-        service.reply(new ChatRequest(SESSION, "xin chào"), null, true);
-        service.reply(new ChatRequest(SESSION, "xin chào"), 42L, false);
+        service.reply(new ChatRequest(SESSION, "xin chào"), null, AssistantAudience.CUSTOMER);
+        service.reply(new ChatRequest(SESSION, "xin chào"), 42L, null);
 
-        verify(assistant, never()).reply(any(), any());
-        verify(assistantLimit, never()).tryAcquire(any());
+        verify(assistant, never()).reply(any(), any(), any(), any());
+        verify(assistantLimit, never()).tryAcquire(any(), any());
     }
 
     @Test
@@ -300,16 +332,16 @@ class ChatServiceTest {
                                 message(3L, 42L, "câu mới"),
                                 message(2L, 7L, "của người khác"),
                                 message(1L, 42L, "câu cũ")));
-        when(assistant.reply(any(), any()))
+        when(assistant.reply(any(), any(), any(), any()))
                 .thenReturn(
                         new ClaudeAssistant.AiReply(
                                 "ok", ChatIntent.UNKNOWN, "AI:none", List.of()));
 
-        service.reply(new ChatRequest(SESSION, "tiếp"), 42L, true);
+        service.reply(new ChatRequest(SESSION, "tiếp"), 42L, AssistantAudience.CUSTOMER);
 
         @SuppressWarnings("unchecked")
         ArgumentCaptor<List<ChatMessage>> history = ArgumentCaptor.forClass(List.class);
-        verify(assistant).reply(history.capture(), eq("tiếp"));
+        verify(assistant).reply(history.capture(), eq("tiếp"), any(), any());
         assertThat(history.getValue()).extracting("message").containsExactly("câu cũ", "câu mới");
     }
 

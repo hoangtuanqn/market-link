@@ -3,7 +3,7 @@
   "intro": "네 개 장터에 걸친 MarketLink의 모든 주문입니다. 관리자는 읽기만 하고, 주문을 다음 상태로 넘기는 건 가게뿐입니다.",
   "noun": "orders",
   "list": {
-    "inPeriod": "{{month}}에 {{count}}건",
+    "inPeriod": "주문 {{count}}건",
     "filterLabel": "상태로 주문 거르기",
     "market": "장터",
     "allMarkets": "모든 장터",

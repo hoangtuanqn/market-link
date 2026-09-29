@@ -39,13 +39,19 @@
     "complete": "Als abgeschlossen markieren",
     "view": "Ansehen"
   },
-  "greeting": "Guten Morgen, {{name}}",
-  "applyTemplate": "Wochenvorlage anwenden",
+  "title": "Übersicht",
+  "editTemplate": "Wochenvorlage bearbeiten",
   "addProduct": "Produkt hinzufügen",
   "banner": {
-    "title_one": "{{count}} Bestellung wartet auf Sie. {{closing}} davon schließen morgen um {{time}}.",
-    "title_other": "{{count}} Bestellungen warten auf Sie. {{closing}} davon schließen morgen um {{time}}.",
+    "title_one": "{{count}} Bestellung wartet auf Sie.",
+    "title_other": "{{count}} Bestellungen warten auf Sie.",
     "text": "Nicht freigegebene Bestellungen halten weiterhin Bestand. Nehmen Sie sie vor dem Bestellschluss an oder lehnen Sie sie ab, damit Kunden planen können."
+  },
+  "strikes": {
+    "title": "Haltbarkeitsverstöße: {{count}}/{{limit}} in {{days}} Tagen",
+    "text": "Eine bestätigte Verderb-Meldung zu einer verlängerten Haltbarkeit zählt als Verstoß. 3 Verstöße sperren längere Haltbarkeiten.",
+    "locked": "Längere Haltbarkeiten sind bis {{date}} gesperrt.",
+    "link": "Verderb-Meldungen ansehen"
   },
   "kpi": {
     "noun": "your numbers",
@@ -66,8 +72,8 @@
     }
   },
   "stock": {
-    "title": "Bestand für {{day}}",
-    "link": "Bestand dieser Woche",
+    "title": "Aktueller Bestand",
+    "link": "Wochenvorlage",
     "noun": "stock",
     "empty": {
       "title": "No products yet",
@@ -82,5 +88,19 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "Heute auf {{markets}}",
+    "titleNoMarket": "Heute sind Sie auf keinem Markt",
+    "orders_one": "{{count}} Bestellung für heute",
+    "orders_other": "{{count}} Bestellungen für heute",
+    "waiting_one": "{{count}} wartet noch auf Ihre Zu- oder Absage",
+    "waiting_other": "{{count}} warten noch auf Ihre Zu- oder Absage",
+    "cutoffPassed_one": "Bei {{count}} davon ist die Frist abgelaufen, Kunden können nichts mehr ändern",
+    "cutoffPassed_other": "Bei {{count}} davon ist die Frist abgelaufen, Kunden können nichts mehr ändern",
+    "soldOut_one": "{{count}} Produkt ist als ausverkauft markiert",
+    "soldOut_other": "{{count}} Produkte sind als ausverkauft markiert",
+    "lowStock_one": "{{count}} Produkt geht zur Neige",
+    "lowStock_other": "{{count}} Produkte gehen zur Neige"
   }
 }

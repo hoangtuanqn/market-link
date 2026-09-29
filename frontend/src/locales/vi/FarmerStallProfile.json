@@ -51,7 +51,8 @@
     "notApproved": "Chợ, ngày và khung giờ nhận mở sau khi admin duyệt gian hàng của bạn.",
     "windowError": "{{market}}: chọn ít nhất một ngày và giờ kết thúc phải sau giờ bắt đầu.",
     "joined": "Đã thêm {{name}} vào gian hàng của bạn.",
-    "left": "Đã bỏ {{name}} khỏi gian hàng của bạn."
+    "left": "Đã bỏ {{name}} khỏi gian hàng của bạn.",
+    "codeError": "{{market}}: mã sạp tối đa {{max}} ký tự."
   },
   "map": {
     "yourStall": "Sạp của bạn"

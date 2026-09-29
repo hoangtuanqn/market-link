@@ -32,21 +32,13 @@
     "title": "認証アプリでスキャンする",
     "text": "Google Authenticator、Microsoft Authenticator、Authy、1Password など、どれでも使えます。何も送信されません。下のコードはお使いのブラウザが描画しています。",
     "qr": "認証アプリ用の QR コード",
-    "manual": "<b>スキャンできませんか？</b>このキーを手入力してください：",
-    "type": "種類",
-    "typeValue": "時間ベース（TOTP）",
-    "algorithm": "アルゴリズム",
-    "digits": "桁数",
-    "period": "間隔",
-    "seconds_one": "{{count}} 秒",
-    "seconds_other": "{{count}} 秒"
+    "manual": "<b>スキャンできませんか？</b>このキーを手入力してください："
   },
   "step2": {
     "title": "表示されたコードを入力する",
     "text": "オンにする前に、スマートフォンとサーバーの時刻が合っていることを確認します。",
     "code": "6 桁のコード",
-    "confirm": "確認",
-    "confirmed": "確認済み"
+    "confirm": "確認"
   },
   "step3": {
     "title": "リカバリーコードを保存する",
@@ -80,5 +72,19 @@
     "copyFailed": "コピーできませんでした。コードを選択して手動でコピーしてください。",
     "downloaded": "{{file}} としてダウンロードしました。",
     "fileHeading": "MarketLink 管理者リカバリーコード"
+  },
+  "setup": {
+    "overline": "管理者セキュリティ",
+    "title": "二段階認証を設定",
+    "copySecret": "キーをコピー",
+    "secretCopied": "キーをクリップボードにコピーしました。",
+    "completeTitle": "二段階認証がオンになりました！",
+    "completeText": "管理者アカウントが保護されました。下のバックアップ用リカバリーコードを保存してから、ダッシュボードに進んでください。",
+    "goToDashboard": "管理者ダッシュボードへ",
+    "alreadyActive": "このアカウントではすでに二段階認証が有効です。",
+    "backToDashboard": "ダッシュボードに戻る",
+    "manageSecurity": "セキュリティ設定",
+    "notYou": "あなたではありませんか？",
+    "signOut": "サインアウト"
   }
 }

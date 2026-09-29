@@ -1,6 +1,9 @@
 package com.techx.intervue.modules.user.repositories;
 
 import com.techx.intervue.modules.user.entities.User;
+import com.techx.intervue.modules.user.enums.UserStatus;
+import java.time.Instant;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,4 +18,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     /** The phone number already belongs to another account (ignoring the user being edited). */
     boolean existsByPhoneAndIdNot(String phone, Long id);
+
+    /** FR-072: every customer whose temporary ban has expired, for CustomerBanExpiryJob. */
+    List<User> findByStatusAndDeactivatedUntilLessThanEqual(UserStatus status, Instant now);
 }

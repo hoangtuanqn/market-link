@@ -13,15 +13,19 @@ public interface WeeklyStockTemplateRepository extends JpaRepository<WeeklyStock
 
     void deleteByFarmerId(Long farmerId);
 
-    List<WeeklyStockTemplate> findByFarmerIdAndDayOfWeekAndActiveTrue(Long farmerId, int dayOfWeek);
+    void deleteByProductId(Long productId);
 
     List<WeeklyStockTemplate> findByProductIdAndActiveTrue(Long productId);
+
+    List<WeeklyStockTemplate> findByFarmerIdAndActiveTrue(Long farmerId);
 
     @Query(
             "select new com.techx.intervue.modules.product.resources.StockTemplateResource("
                     + "t.productId, p.name, t.dayOfWeek, t.defaultQuantity, t.defaultPrice) "
                     + "from WeeklyStockTemplate t join Product p on p.id = t.productId "
                     + "where t.farmerId = :farmerId "
+                    + "and p.deleted = false "
+                    + "and t.active = true "
                     + "order by t.dayOfWeek, p.name")
     List<StockTemplateResource> findResourcesByFarmerId(@Param("farmerId") Long farmerId);
 

@@ -5,6 +5,7 @@ import useRequest from '@/hooks/useRequest';
 import useChatUnread from '@/hooks/useChatUnread';
 import { chatWhen } from '@/lib/chat/time';
 import { displayName } from '@/lib/chat/names';
+import { mediaPreviewKey } from '@/lib/chat/preview';
 
 type Props = {
   to: string;
@@ -12,6 +13,10 @@ type Props = {
 
 export default function MessagesPreview({ to }: Props) {
   const { t } = useTranslation('common');
+  const preview = (text: string | null) => {
+    const key = mediaPreviewKey(text);
+    return key ? t(key) : (text ?? '');
+  };
   const unreadCount = useChatUnread();
 
   const { state } = useRequest(`chat-preview:${unreadCount}`, () =>
@@ -50,7 +55,7 @@ export default function MessagesPreview({ to }: Props) {
               )}
             </div>
             {/* A freshly opened thread with no message yet: leave it empty, do not fake an "..." mark */}
-            <p className="text-small text-ink-muted mt-1 truncate">{thread.lastMessageText ?? ''}</p>
+            <p className="text-small text-ink-muted mt-1 truncate">{preview(thread.lastMessageText)}</p>
           </div>
           {thread.unreadCount > 0 && (
             <div className="bg-accent mt-2 size-2 flex-shrink-0 rounded-full">

@@ -1,10 +1,13 @@
 import type { ComponentType } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router';
+import AssistantLauncher from '@/components/assistant/AssistantLauncher';
+import { AssistantProvider } from '@/components/assistant/AssistantProvider';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import OnboardingTour from '@/components/OnboardingTour';
 import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import useChatUnread from '@/hooks/useChatUnread';
+import useLogout from '@/hooks/useLogout';
 import {
   BellIcon,
   BoxIcon,
@@ -34,6 +37,20 @@ import DashboardShell, { type ShellNavGroup } from './DashboardShell';
 type FarmerNavKey = keyof (typeof common)['farmerNav'];
 type NavItem = { to: string; label: FarmerNavKey; icon: ComponentType<IconProps>; count?: number };
 type NavGroup = { heading: FarmerNavKey; items: NavItem[] };
+
+/**
+ * D-09: while a stall is suspended it "chỉ thấy đơn cũ" (only sees old orders) — the server backs this with
+ * StallSuspensionMessage.assertUsable on the product, stock and dashboard reads (FR-071 Task 3), so these are exactly
+ * the screens that would now fail with STALL_SUSPENDED. Reviews and sales history stay: neither is guarded server-side,
+ * since responding to a past review or reading completed-order history is not "selling".
+ */
+const LOCKED_WHILE_SUSPENDED = new Set([
+  '/farmer',
+  '/farmer/products',
+  '/farmer/stock',
+  '/farmer/slots',
+  '/farmer/stall',
+]);
 
 const NAV: NavGroup[] = [
   {
@@ -86,6 +103,7 @@ const FarmerLayout = () => {
   const unread = useUnreadNotifications();
   const { user } = useSession();
   const { pathname } = useLocation();
+  const logout = useLogout();
   const { state: profileLoad } = useRequest('farmer-layout-profile', () => StallApi.myProfile());
   const profile = profileLoad.kind === 'ready' ? profileLoad.data : null;
   const stallName = profile?.stallName ?? user?.fullName ?? '';
@@ -97,25 +115,28 @@ const FarmerLayout = () => {
     OrderApi.farmerList({ status: 'placed', pageSize: 1 }),
   );
   const awaiting = placedLoad.kind === 'ready' ? placedLoad.data.total : undefined;
+  const suspended = profile?.approvalStatus === 'suspended';
 
   const nav: ShellNavGroup[] = NAV.map((g) => ({
     heading: t(`farmerNav.${g.heading}`),
-    items: g.items.map((it) => ({
-      ...it,
-      label: t(`farmerNav.${it.label}`),
-      count:
-        it.to === '/farmer/notifications'
-          ? unread || undefined
-          : it.to === '/farmer/messages'
-            ? chatUnread || undefined
-            : it.to === '/farmer/orders'
-              ? awaiting || undefined
-              : it.count,
-    })),
-  }));
+    items: g.items
+      .filter((it) => !suspended || !LOCKED_WHILE_SUSPENDED.has(it.to))
+      .map((it) => ({
+        ...it,
+        label: t(`farmerNav.${it.label}`),
+        count:
+          it.to === '/farmer/notifications'
+            ? unread || undefined
+            : it.to === '/farmer/messages'
+              ? chatUnread || undefined
+              : it.to === '/farmer/orders'
+                ? awaiting || undefined
+                : it.count,
+      })),
+  })).filter((g) => g.items.length > 0);
 
   return (
-    <>
+    <AssistantProvider>
       <OnboardingTour role="farmer" />
       <DashboardShell
         badge={t('farmerNav.badge')}
@@ -135,13 +156,16 @@ const FarmerLayout = () => {
           mono: initials(user?.fullName, user?.email),
           email: user?.email ?? '',
           line: t('farmerNav.roleStall', { stall: stallName }),
+          name: user?.fullName,
         }}
-        searchId="farmer-appq"
-        searchPlaceholder={t('farmerNav.searchPlaceholder')}
         accountTo="/account"
+        onSignOut={logout}
         headerActions={<NotificationBell to="/farmer/notifications" />}
+        className="bg-surface-quiet"
       />
-    </>
+      {/* FR-093: without this the Farmer tools exist on the server and nothing in this panel can reach them. */}
+      <AssistantLauncher />
+    </AssistantProvider>
   );
 };
 

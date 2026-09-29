@@ -10,5 +10,26 @@
   "hours_one": "{{count}} 小时",
   "hours_other": "{{count}} 小时",
   "orders_one": "{{count}} 单",
-  "orders_other": "{{count}} 单"
+  "orders_other": "{{count}} 单",
+  "website": {
+    "title": "网站状态",
+    "intro": "在修复问题时暂时关闭整个网站，完成后再重新开启。",
+    "loading": "正在加载网站状态",
+    "loadErrorTitle": "无法加载网站状态",
+    "loadErrorText": "请检查网络连接后重试。",
+    "retry": "重试",
+    "pillActive": "正常运行",
+    "pillMaintenance": "维护中",
+    "activeText": "MarketLink 目前对所有人开放。",
+    "maintenanceText": "目前只有管理员可以登录，其他人都会看到维护提示。",
+    "enable": "开启维护模式",
+    "disable": "关闭维护模式",
+    "confirmTitle": "要开启维护模式吗？",
+    "confirmText": "除管理员外的所有访客都会立即被跳转到维护提示页面。你可以随时再次关闭它。",
+    "confirmButton": "立即开启",
+    "cancelButton": "暂不开启",
+    "toastOn": "维护模式已开启，除管理员外所有人都无法访问。",
+    "toastOff": "维护模式已关闭，MarketLink 已重新开放。",
+    "error": "无法更新网站状态，请重试。"
+  }
 }

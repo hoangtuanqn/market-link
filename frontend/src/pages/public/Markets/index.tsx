@@ -15,14 +15,12 @@ import useClock from '@/hooks/useClock';
 import useGeolocation from '@/hooks/useGeolocation';
 import useRequest from '@/hooks/useRequest';
 import useSettings from '@/hooks/useSettings';
-import { dayList, dayName, formatClock, nowLabel, upcoming } from '@/lib/format';
+import { dayList, dayName, firstOpenDay, formatClock, formatDayMonth, nextSevenDays, nowLabel } from '@/lib/format';
 import { distanceKm } from '@/lib/geo';
 import type { MarketType } from '@/types/market.types';
 import Notification from '@/utils/notification';
 
 const PAGE_SIZE = 3;
-/** All seven weekdays, Monday first, matching `market_operating_days.day_of_week` (0 = Sunday). */
-const DAY_OPTIONS = [1, 2, 3, 4, 5, 6, 0];
 const SORTS = ['near', 'stalls', 'opens'] as const;
 /**
  * Contract §3 caps one page at 50. A city's markets fit in a single call, so the day chips (which need to know every
@@ -38,7 +36,7 @@ const MarketsPage = () => {
   const { t } = useTranslation('Markets');
   const { t: tc } = useTranslation();
   const now = useClock();
-  const [day, setDay] = useState(6);
+  const [picked, setPicked] = useState<number | null>(null);
   const [area, setArea] = useState('all');
   const [sort, setSort] = useState('stalls');
   const [page, setPage] = useState(1);
@@ -52,11 +50,16 @@ const MarketsPage = () => {
   );
   const all = load.kind === 'ready' ? load.data : NO_MARKETS;
   const openOn = useCallback((dow: number) => all.filter((m) => m.days.includes(dow)), [all]);
+  // The coming week from today, today first (FR-010). Until the visitor picks a chip, the day is the first one from
+  // today that some market opens on.
+  const week = nextSevenDays(now);
+  const defaultDay = firstOpenDay((d) => openOn(d).length > 0, now);
+  const day = picked ?? defaultDay;
 
   const onDay = useMemo(() => openOn(day), [openOn, day]);
-  // Areas come from the markets themselves, so a new market in a new district needs no edit here (FR-010).
+  // Areas come from the markets themselves, so a new market in a new ward needs no edit here (FR-010).
   const areas = useMemo(
-    () => [...new Set(all.map((m) => m.district).filter(Boolean))].sort((a, b) => a.localeCompare(b)),
+    () => [...new Set(all.map((m) => m.area).filter(Boolean))].sort((a, b) => a.localeCompare(b)),
     [all],
   );
 
@@ -68,7 +71,7 @@ const MarketsPage = () => {
 
   const { preferredMarket } = useSettings();
   const matches = useMemo(() => {
-    const list = onDay.filter((m) => area === 'all' || m.district === area);
+    const list = onDay.filter((m) => area === 'all' || m.area === area);
     return [...list].sort((a, b) => {
       // Settings → Market you shop at most: that market leads whatever the sort
       const pa = String(a.id) === preferredMarket ? 0 : 1;
@@ -101,7 +104,7 @@ const MarketsPage = () => {
         lines: [
           `${dayList(m.days)} · ${formatClock(m.open)}–${formatClock(m.close)}`,
           t('popupStalls', { count: m.stalls }),
-          m.district,
+          m.area,
         ],
         href: `/markets/${m.id}`,
       },
@@ -109,7 +112,7 @@ const MarketsPage = () => {
   }, [matches, all, from, t]);
 
   const setDayAndReset = (d: number) => {
-    setDay(d);
+    setPicked(d);
     setPage(1);
   };
   const setAreaAndReset = (a: string) => {
@@ -121,11 +124,11 @@ const MarketsPage = () => {
     setPage(1);
   };
   const clearAll = () => {
-    setDay(6);
+    setPicked(null);
     setArea('all');
     setSort('stalls');
     setPage(1);
-    Notification.info({ title: t('cleared.title'), text: t('cleared.text', { day: dayLabel(6) }) });
+    Notification.info({ title: t('cleared.title'), text: t('cleared.text', { day: dayLabel(defaultDay) }) });
   };
   const goToPage = (p: number) => {
     setPage(p);
@@ -155,11 +158,11 @@ const MarketsPage = () => {
             name="market-day"
             value={String(day)}
             onChange={(v) => setDayAndReset(Number(v))}
-            options={DAY_OPTIONS.map((d) => ({
-              value: String(d),
-              label: dayLabel(d),
-              date: upcoming(d, now),
-              disabled: load.kind === 'ready' && openOn(d).length === 0,
+            options={week.map((d) => ({
+              value: String(d.dow),
+              label: dayLabel(d.dow),
+              date: formatDayMonth(d.date),
+              disabled: load.kind === 'ready' && openOn(d.dow).length === 0,
             }))}
           />
           <Button variant="ghost" size="sm" onClick={clearAll} className="self-start">
@@ -176,7 +179,7 @@ const MarketsPage = () => {
               { value: 'all', label: t('filters.allAreas', { count: onDay.length }) },
               ...areas.map((a) => ({
                 value: a,
-                label: `${a} (${onDay.filter((m) => m.district === a).length})`,
+                label: `${a} (${onDay.filter((m) => m.area === a).length})`,
               })),
             ]}
             className="min-w-65"
@@ -250,7 +253,7 @@ const MarketsPage = () => {
           {load.kind === 'error' ? (
             <LoadError
               noun={t('error.noun')}
-              alt={<Trans t={t} i18nKey="error.alt" components={{ link: <Link to="/map" /> }} />}
+              alt={<Trans t={t} i18nKey="error.alt" components={{ a: <Link to="/map" /> }} />}
               onRetry={retry}
             />
           ) : load.kind === 'loading' || matches.length ? (

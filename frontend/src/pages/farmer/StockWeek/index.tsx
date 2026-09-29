@@ -9,7 +9,7 @@ import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import useRequest from '@/hooks/useRequest';
-import { dayName, unitName, vnd } from '@/lib/format';
+import { dayName, unitName, money } from '@/lib/format';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
@@ -80,6 +80,8 @@ const TemplateGrid = ({
   const { t: tc } = useTranslation();
   const [cells, setCells] = useState<Record<string, Cell>>(() => seedCells(initialTemplates));
   const [saving, setSaving] = useState(false);
+  // FR-063: the cell whose price the server would refuse ($0 or less), and the message said for it
+  const [badPrice, setBadPrice] = useState<{ key: string; message: string } | null>(null);
 
   const setCell = (productId: number, day: number, patch: Partial<Cell>) => {
     const key = cellKey(productId, day);
@@ -95,9 +97,18 @@ const TemplateGrid = ({
         const quantity = Number(cell.quantity);
         if (!Number.isFinite(quantity) || quantity <= 0) continue;
         const price = cell.price.trim() === '' ? null : Number(cell.price);
+        // The server only takes a weekday price above $0 (StockTemplateRequest); blank keeps the current price
+        if (price !== null && (!Number.isFinite(price) || price <= 0)) {
+          setBadPrice({
+            key: cellKey(p.id, day),
+            message: t('template.priceError', { product: p.name, day: dayName(day, 'long') }),
+          });
+          return;
+        }
         items.push({ productId: p.id, dayOfWeek: day, defaultQuantity: quantity, defaultPrice: price });
       }
     }
+    setBadPrice(null);
     setSaving(true);
     try {
       const rows = await StockTemplateApi.replace(items);
@@ -131,11 +142,12 @@ const TemplateGrid = ({
                 <td className={td}>
                   <b>{p.name}</b>
                   <span className="text-ink-muted mt-0.5 block text-[12px] font-normal">
-                    {t('per', { unit: unitName(p.unit) })} · {t('currentPrice', { price: vnd(p.price) })}
+                    {t('per', { unit: unitName(p.unit) })} · {t('currentPrice', { price: money(p.price) })}
                   </span>
                 </td>
                 {DAYS.map((day) => {
                   const cell = cells[cellKey(p.id, day)] ?? { quantity: '', price: '' };
+                  const priceInvalid = badPrice?.key === cellKey(p.id, day);
                   return (
                     <td key={day} className={td}>
                       <div className="flex flex-col gap-1">
@@ -146,17 +158,22 @@ const TemplateGrid = ({
                           onChange={(e) => setCell(p.id, day, { quantity: e.target.value })}
                           aria-label={t('aria.quantity', { product: p.name, day: dayName(day, 'long') })}
                           placeholder="0"
-                          className="border-line-strong bg-surface-raised min-h-9 w-20 rounded-sm border-[1.5px] px-2 text-right text-[14px] tabular-nums"
+                          className="border-line-strong bg-surface-raised min-h-11 w-20 rounded-sm border-[1.5px] px-2 text-right text-[14px] tabular-nums"
                         />
                         <input
                           type="number"
-                          min={0}
-                          step={1000}
+                          min={0.01}
+                          step={0.01}
                           value={cell.price}
                           onChange={(e) => setCell(p.id, day, { price: e.target.value })}
                           aria-label={t('aria.price', { product: p.name, day: dayName(day, 'long') })}
+                          aria-invalid={priceInvalid}
+                          aria-describedby={priceInvalid ? 'template-price-error' : undefined}
                           placeholder={t('defaultPricePlaceholder')}
-                          className="border-line text-ink-muted min-h-8 w-20 rounded-sm border px-2 text-right text-[12px] tabular-nums"
+                          className={
+                            'text-ink-muted min-h-11 w-20 rounded-sm border px-2 text-right text-[12px] tabular-nums ' +
+                            (priceInvalid ? 'border-danger' : 'border-line')
+                          }
                         />
                       </div>
                     </td>
@@ -167,6 +184,11 @@ const TemplateGrid = ({
           </tbody>
         </table>
       </Card>
+      {badPrice && (
+        <p id="template-price-error" role="alert" className="text-danger m-0 text-[13px]">
+          {badPrice.message}
+        </p>
+      )}
       <div className="flex flex-wrap items-center gap-3">
         <Button onClick={() => void save()} disabled={saving}>
           {t('template.save')}
@@ -192,7 +214,7 @@ const FarmerStockWeekPage = () => {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-h1">{t('title')}</h1>
+        <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
         <p className="text-body max-w-160">{t('intro')}</p>
       </div>
 

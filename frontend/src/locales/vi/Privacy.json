@@ -3,7 +3,7 @@
   "lead": "MarketLink lưu gì về bạn, vì sao lưu, và ai được xem. Viết từ đúng những bảng dữ liệu mà sản phẩm thật sự có, không phải từ một mẫu có sẵn.",
   "meta": "Phiên bản 0.1 · Cập nhật lần cuối {{date}} · Áp dụng cho Khách hàng, Nhà vườn và khách ghé thăm",
   "onThisPage": "Trong trang này",
-  "seeAlso": "Đọc thêm <link>Điều khoản dịch vụ</link>. Phần đó nói về việc đặt trước và nhận hàng.",
+  "seeAlso": "Đọc thêm <a>Điều khoản dịch vụ</a>. Phần đó nói về việc đặt trước và nhận hàng.",
   "sections": [
     {
       "id": "collect",

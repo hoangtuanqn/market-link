@@ -1,8 +1,8 @@
 package com.techx.intervue.modules.product.services.impl;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -13,18 +13,22 @@ import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
+import com.techx.intervue.modules.product.entities.ProductDailyStock;
+import com.techx.intervue.modules.product.entities.WeeklyStockTemplate;
 import com.techx.intervue.modules.product.enums.ProductStatus;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
 import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateRepository;
 import com.techx.intervue.modules.product.requests.StockTemplateRequest;
-import com.techx.intervue.modules.product.resources.StockTemplateResource;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
+import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 
 class StockTemplateServiceTest {
 
@@ -37,6 +41,7 @@ class StockTemplateServiceTest {
     private ProductRepository products;
     private FarmerProfileRepository farmers;
     private RestockNotifier restock;
+    private DailyStockTemplateSync sync;
     private StockTemplateService service;
 
     @BeforeEach
@@ -45,7 +50,8 @@ class StockTemplateServiceTest {
         products = mock(ProductRepository.class);
         farmers = mock(FarmerProfileRepository.class);
         restock = mock(RestockNotifier.class);
-        service = new StockTemplateService(templates, products, farmers, restock);
+        sync = mock(DailyStockTemplateSync.class);
+        service = new StockTemplateService(templates, products, farmers, restock, sync);
         when(products.save(any(Product.class))).thenAnswer(i -> i.getArgument(0));
     }
 
@@ -77,18 +83,17 @@ class StockTemplateServiceTest {
 
     // ---- list ----
 
-    /** Đọc lịch không cần stall đã duyệt, giống {@code ProductService.mineOne}. */
+    /**
+     * FR-071: reading the weekly plan used to be allowed while suspended. D-09 is stricter — a
+     * suspended Farmer sees only their old orders — so this screen closes with the rest of the
+     * selling panel.
+     */
     @Test
-    void listReturnsTemplatesEvenWhenStallSuspended() {
+    void listIsRefusedWhileTheStallIsSuspended() {
         when(farmers.findByUserId(USER_ID))
                 .thenReturn(Optional.of(stall(ApprovalStatus.SUSPENDED)));
-        StockTemplateResource resource =
-                new StockTemplateResource(PRODUCT_ID, "Rau muống", 1, 50, new BigDecimal("2.00"));
-        when(templates.findResourcesByFarmerId(FARMER_ID)).thenReturn(List.of(resource));
 
-        List<StockTemplateResource> result = service.list(USER_ID);
-
-        assertThat(result).containsExactly(resource);
+        assertThatThrownBy(() -> service.list(USER_ID)).isInstanceOf(StallSuspendedException.class);
     }
 
     // ---- replace ----
@@ -177,6 +182,67 @@ class StockTemplateServiceTest {
         service.replace(USER_ID, oneItemRequest(1, 40, new BigDecimal("2.00")));
 
         verify(restock).afterChange(product, true, true);
+    }
+
+    /**
+     * FR-062/FR-063: the days that already have a daily-stock row follow the new template. Their
+     * rows are locked before the restock check reads them (C5-2), and followed after the new set is
+     * written.
+     */
+    @Test
+    void replaceLocksTheDaysFirstThenMakesThemFollowTheNewTemplate() {
+        approvedStall();
+        Product product = product(FARMER_ID);
+        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(product));
+        when(templates.findByFarmerIdAndActiveTrue(FARMER_ID))
+                .thenReturn(List.of(template(PRODUCT_ID, 6, 30)));
+        List<ProductDailyStock> rows = List.of(new ProductDailyStock());
+        when(sync.lockUpcoming(PRODUCT_ID)).thenReturn(rows);
+
+        service.replace(USER_ID, oneItemRequest(6, 50, null));
+
+        InOrder order = inOrder(sync, restock, templates);
+        order.verify(sync).lockUpcoming(PRODUCT_ID);
+        order.verify(restock).isOrderable(product);
+        order.verify(templates).replaceAll(any(), any());
+        order.verify(sync)
+                .followTemplate(
+                        product,
+                        rows,
+                        Map.of(6, new DailyStockTemplateSync.DayPlan(30, null)),
+                        Map.of(6, new DailyStockTemplateSync.DayPlan(50, null)));
+    }
+
+    /** A product left out of the request lost every weekday: its booked days stop selling too. */
+    @Test
+    void replaceAlsoMakesAProductDroppedFromTheRequestFollow() {
+        approvedStall();
+        Product kept = product(FARMER_ID);
+        Product dropped = product(FARMER_ID);
+        dropped.setId(PRODUCT_ID + 1);
+        when(products.findByIdAndDeletedFalse(PRODUCT_ID)).thenReturn(Optional.of(kept));
+        when(products.findByIdAndDeletedFalse(PRODUCT_ID + 1)).thenReturn(Optional.of(dropped));
+        when(templates.findByFarmerIdAndActiveTrue(FARMER_ID))
+                .thenReturn(List.of(template(PRODUCT_ID + 1, 6, 30)));
+        when(sync.lockUpcoming(PRODUCT_ID + 1)).thenReturn(List.of());
+
+        service.replace(USER_ID, oneItemRequest(1, 40, null));
+
+        verify(sync)
+                .followTemplate(
+                        dropped,
+                        List.of(),
+                        Map.of(6, new DailyStockTemplateSync.DayPlan(30, null)),
+                        Map.of());
+    }
+
+    private static WeeklyStockTemplate template(long productId, int dayOfWeek, int quantity) {
+        WeeklyStockTemplate t = new WeeklyStockTemplate();
+        t.setFarmerId(FARMER_ID);
+        t.setProductId(productId);
+        t.setDayOfWeek(dayOfWeek);
+        t.setDefaultQuantity(quantity);
+        return t;
     }
 
     private static StockTemplateRequest oneItemRequest(

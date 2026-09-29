@@ -129,6 +129,7 @@ class FarmerReportServiceTest {
     void lowStockCountsTheNearestPickupDateStock() {
         long userId = fx.user("farmer", "Farmer stock", "x");
         long farmer = fx.farmer(userId, "Stall stock", "approved");
+        fx.sellsEveryDay(farmer, fx.market("Market stock"));
         fx.everyDayTemplate(farmer, fx.product(farmer, category, "Plenty", 10000), 20);
         fx.everyDayTemplate(farmer, fx.product(farmer, category, "Nearly gone", 10000), 3);
         fx.product(farmer, category, "No template", 10000);

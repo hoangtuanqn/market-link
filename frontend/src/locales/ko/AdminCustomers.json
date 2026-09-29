@@ -35,9 +35,9 @@
   },
   "deactivate": {
     "title": "{{name}} 님을 정지할까요?",
-    "text": "모든 기기에서 로그아웃되고 로그인도 주문도 할 수 없습니다. 이미 넣은 주문은 가게 쪽에 그대로 남습니다.",
-    "reason": "사유, 계정에 기록됩니다",
-    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
+    "text": "모든 기기에서 즉시 로그아웃되고 로그인도 주문도 할 수 없습니다. 일시 정지는 기존 주문을 건드리지 않지만, 영구 정지는 아직 접수 대기 중이거나 수락된 주문까지 모두 취소하고 재고를 돌려놓습니다.",
+    "reason": "사유",
+    "reasonRequired": "사유를 하나 이상 선택하거나 메모를 입력하세요.",
     "keep": "정상 유지",
     "confirm": "계정 정지"
   },

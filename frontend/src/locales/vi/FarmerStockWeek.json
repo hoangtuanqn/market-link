@@ -1,32 +1,33 @@
 {
-  "title": "Hàng tuần này",
-  "intro": "Mẫu hằng tuần là số lượng khởi đầu cho mỗi ngày chợ. Áp dụng mẫu, rồi chỉnh những ngày thu hoạch khác đi. Hàng đã giữ chỗ đã được trừ khỏi số khách thấy.",
+  "title": "Mẫu hàng hằng tuần",
+  "intro": "Đặt số lượng mỗi sản phẩm bạn thường mang đến vào một ngày trong tuần, và giá bán. Hàng tự làm đầy lại cho khách xem ngày đó, bạn không cần làm thêm bước nào.",
   "saved": "Đã lưu",
   "per": "theo {{unit}}",
-  "currentPrice": "now {{price}}",
-  "defaultPricePlaceholder": "Same price",
+  "currentPrice": "hiện {{price}}",
+  "defaultPricePlaceholder": "Giữ nguyên giá",
   "col": {
     "product": "Sản phẩm"
   },
   "error": {
-    "productsNoun": "your products",
-    "templateNoun": "your weekly template"
+    "productsNoun": "sản phẩm của bạn",
+    "templateNoun": "mẫu hằng tuần"
   },
   "aria": {
-    "quantity": "{{product}} quantity on {{day}}",
-    "price": "Giá {{product}}"
+    "quantity": "Số lượng {{product}} vào {{day}}",
+    "price": "Giá {{product}} vào {{day}}"
   },
   "table": {
-    "caption": "Weekly stock template, one row per product and one column per weekday"
+    "caption": "Mẫu hàng hằng tuần, mỗi dòng một sản phẩm, mỗi cột một ngày trong tuần"
   },
   "template": {
     "save": "Lưu mẫu",
-    "savedText": "Đã lưu mẫu. Mẫu áp dụng từ tuần sau, trừ khi bạn áp dụng ngay.",
-    "note": "Ngày trong mẫu theo ngày hoạt động của bạn. Đổi ngày đó trong Sạp & nhận hàng."
+    "savedText": "Đã lưu mẫu.",
+    "note": "Để trống số lượng của một ngày để bỏ qua ngày đó. Để trống giá thì giữ giá hiện tại của sản phẩm.",
+    "priceError": "Nhập giá lớn hơn $0 cho {{product}} vào {{day}}, hoặc để trống để giữ giá hiện tại."
   },
   "empty": {
-    "title": "Add a product first",
-    "text": "A weekly template needs at least one product.",
-    "action": "Add a product"
+    "title": "Hãy thêm sản phẩm trước",
+    "text": "Mẫu hằng tuần cần ít nhất một sản phẩm.",
+    "action": "Thêm sản phẩm"
   }
 }

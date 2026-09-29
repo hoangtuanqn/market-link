@@ -1,17 +1,35 @@
 {
-  "overline": "Admin-Bereich",
-  "title": "Melden Sie sich an, um MarketLink zu verwalten",
-  "intro": "Diese Anmeldung ist nur für Plattform-Admins und führt zu einem eigenen Dashboard. Kunden und Landwirte <link>melden sich hier an</link>.",
-  "notAdmin": {
-    "title": "Dieses Konto ist kein Admin-Konto",
-    "text": "Diese Anmeldung ist nur für Plattform-Admins. <link>Kunden und Landwirte melden sich hier an</link>."
+  "brand": {
+    "headline": "Melden Sie sich an, um den Marktplatz zu verwalten",
+    "intro": "Diese Anmeldung ist nur für Plattform-Admins und führt zu einem eigenen Dashboard, getrennt von Kunden und Landwirten.",
+    "bullet1": "Bewerbungen für Landwirt-Stände genehmigen",
+    "bullet2": "Produktangebote und Bewertungen moderieren",
+    "bullet3": "Plattformberichte für alle Märkte einsehen",
+    "foot": "MarketLink-Verwaltung"
   },
   "form": {
+    "eyebrow": "Admin-Bereich",
+    "heading": "Willkommen zurück",
+    "subheading": "Melden Sie sich an, um MarketLink zu verwalten",
     "email": "Admin-E-Mail",
+    "emailPlaceholder": "admin@marketlink.vn",
     "password": "Passwort",
+    "passwordPlaceholder": "Passwort eingeben",
     "submit": "Anmelden",
     "submitting": "Anmeldung läuft…",
     "signedIn": "Angemeldet.",
-    "error": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
+    "error": "Die Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "note": "Aus Sicherheitsgründen werden Admin-Sitzungen nicht gespeichert.",
+    "setupRequired": "Richten Sie die Zwei-Faktor-Authentifizierung ein, um die Anmeldung abzuschließen.",
+    "tooMany_one": "Zu viele fehlgeschlagene Anmeldeversuche. Versuchen Sie es in {{count}} Minute erneut.",
+    "tooMany_other": "Zu viele fehlgeschlagene Anmeldeversuche. Versuchen Sie es in {{count}} Minuten erneut."
+  },
+  "switchRole": {
+    "question": "Kein Admin?",
+    "cta": "Zu MarketLink"
+  },
+  "notAdmin": {
+    "title": "Dieses Konto ist kein Admin-Konto",
+    "text": "Diese Anmeldung ist nur für Plattform-Admins. <a>Kunden und Landwirte melden sich hier an</a>."
   }
 }

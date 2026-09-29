@@ -3,7 +3,7 @@
   "lead": "Ce que MarketLink conserve à votre sujet, pourquoi, et qui peut le voir. Écrit à partir des tables que le produit possède réellement, pas d'un modèle.",
   "meta": "Version 0.1 · Dernière mise à jour {{date}} · S'applique aux Customers, aux Farmers et aux visiteurs",
   "onThisPage": "Sur cette page",
-  "seeAlso": "Lisez aussi les <link>Conditions d'utilisation</link>. Elles traitent de la réservation et du retrait.",
+  "seeAlso": "Lisez aussi les <a>Conditions d'utilisation</a>. Elles traitent de la réservation et du retrait.",
   "sections": [
     {
       "id": "collect",

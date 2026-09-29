@@ -8,6 +8,7 @@ import com.techx.intervue.modules.notification.repositories.NotificationReposito
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
+import com.techx.intervue.modules.user.repositories.AdminMfaRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
@@ -30,6 +31,7 @@ class AnnouncementControllerTest {
 
     @LocalServerPort int port;
     @Autowired UserRepository users;
+    @Autowired AdminMfaRepository adminMfa;
     @Autowired UserSessionCache sessions;
     @Autowired JwtServiceInterface jwt;
     @Autowired NotificationRepository notifications;
@@ -43,7 +45,7 @@ class AnnouncementControllerTest {
 
     @BeforeEach
     void setUp() {
-        api = new NotificationTestSupport(users, sessions, jwt, port);
+        api = new NotificationTestSupport(users, sessions, jwt, adminMfa, port);
         admin = api.user(RoleType.ADMIN);
         customer = api.user(RoleType.CUSTOMER);
         farmer = api.user(RoleType.FARMER);

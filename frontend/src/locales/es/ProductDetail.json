@@ -10,17 +10,23 @@
     "remove": "Quitar de favoritos: {{name}}"
   },
   "soldPer": "se vende por {{unit}}",
-  "left": "Quedan <b>{{qty}}</b> esta semana",
+  "left": "Quedan <b>{{qty}}</b>",
+  "leftOn": "Quedan <b>{{qty}}</b> para el {{day}}",
   "stockUpdated": "Stock actualizado hoy, antes de los pedidos de este fin de semana.",
-  "notifyMe": "Avísame cuando vuelva",
   "added": {
     "title": "Añadido al carrito",
     "text": "Se añadió {{qty}} de {{name}} a tu carrito."
   },
   "addToCart": "Añadir al carrito",
   "payNote": "El stock queda reservado cuando haces el pedido. Pagas {{price}} en el puesto al recoger.",
+  "deals": {
+    "title": "En oferta para estos días de recogida",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, antes {{was}} · bueno hasta el final de {{until}} · quedan {{qty}}",
+    "add": "Añadir para el {{day}}",
+    "noun": "ofertas"
+  },
   "fromStall": "Del puesto",
-  "sellingSince": "vende aquí desde el {{date}}",
   "stats": {
     "reviews_one": "{{count}} reseña",
     "reviews_other": "{{count}} reseñas",
@@ -31,13 +37,13 @@
     "cutoff": "cierre de pedidos"
   },
   "seeStall": "Ver el puesto",
-  "messageStall": "Escribir al puesto",
   "details": {
     "title": "Detalles del producto",
     "soldPer": "Se vende por",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "Vida útil",
+    "shelfLifeLine_one": "{{storage}} · dura {{count}} día desde la recogida",
+    "shelfLifeLine_other": "{{storage}} · dura {{count}} días desde la recogida",
+    "shelfLifePromise": "El puesto promete {{days}} días (normalmente {{suggested}}).",
     "category": "Categoría",
     "stall": "Puesto",
     "market": "Mercado"
@@ -74,7 +80,6 @@
   "similar": {
     "title": "{{name}} en otros puestos este fin de semana",
     "note": "La misma verdura, otra parcela y otro precio",
-    "here": "Estás aquí",
     "view": "Ver"
   },
   "also": {

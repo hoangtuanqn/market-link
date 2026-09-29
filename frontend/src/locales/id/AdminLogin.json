@@ -1,17 +1,35 @@
 {
-  "overline": "Area admin",
-  "title": "Masuk untuk mengelola MarketLink",
-  "intro": "Halaman masuk ini hanya untuk admin platform dan mengarah ke dasbor terpisah. Pelanggan dan Petani <link>masuk di sini</link>.",
-  "notAdmin": {
-    "title": "Akun ini bukan admin",
-    "text": "Halaman masuk ini hanya untuk admin platform. <link>Pelanggan dan Petani masuk di sini</link>."
+  "brand": {
+    "headline": "Masuk untuk mengelola marketplace",
+    "intro": "Halaman masuk ini hanya untuk admin platform dan mengarah ke dasbor terpisah dari Pelanggan dan Petani.",
+    "bullet1": "Menyetujui pengajuan lapak Petani",
+    "bullet2": "Memoderasi daftar produk dan ulasan",
+    "bullet3": "Melihat laporan platform per pasar",
+    "foot": "Admin MarketLink"
   },
   "form": {
+    "eyebrow": "Portal admin",
+    "heading": "Selamat datang kembali",
+    "subheading": "Masuk untuk mengelola MarketLink",
     "email": "Email admin",
+    "emailPlaceholder": "admin@marketlink.vn",
     "password": "Kata sandi",
+    "passwordPlaceholder": "Masukkan kata sandi Anda",
     "submit": "Masuk",
     "submitting": "Sedang masuk…",
     "signedIn": "Berhasil masuk.",
-    "error": "Tidak dapat memasukkan Anda. Silakan coba lagi."
+    "error": "Tidak dapat memasukkan Anda. Silakan coba lagi.",
+    "note": "Demi keamanan, sesi admin tidak diingat.",
+    "setupRequired": "Siapkan verifikasi dua langkah untuk menyelesaikan proses masuk.",
+    "tooMany_one": "Terlalu banyak percobaan masuk yang gagal. Coba lagi dalam {{count}} menit.",
+    "tooMany_other": "Terlalu banyak percobaan masuk yang gagal. Coba lagi dalam {{count}} menit."
+  },
+  "switchRole": {
+    "question": "Bukan admin?",
+    "cta": "Ke MarketLink"
+  },
+  "notAdmin": {
+    "title": "Akun ini bukan admin",
+    "text": "Halaman masuk ini hanya untuk admin platform. <a>Pelanggan dan Petani masuk di sini</a>."
   }
 }

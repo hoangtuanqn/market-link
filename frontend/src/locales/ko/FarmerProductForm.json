@@ -26,27 +26,49 @@
     "text": "가격표에 <b>{{price}}</b> · <b>{{left}}</b> 남음 · 하나를 주문하면 <b>{{one}}</b>(으)로 보여요"
   },
   "price": {
-    "label": "가격(₫)",
+    "label": "가격($)",
     "hint": "{{price}}(으)로 표시돼요."
   },
   "qty": {
     "label": "이번 주 판매 가능 수량",
-    "error": "수량은 0 이상이어야 해요. 남은 게 없으면 품절을 사용하세요."
+    "error": "수량은 0 이상이어야 해요. 남은 게 없으면 품절을 사용하세요.",
+    "hint": "참고용 숫자예요. 고객은 주간 재고로 주문하니, 저장한 뒤 주간 재고를 설정하세요."
   },
   "shelfLife": {
-    "label": "Shelf life (days)",
-    "hint": "This category is usually {{min}}–{{max}} days.",
-    "error": "Enter a whole number of 1 or more.",
-    "warningTitle": "Outside the usual range",
-    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+    "label": "유통기한",
+    "group": "보관 그룹",
+    "pickGroup": "그룹 선택",
+    "examples": "예: {{examples}}",
+    "storage": "보관 방법",
+    "suggested_one": "권장 {{count}}일",
+    "suggested_other": "권장 {{count}}일",
+    "days_one": "{{count}}일",
+    "days_other": "{{count}}일",
+    "decrease": "하루 줄이기",
+    "increase": "하루 늘리기",
+    "peers_one": "다른 매대는 보통 {{count}}일로 설정합니다",
+    "peers_other": "다른 매대는 보통 {{count}}일로 설정합니다",
+    "shorter": "권장보다 짧습니다. 고객에게는 이 일수가 그대로 표시됩니다.",
+    "longerTitle_one": "권장보다 {{count}}일 긴 설정입니다(권장 {{suggested}}, {{storage}})",
+    "longerTitle_other": "권장보다 {{count}}일 긴 설정입니다(권장 {{suggested}}, {{storage}})",
+    "ackLabel": "이 보관 방법({{storage}})으로 {{days}}일 동안 신선하게 유지됨을 약속합니다. 고객이 그 전에 상했다고 신고하면 관리자가 매대의 위반 사항으로 기록할 수 있습니다.",
+    "ackRequired": "더 긴 유통기한을 저장하려면 약속 항목에 체크하세요.",
+    "tooLong_one": "이 그룹은 최대 {{count}}일까지입니다.",
+    "tooLong_other": "이 그룹은 최대 {{count}}일까지입니다.",
+    "locked": "이 매대는 {{date}}까지 권장 일수를 초과해 설정할 수 없습니다. 90일 동안 유통기한 위반이 3회에 달했습니다.",
+    "overLock_one": "이 매대는 지금은 권장 일수를 초과할 수 없습니다. {{count}}일로 줄이세요.",
+    "overLock_other": "이 매대는 지금은 권장 일수를 초과할 수 없습니다. {{count}}일로 줄이세요.",
+    "saveBlocked": "저장하려면 위의 약속 항목에 체크하세요.",
+    "saveNeedsGroup": "저장하려면 위에서 보관 그룹을 선택하세요.",
+    "saveNeedsGroups": "저장하려면 위에서 보관 그룹을 다시 불러오세요.",
+    "loading": "보관 그룹 불러오는 중",
+    "fallback": "이 카테고리에는 아직 보관 그룹이 없습니다. 보통 {{min}}~{{max}}일 신선합니다.",
+    "groupGone": "이 상품이 사용하던 그룹은 더 이상 제공되지 않습니다. 다른 그룹을 선택하세요.",
+    "noun": "보관 그룹"
   },
   "desc": {
     "label": "설명",
     "hint": "상품 페이지에 표시돼요. 어떻게 키웠고 어떻게 보관하는지 적어 주세요."
-  },
-  "flag": {
-    "label": "카드에 넣을 짧은 태그",
-    "hint": "선택 사항, 가격표에 손글씨로 들어가요: “오늘 수확”, “새벽 5시에 구움”."
   },
   "status": {
     "label": "상태",
@@ -62,7 +84,11 @@
     "uploading": "업로드 중",
     "uploadInProgress": "사진 업로드가 끝난 뒤에 저장해 주세요.",
     "alt": "상품 사진",
-    "hint": "JPEG, PNG 또는 WEBP, 최대 8MB. 가까이서, 자연광으로, 나무나 종이 위에서."
+    "hint": "JPEG, PNG 또는 WEBP, 최대 8MB. 가까이서, 자연광으로, 나무나 종이 위에서.",
+    "error": {
+      "tooLarge": "사진은 8MB 이하여야 합니다.",
+      "type": "사진은 JPEG, PNG 또는 WEBP 형식이어야 합니다."
+    }
   },
   "save": "상품 저장",
   "add": "상품 추가",
@@ -77,7 +103,8 @@
     "saved": "저장했어요",
     "savedText": "{{name}}을(를) 저장했어요.",
     "product": "상품",
-    "deletedText": "{{name}}을(를) 삭제했습니다."
+    "deletedText": "{{name}}을(를) 삭제했습니다.",
+    "createdText": "{{name}}을(를) 저장했어요. 고객이 주문할 수 있도록 요일별로 가져올 수량을 설정하세요."
   },
   "error": {
     "noun": "상품"
@@ -88,6 +115,6 @@
   },
   "errors": {
     "required": "필수 항목입니다.",
-    "price": "가격은 0 이상이어야 합니다."
+    "price": "가격은 0보다 커야 합니다."
   }
 }

@@ -79,6 +79,7 @@ export type AdminFarmerListItemType = {
   phone: string;
   approvalStatus: FarmerApproval;
   createdAt: string;
+  avatarUrl?: string | null;
 };
 
 /** §6.2 — full detail so the Admin can approve or suspend. */
@@ -100,6 +101,10 @@ export type AdminFarmerDetailType = {
   /** The Customer account already existed — this is not the creation date of this Farmer profile. */
   customerSince: string;
   accountStatus: 'active' | 'inactive' | 'suspended';
+  /** FR-123: shelf-life strikes of the last 90 days. */
+  activeViolations: number;
+  /** FR-123: when the lock on longer shelf lives ends (ISO 8601); null when the stall is not locked. */
+  extensionLockedUntil: string | null;
 } & FarmerApplicationDetails;
 
 /** Images/videos uploaded before submitting the main form. */

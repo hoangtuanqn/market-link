@@ -11,7 +11,6 @@
     "reviews_other": "{{count}} 件のレビュー",
     "markets_one": "マーケット",
     "markets_other": "マーケット",
-    "since": "出店開始日",
     "cutoff": "受取前の締切（時間）"
   },
   "tabs": {
@@ -24,14 +23,13 @@
     "count_one": "{{count}} 件の商品",
     "count_other": "{{count}} 件の商品",
     "availableOn": "販売日",
-    "notSelling": "{{stall}} は{{day}}に販売していません。上の商品は販売日（{{days}}）に扱っているものです。"
+    "notSelling": "{{stall}} は{{day}}に販売していません。上の商品は販売日（{{days}}）に扱っているものです。",
+    "emptyTitle": "{{day}}の商品はまだありません",
+    "emptyText": "この屋台はその日の在庫をまだ登録していません。別の日を選んでください。"
   },
   "reviews": {
     "summary_one": "{{count}} 件のレビュー（すべて完了した注文から）",
     "summary_other": "{{count}} 件のレビュー（すべて完了した注文から）",
-    "all": "すべて",
-    "farmer": "店について",
-    "product": "商品について",
     "newest": "新しい順",
     "emptyTitle": "No reviews yet",
     "emptyText": "Be the first to review this stall once your order is completed.",
@@ -56,12 +54,6 @@
     "findingTitle": "店の探し方",
     "findingText": "区画 {{code}} · 受け取り時間帯 {{window}}。各枠は 30 分で、5 件まで受け付けます。",
     "preorder": "このマーケットで予約する"
-  },
-  "report": {
-    "sentTitle": "報告を送信しました",
-    "sentText": "管理者が確認します。",
-    "button": "この店を報告",
-    "note": "度重なる不在、店の位置の誤り、またはプラットフォームのガイドライン違反。"
   },
   "error": {
     "noun": "出店"

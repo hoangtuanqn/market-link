@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
@@ -9,11 +9,12 @@ import { DataState, LoadError } from '@/components/ui/data-state';
 import { SelectField } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import { Table, type TableColumn } from '@/components/ui/table';
-import { ADMIN_CUSTOMERS_PATH, ADMIN_ORDERS_PATH } from '@/constants/nav';
+import { ADMIN_ORDERS_PATH } from '@/constants/nav';
 import type { OrderListItemDto } from '@/api-requests/order.requests';
 import useRequest from '@/hooks/useRequest';
-import { pickupLabel, vnd } from '@/lib/format';
+import { pickupLabel, money } from '@/lib/format';
 import type { OrderStatus } from '@/types/order.types';
+import OrderTableSkeleton from './OrderTableSkeleton';
 
 const FILTERS = ['all', 'placed', 'accepted', 'ready', 'completed', 'declined', 'cancelled'] as const;
 type Filter = (typeof FILTERS)[number];
@@ -39,18 +40,29 @@ const NO_ROWS: OrderListItemDto[] = [];
  */
 const AdminOrdersPage = () => {
   const { t } = useTranslation('AdminOrders');
-  const { t: tc } = useTranslation();
   const [filter, setFilter] = useState<Filter>('all');
   const [market, setMarket] = useState<number | ''>('');
   const [page, setPage] = useState(1);
+  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
+
+  useEffect(() => {
+    if (import.meta.env.MODE === 'test') return;
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const { state: load, retry } = useRequest(`admin-orders:${filter}:${market}:${page}`, () =>
     AdminReportApi.orders({ status: FILTER_STATUS[filter], marketId: market || undefined, page, pageSize: PAGE_SIZE }),
   );
 
-  const { state: countsLoad } = useRequest('admin-order-counts', () =>
+  // The chip counts follow the market picker too, so they match the list under them (FR-075).
+  const { state: countsLoad } = useRequest(`admin-order-counts:${market}`, () =>
     Promise.all(
-      STATUS_FILTERS.map((f) => AdminReportApi.orders({ status: FILTER_STATUS[f], page: 1, pageSize: 1 })),
+      STATUS_FILTERS.map((f) =>
+        AdminReportApi.orders({ status: FILTER_STATUS[f], marketId: market || undefined, page: 1, pageSize: 1 }),
+      ),
     ).then((responses) => {
       const next: Partial<Record<Filter, number>> = {};
       STATUS_FILTERS.forEach((f, i) => {
@@ -69,6 +81,7 @@ const AdminOrdersPage = () => {
 
   const rows = load.kind === 'ready' ? load.data.items : NO_ROWS;
   const total = load.kind === 'ready' ? load.data.total : 0;
+  const showSkeleton = load.kind === 'loading' || initialLoading;
 
   const changeFilter = (f: Filter) => {
     if (f === filter) return;
@@ -86,15 +99,9 @@ const AdminOrdersPage = () => {
         </Link>
       ),
     },
-    {
-      key: 'customer',
-      label: t('col.customer'),
-      render: (o) => (
-        <Link to={`${ADMIN_CUSTOMERS_PATH}/${o.customerId}`} className="text-brand underline">
-          {o.customerName}
-        </Link>
-      ),
-    },
+    // Plain text: the buyer can be a Farmer (D-13), whose account the customer record does not open, and a list row
+    // does not say which. The order page links the buyer to the record that exists (FR-072).
+    { key: 'customer', label: t('col.customer'), render: (o) => o.customerName },
     { key: 'stall', label: t('col.stall'), render: (o) => o.stallName },
     { key: 'market', label: t('col.market'), render: (o) => o.marketName },
     {
@@ -102,14 +109,14 @@ const AdminOrdersPage = () => {
       label: t('col.pickup'),
       render: (o) => pickupLabel(o.pickupDate, `${o.pickupStart}–${o.pickupEnd}`),
     },
-    { key: 'total', label: t('col.total'), align: 'num', render: (o) => vnd(o.totalAmount) },
+    { key: 'total', label: t('col.total'), align: 'num', render: (o) => money(o.totalAmount) },
     { key: 'status', label: t('col.status'), render: (o) => <OrderStatusBadge status={o.status} /> },
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex w-full flex-col gap-6">
       <div className="flex flex-col gap-2">
-        <h1 className="text-h1">{t('title')}</h1>
+        <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
         <p className="text-body max-w-160">{t('intro')}</p>
       </div>
 
@@ -139,10 +146,8 @@ const AdminOrdersPage = () => {
           />
         </div>
 
-        {load.kind === 'loading' ? (
-          <p role="status" className="text-ink-muted">
-            {tc('notify.list.loading')}
-          </p>
+        {showSkeleton ? (
+          <OrderTableSkeleton />
         ) : load.kind === 'error' ? (
           <LoadError noun={t('noun')} onRetry={retry} />
         ) : rows.length ? (

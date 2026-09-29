@@ -26,27 +26,49 @@
     "text": "値札には <b>{{price}}</b> · 残り <b>{{left}}</b> · 1 つ注文した人には <b>{{one}}</b> と表示"
   },
   "price": {
-    "label": "価格（₫）",
+    "label": "価格（$）",
     "hint": "{{price}} と表示されます。"
   },
   "qty": {
     "label": "今週の販売可能数",
-    "error": "数量は 0 以上にしてください。在庫がないときは売り切れを使ってください。"
+    "error": "数量は 0 以上にしてください。在庫がないときは売り切れを使ってください。",
+    "hint": "目安の数です。お客様は週間在庫から注文します。保存後に週間在庫を設定してください。"
   },
   "shelfLife": {
-    "label": "Shelf life (days)",
-    "hint": "This category is usually {{min}}–{{max}} days.",
-    "error": "Enter a whole number of 1 or more.",
-    "warningTitle": "Outside the usual range",
-    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+    "label": "賞味期限",
+    "group": "保存グループ",
+    "pickGroup": "グループを選択",
+    "examples": "例：{{examples}}",
+    "storage": "保存方法",
+    "suggested_one": "推奨{{count}}日",
+    "suggested_other": "推奨{{count}}日",
+    "days_one": "{{count}}日",
+    "days_other": "{{count}}日",
+    "decrease": "1日減らす",
+    "increase": "1日増やす",
+    "peers_one": "他の店舗は通常{{count}}日に設定しています",
+    "peers_other": "他の店舗は通常{{count}}日に設定しています",
+    "shorter": "推奨より短い設定です。お客様にはこの日数がそのまま表示されます。",
+    "longerTitle_one": "推奨より{{count}}日長い設定です（推奨{{suggested}}、{{storage}}）",
+    "longerTitle_other": "推奨より{{count}}日長い設定です（推奨{{suggested}}、{{storage}}）",
+    "ackLabel": "この保存方法（{{storage}}）で{{days}}日間問題なく保存できることを保証します。お客様から期限前に傷んでいたと報告があった場合、管理者はこの店舗の違反として記録できます。",
+    "ackRequired": "推奨より長い賞味期限を保存するには、誓約にチェックを入れてください。",
+    "tooLong_one": "このグループでは最大{{count}}日までです。",
+    "tooLong_other": "このグループでは最大{{count}}日までです。",
+    "locked": "この店舗は{{date}}まで推奨日数を超えて設定できません：90日以内に賞味期限違反が3回に達しました。",
+    "overLock_one": "この店舗は現在、推奨日数を超えて設定できません。{{count}}日まで減らしてください。",
+    "overLock_other": "この店舗は現在、推奨日数を超えて設定できません。{{count}}日まで減らしてください。",
+    "saveBlocked": "保存するには上の誓約にチェックを入れてください。",
+    "saveNeedsGroup": "保存するには、上で保存グループを選んでください。",
+    "saveNeedsGroups": "保存するには、上で保存グループを読み込み直してください。",
+    "loading": "保存グループを読み込み中",
+    "fallback": "このカテゴリーにはまだ保存グループがありません。通常{{min}}〜{{max}}日保存できます。",
+    "groupGone": "この商品が使用していたグループは提供終了しました。別のグループを選んでください。",
+    "noun": "保存グループ"
   },
   "desc": {
     "label": "説明",
     "hint": "商品ページに表示されます。育て方と保存方法を書いてください。"
-  },
-  "flag": {
-    "label": "カードの短いタグ",
-    "hint": "任意。値札に手書きで入ります：「今日の採れたて」「朝 5 時に焼き上げ」。"
   },
   "status": {
     "label": "ステータス",
@@ -62,7 +84,11 @@
     "uploading": "アップロード中",
     "uploadInProgress": "写真のアップロードが終わってから保存してください。",
     "alt": "商品の写真",
-    "hint": "JPEG、PNG または WEBP、8 MB まで。寄りで、自然光で、木や紙の上で。"
+    "hint": "JPEG、PNG または WEBP、8 MB まで。寄りで、自然光で、木や紙の上で。",
+    "error": {
+      "tooLarge": "写真は8MB以下にしてください。",
+      "type": "写真はJPEG、PNG、WEBPのいずれかにしてください。"
+    }
   },
   "save": "商品を保存",
   "add": "商品を追加",
@@ -77,7 +103,8 @@
     "saved": "保存しました",
     "savedText": "{{name}} を保存しました。",
     "product": "商品",
-    "deletedText": "{{name}}を削除しました。"
+    "deletedText": "{{name}}を削除しました。",
+    "createdText": "{{name}} を保存しました。お客様が注文できるよう、曜日ごとに持ってくる数を設定してください。"
   },
   "error": {
     "noun": "商品"
@@ -88,6 +115,6 @@
   },
   "errors": {
     "required": "この項目は必須です。",
-    "price": "価格は0以上にしてください。"
+    "price": "価格は0より大きい値にしてください。"
   }
 }

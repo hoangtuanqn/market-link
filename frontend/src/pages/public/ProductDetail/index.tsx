@@ -13,6 +13,7 @@ import ProductCard from '@/components/ProductCard';
 import QtyStepper from '@/components/QtyStepper';
 import Rating from '@/components/Rating';
 import ReviewCard from '@/components/ReviewCard';
+import { stockDay } from '@/components/stockDay';
 import { BarList } from '@/components/ui/bar-list';
 import { Button, ButtonLink } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -22,11 +23,13 @@ import { Table } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
 import { Cart } from '@/lib/cart';
 import useSession from '@/hooks/useSession';
-import { perUnit, unitName, unitPrice, units, vnd } from '@/lib/format';
+import { perUnit, unitName, unitPrice, units, money } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import ProductDeals from './ProductDeals';
+import ShelfLifeDetails from './ShelfLifeDetails';
 
 const NO_MARKETS: MarketType[] = [];
 const NO_PRODUCTS: ProductType[] = [];
@@ -116,6 +119,8 @@ const ProductDetailPage = () => {
   const stallRating = detail.farmer.ratingCount === 0 ? null : Number(detail.farmer.ratingAvg);
   const soldOut = p.status !== 'available' || p.stockQuantity === 0;
   const qty = pickedQty ?? Math.min(2, Math.max(1, p.stockQuantity));
+  // FR-022: the stock number is for one pickup date, the nearest one still open to orders
+  const availableDay = stockDay(p.availableDate);
   const stallLink = (
     <Link to={`/stalls/${p.farmerId}`} className="text-brand underline">
       {p.stallName}
@@ -146,7 +151,7 @@ const ProductDetailPage = () => {
           {t('breadcrumb')}
         </Link>{' '}
         ·{' '}
-        <Link to="/products" className="text-brand underline">
+        <Link to={`/products?category=${p.categoryId}`} className="text-brand underline">
           {p.categoryName}
         </Link>{' '}
         · {stallLink}
@@ -154,9 +159,11 @@ const ProductDetailPage = () => {
 
       <div className="grid items-stretch gap-6 lg:grid-cols-2">
         {p.imageUrl ? (
-          <img src={p.imageUrl} alt={p.name} className="min-h-60 w-full rounded-md object-cover" />
+          <div className="relative aspect-[4/3] min-h-0 w-full overflow-hidden rounded-md lg:aspect-auto lg:h-full">
+            <img src={Helper.mediaUrl(p.imageUrl)} alt={p.name} className="absolute inset-0 size-full object-cover" />
+          </div>
         ) : (
-          <div className="bg-surface-sunken font-hand text-ink-muted grid min-h-60 place-items-center rounded-md">
+          <div className="bg-surface-sunken font-hand text-ink-muted grid aspect-[4/3] min-h-60 w-full place-items-center rounded-md lg:aspect-auto lg:h-full">
             {p.categoryName}
           </div>
         )}
@@ -181,14 +188,14 @@ const ProductDetailPage = () => {
           <Card className="flex flex-col gap-3 p-6">
             <div className="flex flex-wrap items-center gap-6">
               <span className="font-hand text-price text-[36px] tabular-nums">
-                {vnd(unitPrice(Number(p.price), p.unit).amount)}
+                {money(unitPrice(Number(p.price), p.unit).amount)}
               </span>
               {!soldOut && (
                 <span className="text-body">
                   <Trans
                     t={t}
-                    i18nKey="left"
-                    values={{ qty: units(p.stockQuantity, p.unit) }}
+                    i18nKey={availableDay ? 'leftOn' : 'left'}
+                    values={{ qty: units(p.stockQuantity, p.unit), day: availableDay }}
                     components={{ b: <b /> }}
                   />
                 </span>
@@ -225,6 +232,8 @@ const ProductDetailPage = () => {
             )}
             <p className="text-small text-ink-muted">{t('payNote', { price: perUnit(Number(p.price), p.unit) })}</p>
           </Card>
+
+          <ProductDeals productId={p.id} />
         </div>
       </div>
 
@@ -279,7 +288,9 @@ const ProductDetailPage = () => {
               <dt className="text-ink-muted">{t('details.soldPer')}</dt>
               <dd className="m-0">{units(1, unitName(p.unit))}</dd>
               <dt className="text-ink-muted">{t('details.shelfLife')}</dt>
-              <dd className="m-0">{t('details.shelfLifeValue', { count: p.shelfLifeDays })}</dd>
+              <dd className="m-0">
+                <ShelfLifeDetails shelfLife={detail.shelfLife} fallbackDays={p.shelfLifeDays} />
+              </dd>
               <dt className="text-ink-muted">{t('details.category')}</dt>
               <dd className="m-0">{p.categoryName}</dd>
               <dt className="text-ink-muted">{t('details.stall')}</dt>
@@ -411,7 +422,7 @@ const ProductDetailPage = () => {
                 align: 'num',
                 render: (row: ProductType) => (
                   <>
-                    {vnd(unitPrice(row.price, row.unit).amount)}{' '}
+                    {money(unitPrice(row.price, row.unit).amount)}{' '}
                     <span className="text-ink-muted block text-[12px] font-normal">
                       {t('table.perUnit', { unit: unitName(row.unit) })}
                     </span>
@@ -422,7 +433,17 @@ const ProductDetailPage = () => {
                 key: 'left',
                 label: t('table.left'),
                 align: 'num',
-                render: (row: ProductType) => units(row.stock, row.unit, row.plural),
+                // Each row can be for a different pickup day, so the day goes under the number.
+                render: (row: ProductType) => (
+                  <>
+                    {units(row.stock, row.unit, row.plural)}
+                    {stockDay(row.availableDate) && (
+                      <span className="text-ink-muted block text-[12px] font-normal">
+                        {stockDay(row.availableDate)}
+                      </span>
+                    )}
+                  </>
+                ),
               },
               {
                 key: 'action',

@@ -225,7 +225,8 @@ class OrderModifyTest {
                 1,
                 "2026-09-26T02:00:00Z",
                 7L,
-                "Khách 7");
+                "Khách 7",
+                false);
     }
 
     private static OrderDetailRow aDetailRow() {
@@ -893,6 +894,7 @@ class OrderModifyTest {
         when(productRepository.findAllById(any())).thenReturn(List.of(a));
         stubDailyStockLock(dailyStock(PRODUCT_A, 0));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
+        when(restock.isOrderable(a)).thenReturn(false, true);
 
         service.modifyItems(
                 CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(new CartLine(PRODUCT_A, 2))));

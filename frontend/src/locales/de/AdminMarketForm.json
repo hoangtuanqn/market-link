@@ -3,7 +3,6 @@
   "crumbNew": "Hinzufügen",
   "crumbEdit": "Bearbeiten",
   "titleNew": "Neuer Markt",
-  "city": "Ho-Chi-Minh-Stadt",
   "metaStalls": "{{stalls}} Stände",
   "missing": {
     "title": "Diesen Markt gibt es nicht mehr",
@@ -11,16 +10,12 @@
   },
   "field": {
     "name": "Name des Marktes",
-    "address": "Adresse",
-    "district": "Bezirk",
-    "city": "Stadt",
     "days": "Markttage",
     "open": "Öffnet",
     "close": "Schließt",
     "lat": "Breitengrad",
     "lng": "Längengrad",
     "lngHint": "Oder zieh die Markierung. Die Kartendaten stammen von OpenStreetMap.",
-    "notes": "Hinweise für die Stände",
     "images": "Fotos"
   },
   "images": {
@@ -59,7 +54,6 @@
     "announced": "Angekündigt",
     "notYet": "Noch nicht",
     "noneYet": "Noch keine",
-    "noReason": "Nicht angegeben",
     "byAdminToday": "Administrator · heute",
     "col": {
       "date": "Datum",

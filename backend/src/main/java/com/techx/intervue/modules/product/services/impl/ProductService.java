@@ -1,11 +1,15 @@
 package com.techx.intervue.modules.product.services.impl;
 
 import com.techx.intervue.modules.catalog.entities.Category;
+import com.techx.intervue.modules.catalog.entities.ShelfLifeGuide;
+import com.techx.intervue.modules.catalog.enums.StorageMode;
 import com.techx.intervue.modules.catalog.repositories.CategoryRepository;
+import com.techx.intervue.modules.catalog.repositories.ShelfLifeGuideRepository;
+import com.techx.intervue.modules.catalog.services.impl.ShelfLifePolicy;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
-import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.farmer.services.impl.StallSuspensionMessage;
 import com.techx.intervue.modules.favorite.services.impl.RestockNotifier;
 import com.techx.intervue.modules.product.entities.Product;
 import com.techx.intervue.modules.product.enums.ProductStatus;
@@ -13,15 +17,23 @@ import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
 import com.techx.intervue.modules.product.repositories.ProductQueryRepository;
 import com.techx.intervue.modules.product.repositories.ProductRepository;
+import com.techx.intervue.modules.product.repositories.WeeklyStockTemplateRepository;
 import com.techx.intervue.modules.product.requests.ProductRequest;
 import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
+import com.techx.intervue.modules.product.resources.ShelfLifeResource;
 import com.techx.intervue.modules.product.services.interfaces.ProductServiceInterface;
-import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
+import com.techx.intervue.modules.quality.services.interfaces.ShelfLifeStandingServiceInterface;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
+import java.math.BigDecimal;
+import java.time.Clock;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +49,12 @@ public class ProductService implements ProductServiceInterface {
     private final CategoryRepository categories;
     private final ProductQueryRepository query;
     private final RestockNotifier restock;
+    private final ProductAvailabilityResolver availability;
+    private final WeeklyStockTemplateRepository templates;
+    private final ShelfLifeGuideRepository shelfLifeGuides;
+    private final Clock clock;
+    private final ShelfLifeStandingServiceInterface shelfLifeStanding;
+    private final DailyStockTemplateSync dailyStockSync;
 
     @Override
     public PageResource<FarmerProductResource> mine(
@@ -45,7 +63,42 @@ public class ProductService implements ProductServiceInterface {
         int safePage = Math.max(1, page);
         int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
         String dbStatus = status == null || status.isBlank() ? null : parseStatus(status).value();
-        return query.mine(profile.getId(), dbStatus, (safePage - 1) * safeSize, safeSize);
+        PageResource<FarmerProductResource> rows =
+                query.mine(profile.getId(), dbStatus, (safePage - 1) * safeSize, safeSize);
+        return new PageResource<>(
+                withNextDate(rows.items()), rows.page(), rows.pageSize(), rows.total());
+    }
+
+    /**
+     * FR-031, FR-063: the nearest date a customer can still order for — the same date and number
+     * the public pages show — plus what active orders already hold for that date. The raw {@code
+     * stockQuantity} is left as the Farmer typed it.
+     */
+    private List<FarmerProductResource> withNextDate(List<FarmerProductResource> rows) {
+        Map<Long, BigDecimal> prices =
+                rows.stream()
+                        .collect(
+                                Collectors.toMap(
+                                        r -> r.item().id(), r -> r.item().price(), (a, b) -> a));
+        Map<Long, ProductAvailabilityResolver.Availability> next = availability.resolve(prices);
+        Map<Long, Integer> reserved =
+                query.reservedOn(
+                        next.entrySet().stream()
+                                .collect(
+                                        Collectors.toMap(
+                                                Map.Entry::getKey, e -> e.getValue().date())));
+        return rows.stream()
+                .map(
+                        r -> {
+                            ProductAvailabilityResolver.Availability a = next.get(r.item().id());
+                            return a == null
+                                    ? r
+                                    : r.withNextDate(
+                                            a.date().toString(),
+                                            a.quantity(),
+                                            reserved.getOrDefault(r.item().id(), 0));
+                        })
+                .toList();
     }
 
     /**
@@ -61,36 +114,46 @@ public class ProductService implements ProductServiceInterface {
                         products.findByIdAndDeletedFalse(productId)
                                 .orElseThrow(() -> new ProductNotFoundException(productId)));
         return toResource(
-                product, profile, categories.findById(product.getCategoryId()).orElse(null));
+                product,
+                profile,
+                categories.findById(product.getCategoryId()).orElse(null),
+                guideOf(product));
     }
 
     @Override
     @Transactional
     public FarmerProductResource create(long userId, ProductRequest request) {
         FarmerProfile profile = mine(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
         Category category = activeCategory(request.categoryId());
         Product product = new Product();
         product.setFarmerId(profile.getId());
         apply(product, request, category);
-        return toResource(products.save(product), profile, category);
+        ShelfLifeGuide guide = applyShelfLife(product, request, category);
+        return toResource(products.save(product), profile, category, guide);
     }
 
     /**
      * {@code stockQuantity} here is a reference number only — actual availability is per pickup
      * date ({@code product_daily_stock}, D-02 redesign) and comes from the weekly template, not
      * from this field. Editing it (or anything else {@link ProductRequest} carries) never changes
-     * {@link ProductStatus} and is never a restock event.
+     * {@link ProductStatus} and is never a restock event. A new price reaches the upcoming pickup
+     * days that were still sold at the old one ({@link DailyStockTemplateSync#followPrice}).
      */
     @Override
     @Transactional
     public FarmerProductResource update(long userId, long productId, ProductRequest request) {
         FarmerProfile profile = mine(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
         Product product = owned(profile, productId);
         Category category = activeCategory(request.categoryId());
+        BigDecimal oldPrice = product.getPrice();
         apply(product, request, category);
-        return toResource(products.save(product), profile, category);
+        ShelfLifeGuide guide = applyShelfLife(product, request, category);
+        Product saved = products.save(product);
+        dailyStockSync.followPrice(
+                saved, oldPrice, templates.findByProductIdAndActiveTrue(saved.getId()));
+        return toResource(saved, profile, category, guide);
     }
 
     /** Soft delete — order_items point to product_id, old orders must stay readable (FR-036). */
@@ -98,10 +161,11 @@ public class ProductService implements ProductServiceInterface {
     @Transactional
     public void softDelete(long userId, long productId) {
         FarmerProfile profile = mine(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
         Product product = owned(profile, productId);
         product.setDeleted(true);
         products.save(product);
+        templates.deleteByProductId(productId);
     }
 
     /**
@@ -112,14 +176,25 @@ public class ProductService implements ProductServiceInterface {
     @Transactional
     public FarmerProductResource setStatus(long userId, long productId, ProductStatus status) {
         FarmerProfile profile = mine(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
         Product product = owned(profile, productId);
         boolean wasOrderable = restock.isOrderable(product);
         product.setStatus(status);
         Product saved = products.save(product);
         // FR-041: lifting a pause or a manual "sold out" can make it orderable again
         restock.afterChange(saved, wasOrderable, restock.isOrderable(saved));
-        return toResource(saved, profile, categories.findById(saved.getCategoryId()).orElse(null));
+        return toResource(
+                saved,
+                profile,
+                categories.findById(saved.getCategoryId()).orElse(null),
+                guideOf(saved));
+    }
+
+    @Override
+    public PageResource<FarmerProductResource> adminHidden(int page, int pageSize) {
+        int safePage = Math.max(1, page);
+        int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
+        return query.hidden((safePage - 1) * safeSize, safeSize);
     }
 
     @Override
@@ -142,19 +217,42 @@ public class ProductService implements ProductServiceInterface {
         restock.afterChange(saved, wasOrderable, restock.isOrderable(saved));
     }
 
+    @Override
+    public PageResource<FarmerProductResource> mineDeleted(long userId, int page, int pageSize) {
+        FarmerProfile profile = mine(userId);
+        int safePage = Math.max(1, page);
+        int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
+        return query.mineDeleted(profile.getId(), (safePage - 1) * safeSize, safeSize);
+    }
+
+    @Override
+    @Transactional
+    public FarmerProductResource restore(long userId, long productId) {
+        FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
+        Product product = requireOwner(profile, locked(productId));
+        if (product.isDeleted()) {
+            product.setDeleted(false);
+            product.setStatus(ProductStatus.UNAVAILABLE);
+            products.save(product);
+        }
+        Category category = categories.findById(product.getCategoryId()).orElse(null);
+        return toResource(product, profile, category, guideOf(product));
+    }
+
     /**
      * R-06: the profile is always looked up by the token's userId; there is no path that takes a
      * farmerId from the request.
      */
+    /**
+     * D-09: every product screen — the list and the detail as much as the writes — goes through
+     * here, so a suspended stall sees none of them. Orders are deliberately not routed this way.
+     */
     private FarmerProfile mine(long userId) {
-        return farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
-    }
-
-    /** D-09 / contract §4: when not approved or suspended, every product write is blocked. */
-    private static void requireApproved(FarmerProfile profile) {
-        if (profile.getApprovalStatus() != ApprovalStatus.APPROVED) {
-            throw new StallNotApprovedException();
-        }
+        FarmerProfile profile =
+                farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
+        StallSuspensionMessage.assertUsable(profile);
+        return profile;
     }
 
     /**
@@ -231,11 +329,94 @@ public class ProductService implements ProductServiceInterface {
                 request.imageUrl() == null || request.imageUrl().isBlank()
                         ? null
                         : request.imageUrl().trim());
-        product.setShelfLifeDays(request.shelfLifeDays());
+    }
+
+    /**
+     * FR-121 (spec §4.2): the suggestion comes from the chosen group, or from the category's upper
+     * bound when the category has no groups; the server never trusts a number the client sends.
+     * Longer than the suggestion needs the Farmer's promise and is recorded with its time; more
+     * than twice the suggestion is refused.
+     */
+    private ShelfLifeGuide applyShelfLife(
+            Product product, ProductRequest request, Category category) {
+        int days = request.shelfLifeDays();
+        ShelfLifeGuide guide = null;
+        StorageMode mode;
+        int suggested;
+        if (request.shelfLifeGuideId() != null) {
+            guide =
+                    shelfLifeGuides
+                            .findById(request.shelfLifeGuideId())
+                            .filter(ShelfLifeGuide::isActive)
+                            .filter(g -> g.getCategoryId().equals(category.getId()))
+                            .orElseThrow(
+                                    () ->
+                                            new InvalidFieldException(
+                                                    "shelfLifeGuideId",
+                                                    "Choose a group from this category."));
+            mode = guide.getStorageMode();
+            if (request.storageMode() != null && StorageMode.parse(request.storageMode()) != mode) {
+                throw new InvalidFieldException(
+                        "storageMode", "This group cannot be sold that way.");
+            }
+            suggested = guide.getSuggestedDays();
+        } else {
+            if (!shelfLifeGuides
+                    .findByCategoryIdAndActiveTrueOrderByGroupNameAscStorageModeAsc(
+                            category.getId())
+                    .isEmpty()) {
+                throw new InvalidFieldException(
+                        "shelfLifeGuideId", "Choose a group from this category.");
+            }
+            mode =
+                    request.storageMode() == null
+                            ? StorageMode.ROOM
+                            : StorageMode.parse(request.storageMode());
+            suggested = category.getMaxShelfLifeDays();
+        }
+        int max = ShelfLifePolicy.maxDays(suggested);
+        if (days > max) {
+            throw new InvalidFieldException(
+                    "shelfLifeDays", "At most " + max + " days for this group.");
+        }
+        boolean extended = ShelfLifePolicy.extendedBy(days, suggested) > 0;
+        if (extended) {
+            // FR-123 (spec §4.2, §4.4.4): 3 strikes in 90 days lock anything above the suggestion
+            shelfLifeStanding.requireCanExtend(product.getFarmerId());
+        }
+        if (extended && !Boolean.TRUE.equals(request.acknowledgeLongerShelfLife())) {
+            throw new InvalidFieldException(
+                    "acknowledgeLongerShelfLife",
+                    "Confirm that the product stays good for the longer time.");
+        }
+        Long guideId = guide == null ? null : guide.getId();
+        // Spec §4.2: the time is when the Farmer ticked the promise, so a save that keeps the same
+        // promise (same group, way of keeping and days), such as a price change, keeps its time
+        boolean samePromise =
+                product.isShelfLifeExtended()
+                        && product.getShelfLifeAckAt() != null
+                        && Objects.equals(product.getShelfLifeGuideId(), guideId)
+                        && product.getStorageMode() == mode
+                        && product.getShelfLifeDays() == days;
+        LocalDateTime promisedAt =
+                samePromise ? product.getShelfLifeAckAt() : LocalDateTime.now(clock);
+        product.setShelfLifeDays(days);
+        product.setShelfLifeGuideId(guideId);
+        product.setStorageMode(mode);
+        product.setSuggestedShelfLifeDays(suggested);
+        product.setShelfLifeExtended(extended);
+        product.setShelfLifeAckAt(extended ? promisedAt : null);
+        return guide;
+    }
+
+    private ShelfLifeGuide guideOf(Product product) {
+        return product.getShelfLifeGuideId() == null
+                ? null
+                : shelfLifeGuides.findById(product.getShelfLifeGuideId()).orElse(null);
     }
 
     private static FarmerProductResource toResource(
-            Product p, FarmerProfile profile, Category category) {
+            Product p, FarmerProfile profile, Category category, ShelfLifeGuide guide) {
         ProductListItemResource item =
                 new ProductListItemResource(
                         p.getId(),
@@ -253,8 +434,19 @@ public class ProductService implements ProductServiceInterface {
                         p.getStatus().value(),
                         p.getRatingAvg(),
                         p.getRatingCount(),
-                        p.getShelfLifeDays());
+                        p.getShelfLifeDays(),
+                        null);
         return new FarmerProductResource(
-                item, p.getDescription(), p.isHidden(), p.getHiddenReason());
+                item, p.getDescription(), p.isHidden(), p.getHiddenReason(), shelfLifeOf(p, guide));
+    }
+
+    static ShelfLifeResource shelfLifeOf(Product p, ShelfLifeGuide guide) {
+        return new ShelfLifeResource(
+                p.getShelfLifeGuideId(),
+                guide == null ? null : guide.getGroupName(),
+                p.getStorageMode().value(),
+                p.getShelfLifeDays(),
+                p.getSuggestedShelfLifeDays(),
+                p.isShelfLifeExtended());
     }
 }

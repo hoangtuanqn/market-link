@@ -3,7 +3,6 @@
   "title": "Categories",
   "intro": "The one list every stall picks from when it adds a product. Sale units are fixed and ship with the app.",
   "link": {
-    "announcements": "Announcements",
     "feedback": "Feedback inbox"
   },
   "caption": {
@@ -14,11 +13,17 @@
     "category": "Category",
     "products": "Products",
     "stalls": "Stalls",
-    "nameOf": "Name of {{name}}"
+    "nameOf": "Name of {{name}}",
+    "status": "Status",
+    "shelfLife": "Shelf life",
+    "shelfLifeRange": "{{min}}–{{max}} days",
+    "shelfLifeDays_one": "{{count}} day",
+    "shelfLifeDays_other": "{{count}} days"
   },
   "action": {
     "save": "Save",
-    "remove": "Remove"
+    "remove": "Remove",
+    "enable": "Enable"
   },
   "categoryForm": {
     "title": "Add a category",
@@ -38,7 +43,9 @@
     "textUnused": "No products use it.",
     "moveTo": "Move products to",
     "keep": "Keep category",
-    "confirm": "Remove category"
+    "confirm": "Remove category",
+    "moveToHint": "Products currently assigned to this category will be reassigned.",
+    "moveToNone": "None (products keep this category)"
   },
   "empty": {
     "categories": {
@@ -49,12 +56,64 @@
   "toast": {
     "categorySaved": "{{name}} saved.",
     "categoryAdded": "Category added. Stalls can pick it now.",
-    "categoryRemoved": "{{name}} removed."
+    "categoryRemoved": "{{name}} removed.",
+    "categoryEnabled": "{{name}} enabled."
   },
   "error": {
     "noun": "categories",
     "nameRequired": "Give the category a name.",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "Keep the name to {{max}} characters or fewer.",
+    "nameTaken": "A category with this name already exists."
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+  "guides": {
+    "title": "Storage groups",
+    "intro": "Suggested shelf life per group and way of keeping. Farmers start from these numbers.",
+    "category": "Category",
+    "col": {
+      "group": "Group",
+      "storage": "Kept",
+      "days": "Days",
+      "daysFor": "Days for {{group}} ({{storage}})"
+    },
+    "status": {
+      "off": "Off"
+    },
+    "action": {
+      "save": "Save",
+      "off": "Turn off",
+      "on": "Turn on"
+    },
+    "form": {
+      "title": "Add a group",
+      "group": "Group name",
+      "groupPlaceholder": "e.g. Leafy greens",
+      "examples": "Examples",
+      "examplesHint": "Comma-separated product words, in Vietnamese and English, used to pick the group from a product name.",
+      "storage": "How it is kept",
+      "days": "Suggested days",
+      "submit": "Add group"
+    },
+    "empty": {
+      "title": "No storage groups yet",
+      "text": "Farmers in this category see the category's range until you add a group."
+    },
+    "noun": "storage groups",
+    "error": {
+      "nameRequired": "Give the group a name.",
+      "days": "Enter a whole number from 1 to 365.",
+      "taken": "This group already has that way of keeping."
+    },
+    "toast": {
+      "added": "Group added.",
+      "saved": "Group saved.",
+      "off": "Group turned off.",
+      "on": "Group turned on."
+    }
   }
 }

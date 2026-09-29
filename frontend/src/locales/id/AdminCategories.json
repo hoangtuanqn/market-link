@@ -3,7 +3,6 @@
   "title": "Kategori",
   "intro": "Satu-satunya daftar yang dipilih setiap lapak saat menambah produk. Satuan jual bersifat tetap dan sudah ada di aplikasi.",
   "link": {
-    "announcements": "Pengumuman",
     "feedback": "Kotak masukan"
   },
   "caption": {
@@ -14,11 +13,17 @@
     "category": "Kategori",
     "products": "Produk",
     "stalls": "Lapak",
-    "nameOf": "Nama {{name}}"
+    "nameOf": "Nama {{name}}",
+    "status": "Status",
+    "shelfLife": "Masa simpan",
+    "shelfLifeRange": "{{min}}–{{max}} hari",
+    "shelfLifeDays_one": "{{count}} hari",
+    "shelfLifeDays_other": "{{count}} hari"
   },
   "action": {
     "save": "Simpan",
-    "remove": "Hapus"
+    "remove": "Hapus",
+    "enable": "Aktifkan"
   },
   "categoryForm": {
     "title": "Tambah kategori",
@@ -38,7 +43,9 @@
     "textUnused": "Tidak ada produk yang memakainya.",
     "moveTo": "Pindahkan produk ke",
     "keep": "Pertahankan kategori",
-    "confirm": "Hapus kategori"
+    "confirm": "Hapus kategori",
+    "moveToHint": "Produk yang saat ini ditetapkan ke kategori ini akan dialihkan.",
+    "moveToNone": "Tidak ada (produk tetap memakai kategori ini)"
   },
   "empty": {
     "categories": {
@@ -49,12 +56,64 @@
   "toast": {
     "categorySaved": "{{name}} tersimpan.",
     "categoryAdded": "Kategori ditambahkan. Lapak sudah bisa memilihnya.",
-    "categoryRemoved": "{{name}} dihapus."
+    "categoryRemoved": "{{name}} dihapus.",
+    "categoryEnabled": "{{name}} diaktifkan."
   },
   "error": {
     "noun": "kategori",
     "nameRequired": "Beri nama kategori.",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "Nama paling banyak {{max}} karakter.",
+    "nameTaken": "Kategori dengan nama ini sudah ada."
+  },
+  "status": {
+    "active": "Aktif",
+    "inactive": "Tidak aktif"
+  },
+  "guides": {
+    "title": "Kelompok penyimpanan",
+    "intro": "Perkiraan masa simpan per kelompok dan cara penyimpanan. Petani memulai dari angka-angka ini.",
+    "category": "Kategori",
+    "col": {
+      "group": "Kelompok",
+      "storage": "Penyimpanan",
+      "days": "Hari",
+      "daysFor": "Hari untuk {{group}} ({{storage}})"
+    },
+    "status": {
+      "off": "Nonaktif"
+    },
+    "action": {
+      "save": "Simpan",
+      "off": "Nonaktifkan",
+      "on": "Aktifkan"
+    },
+    "form": {
+      "title": "Tambah kelompok",
+      "group": "Nama kelompok",
+      "groupPlaceholder": "mis. Leafy greens",
+      "examples": "Contoh",
+      "examplesHint": "Kata-kata produk dipisah koma, dalam bahasa Vietnam dan Inggris, dipakai untuk memilih kelompok dari nama produk.",
+      "storage": "Cara penyimpanan",
+      "days": "Hari yang disarankan",
+      "submit": "Tambah kelompok"
+    },
+    "empty": {
+      "title": "Belum ada kelompok penyimpanan",
+      "text": "Petani di kategori ini melihat rentang kategori sampai kamu menambahkan kelompok."
+    },
+    "noun": "kelompok penyimpanan",
+    "error": {
+      "nameRequired": "Beri nama kelompok ini.",
+      "days": "Masukkan bilangan bulat dari 1 sampai 365.",
+      "taken": "Kelompok ini sudah punya cara penyimpanan itu."
+    },
+    "toast": {
+      "added": "Kelompok ditambahkan.",
+      "saved": "Kelompok disimpan.",
+      "off": "Kelompok dinonaktifkan.",
+      "on": "Kelompok diaktifkan."
+    }
   }
 }

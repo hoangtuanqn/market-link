@@ -4,10 +4,15 @@ import com.techx.intervue.modules.product.requests.ProductSearchCriteria;
 import com.techx.intervue.modules.product.resources.FarmerProductResource;
 import com.techx.intervue.modules.product.resources.ProductDetailRow;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
+import com.techx.intervue.modules.product.resources.ShelfLifeResource;
 import com.techx.intervue.resources.PageResource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -120,7 +125,132 @@ public class ProductQueryRepository {
               AND (:status IS NULL OR p.status = :status)
             """;
 
+    public static final String MINE_DELETED_SQL =
+            """
+            SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
+                   p.rating_avg, p.rating_count, p.description, p.shelf_life_days, p.is_hidden,
+                   p.hidden_reason,
+                   f.id AS farmer_id, f.stall_name,
+                   c.id AS category_id, c.name AS category_name,
+                   NULL AS market_id, NULL AS market_name
+            FROM products p
+            JOIN farmer_profiles f ON f.id = p.farmer_id
+            JOIN categories c ON c.id = p.category_id
+            WHERE p.farmer_id = :farmerId
+              AND p.is_deleted = TRUE
+            ORDER BY p.updated_at DESC, p.id
+            LIMIT :limit OFFSET :offset
+            """;
+
+    private static final String MINE_DELETED_COUNT_SQL =
+            """
+            SELECT COUNT(*) FROM products p
+            WHERE p.farmer_id = :farmerId
+              AND p.is_deleted = TRUE
+            """;
+
+    /**
+     * FR-074: every listing the Admin has hidden, newest change first, so a hidden listing can be
+     * found again and unhidden.
+     */
+    public static final String HIDDEN_SQL =
+            """
+            SELECT p.id, p.name, p.price, p.unit, p.stock_quantity, p.image_url, p.status,
+                   p.rating_avg, p.rating_count, p.description, p.shelf_life_days, p.is_hidden,
+                   p.hidden_reason,
+                   f.id AS farmer_id, f.stall_name,
+                   c.id AS category_id, c.name AS category_name,
+                   NULL AS market_id, NULL AS market_name
+            FROM products p
+            JOIN farmer_profiles f ON f.id = p.farmer_id
+            JOIN categories c ON c.id = p.category_id
+            WHERE p.is_hidden = TRUE
+              AND p.is_deleted = FALSE
+            ORDER BY p.updated_at DESC, p.id
+            LIMIT :limit OFFSET :offset
+            """;
+
+    private static final String HIDDEN_COUNT_SQL =
+            """
+            SELECT COUNT(*) FROM products p
+            WHERE p.is_hidden = TRUE
+              AND p.is_deleted = FALSE
+            """;
+
+    /**
+     * Units that orders still holding stock (placed, accepted, ready — D-02) take per product and
+     * pickup date. Declined and cancelled orders gave their stock back; completed ones were handed
+     * over.
+     */
+    private static final String RESERVED_SQL =
+            """
+            SELECT oi.product_id, o.pickup_date, SUM(oi.quantity) AS reserved
+            FROM order_items oi
+            JOIN orders o ON o.id = oi.order_id
+            WHERE oi.product_id IN (:productIds)
+              AND o.pickup_date IN (:dates)
+              AND o.status IN ('placed', 'accepted', 'ready')
+            GROUP BY oi.product_id, o.pickup_date
+            """;
+
+    public static final String SOLD_FROM_SQL =
+            """
+            SELECT o.pickup_date, SUM(oi.quantity) AS sold
+            FROM order_items oi
+            JOIN orders o ON o.id = oi.order_id
+            WHERE oi.product_id = :productId
+              AND o.pickup_date >= :fromDate
+              AND o.status IN ('placed', 'accepted', 'ready', 'completed')
+            GROUP BY o.pickup_date
+            """;
+
     private final NamedParameterJdbcTemplate jdbc;
+
+    /**
+     * For each product, the units active orders hold for the one pickup date given for it; a
+     * product with none is absent from the map.
+     */
+    public Map<Long, Integer> reservedOn(Map<Long, LocalDate> dateByProductId) {
+        if (dateByProductId.isEmpty()) {
+            return Map.of();
+        }
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("productIds", dateByProductId.keySet())
+                        .addValue("dates", new HashSet<>(dateByProductId.values()));
+        Map<Long, Integer> reserved = new HashMap<>();
+        jdbc.query(
+                RESERVED_SQL,
+                params,
+                rs -> {
+                    long productId = rs.getLong("product_id");
+                    LocalDate date = rs.getObject("pickup_date", LocalDate.class);
+                    if (date.equals(dateByProductId.get(productId))) {
+                        reserved.put(productId, rs.getInt("reserved"));
+                    }
+                });
+        return reserved;
+    }
+
+    /**
+     * Units one product's orders took from each pickup date on or after {@code from} and still hold
+     * — every status but declined and cancelled, the two that give stock back (D-02). A date with
+     * none is absent from the map.
+     */
+    public Map<LocalDate, Integer> soldFrom(long productId, LocalDate from) {
+        MapSqlParameterSource params =
+                new MapSqlParameterSource()
+                        .addValue("productId", productId)
+                        .addValue("fromDate", from);
+        Map<LocalDate, Integer> sold = new HashMap<>();
+        jdbc.query(
+                SOLD_FROM_SQL,
+                params,
+                rs -> {
+                    sold.put(rs.getObject("pickup_date", LocalDate.class), rs.getInt("sold"));
+                });
+        return sold;
+    }
 
     public PageResource<FarmerProductResource> mine(
             long farmerId, String status, int offset, int limit) {
@@ -133,6 +263,40 @@ public class ProductQueryRepository {
         List<FarmerProductResource> items =
                 jdbc.query(
                         MINE_SQL,
+                        params,
+                        (rs, i) ->
+                                new FarmerProductResource(
+                                        item(rs),
+                                        rs.getString("description"),
+                                        rs.getBoolean("is_hidden"),
+                                        rs.getString("hidden_reason")));
+        return new PageResource<>(items, offset / limit + 1, limit, total == null ? 0 : total);
+    }
+
+    public PageResource<FarmerProductResource> hidden(int offset, int limit) {
+        MapSqlParameterSource params = new MapSqlParameterSource();
+        Long total = jdbc.queryForObject(HIDDEN_COUNT_SQL, params, Long.class);
+        params.addValue("limit", limit).addValue("offset", offset);
+        List<FarmerProductResource> items =
+                jdbc.query(
+                        HIDDEN_SQL,
+                        params,
+                        (rs, i) ->
+                                new FarmerProductResource(
+                                        item(rs),
+                                        rs.getString("description"),
+                                        rs.getBoolean("is_hidden"),
+                                        rs.getString("hidden_reason")));
+        return new PageResource<>(items, offset / limit + 1, limit, total == null ? 0 : total);
+    }
+
+    public PageResource<FarmerProductResource> mineDeleted(long farmerId, int offset, int limit) {
+        MapSqlParameterSource params = new MapSqlParameterSource("farmerId", farmerId);
+        Long total = jdbc.queryForObject(MINE_DELETED_COUNT_SQL, params, Long.class);
+        params.addValue("limit", limit).addValue("offset", offset);
+        List<FarmerProductResource> items =
+                jdbc.query(
+                        MINE_DELETED_SQL,
                         params,
                         (rs, i) ->
                                 new FarmerProductResource(
@@ -199,6 +363,38 @@ public class ProductQueryRepository {
         return rows.stream().findFirst();
     }
 
+    /** FR-121: one product's stored shelf-life block for its public page. */
+    public static final String SHELF_LIFE_SQL =
+            """
+            SELECT p.shelf_life_guide_id, g.group_name, p.storage_mode, p.shelf_life_days,
+                   p.suggested_shelf_life_days, p.shelf_life_extended
+            FROM products p
+            LEFT JOIN shelf_life_guides g ON g.id = p.shelf_life_guide_id
+            WHERE p.id = :id
+            """;
+
+    public Optional<ShelfLifeResource> shelfLife(long productId) {
+        return jdbc
+                .query(
+                        SHELF_LIFE_SQL,
+                        new MapSqlParameterSource("id", productId),
+                        (rs, i) -> {
+                            long guideId = rs.getLong("shelf_life_guide_id");
+                            Long guide = rs.wasNull() ? null : guideId;
+                            int suggested = rs.getInt("suggested_shelf_life_days");
+                            Integer suggestedDays = rs.wasNull() ? null : suggested;
+                            return new ShelfLifeResource(
+                                    guide,
+                                    rs.getString("group_name"),
+                                    rs.getString("storage_mode"),
+                                    rs.getInt("shelf_life_days"),
+                                    suggestedDays,
+                                    rs.getBoolean("shelf_life_extended"));
+                        })
+                .stream()
+                .findFirst();
+    }
+
     private static ProductListItemResource item(ResultSet rs) throws SQLException {
         long marketId = rs.getLong("market_id");
         return new ProductListItemResource(
@@ -217,7 +413,8 @@ public class ProductQueryRepository {
                 rs.getString("status"),
                 rs.getBigDecimal("rating_avg"),
                 rs.getInt("rating_count"),
-                rs.getInt("shelf_life_days"));
+                rs.getInt("shelf_life_days"),
+                null);
     }
 
     /** '%' and '_' typed by the user must not act as wildcards. */

@@ -10,17 +10,23 @@
     "remove": "Bỏ khỏi yêu thích: {{name}}"
   },
   "soldPer": "bán theo {{unit}}",
-  "left": "còn <b>{{qty}}</b> trong tuần này",
+  "left": "còn <b>{{qty}}</b>",
+  "leftOn": "còn <b>{{qty}}</b> cho {{day}}",
   "stockUpdated": "Tồn kho cập nhật hôm nay, trước các đơn cuối tuần này.",
-  "notifyMe": "Báo cho tôi khi có lại",
   "added": {
     "title": "Đã thêm vào giỏ",
     "text": "Đã thêm {{qty}} {{name}} vào giỏ hàng."
   },
   "addToCart": "Thêm vào giỏ",
   "payNote": "Hàng được giữ cho bạn khi bạn đặt đơn. Bạn trả {{price}} tại sạp khi nhận hàng.",
+  "deals": {
+    "title": "Đang giảm giá theo ngày nhận",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, giá gốc {{was}} · dùng tốt đến hết {{until}} · còn {{qty}}",
+    "add": "Thêm cho {{day}}",
+    "noun": "hàng giảm giá"
+  },
   "fromStall": "Từ sạp",
-  "sellingSince": "bán ở đây từ {{date}}",
   "stats": {
     "reviews_one": "{{count}} đánh giá",
     "reviews_other": "{{count}} đánh giá",
@@ -31,13 +37,13 @@
     "cutoff": "chốt đơn trước"
   },
   "seeStall": "Xem sạp",
-  "messageStall": "Nhắn tin cho sạp",
   "details": {
     "title": "Chi tiết sản phẩm",
     "soldPer": "Bán theo",
-    "shelfLife": "Độ tươi ngon",
-    "shelfLifeValue_one": "{{count}} ngày",
-    "shelfLifeValue_other": "{{count}} ngày",
+    "shelfLife": "Hạn dùng",
+    "shelfLifeLine_one": "{{storage}} · dùng tốt {{count}} ngày kể từ ngày nhận",
+    "shelfLifeLine_other": "{{storage}} · dùng tốt {{count}} ngày kể từ ngày nhận",
+    "shelfLifePromise": "Sạp cam kết {{days}} ngày (thường gặp {{suggested}} ngày).",
     "category": "Loại",
     "stall": "Sạp",
     "market": "Chợ"
@@ -74,7 +80,6 @@
   "similar": {
     "title": "{{name}} ở các sạp khác cuối tuần này",
     "note": "Cùng loại rau, khác vườn và khác giá",
-    "here": "Bạn đang xem",
     "view": "Xem"
   },
   "also": {

@@ -6,6 +6,7 @@ import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.SetPasswordRequest;
 import com.techx.intervue.modules.user.requests.UpdateProfileRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
+import com.techx.intervue.modules.user.resources.SignupStartedResource;
 import com.techx.intervue.modules.user.resources.SocialProfile;
 import com.techx.intervue.modules.user.resources.UserResource;
 
@@ -15,7 +16,11 @@ public interface UserServiceInterface {
     /** FR-008: step 2 of admin sign-in with two-step verification on. */
     AuthResult completeMfaLogin(String mfaToken, String code, String recoveryCode);
 
-    AuthResult registerCustomer(CustomerRegisterRequest request);
+    /** FR-001 + FR-009: park the form and mail a code; no account exists yet. */
+    SignupStartedResource registerCustomer(CustomerRegisterRequest request, String clientIp);
+
+    /** FR-009: the right code creates the customer account and signs it in. */
+    AuthResult completeSignup(String email, String code, String signupToken);
 
     void logout(Long userId, String accessToken, String refreshToken);
 
@@ -31,6 +36,12 @@ public interface UserServiceInterface {
     /** Change the password (needs the current password), then sign out of every device. */
     void changePassword(Long userId, ChangePasswordRequest request);
 
+    /**
+     * FR-008: sign out of every device, then hand the caller a fresh session — used right after
+     * two-step verification is turned on.
+     */
+    AuthResult restartSession(Long userId);
+
     /** Information about the signed-in user themself (GET /auth/me). */
     UserResource getProfile(Long userId);
 
@@ -38,10 +49,4 @@ public interface UserServiceInterface {
      * Update the full name, phone number, address of the signed-in user themself (PUT /auth/me).
      */
     UserResource updateProfile(Long userId, UpdateProfileRequest request);
-
-    // Optional<User> findById(Long userId);
-
-    // Optional<User> findByEmail(String email);
-
-    // UserResource getMe(Long userId);
 }

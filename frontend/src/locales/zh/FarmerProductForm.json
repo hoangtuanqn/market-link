@@ -26,27 +26,49 @@
     "text": "标签上显示 <b>{{price}}</b> · 剩余 <b>{{left}}</b> · 订购一份的人会看到 <b>{{one}}</b>"
   },
   "price": {
-    "label": "价格（₫）",
+    "label": "价格（$）",
     "hint": "显示为 {{price}}。"
   },
   "qty": {
     "label": "本周可售数量",
-    "error": "数量必须为 0 或以上。没有剩余时请用“售罄”。"
+    "error": "数量必须为 0 或以上。没有剩余时请用“售罄”。",
+    "hint": "仅作参考。顾客按每周库存下单，保存后再设置每周库存。"
   },
   "shelfLife": {
-    "label": "Shelf life (days)",
-    "hint": "This category is usually {{min}}–{{max}} days.",
-    "error": "Enter a whole number of 1 or more.",
-    "warningTitle": "Outside the usual range",
-    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+    "label": "保鲜期",
+    "group": "保存分组",
+    "pickGroup": "请选择分组",
+    "examples": "例如：{{examples}}",
+    "storage": "保存方式",
+    "suggested_one": "建议 {{count}} 天",
+    "suggested_other": "建议 {{count}} 天",
+    "days_one": "{{count}} 天",
+    "days_other": "{{count}} 天",
+    "decrease": "减少一天",
+    "increase": "增加一天",
+    "peers_one": "其他摊位通常设为 {{count}} 天",
+    "peers_other": "其他摊位通常设为 {{count}} 天",
+    "shorter": "比建议时间短。顾客看到的就是这个天数。",
+    "longerTitle_one": "比建议多 {{count}} 天（建议 {{suggested}}，{{storage}}）",
+    "longerTitle_other": "比建议多 {{count}} 天（建议 {{suggested}}，{{storage}}）",
+    "ackLabel": "我承诺按这种保存方式（{{storage}}）存放 {{days}} 天仍然新鲜。如果顾客反映提前变质，管理员可以为该摊位记录一次违规。",
+    "ackRequired": "勾选承诺才能保存更长的保鲜期。",
+    "tooLong_one": "此分组最多 {{count}} 天。",
+    "tooLong_other": "此分组最多 {{count}} 天。",
+    "locked": "你的摊位在 {{date}} 之前不能超过建议天数：90 天内已达到 3 次保鲜期违规。",
+    "overLock_one": "你的摊位目前不能超过建议天数，请降到 {{count}} 天。",
+    "overLock_other": "你的摊位目前不能超过建议天数，请降到 {{count}} 天。",
+    "saveBlocked": "请勾选上方承诺以保存。",
+    "saveNeedsGroup": "请先在上方选择保存分组，再保存。",
+    "saveNeedsGroups": "请先在上方重新加载保存分组，再保存。",
+    "loading": "正在加载保存分组",
+    "fallback": "该类别暂无保存分组，通常可保存 {{min}}–{{max}} 天。",
+    "groupGone": "此商品原先使用的分组已不再提供，请另选一个。",
+    "noun": "保存分组"
   },
   "desc": {
     "label": "描述",
     "hint": "显示在商品页面上。说说它是怎么种的、怎么保存。"
-  },
-  "flag": {
-    "label": "卡片上的短标签",
-    "hint": "可选，手写在标签上：“今日新鲜”“清晨 5 点出炉”。"
   },
   "status": {
     "label": "状态",
@@ -62,7 +84,11 @@
     "uploading": "上传中",
     "uploadInProgress": "请等照片上传完成后再保存。",
     "alt": "产品照片",
-    "hint": "JPEG、PNG 或 WEBP，最大 8 MB。近距离、自然光，放在木板或纸上拍摄。"
+    "hint": "JPEG、PNG 或 WEBP，最大 8 MB。近距离、自然光，放在木板或纸上拍摄。",
+    "error": {
+      "tooLarge": "照片必须小于或等于 8 MB。",
+      "type": "照片必须是 JPEG、PNG 或 WEBP 格式。"
+    }
   },
   "save": "保存商品",
   "add": "添加商品",
@@ -77,7 +103,8 @@
     "saved": "已保存",
     "savedText": "{{name}} 已保存。",
     "product": "商品",
-    "deletedText": "已删除{{name}}。"
+    "deletedText": "已删除{{name}}。",
+    "createdText": "{{name}} 已保存。请设置每周各天带来的数量，顾客才能下单。"
   },
   "error": {
     "noun": "商品"
@@ -88,6 +115,6 @@
   },
   "errors": {
     "required": "此项为必填。",
-    "price": "价格必须大于或等于 0。"
+    "price": "价格必须大于 0。"
   }
 }

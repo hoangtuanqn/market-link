@@ -3,24 +3,28 @@
   "intro": "Alles, was Sie anbieten können. Markieren Sie ein Produkt als ausverkauft, wenn es am Markttag aufgebraucht ist, oder pausieren Sie es außerhalb der Saison.",
   "add": "Produkt hinzufügen",
   "filterAll": "Alle",
+  "filterDeleted": "Gelöscht",
   "status": {
     "available": "Verfügbar",
     "sold_out": "Ausverkauft",
-    "unavailable": "Pausiert"
+    "unavailable": "Pausiert",
+    "deleted": "Gelöscht"
   },
   "caption_one": "{{count}} Produkt",
   "caption_other": "{{count}} Produkte",
   "col": {
     "product": "Produkt",
     "price": "Preis",
-    "left": "Diese Woche übrig",
+    "left": "Nächste Abholung · übrig",
     "reserved": "Reserviert",
     "status": "Status"
   },
   "perUnit": "pro {{unit}}",
+  "nextLeft": "{{day}} · noch {{qty}}",
   "statusOf": "Status von {{name}}",
   "edit": "Bearbeiten",
   "delete": "Löschen",
+  "restore": "Wiederherstellen",
   "footNote": "Wenn Sie ein Produkt löschen, verschwindet es aus dem Katalog; frühere Bestellungen behalten ihre Positionen. Fotos: 4:3, Tageslicht, auf Holz oder Papier.",
   "toast": {
     "statusSaved": "Status gespeichert",
@@ -30,7 +34,10 @@
       "unavailable": "Das Produkt ist für Kunden ausgeblendet, bis Sie es wieder aktivieren."
     },
     "deleted": "Gelöscht",
-    "deletedText": "{{name}} gelöscht."
+    "deletedText": "{{name}} gelöscht.",
+    "restored": "Wiederhergestellt",
+    "restoredText": "{{name}} als pausiert wiederhergestellt. Legen Sie den Wochenbestand erneut fest, bevor Sie es wieder verkaufen.",
+    "stockAdjusted": "Bestand für {{day}} aktualisiert."
   },
   "dialog": {
     "title": "{{name}} löschen?",
@@ -39,6 +46,13 @@
     "text": "Es verschwindet aus dem Katalog und aus Ihrer Vorlage. Bestellungen, die es bereits enthalten, bleiben unverändert.",
     "pauseHint": "Um es eine Weile nicht zu verkaufen, wählen Sie stattdessen Pausiert."
   },
+  "restoreDialog": {
+    "title": "{{name}} wiederherstellen?",
+    "cancel": "Im Papierkorb behalten",
+    "confirm": "Produkt wiederherstellen",
+    "text": "Das Produkt wird im Status „Pausiert“ wiederhergestellt, sodass Sie Bestand und Preis überprüfen können, bevor Sie es wieder zum Verkauf anbieten.",
+    "stockHint": "Der Wochenbestand wurde beim Löschen entfernt. Kunden können erst bestellen, wenn Sie ihn erneut festlegen."
+  },
   "error": {
     "noun": "deine Produkte"
   },
@@ -46,5 +60,79 @@
   "empty": {
     "title": "Noch keine Produkte",
     "text": "Füge dein erstes Produkt hinzu — es erscheint sofort auf deiner Standseite."
-  }
+  },
+  "emptyDeleted": {
+    "title": "Papierkorb ist leer",
+    "text": "Keine gelöschten Produkte vorhanden."
+  },
+  "adjust": "Anpassen",
+  "adjustDialog": {
+    "title": "Bestand für {{day}} anpassen",
+    "quantity": "Verfügbare Einheiten",
+    "price": "Preis für diesen Tag (optional)",
+    "priceHint": "Leer lassen, um den aktuellen Preis beizubehalten. Ein Preis hier beendet an diesem Tag auch ein Angebot mit kurzer Haltbarkeit.",
+    "cancel": "Abbrechen",
+    "confirm": "Speichern",
+    "error": {
+      "quantity": "Geben Sie eine ganze Zahl von 0 oder mehr ein.",
+      "price": "Geben Sie einen Preis über 0 $ ein oder lassen Sie das Feld leer."
+    }
+  },
+  "dealAction": "Angebot: kurze Haltbarkeit",
+  "dealActionFor": "Angebot: kurze Haltbarkeit für {{name}}",
+  "deals": {
+    "title_one": "Im Angebot ({{count}})",
+    "title_other": "Im Angebot ({{count}})",
+    "loading": "Deine Angebote werden geladen…",
+    "col": {
+      "product": "Produkt",
+      "day": "Abholtag",
+      "discount": "Rabatt",
+      "left": "Übrig",
+      "until": "Haltbar bis"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}, statt {{was}}",
+    "until_one": "Ende {{day}} ({{count}} Tag)",
+    "until_other": "Ende {{day}} ({{count}} Tage)",
+    "remove": "Angebot entfernen",
+    "removed": "Angebot entfernt",
+    "removedText": "{{name}} hat für {{day}} wieder den regulären Preis.",
+    "noun": "deine Angebote"
+  },
+  "dealDialog": {
+    "title": "Angebot: kurze Haltbarkeit · {{name}}",
+    "day": "Abholtag",
+    "qty": "Mitgebrachte Menge ({{unit}})",
+    "onSale": "{{qty}} an diesem Tag bereits im Angebot",
+    "packedOn": "Geerntet oder verpackt am",
+    "result_one": "Haltbar bis Ende {{until}} · Kunde hat noch {{count}} Tag (Haltbarkeit {{shelfLife}} Tage)",
+    "result_other": "Haltbar bis Ende {{until}} · Kunde hat noch {{count}} Tage (Haltbarkeit {{shelfLife}} Tage)",
+    "discount": "Rabatt",
+    "less": "Rabatt senken",
+    "more": "Rabatt erhöhen",
+    "suggested": "Empfohlen {{percent}}%",
+    "price": "Preis",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "Angebot veröffentlichen",
+    "posting": "Wird veröffentlicht…",
+    "posted": "Angebot veröffentlicht",
+    "postedText": "{{name}} ist für {{day}} {{percent}}% günstiger.",
+    "loadingDays": "Abholtage werden geladen…",
+    "daysNoun": "Abholtage",
+    "noDays": {
+      "title": "Kein Abholtag verfügbar",
+      "text": "Kunden können dieses Produkt für keinen der nächsten 14 Tage bestellen. Prüfe deinen Wochenbestand und deine Abholzeiten."
+    },
+    "why": {
+      "packedOn": "Gib das Ernte- oder Verpackungsdatum ein.",
+      "qty": "Bring mindestens 1 mit.",
+      "packedInFuture": "Das Ernte- oder Verpackungsdatum darf nicht nach heute liegen.",
+      "fresh": "Am Abholtag geerntet zählt als frisch, daher ist kein Angebot nötig.",
+      "notNearExpiry": "An diesem Tag ist noch mehr als die Hälfte der {{shelfLife}}-tägigen Haltbarkeit übrig. Angebote sind nur für Ware, deren Haltbarkeit schon zur Hälfte abgelaufen ist.",
+      "expiredBeforePickup": "Diese Charge ist an diesem Tag nicht mehr gut und kann dafür nicht verkauft werden."
+    }
+  },
+  "noNextDate": "Kein Tag für Bestellungen offen",
+  "checkWeeklyStock": "Wochenbestand festlegen"
 }

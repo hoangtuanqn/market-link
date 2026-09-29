@@ -4,3 +4,8 @@
 @import './styles/marketlink-theme.css';
 @import './styles/marketlink-components.css';
 @import './styles/tiers.css';
+
+html,
+body {
+  background-color: var(--surface-quiet);
+}

@@ -6,8 +6,8 @@ COMPOSE_APP  := docker compose --profile app
 COMPOSE_PROD := docker compose -p market-link-prod --env-file .env.production -f docker-compose.yml -f docker-compose.prod.yml --profile app
 
 .DEFAULT_GOAL := help
-.PHONY: help vapid-keys check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init \
-        format lint be-format be-test fe-install seed mysql redis clean
+.PHONY: help vapid-keys check-env init up down build logs ps restart be-restart tools infra prod prod-down prod-logs prod-init prod-seed \
+        format lint be-format be-test fe-install seed seed-images mysql redis clean submission
 
 help: ## Show the command list
 	@grep -E '^[a-zA-Z_-]+:.*?## ' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "}{printf "  \033[36m%-12s\033[0m %s\n",$$1,$$2}'
@@ -70,6 +70,18 @@ prod-logs: ## Xem log production (make prod-logs s=backend)
 prod-down: ## Stop the production stack (keep data)
 	$(COMPOSE_PROD) down
 
+# AdminSeeder only runs in dev/local, so a fresh production DB has no admin: this seed is how it gets one.
+# Run it once the backend is up (Flyway has created the tables). The photos are unpacked by the backend's
+# spring user so the uploads-data volume stays writable for later uploads. COPYFILE_DISABLE and --no-xattrs keep
+# macOS tar from adding ._* files and xattr headers.
+prod-seed: ## Load db/seed.sql + demo photos into production (admin + demo accounts, password Demo@1234)
+	$(COMPOSE_PROD) exec -T mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"' < db/seed.sql
+	(cd db/seed-images/products && COPYFILE_DISABLE=1 tar --no-xattrs -cf - *.jpg) | $(COMPOSE_PROD) exec -T backend \
+		sh -c 'mkdir -p /app/uploads/product-images && tar -xf - -C /app/uploads/product-images'
+	(cd db/seed-images/markets && COPYFILE_DISABLE=1 tar --no-xattrs -cf - *.jpg) | $(COMPOSE_PROD) exec -T backend \
+		sh -c 'mkdir -p /app/uploads/market-images && tar -xf - -C /app/uploads/market-images'
+	@echo "Seed xong. Đổi mật khẩu admin (Demo@1234) ngay sau lần đăng nhập đầu."
+
 format: be-format ## Format all code (prettier + spotless) in the container
 	$(COMPOSE) exec frontend npx prettier --write .
 
@@ -89,9 +101,14 @@ be-test: ## Run backend tests in the container
 fe-install: ## Reinstall frontend packages in the container (after changing package.json)
 	$(COMPOSE) exec frontend npm install
 
-seed: ## Load the demo data db/seed.sql (FR-100…102) — safe to run repeatedly
+seed: seed-images ## Load the demo data db/seed.sql (FR-100…102) — safe to run repeatedly
 	$(COMPOSE) exec -T mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"' < db/seed.sql
 	@echo "Seed xong."
+
+seed-images: ## Copy demo photos from db/seed-images/ into the uploads volume (see db/seed-images/PROMPTS.md)
+	@mkdir -p backend/uploads/product-images backend/uploads/market-images
+	@cp db/seed-images/products/*.jpg backend/uploads/product-images/ 2>/dev/null || true
+	@cp db/seed-images/markets/*.jpg backend/uploads/market-images/ 2>/dev/null || true
 
 mysql: ## Open a MySQL shell
 	$(COMPOSE) exec mysql sh -c 'mysql -u"$$MYSQL_USER" -p"$$MYSQL_PASSWORD" "$$MYSQL_DATABASE"'
@@ -101,3 +118,7 @@ redis: ## Open redis-cli
 
 clean: ## Remove containers + volumes (DB DATA IS LOST)
 	$(COMPOSE_APP) --profile tools down -v
+
+submission: ## Build the archive handed to the judges (dist/MarketLink-TechWiz7.zip)
+	./scripts/make-submission.sh
+	./scripts/make-submission.test.sh

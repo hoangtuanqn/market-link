@@ -1,7 +1,7 @@
 import type { TFunction } from 'i18next';
 import { useEffect, useState, type SubmitEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -32,9 +32,10 @@ const validate = (t: TFunction<'CustomerAccount'>, current: string, next: string
 };
 
 /**
- * The change-password page (/account/password), opened from the "Password & security" frame on the Account page. The
- * ".." link is relative to the path so it returns to the exact page that opened it. After the change the backend signs
- * out every device (including this one), so the FE clears the session and sends the user to the sign-in page.
+ * The change-password page (/account/password), opened from the "Password & security" frame on the Account page.
+ * Rendered within AuthLayout (no Header/Footer) for consistency with sign-in and sign-up flows. After the change the
+ * backend signs out every device (including this one), so the FE clears the session and sends the user to the sign-in
+ * page.
  */
 const ChangePasswordPage = () => {
   const { t } = useTranslation('CustomerAccount');
@@ -77,83 +78,75 @@ const ChangePasswordPage = () => {
   };
 
   return (
-    <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
-      <p className="text-small text-ink-muted">
-        <Link to=".." relative="path" className="text-brand underline">
-          {t('title')}
-        </Link>{' '}
-        · {t('password.title')}
-      </p>
+    <Card className="mx-auto my-4 w-full max-w-115 p-4 md:my-8 md:p-8">
+      <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
+        <div className="flex flex-col gap-2">
+          <h1 className="font-hand text-h1">{t('password.title')}</h1>
+          <p className="text-small text-ink-muted">{t('password.intro')}</p>
+        </div>
 
-      <div className="flex flex-col gap-2">
-        <h1 className="text-h1">{t('password.title')}</h1>
-        <p className="text-body-lg">{t('password.intro')}</p>
-      </div>
+        {/* Tell the password manager which account the password belongs to */}
+        <input
+          type="email"
+          name="username"
+          autoComplete="username"
+          value={Session.getUser()?.email ?? ''}
+          readOnly
+          hidden
+        />
 
-      <Card className="p-6">
-        <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
-          {/* Tell the password manager which account the password belongs to */}
-          <input
-            type="email"
-            name="username"
-            autoComplete="username"
-            value={Session.getUser()?.email ?? ''}
-            readOnly
-            hidden
-          />
+        <Field
+          id="currentPassword"
+          label={t('password.current')}
+          type="password"
+          required
+          autoComplete="current-password"
+          value={currentPassword}
+          onChange={(e) => setCurrentPassword(e.target.value)}
+          error={errors.currentPassword}
+          disabled={isSubmitting}
+        />
 
-          <Field
-            id="currentPassword"
-            label={t('password.current')}
-            type="password"
-            required
-            autoComplete="current-password"
-            value={currentPassword}
-            onChange={(e) => setCurrentPassword(e.target.value)}
-            error={errors.currentPassword}
-            disabled={isSubmitting}
-          />
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-            <Field
-              id="newPassword"
-              label={t('password.new')}
-              type="password"
-              required
-              autoComplete="new-password"
-              value={newPassword}
-              onChange={(e) => setNewPassword(e.target.value)}
-              error={errors.newPassword}
-              hint={t('password.hint', { min: PASSWORD_MIN, max: PASSWORD_MAX })}
-              disabled={isSubmitting}
-            />
-            <Field
-              id="confirmPassword"
-              label={t('password.repeat')}
-              type="password"
-              required
-              autoComplete="new-password"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              error={errors.confirmPassword}
-              disabled={isSubmitting}
-            />
-          </div>
-          <div className="flex flex-wrap gap-2 pt-2">
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? t('password.submitting') : t('password.submit')}
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => navigate('..', { relative: 'path' })}
-              disabled={isSubmitting}
-            >
-              {t('password.cancel')}
-            </Button>
-          </div>
-        </form>
-      </Card>
-    </div>
+        <Field
+          id="newPassword"
+          label={t('password.new')}
+          type="password"
+          required
+          autoComplete="new-password"
+          value={newPassword}
+          onChange={(e) => setNewPassword(e.target.value)}
+          error={errors.newPassword}
+          hint={t('password.hint', { min: PASSWORD_MIN, max: PASSWORD_MAX })}
+          disabled={isSubmitting}
+        />
+
+        <Field
+          id="confirmPassword"
+          label={t('password.repeat')}
+          type="password"
+          required
+          autoComplete="new-password"
+          value={confirmPassword}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          error={errors.confirmPassword}
+          disabled={isSubmitting}
+        />
+
+        <Button type="submit" className="w-full" disabled={isSubmitting}>
+          {isSubmitting ? t('password.submitting') : t('password.submit')}
+        </Button>
+
+        <Button
+          type="button"
+          variant="ghost"
+          className="self-center"
+          onClick={() => navigate('/account')}
+          disabled={isSubmitting}
+        >
+          {t('password.cancel')}
+        </Button>
+      </form>
+    </Card>
   );
 };
 

@@ -1,7 +1,7 @@
 {
   "allCustomers": "Kundschaft",
   "noun": "customer",
-  "since": "Kundschaft seit {{joined}} · letzte Bestellung {{last}}",
+  "since": "Kundschaft seit {{joined}}",
   "missing": {
     "title": "Diese Person gibt es nicht mehr",
     "text": "Das Konto wurde vielleicht gelöscht. Öffne es erneut über die Kundenliste."
@@ -43,13 +43,13 @@
   },
   "whatItDoes": {
     "title": "Was das Sperren bewirkt",
-    "text": "Die Person kann sich nicht anmelden und nichts Neues bestellen. Bereits aufgegebene Bestellungen bleiben unangetastet, der Stand gibt also weiterhin heraus, was er zurückgelegt hat, und niemand verliert Lebensmittel, die für ihn geerntet wurden."
+    "text": "Die Person kann sich nicht anmelden und nichts Neues bestellen, und wird sofort überall abgemeldet. Eine vorübergehende Sperre lässt bestehende Bestellungen unangetastet; eine dauerhafte storniert zusätzlich jede noch offene oder angenommene Bestellung und gibt den Bestand zurück."
   },
   "deactivate": {
     "title": "{{name}} sperren?",
-    "text": "Anmelden und bestellen ist erst wieder möglich, wenn ein Administrator das Konto freigibt. Bereits aufgegebene Bestellungen laufen zu Ende, damit kein Stand auf Ware sitzen bleibt, die niemand abholt.",
-    "reason": "Grund, der am Konto vermerkt wird",
-    "reasonHint": "The server does not store a reason yet — nothing here is sent with the request.",
+    "text": "Die Person wird sofort überall abgemeldet und kann sich weder anmelden noch bestellen. Eine vorübergehende Sperre lässt bestehende Bestellungen unangetastet; eine dauerhafte storniert zusätzlich jede noch offene oder angenommene Bestellung und gibt den Bestand zurück.",
+    "reason": "Grund",
+    "reasonRequired": "Wähle mindestens einen Grund oder füge eine Notiz hinzu.",
     "keep": "Noch nicht",
     "confirm": "Sperren"
   },
@@ -71,5 +71,25 @@
     "items": "Artikel",
     "total": "Summe",
     "status": "Status"
+  },
+  "history": {
+    "title": "Kontoverlauf",
+    "noun": "Kontoverlauf",
+    "system": "System (automatisch)",
+    "col": {
+      "when": "Wann",
+      "action": "Aktion",
+      "reason": "Grund",
+      "until": "Bis",
+      "by": "Von"
+    },
+    "action": {
+      "active": "Reaktiviert",
+      "inactive": "Gesperrt"
+    },
+    "empty": {
+      "title": "Noch kein Verlauf",
+      "text": "Jede Sperrung oder Reaktivierung dieses Kontos erscheint hier."
+    }
   }
 }

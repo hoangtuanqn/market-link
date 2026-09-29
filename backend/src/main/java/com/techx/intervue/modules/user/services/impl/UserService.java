@@ -2,10 +2,13 @@ package com.techx.intervue.modules.user.services.impl;
 
 import com.techx.intervue.config.AuthConfig;
 import com.techx.intervue.helpers.TransactionHelper;
+import com.techx.intervue.modules.geo.enums.AddressPolicy;
+import com.techx.intervue.modules.geo.resources.AddressPartsResource;
+import com.techx.intervue.modules.geo.services.impl.ResolvedAddress;
+import com.techx.intervue.modules.geo.services.interfaces.AddressServiceInterface;
 import com.techx.intervue.modules.user.entities.SocialAccount;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
-import com.techx.intervue.modules.user.enums.UserStatus;
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
@@ -18,8 +21,12 @@ import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.requests.SetPasswordRequest;
 import com.techx.intervue.modules.user.requests.UpdateProfileRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
+import com.techx.intervue.modules.user.resources.PendingSignup;
+import com.techx.intervue.modules.user.resources.SignupStartedResource;
 import com.techx.intervue.modules.user.resources.SocialProfile;
 import com.techx.intervue.modules.user.resources.UserResource;
+import com.techx.intervue.modules.user.resources.VerifiedSignup;
+import com.techx.intervue.modules.user.services.interfaces.EmailVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface.PendingLogin;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
@@ -37,7 +44,6 @@ import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +64,8 @@ public class UserService extends BaseService implements UserServiceInterface {
     private final AuthConfig authConfig;
     private final JobQueueInterface jobQueue;
     private final MfaServiceInterface mfaService;
+    private final AddressServiceInterface addressService;
+    private final EmailVerificationServiceInterface emailVerification;
 
     /**
      * FR-006: the access token goes into the Redis blacklist until it expires (JwtAuthFilter blocks
@@ -75,15 +83,77 @@ public class UserService extends BaseService implements UserServiceInterface {
         }
     }
 
+    /**
+     * FR-001 + FR-009: check the form, then hold it in Redis until the code mailed to that address
+     * is entered. No account exists before that.
+     */
     @Override
-    @Transactional
-    public AuthResult registerCustomer(CustomerRegisterRequest request) {
+    public SignupStartedResource registerCustomer(
+            CustomerRegisterRequest request, String clientIp) {
         if (!request.password().equals(request.confirmPassword())) {
             throw new InvalidFieldException("confirmPassword", "Passwords do not match.");
         }
-        String email = request.email().trim().toLowerCase(Locale.ROOT);
+        String email = EmailVerificationService.normalizeEmail(request.email());
         String phone = request.phone().trim();
-        // Check both before failing, so the form marks every taken field in one go (QA BUG-005)
+        throwIfTaken(email, phone);
+        ResolvedAddress address =
+                addressService.resolve(request.addressParts(), AddressPolicy.ACCOUNT);
+        if (StringUtils.hasText(request.website())) {
+            // Honeypot: people never see this field, so only a bot fills it in
+            log.info("Sign-up honeypot filled in, request dropped");
+            return emailVerification.decoy(email);
+        }
+        PendingSignup pending =
+                new PendingSignup(
+                        request.fullName().trim(),
+                        email,
+                        phone,
+                        address.formatted(),
+                        address.columns(),
+                        passwordEncoder.encode(request.password()),
+                        EmailVerificationService.normalizeLanguage(request.language()),
+                        null);
+        return emailVerification.start(pending, request.signupToken(), clientIp);
+    }
+
+    /**
+     * FR-009: the right code turns the parked form into an account and signs it in, like the old
+     * register did. If saving fails the code is given back so the person can try again.
+     */
+    @Override
+    @Transactional
+    public AuthResult completeSignup(String email, String code, String signupToken) {
+        VerifiedSignup verified = emailVerification.verify(email, code, signupToken);
+        PendingSignup pending = verified.pending();
+        try {
+            throwIfTaken(pending.email(), pending.phone());
+        } catch (DuplicateAccountException e) {
+            // Someone else finished first with this email or phone: this sign-up can never succeed
+            emailVerification.discard(pending.email());
+            throw e;
+        }
+        // Registered before the save, so a failed insert (e.g. a phone taken a moment ago) also
+        // gives
+        // the code back
+        TransactionHelper.afterCompletion(
+                () -> emailVerification.discard(pending.email()),
+                () -> emailVerification.restore(verified));
+        User user =
+                userRepository.save(
+                        User.builder()
+                                .fullName(pending.fullName())
+                                .email(pending.email())
+                                .phone(pending.phone())
+                                .address(pending.address())
+                                .addressParts(pending.addressParts())
+                                .passwordHash(pending.passwordHash())
+                                .role(RoleType.CUSTOMER)
+                                .build());
+        return issueTokens(user);
+    }
+
+    /** Check both before failing, so the form marks every taken field in one go (QA BUG-005). */
+    private void throwIfTaken(String email, String phone) {
         Map<String, String> taken = new LinkedHashMap<>();
         if (userRepository.existsByEmail(email)) {
             taken.put("email", "This email is already registered.");
@@ -94,17 +164,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         if (!taken.isEmpty()) {
             throw new DuplicateAccountException(taken);
         }
-        User user =
-                userRepository.save(
-                        User.builder()
-                                .fullName(request.fullName().trim())
-                                .email(email)
-                                .phone(phone)
-                                .address(request.address().trim())
-                                .passwordHash(passwordEncoder.encode(request.password()))
-                                .role(RoleType.CUSTOMER)
-                                .build());
-        return issueTokens(user);
     }
 
     /**
@@ -128,10 +187,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                                 () ->
                                         new BadCredentialsException(
                                                 "Email or password is incorrect."));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         // Check before issuing a token: do not hand out a refresh cookie to an account with the
         // wrong role
         if (request.requiredRole() != null && user.getRole() != request.requiredRole()) {
@@ -152,10 +208,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                 userRepository
                         .findById(pending.userId())
                         .orElseThrow(() -> new BadCredentialsException("Account not found."));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         return issueTokens(user, pending.rememberMe());
     }
 
@@ -173,10 +226,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                         .findById(rotated.userId())
                         .orElseThrow(
                                 () -> new BadCredentialsException("Refresh token is not valid."));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         return buildAuthResult(user, rotated.newRefreshToken(), rotated.rememberMe());
     }
 
@@ -201,10 +251,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                                                                 new BadCredentialsException(
                                                                         "Account not found.")))
                         .orElseGet(() -> linkOrCreateUser(profile));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         // FR-008: Google sign-in must not skip step 2
         return issueTokensOrChallenge(user, true);
     }
@@ -285,7 +332,8 @@ public class UserService extends BaseService implements UserServiceInterface {
      * Only your own account can be edited (userId comes from the access token, not accepted from
      * the request). The email is unchanged. A phone number that duplicates another account → 409;
      * if two requests race past the check, the DB's UNIQUE blocks (AuthExceptionHandler returns
-     * 409).
+     * 409). The address is required except for an admin, whose address no screen shows: leaving it
+     * out keeps the one on file.
      */
     @Override
     @Transactional
@@ -296,9 +344,16 @@ public class UserService extends BaseService implements UserServiceInterface {
             throw new DuplicateAccountException(
                     "phone", "This phone number is already registered.");
         }
+        if (request.addressParts() != null) {
+            ResolvedAddress address =
+                    addressService.resolve(request.addressParts(), AddressPolicy.ACCOUNT);
+            user.setAddress(address.formatted());
+            user.setAddressParts(address.columns());
+        } else if (user.getRole() != RoleType.ADMIN) {
+            throw new InvalidFieldException("addressParts", "Choose your address.");
+        }
         user.setFullName(request.fullName().trim());
         user.setPhone(phone);
-        user.setAddress(request.address().trim());
         return toResource(userRepository.saveAndFlush(user));
     }
 
@@ -307,23 +362,29 @@ public class UserService extends BaseService implements UserServiceInterface {
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new BadCredentialsException("Account not found."));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         return user;
     }
 
     /**
-     * FR-008: an admin with 2FA on → only return the pending token; otherwise issue the session as
-     * before.
+     * FR-008: an admin with 2FA on → only return the pending token; an admin who has never set up
+     * 2FA → issue session with mfaSetupRequired = true; otherwise issue the session as before. The
+     * pending answer carries only the email (the code screen shows it): the profile — phone,
+     * address — waits until the code is right.
      */
     private AuthResult issueTokensOrChallenge(User user, boolean rememberMe) {
-        if (user.getRole() == RoleType.ADMIN && mfaService.isEnabled(user.getId())) {
-            return AuthResult.mfaPending(
-                    toResource(user),
-                    rememberMe,
-                    mfaService.startChallenge(user.getId(), rememberMe));
+        if (user.getRole() == RoleType.ADMIN) {
+            if (mfaService.isEnabled(user.getId())) {
+                return AuthResult.mfaPending(
+                        UserResource.builder().email(user.getEmail()).build(),
+                        rememberMe,
+                        mfaService.startChallenge(user.getId(), rememberMe));
+            }
+            if (mfaService.isSetupRequired(user.getId())) {
+                AuthResult session = issueTokens(user, rememberMe);
+                return AuthResult.mfaSetupPending(
+                        session.accessToken(), session.refreshToken(), session.user(), rememberMe);
+            }
         }
         return issueTokens(user, rememberMe);
     }
@@ -354,6 +415,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                 .fullName(user.getFullName())
                 .phone(user.getPhone())
                 .address(user.getAddress())
+                .addressParts(AddressPartsResource.from(user.getAddressParts()))
                 .role(user.getRole())
                 .createdAt(user.getCreatedAt())
                 .hasPassword(user.getPasswordHash() != null)
@@ -402,6 +464,24 @@ public class UserService extends BaseService implements UserServiceInterface {
     }
 
     /**
+     * FR-008: right after two-step verification is turned on. A session opened earlier with only
+     * the password (JwtAuthFilter recomputes the MFA_SETUP_PENDING mark on every request) would
+     * otherwise get full admin access the moment the code is confirmed, so every refresh token is
+     * revoked and every access token issued before now rejected, like a password change. The caller
+     * — who just proved they hold the code — gets a new session so the setup screen can go on to
+     * the dashboard. Admin sign-in never remembers the session, so neither does this one.
+     */
+    @Override
+    @Transactional
+    public AuthResult restartSession(Long userId) {
+        User user = findActiveUser(userId);
+        refreshTokenService.revokeAllTokens(userId);
+        // writes the revoked-before marker first: the token issued below is not older than it
+        userSessionCache.revokeAll(userId);
+        return issueTokens(user, false);
+    }
+
+    /**
      * Set a password for the first time for an account created through Google. Only when there is
      * no password yet — if there is one, use change / forgot password (409). userId comes from the
      * access token (R-06). The current session is kept.
@@ -416,10 +496,7 @@ public class UserService extends BaseService implements UserServiceInterface {
                 userRepository
                         .findById(userId)
                         .orElseThrow(() -> new BadCredentialsException("Account not found."));
-        if (user.getStatus() != UserStatus.ACTIVE) {
-            throw new DisabledException(
-                    "Your account has been locked. Please contact an administrator.");
-        }
+        DeactivationMessage.assertActive(user);
         if (user.getPasswordHash() != null) {
             throw new PasswordAlreadySetException();
         }

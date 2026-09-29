@@ -39,13 +39,19 @@
     "complete": "完了にする",
     "view": "見る"
   },
-  "greeting": "おはようございます、{{name}}さん",
-  "applyTemplate": "週間テンプレートを適用",
+  "title": "概要",
+  "editTemplate": "週間テンプレートを編集",
   "addProduct": "商品を追加",
   "banner": {
-    "title_one": "{{count}} 件の注文があなたを待っています。そのうち {{closing}} 件は明日 {{time}} に締め切られます。",
-    "title_other": "{{count}} 件の注文があなたを待っています。そのうち {{closing}} 件は明日 {{time}} に締め切られます。",
+    "title_one": "{{count}} 件の注文があなたを待っています。",
+    "title_other": "{{count}} 件の注文があなたを待っています。",
     "text": "未承認の注文も在庫を確保しています。お客さまが予定を立てられるよう、締め切り前に受け付けるかお断りしてください。"
+  },
+  "strikes": {
+    "title": "賞味期限違反：{{count}}/{{limit}}（{{days}}日以内）",
+    "text": "延長した賞味期限の商品で確認された傷み報告は違反1回になります。違反が3回になると、より長い賞味期限がロックされます。",
+    "locked": "より長い賞味期限の設定は{{date}}までロックされています。",
+    "link": "傷み報告を見る"
   },
   "kpi": {
     "noun": "your numbers",
@@ -66,8 +72,8 @@
     }
   },
   "stock": {
-    "title": "{{day}}の在庫",
-    "link": "今週の在庫",
+    "title": "現在の在庫",
+    "link": "週間テンプレート",
     "noun": "stock",
     "empty": {
       "title": "No products yet",
@@ -82,5 +88,14 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "今日は {{markets}}",
+    "titleNoMarket": "今日はどのマーケットにも出店しません",
+    "orders_other": "今日の注文は {{count}} 件",
+    "waiting_other": "そのうち {{count}} 件があなたの承諾か辞退を待っています",
+    "cutoffPassed_other": "そのうち {{count}} 件は締切を過ぎ、お客様は変更できません",
+    "soldOut_other": "{{count}} 商品が売り切れになっています",
+    "lowStock_other": "{{count}} 商品が残りわずかです"
   }
 }

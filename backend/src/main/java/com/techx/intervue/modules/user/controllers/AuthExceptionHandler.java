@@ -3,6 +3,7 @@ package com.techx.intervue.modules.user.controllers;
 import com.techx.intervue.modules.user.exceptions.DuplicateAccountException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.exceptions.InvalidResetTokenException;
+import com.techx.intervue.modules.user.exceptions.LoginRateLimitedException;
 import com.techx.intervue.modules.user.exceptions.MfaCodeInvalidException;
 import com.techx.intervue.modules.user.exceptions.MfaLockedException;
 import com.techx.intervue.modules.user.exceptions.MfaStateException;
@@ -10,6 +11,10 @@ import com.techx.intervue.modules.user.exceptions.MfaTokenInvalidException;
 import com.techx.intervue.modules.user.exceptions.OAuthNotConfiguredException;
 import com.techx.intervue.modules.user.exceptions.PasswordAlreadySetException;
 import com.techx.intervue.modules.user.exceptions.RoleMismatchException;
+import com.techx.intervue.modules.user.exceptions.SignupCodeExpiredException;
+import com.techx.intervue.modules.user.exceptions.SignupCodeInvalidException;
+import com.techx.intervue.modules.user.exceptions.SignupExpiredException;
+import com.techx.intervue.modules.user.exceptions.SignupRateLimitedException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.resources.FieldErrorResource;
@@ -232,6 +237,51 @@ public class AuthExceptionHandler {
     @ExceptionHandler(MfaLockedException.class)
     ResponseEntity<ApiResource<Void>> mfaLocked(MfaLockedException e) {
         ErrorResource error = ErrorResource.builder().code("MFA_LOCKED").details(List.of()).build();
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .header(HttpHeaders.RETRY_AFTER, String.valueOf(e.getRetryAfterSeconds()))
+                .body(ApiResource.error(error, e.getMessage()));
+    }
+
+    /** FR-009: details carry the field message and the tries left as a number the FE translates. */
+    @ExceptionHandler(SignupCodeInvalidException.class)
+    ResponseEntity<ApiResource<Void>> signupCodeInvalid(SignupCodeInvalidException e) {
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "SIGNUP_CODE_INVALID",
+                e.getMessage(),
+                List.of(
+                        FieldErrorResource.builder().field("code").message(e.getMessage()).build(),
+                        FieldErrorResource.builder()
+                                .field("attemptsLeft")
+                                .message(String.valueOf(e.getAttemptsLeft()))
+                                .build()));
+    }
+
+    @ExceptionHandler(SignupCodeExpiredException.class)
+    ResponseEntity<ApiResource<Void>> signupCodeExpired(SignupCodeExpiredException e) {
+        return error(HttpStatus.BAD_REQUEST, "SIGNUP_CODE_EXPIRED", e.getMessage(), List.of());
+    }
+
+    /** FR-009: the parked form is gone (30 minutes) — the person fills the form in again. */
+    @ExceptionHandler(SignupExpiredException.class)
+    ResponseEntity<ApiResource<Void>> signupExpired(SignupExpiredException e) {
+        return error(HttpStatus.GONE, "SIGNUP_EXPIRED", e.getMessage(), List.of());
+    }
+
+    @ExceptionHandler(SignupRateLimitedException.class)
+    ResponseEntity<ApiResource<Void>> signupRateLimited(SignupRateLimitedException e) {
+        ErrorResource error =
+                ErrorResource.builder().code("RATE_LIMITED").details(List.of()).build();
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
+                .header(HttpHeaders.RETRY_AFTER, String.valueOf(e.getRetryAfterSeconds()))
+                .body(ApiResource.error(error, e.getMessage()));
+    }
+
+    /** FR-003: too many wrong passwords; the FE counts the minutes from Retry-After. */
+    @ExceptionHandler(LoginRateLimitedException.class)
+    ResponseEntity<ApiResource<Void>> loginRateLimited(LoginRateLimitedException e) {
+        ErrorResource error =
+                ErrorResource.builder().code("LOGIN_LOCKED").details(List.of()).build();
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS)
                 .header(HttpHeaders.RETRY_AFTER, String.valueOf(e.getRetryAfterSeconds()))
                 .body(ApiResource.error(error, e.getMessage()));

@@ -18,7 +18,7 @@ Frontend **không dựng lại màn hình nào** — 43 trang đang đọc `src/
 React 19 · Vite · TypeScript · Tailwind 4 · axios · Leaflet + OSM · i18next (10 ngôn ngữ).
 
 **Spec:** phần **§S — Spec** ngay trong file này. Nguồn cấp trên của nó, đọc kèm khi cần:
-`MarketLink End-to-End Web Solutions_SRS.pdf` (đề bài) · `.ai/REQUIREMENTS.md` (scope) ·
+`docs/requirements/MarketLink-SRS.pdf` (đề bài) · `.ai/REQUIREMENTS.md` (scope) ·
 `docs/decisions.md` (D-01…D-13) · `docs/api-contract.md` (contract) · `db/schema.sql` (schema đích) ·
 `docs/design-system/README.md` (UI) · `docs/prototype/` (bố cục màn hình).
 
@@ -192,7 +192,7 @@ Flyway chạy ở mọi môi trường; seed demo không được chui vào prod
 chạy bằng `make seed`. Đây cũng chính là file `.sql` mà mục 1.9 của đề bắt nộp.
 Mỗi cụm **thêm phần của mình vào cuối `db/seed.sql`**, không viết file riêng.
 
-### S.4.5 · `docs/ROADMAP_IMPLEMENT.md` có mô hình "phiên bán" — không dùng
+### S.4.5 · `docs/archive/ROADMAP_IMPLEMENT.md` có mô hình "phiên bán" — không dùng
 
 Roadmap đề xuất bảng `selling_sessions`. `db/schema.sql` (LEAD, R-02) **không có bảng đó**: tồn kho nằm
 ở `products.stock_quantity`, thời gian nhận nằm ở `farmer_operating_days` + `pickup_slots`.
@@ -3670,9 +3670,9 @@ docker compose exec -T mysql mysqldump -uroot -p"$MYSQL_ROOT_PASSWORD" \
 - [ ] **Step 2: Đối chiếu dump với `db/schema.sql`** và ghi mọi chỗ lệch vào phần "Đề xuất LEAD"
   cuối file này. **Không sửa `db/schema.sql`** (R-02).
 
-- [ ] **Step 3: Rà soát từng dòng SRS** — mở `MarketLink End-to-End Web Solutions_SRS.pdf` mục 1.6,
+- [ ] **Step 3: Rà soát từng dòng SRS** — mở `docs/requirements/MarketLink-SRS.pdf` mục 1.6,
   đọc từng gạch đầu dòng, mở đúng màn hình tương ứng trên `localhost:3000` và xác nhận nó chạy.
-  Ghi kết quả vào một bảng trong `docs/SRS-COVERAGE.md`: dòng SRS → FR-xxx → URL → đã xem (có/không).
+  Ghi kết quả vào một bảng trong `docs/requirements/SRS-COVERAGE.md`: dòng SRS → FR-xxx → URL → đã xem (có/không).
   **Đây là kịch bản của video demo mà đề bắt nộp.**
 
 - [ ] **Step 4: Kiểm tra lần cuối cả hai lệnh**

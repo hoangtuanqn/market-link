@@ -1,9 +1,9 @@
 import type { ApiResponse, PageType } from '@/types/api.types';
-import type { ChatAttachment, ChatMessageItem, ConversationSummary, ReportReason } from '@/types/chat.types';
+import type { ChatAttachment, ChatMessageItem, ConversationSummary, ReportReason, StreamUrl } from '@/types/chat.types';
 import { privateApi } from '@/utils/axiosInstance';
 
 type SendBody = {
-  kind?: 'text' | 'image';
+  kind?: 'text' | 'image' | 'video';
   body?: string;
   productId?: number;
   orderId?: number;
@@ -50,20 +50,46 @@ class ConversationApi {
     return response.data;
   };
 
-  /** The field name must be `file` — the backend reads @RequestParam MultipartFile file. */
-  static uploadPhoto = async (file: File) => {
+  /**
+   * A photo or a video up to 50 MB (FR-115). The field name must be `file` — the backend reads @RequestParam
+   * MultipartFile file. No timeout: the instance's 10 s would cut off any video on a phone connection; the person can
+   * cancel through `signal` instead.
+   */
+  static uploadMedia = async (
+    file: File,
+    { onProgress, signal }: { onProgress?: (percent: number) => void; signal?: AbortSignal } = {},
+  ) => {
     const form = new FormData();
     form.append('file', file);
-    const response = await privateApi.post<ApiResponse<ChatAttachment>>('/attachments', form);
+    const response = await privateApi.post<ApiResponse<ChatAttachment>>('/attachments', form, {
+      // Drop the default application/json header: with it axios sends the FormData as JSON ("{"file":{}}") instead of
+      // multipart/form-data, and the server never sees a file. The browser sets the multipart boundary itself.
+      headers: { 'Content-Type': undefined },
+      timeout: 0,
+      signal,
+      onUploadProgress: (event) => {
+        if (onProgress && event.total) onProgress(Math.round((event.loaded / event.total) * 100));
+      },
+    });
+    return response.data;
+  };
+
+  /**
+   * FR-115: a `<video>` cannot send the Authorization header either, so it plays from a signed link that expires after
+   * five minutes. The url is relative to the API origin.
+   */
+  static streamUrl = async (attachmentId: number) => {
+    const response = await privateApi.get<ApiResponse<StreamUrl>>(`/attachments/${attachmentId}/stream-url`);
     return response.data;
   };
 
   /**
    * The JWT travels in the `Authorization` header, not a cookie, so `<img src="/api/v1/attachments/5">` returns 401. It
-   * must be loaded with axios and wrapped as a blob URL — and the caller must revoke it on leaving the screen.
+   * must be loaded with axios and wrapped as a blob URL — and the caller must revoke it on leaving the screen. No
+   * timeout, like `uploadMedia`: a photo can be up to 50 MB, which the instance's 10 s cuts off on a slow connection.
    */
   static photoBlob = async (attachmentId: number) => {
-    const response = await privateApi.get<Blob>(`/attachments/${attachmentId}`, { responseType: 'blob' });
+    const response = await privateApi.get<Blob>(`/attachments/${attachmentId}`, { responseType: 'blob', timeout: 0 });
     return URL.createObjectURL(response.data);
   };
 

@@ -1,6 +1,8 @@
+import { useEffect, useState } from 'react';
 import { isAxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
 import { Link, useParams } from 'react-router';
+import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
 import OrderApi, { type OrderItemDto } from '@/api-requests/order.requests';
 import OrderStatusBadge from '@/components/OrderStatusBadge';
 import { Banner } from '@/components/ui/banner';
@@ -11,8 +13,9 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import { ADMIN_CUSTOMERS_PATH, ADMIN_FARMERS_PATH, ADMIN_ORDERS_PATH } from '@/constants/nav';
 import { ORDER_STATUS_META } from '@/constants/orderStatus';
 import useRequest from '@/hooks/useRequest';
-import { cutoffLabel, formatDate, formatTime, pickupLabel, units, vnd } from '@/lib/format';
+import { cutoffLabel, formatDate, formatTime, pickupLabel, units, money } from '@/lib/format';
 import Helper from '@/utils/helper';
+import OrderDetailSkeleton from './OrderDetailSkeleton';
 
 /** 403 (should not happen for an admin, Task 1.4) and 404 read the same: the order is not here to show. */
 const isGone = (error: unknown) =>
@@ -30,21 +33,37 @@ const when = (iso: string) => {
  */
 const AdminOrderDetailPage = () => {
   const { t } = useTranslation('AdminOrderDetail');
-  const { t: tc } = useTranslation();
   const { code } = useParams<{ code: string }>();
   const id = /^\d+$/.test(code ?? '') ? Number(code) : null;
+  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
+
+  useEffect(() => {
+    if (import.meta.env.MODE === 'test') return;
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const { state, retry } = useRequest(`admin-order:${id ?? 'none'}`, () =>
     id === null ? Promise.reject(new Error('not an order id')) : OrderApi.get(id),
   );
   const order = state.kind === 'ready' ? state.data : null;
 
-  if (state.kind === 'loading' && id !== null) {
-    return (
-      <p role="status" className="text-ink-muted">
-        {tc('notify.list.loading')}
-      </p>
-    );
+  // A Farmer can buy too (D-13), but the customer record only opens customer accounts: find the buyer's own stall by
+  // email so the button opens the record that exists (FR-072).
+  const buyerEmail = order?.customer?.email.toLowerCase() ?? '';
+  const { state: buyerStallLoad } = useRequest(`admin-order-buyer-stall:${buyerEmail}`, () =>
+    buyerEmail
+      ? AdminFarmerApi.list({ q: buyerEmail, pageSize: 5 }).then(
+          (res) => res.data.items.find((f) => f.email.toLowerCase() === buyerEmail) ?? null,
+        )
+      : Promise.resolve(null),
+  );
+  const buyerStall = buyerStallLoad.kind === 'ready' ? buyerStallLoad.data : null;
+
+  if ((state.kind === 'loading' || initialLoading) && id !== null) {
+    return <OrderDetailSkeleton />;
   }
 
   if (id === null || (state.kind === 'error' && isGone(state.error))) {
@@ -73,11 +92,11 @@ const AdminOrderDetailPage = () => {
       align: 'num',
       render: (line) => (
         <>
-          {vnd(line.unitPrice)} <span className="text-ink-muted font-normal">/ {line.unit}</span>
+          {money(line.unitPrice)} <span className="text-ink-muted font-normal">/ {line.unit}</span>
         </>
       ),
     },
-    { key: 'line', label: t('col.lineTotal'), align: 'num', render: (line) => vnd(line.subtotal) },
+    { key: 'line', label: t('col.lineTotal'), align: 'num', render: (line) => money(line.subtotal) },
   ];
 
   return (
@@ -93,7 +112,7 @@ const AdminOrderDetailPage = () => {
         <p className="text-overline text-ink-muted uppercase">
           {t('kicker', { placed: placed ? when(placed.changedAt) : '—', cutoff: cutoffLabel(s.cutoffAt) })}
         </p>
-        <h1 className="text-h2">
+        <h1 className="text-h2 text-ink font-bold">
           {s.orderCode} · {s.stallName}
           {buyer ? ` · ${buyer.fullName}` : ''}
         </h1>
@@ -178,9 +197,15 @@ const AdminOrderDetailPage = () => {
                   <dt className="text-ink-muted">{t('customer.phone')}</dt>
                   <dd className="m-0">{buyer.phone}</dd>
                 </dl>
-                <ButtonLink to={`${ADMIN_CUSTOMERS_PATH}/${buyer.userId}`} variant="secondary" size="sm">
-                  {t('customer.record')}
-                </ButtonLink>
+                {buyerStall ? (
+                  <ButtonLink to={`${ADMIN_FARMERS_PATH}/${buyerStall.id}`} variant="secondary" size="sm">
+                    {t('stall.record')}
+                  </ButtonLink>
+                ) : buyerStallLoad.kind !== 'loading' ? (
+                  <ButtonLink to={`${ADMIN_CUSTOMERS_PATH}/${buyer.userId}`} variant="secondary" size="sm">
+                    {t('customer.record')}
+                  </ButtonLink>
+                ) : null}
               </>
             ) : (
               <p className="text-small text-ink-muted">{t('customer.hidden')}</p>
@@ -197,7 +222,7 @@ const AdminOrderDetailPage = () => {
               <dt className="text-ink-muted">{t('pickup.cutoff')}</dt>
               <dd className="m-0">{cutoffLabel(s.cutoffAt)}</dd>
               <dt className="text-ink-muted">{t('pickup.total')}</dt>
-              <dd className="m-0">{vnd(s.totalAmount)}</dd>
+              <dd className="m-0">{money(s.totalAmount)}</dd>
             </dl>
           </Card>
 

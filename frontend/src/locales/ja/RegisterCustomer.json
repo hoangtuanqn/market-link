@@ -5,9 +5,7 @@
     "fullName": "氏名",
     "phone": "電話番号",
     "email": "メールアドレス",
-    "emailHint": "ログインと注文のお知らせに使います。",
-    "address": "住所",
-    "addressPlaceholder": "通り、坊、区",
+    "emailHint": "ログインと注文のお知らせに使います。ご本人のものか確かめるため、確認コードを送ります。",
     "password": "パスワード",
     "passwordHint": "{{min}}〜{{max}}文字。",
     "confirmPassword": "パスワード（確認）"
@@ -21,8 +19,8 @@
   "haveAccount": "すでにアカウントをお持ちの方",
   "acceptFirst": "アカウントを作成するには規約に同意してください。",
   "sharedAccount": "1つのアカウントを家族で共有できます。アカウント内の個人は区別されません。",
+  "honeypot": "この欄は空欄のままにしてください",
   "toast": {
-    "created": "アカウントを作成しました。",
     "failed": "アカウントを作成できませんでした。もう一度お試しください。"
   },
   "errors": {
@@ -33,11 +31,11 @@
     "emailRequired": "メールアドレスを入力してください。",
     "emailInvalid": "有効なメールアドレスを入力してください。",
     "emailMax": "メールアドレスは{{max}}文字以内で入力してください。",
-    "addressRequired": "住所を入力してください。",
-    "addressMax": "住所は{{max}}文字以内で入力してください。",
     "passwordRequired": "パスワードを入力してください。",
     "passwordLength": "パスワードは{{min}}〜{{max}}文字で入力してください。",
     "confirmRequired": "確認用のパスワードを入力してください。",
-    "confirmMismatch": "パスワードが一致しません。"
+    "confirmMismatch": "パスワードが一致しません。",
+    "tooMany_one": "このアドレスまたはネットワークからのコードのリクエストが多すぎます。{{count}} 分後にもう一度お試しください。",
+    "tooMany_other": "このアドレスまたはネットワークからのコードのリクエストが多すぎます。{{count}} 分後にもう一度お試しください。"
   }
 }

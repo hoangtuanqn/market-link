@@ -22,6 +22,7 @@
   },
   "day": "Día de mercado",
   "all": "Todo",
+  "category": "Categoría",
   "inStock": "En stock",
   "available": "Disponible el {{day}}",
   "productsFrom": "{{products}} de {{stalls}}",
@@ -38,5 +39,15 @@
   "stallsNoun": "puestos",
   "stallsEmpty": {
     "title": "Ningún puesto el {{day}}"
+  },
+  "productsEmpty": {
+    "title": "Nada a la venta el {{day}}",
+    "text": "Prueba otro día de mercado o quita los filtros."
+  },
+  "searchEmpty": {
+    "products": "Ningún producto coincide con «{{q}}»",
+    "stalls": "Ningún puesto coincide con «{{q}}»",
+    "text": "Borra la búsqueda para ver todo lo de este mercado el {{day}}.",
+    "clear": "Borrar búsqueda"
   }
 }

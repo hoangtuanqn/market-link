@@ -22,6 +22,7 @@
   },
   "day": "開催日",
   "all": "すべて",
+  "category": "カテゴリ",
   "inStock": "在庫あり",
   "available": "{{day}}に購入できる商品",
   "productsFrom": "{{stalls}}の{{products}}",
@@ -38,5 +39,15 @@
   "stallsNoun": "出店",
   "stallsEmpty": {
     "title": "{{day}}は出店がありません"
+  },
+  "productsEmpty": {
+    "title": "{{day}}に販売中の商品はありません",
+    "text": "別のマーケット日を選ぶか、絞り込みを解除してください。"
+  },
+  "searchEmpty": {
+    "products": "「{{q}}」に一致する商品はありません",
+    "stalls": "「{{q}}」に一致する店はありません",
+    "text": "検索を消すと、{{day}}のこのマーケットのすべてが表示されます。",
+    "clear": "検索を消す"
   }
 }

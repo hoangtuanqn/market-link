@@ -10,6 +10,10 @@ import com.techx.intervue.modules.catalog.requests.MarketRequest;
 import com.techx.intervue.modules.catalog.resources.MarketDetailResource;
 import com.techx.intervue.modules.catalog.resources.MarketResource;
 import com.techx.intervue.modules.catalog.services.interfaces.MarketServiceInterface;
+import com.techx.intervue.modules.geo.enums.AddressPolicy;
+import com.techx.intervue.modules.geo.resources.AddressPartsResource;
+import com.techx.intervue.modules.geo.services.impl.ResolvedAddress;
+import com.techx.intervue.modules.geo.services.interfaces.AddressServiceInterface;
 import com.techx.intervue.modules.stall.services.interfaces.StallServiceInterface;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
@@ -33,7 +37,6 @@ public class MarketService implements MarketServiceInterface {
     private static final int MAX_IMAGES = 8;
 
     private static final int MAX_IMAGE_URL_LENGTH = 255;
-    private static final String DEFAULT_CITY = "TP. Hồ Chí Minh";
     private static final DateTimeFormatter HHMM = DateTimeFormatter.ofPattern("HH:mm");
 
     private final MarketRepository repository;
@@ -47,16 +50,19 @@ public class MarketService implements MarketServiceInterface {
      */
     private final StallServiceInterface stallService;
 
+    /** Checks the market's address and composes `address` (FR-073: must be in Vietnam). */
+    private final AddressServiceInterface addressService;
+
     @Override
     public PageResource<MarketResource> search(
-            String q, Integer day, String city, String district, int page, int pageSize) {
+            String q, Integer day, String provinceCode, String wardCode, int page, int pageSize) {
         int safePage = Math.max(1, page);
         int safeSize = Math.min(MAX_PAGE_SIZE, Math.max(1, pageSize));
         return queryRepository.search(
                 blankToNull(q),
                 day,
-                blankToNull(city),
-                blankToNull(district),
+                blankToNull(provinceCode),
+                blankToNull(wardCode),
                 (safePage - 1) * safeSize,
                 safeSize);
     }
@@ -82,7 +88,7 @@ public class MarketService implements MarketServiceInterface {
                         .filter(m -> !m.isActive())
                         .orElseGet(Market::new);
         boolean restoring = market.getId() != null;
-        apply(market, request, images);
+        ResolvedAddress address = apply(market, request, images);
         market.setActive(true);
         // Flushed so the stall count below, read with plain SQL, already sees the market as active
         Market saved = restoring ? repository.saveAndFlush(market) : repository.save(market);
@@ -95,7 +101,7 @@ public class MarketService implements MarketServiceInterface {
                                 .map(MarketResource::farmerCount)
                                 .orElse(0L)
                         : 0;
-        return toResource(saved, days, images, farmerCount);
+        return toResource(saved, address, days, images, farmerCount);
     }
 
     @Override
@@ -104,12 +110,12 @@ public class MarketService implements MarketServiceInterface {
         List<Integer> days = validDays(request.operatingDays());
         List<String> images = validImages(request.images());
         Market market = repository.findById(id).orElseThrow(() -> new MarketNotFoundException(id));
-        apply(market, request, images);
+        ResolvedAddress address = apply(market, request, images);
         Market saved = repository.save(market);
         dayRepository.replaceDays(saved.getId(), days);
         imageRepository.replaceImages(saved.getId(), images);
         long farmerCount = queryRepository.findById(id).map(MarketResource::farmerCount).orElse(0L);
-        return toResource(saved, days, images, farmerCount);
+        return toResource(saved, address, days, images, farmerCount);
     }
 
     /** Soft delete — old orders still point to this market. */
@@ -165,17 +171,19 @@ public class MarketService implements MarketServiceInterface {
         return clean;
     }
 
-    private static void apply(Market market, MarketRequest request, List<String> images) {
+    /** Copies the request onto the market; returns the checked address for the response. */
+    private ResolvedAddress apply(Market market, MarketRequest request, List<String> images) {
         LocalTime opening = LocalTime.parse(request.openingTime(), HHMM);
         LocalTime closing = LocalTime.parse(request.closingTime(), HHMM);
         if (!closing.isAfter(opening)) {
             throw new InvalidFieldException(
                     "closingTime", "The closing time must be after the opening time.");
         }
+        ResolvedAddress address =
+                addressService.resolve(request.addressParts(), AddressPolicy.MARKET);
         market.setMarketName(request.marketName().trim());
-        market.setAddress(request.address().trim());
-        market.setDistrict(blankToNull(request.district()));
-        market.setCity(blankToNull(request.city()) == null ? DEFAULT_CITY : request.city().trim());
+        market.setAddress(address.formatted());
+        market.setAddressParts(address.columns());
         market.setLatitude(request.latitude());
         market.setLongitude(request.longitude());
         market.setOpeningTime(opening);
@@ -185,16 +193,22 @@ public class MarketService implements MarketServiceInterface {
         market.setImageUrl(images.isEmpty() ? null : images.get(0));
         // D-12: not read from the request — the client cannot choose the map provider.
         market.setMapProvider("osm");
+        return address;
     }
 
     private static MarketResource toResource(
-            Market m, List<Integer> days, List<String> images, long farmerCount) {
+            Market m,
+            ResolvedAddress address,
+            List<Integer> days,
+            List<String> images,
+            long farmerCount) {
         return new MarketResource(
                 m.getId(),
                 m.getMarketName(),
-                m.getAddress(),
-                m.getDistrict(),
-                m.getCity(),
+                address.formatted(),
+                AddressPartsResource.from(address.columns()),
+                address.wardName(),
+                address.provinceName(),
                 m.getLatitude(),
                 m.getLongitude(),
                 m.getMapProvider(),

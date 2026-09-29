@@ -4,11 +4,17 @@ import useSession from '@/hooks/useSession';
 import useSettings from '@/hooks/useSettings';
 import SettingsStore, { LANGUAGES, type Language } from '@/lib/settings';
 
+import Helper from '@/utils/helper';
+
+type LanguageSwitcherProps = {
+  variant?: 'dark' | 'light';
+};
+
 /**
- * Language picker in the footer: anyone can change it, including guests who have not signed in. When signed in it is
- * also saved to the account, like the Language item in Settings.
+ * Language picker: anyone can change it, including guests who have not signed in. When signed in it is also saved to
+ * the account, like the Language item in Settings.
  */
-const LanguageSwitcher = () => {
+const LanguageSwitcher = ({ variant = 'dark' }: LanguageSwitcherProps) => {
   const { t } = useTranslation();
   const { language } = useSettings();
   const { isLoggedIn } = useSession();
@@ -18,13 +24,25 @@ const LanguageSwitcher = () => {
     if (isLoggedIn) SettingsApi.save(SettingsStore.get()).catch(() => undefined);
   };
 
+  const isLight = variant === 'light';
+
   return (
-    <label className="text-board-muted inline-flex items-center gap-2 text-[13px]">
+    <label
+      className={Helper.cn(
+        'inline-flex items-center gap-2 text-[13px]',
+        isLight ? 'text-ink-muted' : 'text-board-muted',
+      )}
+    >
       <span>{t('settings.language')}</span>
       <select
         value={language}
         onChange={(e) => change(e.target.value as Language)}
-        className="bg-board text-on-board border-board-muted focus-visible:outline-on-board min-h-9 cursor-pointer rounded-sm border-[1.5px] px-2 text-[13px] focus-visible:outline-2 focus-visible:outline-offset-1"
+        className={Helper.cn(
+          'min-h-11 cursor-pointer rounded-sm border-[1.5px] px-2 text-[13px] focus-visible:outline-2 focus-visible:outline-offset-1',
+          isLight
+            ? 'border-line bg-surface-raised text-ink focus-visible:outline-ink'
+            : 'border-board-muted bg-board text-on-board focus-visible:outline-on-board',
+        )}
       >
         {LANGUAGES.map((l) => (
           <option key={l.code} value={l.code} lang={l.code}>

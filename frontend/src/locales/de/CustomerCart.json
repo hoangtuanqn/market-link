@@ -28,8 +28,6 @@
     "unavailable": "One or more items are no longer for sale.",
     "stall_suspended": "This stall is not taking orders right now."
   },
-  "changeTime": "Abholzeit bei {{stall}} ändern",
-  "pickupDay": "Abholtag",
   "pickupDayAt": "Abholtag bei {{stall}}",
   "pickupTime": "Abholzeit · {{day}} {{date}} · Zeitfenster {{from}} – {{to}}",
   "summary": {
@@ -52,5 +50,10 @@
     "title": "Artikel im Warenkorb",
     "text": "Wird ein Produkt nicht mehr verkauft, entferne es hier, dann lädt der Warenkorb neu.",
     "clear": "Warenkorb leeren"
+  },
+  "deal": {
+    "badge": "−{{percent}}% Angebot: kurze Haltbarkeit",
+    "onlyOn": "Das Angebot gilt nur für {{day}}.",
+    "dayGone": "Der Angebotstag {{day}} kann nicht mehr gewählt werden. Wählen Sie einen Tag, um den Preis zu sehen."
   }
 }

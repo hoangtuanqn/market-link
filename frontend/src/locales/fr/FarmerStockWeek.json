@@ -1,32 +1,33 @@
 {
-  "title": "Stock de la semaine",
-  "intro": "Votre modèle hebdomadaire donne les quantités de départ pour chaque jour de marché. Appliquez-le, puis ajustez les jours où la récolte diffère. Le stock réservé est déjà retiré de ce que voient les clients.",
+  "title": "Modèle de stock hebdomadaire",
+  "intro": "Indiquez la quantité de chaque produit que vous apportez d’habitude un jour de la semaine, et à quel prix. Le stock se renouvelle automatiquement pour les clients qui consultent ce jour-là, sans étape supplémentaire.",
   "saved": "Enregistré",
   "per": "par {{unit}}",
-  "currentPrice": "now {{price}}",
-  "defaultPricePlaceholder": "Same price",
+  "currentPrice": "actuellement {{price}}",
+  "defaultPricePlaceholder": "Même prix",
   "col": {
     "product": "Produit"
   },
   "error": {
-    "productsNoun": "your products",
-    "templateNoun": "your weekly template"
+    "productsNoun": "produits",
+    "templateNoun": "données du modèle hebdomadaire"
   },
   "aria": {
-    "quantity": "{{product}} quantity on {{day}}",
-    "price": "Prix de {{product}}"
+    "quantity": "Quantité de {{product}} le {{day}}",
+    "price": "Prix de {{product}} le {{day}}"
   },
   "table": {
-    "caption": "Weekly stock template, one row per product and one column per weekday"
+    "caption": "Modèle de stock hebdomadaire, une ligne par produit et une colonne par jour de la semaine"
   },
   "template": {
     "save": "Enregistrer le modèle",
-    "savedText": "Modèle enregistré. Il s'applique à partir de la semaine prochaine, sauf si vous l'appliquez maintenant.",
-    "note": "Les jours du modèle suivent vos jours d'ouverture. Modifiez-les dans Stand et retrait."
+    "savedText": "Modèle enregistré.",
+    "note": "Laissez la quantité d’un jour vide pour le sauter. Un prix vide garde le prix actuel du produit.",
+    "priceError": "Entrez un prix supérieur à 0 $ pour {{product}} le {{day}}, ou laissez vide pour garder le prix actuel."
   },
   "empty": {
-    "title": "Add a product first",
-    "text": "A weekly template needs at least one product.",
-    "action": "Add a product"
+    "title": "Ajoutez d’abord un produit",
+    "text": "Un modèle hebdomadaire a besoin d’au moins un produit.",
+    "action": "Ajouter un produit"
   }
 }

@@ -1,6 +1,6 @@
 {
   "title": "Đăng nhập",
-  "intro": "Khách hàng và nhà vườn đăng nhập tại đây. Quản trị viên dùng <link>trang đăng nhập quản trị riêng</link>.",
+  "intro": "Khách hàng và nhà vườn đăng nhập tại đây. Quản trị viên dùng <a>trang đăng nhập quản trị riêng</a>.",
   "fields": {
     "email": "Email",
     "password": "Mật khẩu"
@@ -19,7 +19,9 @@
   "newHere": "Chưa có tài khoản? <customer>Đăng ký</customer>",
   "toast": {
     "signedIn": "Đã đăng nhập.",
-    "failed": "Không đăng nhập được. Vui lòng thử lại."
+    "failed": "Không đăng nhập được. Vui lòng thử lại.",
+    "tooMany_one": "Bạn đã đăng nhập sai quá nhiều lần. Thử lại sau {{count}} phút.",
+    "tooMany_other": "Bạn đã đăng nhập sai quá nhiều lần. Thử lại sau {{count}} phút."
   },
   "errors": {
     "emailRequired": "Nhập email.",

@@ -6,7 +6,8 @@
     "reviews": "Bewertungen",
     "products": "Produktanzeigen",
     "hidden": "Ausgeblendetes",
-    "messages": "Gemeldete Nachrichten"
+    "messages": "Gemeldete Nachrichten",
+    "quality": "Verderb-Meldungen"
   },
   "reviewFilterLabel": "Bewertungen filtern",
   "reviewFilter": {
@@ -16,13 +17,12 @@
   "recentlyListed": "Kürzlich eingestellte Produkte",
   "search": {
     "label": "Produkte suchen",
-    "placeholder": "Produkt oder Stand",
+    "placeholder": "Produkt oder Kategorie",
     "submit": "Suchen"
   },
   "col": {
     "product": "Produkt",
     "price": "Preis",
-    "description": "Beschreibung",
     "item": "Eintrag",
     "owner": "Von",
     "reason": "Grund",
@@ -73,6 +73,7 @@
     "emptyTitle": "Keine gemeldeten Nachrichten",
     "emptyText": "Wenn ein Kunde oder ein Stand eine Nachricht meldet, wartet sie hier auf dich.",
     "photo": "Foto",
+    "video": "Video",
     "reason": {
       "spam": "Spam oder Werbung",
       "abuse": "Unhöflich oder beleidigend",
@@ -80,6 +81,7 @@
       "other": "Etwas anderes"
     },
     "reportedBy": "Gemeldet von {{name}}",
+    "note": "Notiz zur Meldung: {{note}}",
     "sentBy": "Gesendet von {{name}}",
     "review": "Prüfen",
     "reviewLabel": "Meldung von {{name}} prüfen",
@@ -98,5 +100,43 @@
       "actioned": "Erledigt"
     },
     "statusLabel": "Status"
+  },
+  "hiddenQueue": {
+    "listings": "Ausgeblendete Angebote",
+    "reviews": "Ausgeblendete Bewertungen",
+    "noListings": "Keine ausgeblendeten Angebote",
+    "noListingsText": "Angebote, die du ausblendest, erscheinen hier mit dem Grund, damit du sie wieder einblenden kannst."
+  },
+  "quality": {
+    "boundary": "Nur ein bestätigter Bericht zu einer verlängerten Haltbarkeit, die vor ihrem Datum verdorben ist, wird als Verstoß gewertet. Einem Stand passiert nichts, nur weil ein Kunde etwas gemeldet hat.",
+    "filterLabel": "Verderb-Meldungen filtern",
+    "filter": {
+      "needs": "Braucht eine Entscheidung",
+      "open": "Alle offenen",
+      "decided": "Entschieden"
+    },
+    "noun": "Verderb-Meldungen",
+    "emptyTitle": "Nichts zu entscheiden",
+    "emptyText": "Verderb-Meldungen von Kunden warten hier auf Sie.",
+    "line": "{{code}} · {{product}} · {{stall}}",
+    "details": "Kunde: {{customer}} · abgeholt {{pickup}} · haltbar bis {{bestBefore}} · verdorben {{spoiled}} ({{when}})",
+    "photoAlt": "Das Foto des Kunden vom verdorbenen Erzeugnis",
+    "reply": "Antwort des Standes: „{{text}}“",
+    "noReply": "Der Stand hat noch nicht geantwortet.",
+    "dismiss": "Nicht die Schuld des Standes",
+    "confirm": "Verstoß bestätigen",
+    "dismissTitle": "Nicht die Schuld des Standes?",
+    "dismissText": "Die Meldung wird ohne Verstoß geschlossen. Kunde und Stand werden informiert.",
+    "confirmTitle": "Verstoß bestätigen?",
+    "confirmText": "Die Meldung wird als bestätigt geschlossen. Kunde und Stand werden informiert.",
+    "confirmStrike": "Der Stand hat diese Haltbarkeit verlängert, und sie ist vor ihrem Datum verdorben, daher wird ein Verstoß erfasst und das Produkt kehrt zur vorgeschlagenen Haltbarkeit zurück.",
+    "noteLabel": "Warum es nicht die Schuld des Standes ist",
+    "noteOptional": "Hinweis für den Stand und andere Admins (optional)",
+    "noteRequired": "Geben Sie an, warum es nicht die Schuld des Standes ist.",
+    "decisionNote": "Hinweis: {{text}}",
+    "done": "Entscheidung gespeichert. Kunde und Stand wurden informiert.",
+    "alreadyDecided": "Ein anderer Admin hat über diese Meldung bereits entschieden.",
+    "suspend": "Stand sperren",
+    "suspendLabel": "Stand sperren: {{stall}}"
   }
 }

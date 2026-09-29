@@ -17,5 +17,8 @@
     "google": "Google에서 로그인하지 못했어요. 다시 시도해 주세요.",
     "invalidState": "올바르지 않은 로그인 시도예요. 로그인 페이지에서 다시 시작해 주세요.",
     "failed": "Google 로그인에 실패했어요. 다시 시도해 주세요."
+  },
+  "deactivated": {
+    "browseAsVisitor": "방문자로 둘러보기"
   }
 }

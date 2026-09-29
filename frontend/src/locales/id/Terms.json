@@ -3,7 +3,7 @@
   "lead": "Apa yang Anda setujui ketika memesan dari sebuah lapak di MarketLink, dan apa yang disetujui lapak serta platform sebagai gantinya.",
   "meta": "Versi 0.1 · Terakhir diperbarui {{date}} · Berlaku untuk Customer, Farmer, dan pengunjung",
   "onThisPage": "Di halaman ini",
-  "seeAlso": "Baca juga <link>Kebijakan privasi</link>. Di sana dijelaskan apa yang kami simpan tentang Anda.",
+  "seeAlso": "Baca juga <a>Kebijakan privasi</a>. Di sana dijelaskan apa yang kami simpan tentang Anda.",
   "sections": [
     {
       "id": "what",

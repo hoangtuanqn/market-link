@@ -1,6 +1,6 @@
 {
   "title": "登录",
-  "intro": "顾客和农户在此登录。管理员请使用<link>单独的管理员登录</link>。",
+  "intro": "顾客和农户在此登录。管理员请使用<a>单独的管理员登录</a>。",
   "fields": {
     "email": "邮箱",
     "password": "密码"
@@ -19,7 +19,9 @@
   "newHere": "还没有账户？<customer>注册</customer>",
   "toast": {
     "signedIn": "已登录。",
-    "failed": "无法登录，请重试。"
+    "failed": "无法登录，请重试。",
+    "tooMany_one": "登录失败次数过多，请在 {{count}} 分钟后重试。",
+    "tooMany_other": "登录失败次数过多，请在 {{count}} 分钟后重试。"
   },
   "errors": {
     "emailRequired": "请输入邮箱。",

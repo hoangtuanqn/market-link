@@ -11,14 +11,6 @@
     "language": "언어",
     "languageNote": "메뉴, 버튼, 메시지에 쓰이는 언어예요. 매대, 상품, 장소 이름은 매대가 쓴 그대로 표시돼요.",
     "format": "금액, 날짜, 단위",
-    "currency": "가격 표시",
-    "currencyNote": "매대에서는 항상 베트남 동으로 결제해요. 다른 통화는 참고용으로만 옆에 표시되며, {{date}} 기준 고정 환율을 사용해요.",
-    "currencies": {
-      "VND": "₫ 베트남 동만",
-      "USD": "₫와 $ 미국 달러",
-      "EUR": "₫와 € 유로",
-      "JPY": "₫와 ¥ 일본 엔"
-    },
     "units": "무게와 부피",
     "unitsNote": "측정 단위만 바꿔요. 묶음, 통, 판 단위로 파는 매대는 원래 표현을 그대로 써요.",
     "metric": "미터법 · kg, g, 리터",
@@ -53,15 +45,20 @@
     "orderOf": "주문 {{index}}/{{of}}",
     "payAtPickup": "픽업할 때 매대에서 결제"
   },
-  "chart": {
-    "showNumbers": "수치 보기"
-  },
   "chat": {
     "assistant": "MarketLink 도우미",
     "you": "나",
     "intent": "의도: {{intent}}",
     "photoUnavailable": "이 사진을 볼 수 없습니다.",
+    "previewPhoto": "사진",
+    "previewVideo": "동영상",
     "photoFrom": "{{name}} 님의 사진",
+    "videoFrom": "{{name}}님이 보낸 동영상",
+    "playVideo": "동영상 재생",
+    "loadingVideo": "동영상 불러오는 중…",
+    "videoUnavailable": "이 동영상은 볼 수 없습니다.",
+    "videoCantPlay": "이 브라우저에서는 이 동영상을 재생할 수 없습니다.",
+    "downloadVideo": "동영상 다운로드",
     "seen": "읽음",
     "loadingThreads": "대화를 불러오는 중…",
     "threadsErrorTitle": "대화 목록을 불러오지 못했습니다",
@@ -72,8 +69,8 @@
     "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "읽지 않은 메시지 {{count}}개",
     "sendFailed": "메시지를 보내지 못했습니다. 다시 시도하세요.",
-    "photoFailed": "사진을 보내지 못했습니다. 5 MB 이하의 JPEG, PNG, WebP를 선택하세요.",
-    "attachPhoto": "사진 추가",
+    "mediaFailed": "파일을 보내지 못했습니다. 50MB 미만의 사진이나 동영상을 선택하세요.",
+    "attachMedia": "사진 또는 동영상 추가",
     "draftLabel": "메시지 입력",
     "draftPlaceholder": "메시지 입력",
     "send": "보내기",
@@ -101,8 +98,14 @@
     "unpin": "빼기",
     "productGone": "더 이상 판매하지 않는 상품입니다.",
     "tooFast": "너무 빨리 보내고 있습니다. 잠시 후 다시 시도하세요.",
-    "photoTooBig": "사진이 5 MB를 넘습니다. 더 작은 사진을 선택하세요.",
-    "photoType": "JPEG, PNG, WebP 사진을 선택하세요.",
+    "mediaTooBig": "파일이 50MB를 넘습니다. 더 작은 파일을 선택하세요.",
+    "mediaTooBigForServer": "파일이 서버가 현재 허용하는 크기보다 큽니다. 더 작은 파일을 선택하세요.",
+    "mediaType": "사진(JPEG, PNG, WebP, GIF, AVIF, HEIC) 또는 동영상(MP4, MOV, WebM)을 선택하세요.",
+    "converting": "사진 변환 중…",
+    "convertFailed": "이 사진을 변환할 수 없습니다. JPEG로 저장한 뒤 다시 시도하세요.",
+    "uploading": "보내는 중… {{percent}}%",
+    "uploadProgress": "업로드 진행률",
+    "cancelUpload": "취소",
     "moreThreads": "대화 더 불러오기",
     "reportTitle": "이 메시지 신고",
     "reportWhy": "신고하는 이유가 무엇인가요?",
@@ -141,17 +144,15 @@
     "collapse": "사이드바 접기",
     "approvedMarkets_one": "승인됨 · 시장 {{count}}곳",
     "approvedMarkets_other": "승인됨 · 시장 {{count}}곳",
-    "changeMarket": "보고 있는 시장 바꾸기",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "메뉴 열기",
-    "searchPlaceholder": "주문 번호 또는 고객",
     "yourAccount": "내 계정",
     "today": "오늘",
     "overview": "개요",
-    "incomingOrders": "들어온 주문",
+    "incomingOrders": "주문",
     "pickupSlots": "픽업 시간대",
     "stock": "재고",
-    "weekStock": "이번 주 재고",
+    "weekStock": "주간 템플릿",
     "products": "상품",
     "stall": "매대",
     "stallPickup": "매대 및 픽업",
@@ -171,6 +172,7 @@
     "shop": "사기",
     "marketsNearYou": "가까운 시장",
     "inSeason": "제철 상품",
+    "deals": "유통기한 임박 할인",
     "marketMap": "시장 지도",
     "favoriteStalls": "즐겨찾는 매대",
     "sell": "팔기",
@@ -187,6 +189,11 @@
     "mapDataFrom": "지도 데이터 {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "좋은 아침입니다",
+      "afternoon": "좋은 오후입니다",
+      "evening": "좋은 저녁입니다"
+    },
     "cart": "장바구니",
     "cartItems_one": "장바구니, {{count}}개",
     "cartItems_other": "장바구니, {{count}}개",
@@ -210,8 +217,8 @@
   "loadError": {
     "title": "{{noun}}을(를) 불러오지 못했어요",
     "text": "이번에는 목록이 도착하지 않았어요. 저장하거나 주문한 내용에는 영향이 없어요.",
-    "help": "보통은 사용자 잘못이 아니라 연결 문제예요. 다시 시도해도 안 되면 <link>무슨 일이 있었는지 알려 주세요</link>. 저희가 확인할게요.",
-    "helpAlt": "보통은 사용자 잘못이 아니라 연결 문제예요. 다시 시도해도 안 되면 <alt />, 또는 <link>무슨 일이 있었는지 알려 주세요</link>. 저희가 확인할게요."
+    "help": "보통은 사용자 잘못이 아니라 연결 문제예요. 다시 시도해도 안 되면 <a>무슨 일이 있었는지 알려 주세요</a>. 저희가 확인할게요.",
+    "helpAlt": "보통은 사용자 잘못이 아니라 연결 문제예요. 다시 시도해도 안 되면 <alt />, 또는 <a>무슨 일이 있었는지 알려 주세요</a>. 저희가 확인할게요."
   },
   "loading": {
     "markets": "시장 불러오는 중"
@@ -243,6 +250,7 @@
   "nav": {
     "markets": "시장",
     "products": "상품",
+    "deals": "할인",
     "map": "지도",
     "aboutUs": "소개",
     "myOrders": "내 주문",
@@ -299,24 +307,16 @@
     "show": "비밀번호 보기",
     "hide": "비밀번호 숨기기"
   },
-  "period": {
-    "length": "기간 단위",
-    "day": "일",
-    "week": "주",
-    "month": "월",
-    "quarter": "분기",
-    "year": "연",
-    "custom": "직접 설정",
-    "from": "시작",
-    "to": "종료",
-    "compareWith": "비교 대상",
-    "cmpBefore": "같은 길이의 이전 기간",
-    "cmpLastYear": "작년 같은 기간",
-    "cmpNone": "비교 안 함",
-    "comparedWith": "<b>{{compare}}</b>(같은 길이)와 비교"
-  },
   "price": {
     "was": "이전 가격"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "{{day}} 픽업 · {{until}}까지 신선 · {{qty}} 남음",
+    "added": {
+      "title": "장바구니에 담았어요",
+      "text": "{{name}}이(가) 할인가로, {{day}}에 픽업이에요."
+    }
   },
   "product": {
     "notThisWeek": "이번 주에는 없어요",
@@ -382,12 +382,9 @@
     "fullNameRequired": "이름을 입력해 주세요.",
     "fullNameMax": "이름은 최대 {{max}}자까지 입력할 수 있어요.",
     "phoneRequired": "전화번호를 입력해 주세요.",
-    "phoneInvalid": "올바른 베트남 휴대전화 번호(10자리)를 입력해 주세요.",
-    "addressRequired": "주소를 입력해 주세요.",
-    "addressMax": "주소는 최대 {{max}}자까지 입력할 수 있어요."
+    "phoneInvalid": "올바른 베트남 휴대전화 번호(10자리)를 입력해 주세요."
   },
   "adminNav": {
-    "sections": "관리 메뉴",
     "overview": "개요",
     "farmers": "농가",
     "customers": "고객",
@@ -398,6 +395,7 @@
     "categories": "카테고리",
     "announcements": "공지",
     "feedback": "의견",
+    "notifications": "알림",
     "settings": "설정",
     "account": "내 계정",
     "analytics": "분석",
@@ -407,18 +405,7 @@
     "navigation": "관리자 탐색",
     "home": "MarketLink — 관리자 개요",
     "contextSub": "플랫폼 · 전체 마켓",
-    "userLine": "관리자 · 전체 플랫폼",
-    "searchPlaceholder": "매장, 고객 또는 시장"
-  },
-  "carousel": {
-    "roleCarousel": "캐러셀",
-    "roleSlide": "슬라이드",
-    "slideOf": "{{total}}개 중 {{n}}번째: {{topic}}",
-    "previous": "이전 슬라이드",
-    "next": "다음 슬라이드",
-    "show": "{{n}}번 슬라이드 보기: {{topic}}",
-    "pause": "슬라이드쇼 일시 정지",
-    "play": "슬라이드쇼 재생"
+    "userLine": "관리자 · 전체 플랫폼"
   },
   "geo": {
     "denied": "이 사이트의 위치 권한을 껐습니다. 브라우저의 사이트 설정에서 변경하거나 주소를 대신 사용하세요.",
@@ -435,8 +422,8 @@
     "address": "주소",
     "addressNote": "호찌민시의 거리나 랜드마크.",
     "addressLabel": "출발 주소",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "거리와 군(구)을 입력하는 것이 가장 좋습니다. 지도에 번지가 없는 경우가 많고, 찾지 못하면 OpenStreetMap이 장소를 고르라고 합니다.",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "거리와 방(동)을 입력하는 것이 가장 좋습니다. 지도에 번지가 없는 경우가 많고, 찾지 못하면 OpenStreetMap이 장소를 고르라고 합니다.",
     "useSaved": "저장된 주소 사용",
     "none": "지도에서 직접 입력할게요",
     "noneNote": "목적지만 채운 상태로 OpenStreetMap을 엽니다.",
@@ -504,9 +491,25 @@
           "title": "가게 신청",
           "note": "승인, 거절, 일시 정지, 재개되었을 때"
         },
+        "orders": {
+          "title": "주문",
+          "note": "내가 한 주문이나 받은 주문의 상태가 바뀔 때"
+        },
+        "favorites": {
+          "title": "즐겨찾기",
+          "note": "저장한 상품이 다시 입고되었을 때"
+        },
         "farmerApplications": {
           "title": "Farmer 신청",
           "note": "누군가 MarketLink 판매를 신청했을 때"
+        },
+        "feedback": {
+          "title": "의견",
+          "note": "누군가 버그 신고, 제안, 문의를 보냈을 때"
+        },
+        "qualityReports": {
+          "title": "상한 상품 신고",
+          "note": "유통기한을 연장한 상품이 기한 전에 상했다고 신고되었을 때"
         }
       },
       "sound": "소리 재생",
@@ -563,13 +566,40 @@
     "result": {
       "product": "상품",
       "market": "시장",
-      "farmer": "가판대"
+      "farmer": "가판대",
+      "order": "주문"
     },
     "suggest": {
       "find": "이번 주말 토마토는 어디서 살 수 있나요?",
       "hours": "Bến Thành 시장은 몇 시에 여나요?",
       "stalls": "토요일 Thảo Điền 시장에는 어떤 가판대가 있나요?",
       "cancel": "주문은 어떻게 취소하나요?"
+    },
+    "action": {
+      "confirm": "확인",
+      "openPage": "페이지 열기",
+      "done": "완료",
+      "doneTitle": "완료",
+      "failedTitle": "처리되지 않음",
+      "failedText": "변경이 거부되었어요. 이유는 페이지에서 확인해 주세요.",
+      "accept_order": "주문 {{label}}을(를) 수락할까요?",
+      "decline_order": "주문 {{label}}을(를) 거절할까요?",
+      "ready_order": "주문 {{label}}을(를) 준비 완료로 표시할까요?",
+      "complete_order": "주문 {{label}}을(를) 완료로 표시할까요?",
+      "approve_farmer": "{{label}}을(를) 승인할까요?",
+      "reject_farmer": "{{label}}을(를) 거절할까요?",
+      "suspend_farmer": "{{label}}을(를) 정지할까요?"
+    },
+    "askAboutThis": "어시스턴트에게 묻기",
+    "ask": {
+      "order": "주문 {{code}}에 무엇이 담겨 있고, 아직 마감 전인가요? 수락해도 될까요?",
+      "review": "이 {{rating}}점 리뷰에 짧고 솔직한 답글을 써 주세요.",
+      "application": "이 매대 신청서가 충분한가요? 승인 전에 확인할 점이 있나요?",
+      "reports": "{{from}}부터 {{to}}까지의 숫자를 설명해 주세요. 어느 시장이 활발하고 어디가 한산한지, 그 이유는요.",
+      "cart": "장바구니를 설명해 주세요. 왜 나뉘는지, 매대별 금액은 얼마인지, 마감 시간에 모두 늦지 않는지요.",
+      "announcement": "플랫폼 공지문을 작성해 주세요. 내용은 제가 알려드릴게요.",
+      "product": "{{name}}의 짧은 설명과 가격표에 적을 손글씨 한 줄을 써 주세요.",
+      "feedback": "피드백 수신함을 요약해 주세요. 무엇이 보고되고 있는지, 사실상 같은 문제인 메시지는 무엇인지, 무엇부터 봐야 하는지요."
     }
   },
   "tour": {
@@ -648,8 +678,8 @@
         "body": "고객이 가판대에서 주문을 받아 갈 수 있는 시간대를 설정하세요."
       },
       "farmerStock": {
-        "title": "이번 주 재고",
-        "body": "이번 주에 판매할 수 있는 상품별 수량을 업데이트하세요."
+        "title": "주간 재고 템플릿",
+        "body": "요일마다 상품별로 보통 가져오는 수량을 정하세요. 매주 자동으로 다시 채워져요."
       },
       "farmerProducts": {
         "title": "상품",
@@ -677,16 +707,146 @@
       },
       "farmerSettings": {
         "title": "설정",
-        "body": "언어, 통화, 판매 기본값을 변경하세요."
+        "body": "테마, 언어, 날짜와 단위 형식, 알림을 변경하세요."
       },
       "farmerDone": {
         "title": "가판대 준비 완료",
-        "body": "이번 주 재고와 픽업 시간부터 확인해 보세요."
+        "body": "주간 템플릿과 픽업 시간부터 확인해 보세요."
       },
       "dashboardMenu": {
         "title": "메뉴",
         "body": "메뉴를 열면 관리 화면의 모든 섹션으로 이동할 수 있습니다."
       }
     }
+  },
+  "address": {
+    "legend": "주소",
+    "country": "국가",
+    "province": "성 / 시",
+    "ward": "방 / 사",
+    "street": "거리",
+    "addressLine": "번지 및 상세 주소",
+    "addressLineOptional": "번지 (있는 경우)",
+    "addressLinePlaceholder": "12 또는 12/3A",
+    "region": "주 / 도",
+    "city": "도시",
+    "choose": {
+      "country": "국가 선택",
+      "province": "성 / 시 선택",
+      "ward": "방 / 사 선택"
+    },
+    "wardNeedsProvince": "먼저 성 / 시를 선택하세요.",
+    "loading": "불러오는 중…",
+    "loadFailed": "이 목록을 불러오지 못했습니다.",
+    "retry": "다시 시도",
+    "streetPlaceholder": "입력을 시작하세요 (예: Lê Lợi)",
+    "streetHint": "제안을 선택하거나, 거리가 목록에 없으면 입력한 내용을 그대로 두세요.",
+    "useTyped": "“{{text}}” 사용",
+    "noSuggestions": "제안이 없습니다 — 입력한 내용이 그대로 사용됩니다.",
+    "suggestions": "거리 제안",
+    "current": "현재 주소: {{address}}. 변경 사항을 저장하려면 아래에서 다시 선택하세요.",
+    "vietnamOnly": "시장은 베트남에 있어야 합니다.",
+    "errors": {
+      "countryRequired": "국가를 선택하세요.",
+      "provinceRequired": "성 / 시를 선택하세요.",
+      "wardRequired": "방 / 사를 선택하세요.",
+      "streetRequired": "거리를 입력하세요.",
+      "lineRequired": "번지 및 상세 주소를 입력하세요.",
+      "regionRequired": "주 / 도를 입력하세요.",
+      "cityRequired": "도시를 입력하세요.",
+      "tooLong": "{{max}}자 이내로 입력하세요."
+    }
+  },
+  "reasons": {
+    "pick": "하나 이상 고르세요",
+    "note": "추가 설명",
+    "noteOptional": "추가 설명(선택)",
+    "preview": "상대가 보게 될 문장: “{{text}}”",
+    "length": "{{used}}/{{max}}자.",
+    "reject": {
+      "incompleteInfo": "가판 정보가 부족합니다",
+      "unclearPhotos": "사진이 흐리거나 농장 사진이 아닙니다",
+      "unreachable": "등록한 전화번호로 연락이 닿지 않았습니다",
+      "notFarmProduce": "판매하려는 품목이 농산물이 아닙니다",
+      "duplicate": "이미 등록된 가판입니다"
+    },
+    "suspend": {
+      "complaints": "고객 불만이 반복되었습니다",
+      "notAsDescribed": "상품이 설명과 달랐습니다",
+      "missedPickups": "수령 시간에 가판이 없었습니다",
+      "rulesBroken": "플랫폼 규정을 위반했습니다",
+      "ownerRequest": "가판 운영자의 요청",
+      "shelfLifeViolations": "유통기한 위반"
+    },
+    "deactivate": {
+      "noShows": "주문 후 수령하지 않은 일이 반복되었습니다",
+      "abusiveMessages": "욕설 또는 스팸 메시지",
+      "fakeAccount": "가짜 또는 중복 계정",
+      "fakeReviews": "조작된 리뷰",
+      "ownerRequest": "계정 소유자의 요청"
+    }
+  },
+  "cookieConsent": {
+    "label": "쿠키 안내",
+    "text": "로그인 상태 유지와 장바구니 작동을 위한 필수 쿠키만 사용해요. 광고나 분석용 쿠키는 없어요. <a>개인정보 처리방침</a>.",
+    "decline": "거부",
+    "accept": "동의"
+  },
+  "banDuration": {
+    "label": "기간",
+    "permanent": "영구",
+    "temporary": "일시적",
+    "days_one": "{{count}}일",
+    "days_other": "{{count}}일",
+    "specificTime": "또는 정확한 종료 시각 선택"
+  },
+  "accountDeactivated": {
+    "title": "계정이 정지되었습니다",
+    "generic": "관리자가 이 계정을 정지하여 로그아웃되었습니다.",
+    "whatNow": "방문자로 시장과 농산물을 둘러볼 수는 있지만, 이 기간에는 로그인하거나 주문할 수 없습니다.",
+    "contactIntro": "착오라고 생각되시면 다음으로 연락 주세요:",
+    "acknowledge": "확인했습니다"
+  },
+  "stallSuspended": {
+    "title": "매대가 정지되었습니다",
+    "generic": "관리자가 이 매대를 정지하여 현재 고객에게 보이지 않습니다.",
+    "whatNow": "고객이 이미 주문한 건은 끝까지 처리해 주세요. 정지가 해제될 때까지 상품 등록, 재고 변경, 신규 주문 접수는 할 수 없습니다.",
+    "contactIntro": "착오라고 생각되시면 다음으로 연락 주세요:",
+    "acknowledge": "확인했습니다"
+  },
+  "storageMode": {
+    "room": "실온",
+    "chilled": "냉장 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "{{day}}까지 신선 · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "멍들거나 으깨짐",
+      "mold": "곰팡이",
+      "smell": "냄새가 남",
+      "wilted": "시들거나 말라붙음",
+      "other": "기타"
+    },
+    "problemWithNote": "{{problem}} · “{{note}}”",
+    "status": {
+      "open": "판정 대기 중",
+      "confirmed": "관리자가 확인함",
+      "dismissed": "매대의 잘못이 아님"
+    },
+    "extended_one": "+{{count}}일 연장",
+    "extended_other": "+{{count}}일 연장",
+    "beforePromise": "기한 전",
+    "afterPromise": "기한 후",
+    "strikes": "유통기한 위반: {{count}}/{{limit}} ({{days}}일 이내)"
+  },
+  "gallery": {
+    "label": "{{name}} 사진",
+    "previous": "이전 사진",
+    "next": "다음 사진",
+    "goTo": "{{n}}번째 사진으로 이동",
+    "slide": "{{total}}장 중 {{n}}번째",
+    "photoAlt": "{{name}}, 사진 {{n}}"
   }
 }

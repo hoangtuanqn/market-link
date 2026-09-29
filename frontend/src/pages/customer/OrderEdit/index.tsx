@@ -31,10 +31,28 @@ const CustomerOrderEditPage = () => {
   );
   const data = state.kind === 'ready' ? state.data : null;
 
+  // FR-035, D-07: a line may go up by what the stall still has for this order's pickup day (the server answers 409
+  // OUT_OF_STOCK beyond). The cart preview priced for that day says how much that is. Until it answers, or when it
+  // cannot (that day no longer takes orders), a line can only go down.
+  const { state: leftLoad } = useRequest(`order-edit-left:${data ? data.summary.orderId : 'none'}`, () =>
+    data
+      ? OrderApi.preview(
+          data.items.map((i) => ({ productId: i.productId, quantity: i.quantity })),
+          [{ farmerId: data.summary.farmerId, date: data.summary.pickupDate }],
+        )
+      : Promise.resolve([]),
+  );
+  const leftOf = (productId: number) => {
+    const line =
+      leftLoad.kind === 'ready'
+        ? leftLoad.data.flatMap((g) => g.items).find((i) => i.productId === productId)
+        : undefined;
+    return line && line.status === 'available' ? Math.max(0, line.stockQuantity) : 0;
+  };
+
   // "Mirror-until-edited": every line starts at its order quantity; only lines the customer touched get an entry
   // here. Never written from inside an effect — it is the source of truth for what the customer changed.
   const [edits, setEdits] = useState<Record<number, number>>({});
-  const [note, setNote] = useState('Please pick the smaller bunches if you can.');
   const [saving, setSaving] = useState(false);
 
   if (state.kind === 'loading' && id !== null) {
@@ -86,9 +104,9 @@ const CustomerOrderEditPage = () => {
       name: line.name ?? '',
       unit: line.unit ?? '',
       price: line.price ?? 0,
-      // The stock left is not known here; let the stepper go 20 above the current quantity and let the server be
-      // the judge (409 OUT_OF_STOCK) — FR-035 never adds a new product, only raises or lowers an existing line.
-      max: qtyOf(line) + 20,
+      // The order already holds line.qty; what is still left for its pickup day can be added on top. FR-035 never
+      // adds a new product, only raises or lowers an existing line.
+      max: line.qty + leftOf(line.productId),
       qty: qtyOf(line),
     }));
 
@@ -144,17 +162,6 @@ const CustomerOrderEditPage = () => {
       <p className="text-small text-ink-muted">{t('help', { stall: stallName })}</p>
 
       <Card className="flex flex-col gap-4 p-6">
-        <div className="flex flex-col gap-1.5">
-          <label htmlFor="note" className="text-small font-bold">
-            {t('note')}
-          </label>
-          <textarea
-            id="note"
-            value={note}
-            onChange={(e) => setNote(e.target.value)}
-            className="border-line-strong bg-surface-raised text-body min-h-16 rounded-sm border-[1.5px] p-3"
-          />
-        </div>
         <div className="flex flex-wrap gap-2">
           <Button onClick={() => void onSave()} disabled={visibleItems.length === 0 || saving}>
             {t('submit')}

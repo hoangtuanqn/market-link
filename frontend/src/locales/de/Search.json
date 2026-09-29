@@ -12,6 +12,21 @@
     "submit": "Suchen"
   },
   "day": "Markttag",
+  "filters": {
+    "category": "Kategorie",
+    "allCategories": "Alle Kategorien",
+    "market": "Markt",
+    "allMarkets": "Alle Märkte",
+    "price": "Preis pro Einheit",
+    "clear": "Filter zurücksetzen"
+  },
+  "price": {
+    "any": "Jeder Preis",
+    "low": "Unter {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Über {{high}}"
+  },
+  "stallsNotByCategory": "Die Kategorie schränkt Stände nicht ein — ein Stand gehört zu keiner Kategorie. Sie wirkt auf die Produkte unten.",
   "sort": "Sortieren",
   "sorts": {
     "best": "Beste Treffer",
@@ -34,6 +49,8 @@
   },
   "results_one": "{{count}} Ergebnis für „{{q}}“ am {{day}}",
   "results_other": "{{count}} Ergebnisse für „{{q}}“ am {{day}}",
+  "stallsOn_one": "{{count}} Stand verkauft am {{day}}",
+  "stallsOn_other": "{{count}} Stände verkaufen am {{day}}",
   "noStalls": "Keine passenden Stände.",
   "noProducts": "Keine passenden Produkte.",
   "noMarket": {

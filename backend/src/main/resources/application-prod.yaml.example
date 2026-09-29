@@ -9,7 +9,8 @@ spring:
     url: ${SPRING_DATASOURCE_URL}
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
-  # Mail is not required in prod: if left empty the app still runs, only the forgot-password email fails to send
+  # Mail is required in prod: signing up needs the emailed code (FR-009) and "Forgot password" the reset link (FR-007).
+  # Left empty the app still starts, but mails only go to the log, so nobody can finish signing up.
   mail:
     username: ${MAIL_USERNAME:}
     password: ${MAIL_PASSWORD:}

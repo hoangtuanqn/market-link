@@ -4,44 +4,110 @@ import { Link } from 'react-router';
 import ProductApi from '@/api-requests/product.requests';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import { Button, ButtonLink } from '@/components/ui/button';
+import { stockDay } from '@/components/stockDay';
 import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
+import { Field } from '@/components/ui/input';
 import { Table, type TableColumn } from '@/components/ui/table';
 import useRequest from '@/hooks/useRequest';
-import { unitPrice, units, vnd } from '@/lib/format';
+import { unitPrice, units, money } from '@/lib/format';
 import type { ProductStatus, ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import ActiveDeals from './ActiveDeals';
+import DealDialog from './DealDialog';
 
 const STATUSES: ProductStatus[] = ['available', 'sold_out', 'unavailable'];
-const FILTERS: ('all' | ProductStatus)[] = ['all', ...STATUSES];
+type ProductFilter = 'all' | ProductStatus | 'deleted';
+const FILTERS: ProductFilter[] = ['all', ...STATUSES, 'deleted'];
 const NO_PRODUCTS: ProductType[] = [];
 
-/** FR-062 FR-064 — everything this stall can list: price, this week's count, reserved units and status. */
+/** FR-062 FR-064 — everything this stall can list: price, what is left and reserved for the next pickup day, status. */
 const FarmerProductsPage = () => {
   const { t } = useTranslation('FarmerProducts');
   const { t: tc } = useTranslation();
   const { state: load, retry, mutate } = useRequest('my-products', () => ProductApi.mine());
+  const {
+    state: loadDeleted,
+    retry: retryDeleted,
+    mutate: mutateDeleted,
+  } = useRequest('my-deleted-products', () => ProductApi.mineDeleted());
   const all = load.kind === 'ready' ? load.data : NO_PRODUCTS;
-  const [filter, setFilter] = useState<'all' | ProductStatus>('all');
+  const deletedProducts = loadDeleted.kind === 'ready' ? loadDeleted.data : NO_PRODUCTS;
+  const [filter, setFilter] = useState<ProductFilter>('all');
   const [deleteTarget, setDeleteTarget] = useState<ProductType | null>(null);
+  const [restoreTarget, setRestoreTarget] = useState<ProductType | null>(null);
+  const [adjustTarget, setAdjustTarget] = useState<ProductType | null>(null);
+  const [adjustQuantity, setAdjustQuantity] = useState('');
+  const [adjustPrice, setAdjustPrice] = useState('');
+  const [adjustError, setAdjustError] = useState<string | undefined>();
+  const [adjustPriceError, setAdjustPriceError] = useState<string | undefined>();
   const [busyId, setBusyId] = useState<number | null>(null);
+  // FR-124: the product whose near-expiry deal dialog is open, and a counter that makes "On sale" read again
+  const [dealTarget, setDealTarget] = useState<ProductType | null>(null);
+  const [dealsVersion, setDealsVersion] = useState(0);
 
-  const counts: Record<'all' | ProductStatus, number> = {
+  const counts: Record<ProductFilter, number> = {
     all: all.length,
     available: all.filter((p) => p.status === 'available').length,
     sold_out: all.filter((p) => p.status === 'sold_out').length,
     unavailable: all.filter((p) => p.status === 'unavailable').length,
+    deleted: deletedProducts.length,
   };
-  const rows = filter === 'all' ? all : all.filter((p) => p.status === filter);
+  const rows = filter === 'deleted' ? deletedProducts : filter === 'all' ? all : all.filter((p) => p.status === filter);
+  const currentLoad = filter === 'deleted' ? loadDeleted : load;
+  const currentRetry = filter === 'deleted' ? retryDeleted : retry;
 
   const changeStatus = async (p: ProductType, value: ProductStatus) => {
     setBusyId(p.id);
     try {
       const saved = await ProductApi.setStatus(p.id, value);
-      mutate((list) => list.map((row) => (row.id === p.id ? saved : row)));
+      // A status change moves no stock; keep the next-date numbers only the list read carries
+      mutate((list) =>
+        list.map((row) =>
+          row.id === p.id
+            ? { ...saved, nextDate: row.nextDate, nextLeft: row.nextLeft, nextReserved: row.nextReserved }
+            : row,
+        ),
+      );
       Notification.success({ title: t('toast.statusSaved'), text: t(`toast.status.${value}`) });
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const openAdjust = (p: ProductType) => {
+    setAdjustTarget(p);
+    setAdjustQuantity(String(p.nextLeft ?? 0));
+    setAdjustPrice('');
+    setAdjustError(undefined);
+    setAdjustPriceError(undefined);
+  };
+
+  const confirmAdjust = async () => {
+    if (!adjustTarget?.nextDate) return;
+    const quantity = Number(adjustQuantity);
+    const price = adjustPrice.trim() === '' ? null : Number(adjustPrice);
+    const quantityError = !Number.isInteger(quantity) || quantity < 0 ? t('adjustDialog.error.quantity') : undefined;
+    // The server only takes a price above $0 for a day (FarmerDailyStockRequest); blank keeps the current price
+    const priceError =
+      price !== null && (!Number.isFinite(price) || price <= 0) ? t('adjustDialog.error.price') : undefined;
+    setAdjustError(quantityError);
+    setAdjustPriceError(priceError);
+    if (quantityError || priceError) return;
+    setBusyId(adjustTarget.id);
+    try {
+      await ProductApi.overrideDailyStock(adjustTarget.id, adjustTarget.nextDate, quantity, price);
+      // The new number can change which date is "next" (e.g. dropping to 0), so reload the list
+      // instead of hand-patching nextLeft.
+      retry();
+      // A price here also ends that day's near-expiry deal (Ruling 10), so "On sale" must read again.
+      setDealsVersion((v) => v + 1);
+      Notification.success({ text: t('toast.stockAdjusted', { day: stockDay(adjustTarget.nextDate) }) });
+      setAdjustTarget(null);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
     } finally {
@@ -55,8 +121,28 @@ const FarmerProductsPage = () => {
     try {
       await ProductApi.remove(deleteTarget.id);
       mutate((list) => list.filter((row) => row.id !== deleteTarget.id));
+      mutateDeleted((list) => [{ ...deleteTarget, status: 'unavailable' }, ...list]);
       Notification.success({ title: t('toast.deleted'), text: t('toast.deletedText', { name: deleteTarget.name }) });
       setDeleteTarget(null);
+    } catch (error) {
+      Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
+    } finally {
+      setBusyId(null);
+    }
+  };
+
+  const confirmRestore = async () => {
+    if (!restoreTarget) return;
+    setBusyId(restoreTarget.id);
+    try {
+      const restored = await ProductApi.restore(restoreTarget.id);
+      mutateDeleted((list) => list.filter((p) => p.id !== restoreTarget.id));
+      mutate((list) => [restored, ...list]);
+      Notification.success({
+        title: t('toast.restored'),
+        text: t('toast.restoredText', { name: restoreTarget.name }),
+      });
+      setRestoreTarget(null);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
     } finally {
@@ -72,7 +158,7 @@ const FarmerProductsPage = () => {
         <>
           <Link
             to={`/farmer/products/${p.id}/edit`}
-            className="text-brand font-bold underline-offset-2 hover:underline"
+            className="text-brand inline-flex min-h-11 items-center font-bold underline-offset-2 hover:underline"
           >
             {p.name}
           </Link>
@@ -93,20 +179,42 @@ const FarmerProductsPage = () => {
         const price = unitPrice(p.price, p.unit);
         return (
           <>
-            {vnd(price.amount)}{' '}
+            {money(price.amount)}{' '}
             <span className="text-ink-muted font-normal">{t('perUnit', { unit: price.unit ?? p.unit })}</span>
           </>
         );
       },
     },
     {
+      // FR-031/FR-063: stock is per pickup date, so show the nearest date a customer can still order for and what is
+      // left for it — not products.stock_quantity, which is only the base number the edit form starts from.
       key: 's',
       label: t('col.left'),
       align: 'num',
-      render: (p) => (p.status === 'available' ? units(p.stock, p.unit, p.plural) : '—'),
+      render: (p) => {
+        const day = stockDay(p.nextDate);
+        if (p.status === 'available' && day)
+          return t('nextLeft', { day, qty: units(p.nextLeft ?? 0, p.unit, p.plural) });
+        // FR-062/FR-063: on sale but no customer can order it — usually no weekly stock yet
+        if (p.status === 'available' && !p.hidden)
+          return (
+            <span className="text-small inline-flex flex-col items-end">
+              <span className="text-ink-muted">{t('noNextDate')}</span>
+              <Link to="/farmer/stock" className="text-brand underline-offset-2 hover:underline">
+                {t('checkWeeklyStock')}
+              </Link>
+            </span>
+          );
+        return '—';
+      },
     },
-    // Reserved units come with orders (C5); until then there is nothing honest to show here.
-    { key: 'r', label: t('col.reserved'), align: 'num', render: () => '—' },
+    {
+      // Units that placed, accepted and ready orders hold for that same date.
+      key: 'r',
+      label: t('col.reserved'),
+      align: 'num',
+      render: (p) => (p.nextDate ? units(p.nextReserved ?? 0, p.unit, p.plural) : '—'),
+    },
     {
       key: 'st',
       label: t('col.status'),
@@ -116,7 +224,7 @@ const FarmerProductsPage = () => {
           aria-label={t('statusOf', { name: p.name })}
           disabled={busyId === p.id}
           onChange={(e) => void changeStatus(p, e.target.value as ProductStatus)}
-          className="border-line-strong bg-surface-raised min-h-9 rounded-sm border-[1.5px] px-2 text-[14px]"
+          className="border-line-strong bg-surface-raised min-h-11 rounded-sm border-[1.5px] px-2 text-[14px]"
         >
           {STATUSES.map((s) => (
             <option key={s} value={s}>
@@ -130,13 +238,81 @@ const FarmerProductsPage = () => {
       key: 'a',
       label: '',
       align: 'actions',
+      // FR-124: the deal button sits on a line of its own under the other three, so the column is no wider than
+      // before and the table still fits its card at 1440 px
+      render: (p) => (
+        <div className="flex flex-col items-end gap-2">
+          <div className="flex justify-end gap-2">
+            {p.nextDate && (
+              <Button variant="secondary" size="sm" onClick={() => openAdjust(p)} disabled={busyId === p.id}>
+                {t('adjust')}
+              </Button>
+            )}
+            <ButtonLink variant="secondary" size="sm" to={`/farmer/products/${p.id}/edit`}>
+              {t('edit')}
+            </ButtonLink>
+            <Button variant="danger" size="sm" onClick={() => setDeleteTarget(p)} disabled={busyId === p.id}>
+              {t('delete')}
+            </Button>
+          </div>
+          {p.status === 'available' && !p.hidden && p.nextDate && (
+            <Button
+              variant="secondary"
+              size="sm"
+              aria-label={t('dealActionFor', { name: p.name })}
+              onClick={() => setDealTarget(p)}
+              disabled={busyId === p.id}
+            >
+              {t('dealAction')}
+            </Button>
+          )}
+        </div>
+      ),
+    },
+  ];
+
+  const deletedColumns: TableColumn<ProductType>[] = [
+    {
+      key: 'n',
+      label: t('col.product'),
+      render: (p) => (
+        <>
+          <span className="text-ink inline-flex min-h-11 items-center font-bold">{p.name}</span>
+          <span className="text-ink-muted mt-0.5 block text-[13px] font-normal">{p.category}</span>
+        </>
+      ),
+    },
+    {
+      key: 'p',
+      label: t('col.price'),
+      align: 'num',
+      render: (p) => {
+        const price = unitPrice(p.price, p.unit);
+        return (
+          <>
+            {money(price.amount)}{' '}
+            <span className="text-ink-muted font-normal">{t('perUnit', { unit: price.unit ?? p.unit })}</span>
+          </>
+        );
+      },
+    },
+    {
+      key: 'st',
+      label: t('col.status'),
+      render: () => (
+        <span className="bg-surface-sunken text-ink-muted inline-flex items-center rounded px-2.5 py-1 text-[13px] font-medium">
+          {t('status.deleted')}
+        </span>
+      ),
+    },
+    {
+      key: 'a',
+      label: '',
+      align: 'actions',
       render: (p) => (
         <div className="flex justify-end gap-2">
-          <ButtonLink variant="secondary" size="sm" to={`/farmer/products/${p.id}/edit`}>
-            {t('edit')}
-          </ButtonLink>
-          <Button variant="danger" size="sm" onClick={() => setDeleteTarget(p)} disabled={busyId === p.id}>
-            {t('delete')}
+          <Button variant="secondary" size="sm" onClick={() => setRestoreTarget(p)} disabled={busyId === p.id}>
+            {t('restore')}
           </Button>
         </div>
       ),
@@ -147,39 +323,62 @@ const FarmerProductsPage = () => {
     <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
         <ButtonLink to="/farmer/products/new">{t('add')}</ButtonLink>
       </div>
 
+      <ActiveDeals version={dealsVersion} />
+
       <div className="flex flex-wrap gap-2">
         {FILTERS.map((f) => (
           <Chip key={f} pressed={filter === f} onClick={() => setFilter(f)}>
-            {f === 'all' ? t('filterAll') : t(`status.${f}`)}{' '}
+            {f === 'all' ? t('filterAll') : f === 'deleted' ? t('filterDeleted') : t(`status.${f}`)}{' '}
             <span className="text-[12px] tabular-nums opacity-80">{counts[f]}</span>
           </Chip>
         ))}
       </div>
 
       <div className="flex min-h-[440px] flex-1 flex-col">
-        {load.kind === 'loading' ? (
+        {currentLoad.kind === 'loading' ? (
           <MarketCardSkeleton count={3} />
-        ) : load.kind === 'error' ? (
-          <LoadError noun={t('error.noun')} onRetry={retry} />
+        ) : currentLoad.kind === 'error' ? (
+          <LoadError noun={t('error.noun')} onRetry={currentRetry} />
         ) : rows.length ? (
           <Table
             className="h-full flex-1"
-            caption={t('caption', { count: all.length })}
-            columns={columns}
+            caption={t('caption', { count: rows.length })}
+            columns={filter === 'deleted' ? deletedColumns : columns}
             rows={rows}
           />
         ) : (
-          <DataState fill title={t('empty.title')} text={t('empty.text')} className="h-full min-h-[440px] w-full" />
+          <DataState
+            fill
+            title={filter === 'deleted' ? t('emptyDeleted.title') : t('empty.title')}
+            text={filter === 'deleted' ? t('emptyDeleted.text') : t('empty.text')}
+            className="h-full min-h-[440px] w-full"
+          />
         )}
       </div>
 
       <p className="text-small text-ink-muted">{t('footNote')}</p>
+
+      {dealTarget && (
+        <DealDialog
+          product={dealTarget}
+          onClose={() => setDealTarget(null)}
+          onPosted={(row) => {
+            setDealsVersion((v) => v + 1);
+            // The deal sets what is left for its day; the row's "next pickup day" number follows when it is that day
+            mutate((list) =>
+              list.map((r) =>
+                r.id === row.productId && r.nextDate === row.stockDate ? { ...r, nextLeft: row.quantityAvailable } : r,
+              ),
+            );
+          }}
+        />
+      )}
 
       <Dialog
         open={deleteTarget !== null}
@@ -199,6 +398,66 @@ const FarmerProductsPage = () => {
       >
         <p>{t('dialog.text')}</p>
         <p className="text-ink-muted text-[14px]">{t('dialog.pauseHint')}</p>
+      </Dialog>
+
+      <Dialog
+        open={restoreTarget !== null}
+        title={t('restoreDialog.title', { name: restoreTarget?.name ?? '' })}
+        onClose={() => setRestoreTarget(null)}
+        actions={
+          <>
+            <Button variant="secondary" onClick={() => setRestoreTarget(null)}>
+              {t('restoreDialog.cancel')}
+            </Button>
+            <Button onClick={() => void confirmRestore()} disabled={busyId !== null}>
+              {t('restoreDialog.confirm')}
+            </Button>
+          </>
+        }
+      >
+        <p>{t('restoreDialog.text')}</p>
+        <p className="text-ink-muted text-[14px]">{t('restoreDialog.stockHint')}</p>
+      </Dialog>
+
+      <Dialog
+        open={adjustTarget !== null}
+        title={adjustTarget ? t('adjustDialog.title', { day: stockDay(adjustTarget.nextDate) }) : ''}
+        onClose={() => setAdjustTarget(null)}
+        actions={
+          <>
+            <Button variant="secondary" onClick={() => setAdjustTarget(null)}>
+              {t('adjustDialog.cancel')}
+            </Button>
+            <Button onClick={() => void confirmAdjust()} disabled={busyId !== null}>
+              {t('adjustDialog.confirm')}
+            </Button>
+          </>
+        }
+      >
+        <div className="flex flex-col gap-4">
+          <Field
+            id="adjust-quantity"
+            label={t('adjustDialog.quantity')}
+            type="number"
+            min={0}
+            required
+            value={adjustQuantity}
+            onChange={(e) => setAdjustQuantity(e.target.value)}
+            error={adjustError}
+          />
+          <Field
+            id="adjust-price"
+            label={t('adjustDialog.price')}
+            type="number"
+            min={0.01}
+            step={0.01}
+            placeholder={adjustTarget ? String(adjustTarget.price) : ''}
+            hint={t('adjustDialog.priceHint')}
+            error={adjustPriceError}
+            value={adjustPrice}
+            onChange={(e) => setAdjustPrice(e.target.value)}
+          />
+        </div>
       </Dialog>
     </div>
   );

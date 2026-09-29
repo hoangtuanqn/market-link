@@ -53,5 +53,29 @@
     "title": "이 주문을 취소할까요?",
     "text": "{{stall}}에 바로 알려지고 상품은 다시 판매됩니다.",
     "keep": "주문 유지"
+  },
+  "spoilage": {
+    "report": "상함 신고",
+    "reportLabel": "상함 신고: {{name}}",
+    "reported": "상함 신고됨 · {{status}}",
+    "title": "상한 농산물 신고",
+    "intro": "{{name}}에 무슨 문제가 있었는지 {{stall}}에 알려 주세요. 상품마다 한 번만 신고할 수 있으며, 신선 기한 2일 후까지 가능합니다.",
+    "day": "상한 날짜",
+    "problem": "무엇이 문제였나요",
+    "note": "설명 (선택)",
+    "notePlaceholder": "냉장 보관 2일 후 잎이 검게 변했습니다.",
+    "noteCount": "{{used}}/500자.",
+    "photo": "사진 추가 (선택)",
+    "photoReplace": "사진 바꾸기",
+    "photoRemove": "사진 삭제",
+    "photoAlt": "상한 농산물 사진",
+    "photoHint": "JPG, PNG, WebP, 최대 5MB.",
+    "photoTooBig": "사진은 5MB 이하여야 합니다.",
+    "photoType": "JPG, PNG, WebP 사진을 보내 주세요.",
+    "uploading": "사진 업로드 중",
+    "send": "신고 보내기",
+    "needProblem": "무엇이 문제였는지 먼저 선택하세요.",
+    "sent": "신고를 보냈습니다. 가게가 답할 수 있고, 관리자가 검토할 수도 있습니다.",
+    "failed": "신고를 보내지 못했습니다."
   }
 }

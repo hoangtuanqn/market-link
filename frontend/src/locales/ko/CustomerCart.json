@@ -28,8 +28,6 @@
     "unavailable": "One or more items are no longer for sale.",
     "stall_suspended": "This stall is not taking orders right now."
   },
-  "changeTime": "{{stall}} 픽업 시간 변경",
-  "pickupDay": "픽업 날짜",
   "pickupDayAt": "{{stall}} 픽업 날짜",
   "pickupTime": "픽업 시간 · {{day}} {{date}} · 운영 {{from}} – {{to}}",
   "summary": {
@@ -52,5 +50,10 @@
     "title": "장바구니 상품",
     "text": "더 이상 판매하지 않는 상품이 있으면 여기서 삭제하면 장바구니가 다시 불러와집니다.",
     "clear": "장바구니 비우기"
+  },
+  "deal": {
+    "badge": "−{{percent}}% 유통기한 임박 할인",
+    "onlyOn": "이 할인은 {{day}}에만 적용돼요.",
+    "dayGone": "할인 날짜 {{day}}은(는) 더 이상 선택할 수 없어요. 가격을 보려면 날짜를 선택하세요."
   }
 }

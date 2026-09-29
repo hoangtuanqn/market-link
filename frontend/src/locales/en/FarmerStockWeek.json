@@ -9,8 +9,8 @@
     "product": "Product"
   },
   "error": {
-    "productsNoun": "your products",
-    "templateNoun": "your weekly template"
+    "productsNoun": "products",
+    "templateNoun": "weekly template"
   },
   "aria": {
     "quantity": "{{product}} quantity on {{day}}",
@@ -22,7 +22,8 @@
   "template": {
     "save": "Save template",
     "savedText": "Template saved.",
-    "note": "Leave a day's quantity blank to skip it. A blank price keeps the product's current price."
+    "note": "Leave a day's quantity blank to skip it. A blank price keeps the product's current price.",
+    "priceError": "Enter a price above $0 for {{product}} on {{day}}, or leave it blank to keep the current price."
   },
   "empty": {
     "title": "Add a product first",

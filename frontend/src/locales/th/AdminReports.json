@@ -8,9 +8,9 @@
   "kpi": {
     "noun": "dashboard totals",
     "orders": "คำสั่งซื้อ",
-    "ordersNote": "{{month}} ทุกตลาด",
+    "ordersNote": "ตลอดเวลา ทุกสถานะ",
     "revenue": "ยอดขายที่เสร็จสิ้น",
-    "revenueNote": "₫ จ่ายที่ร้านค้า"
+    "revenueNote": "$ จ่ายที่ร้านค้า"
   },
   "byMarket": {
     "title": "ยอดขายแยกตามตลาด",

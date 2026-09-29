@@ -10,17 +10,23 @@
     "remove": "Aus Favoriten entfernen: {{name}}"
   },
   "soldPer": "verkauft pro {{unit}}",
-  "left": "Noch <b>{{qty}}</b> diese Woche",
+  "left": "Noch <b>{{qty}}</b>",
+  "leftOn": "Noch <b>{{qty}}</b> für {{day}}",
   "stockUpdated": "Bestand heute aktualisiert, vor den Bestellungen dieses Wochenendes.",
-  "notifyMe": "Benachrichtigen, wenn wieder da",
   "added": {
     "title": "In den Warenkorb gelegt",
     "text": "{{qty}} {{name}} in Ihren Warenkorb gelegt."
   },
   "addToCart": "In den Warenkorb",
   "payNote": "Die Ware wird bei der Bestellung für Sie zurückgelegt. Sie zahlen {{price}} bei der Abholung am Stand.",
+  "deals": {
+    "title": "Im Angebot für diese Abholtage",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, statt {{was}} · gut bis Ende {{until}} · {{qty}} übrig",
+    "add": "Für {{day}} hinzufügen",
+    "noun": "Angebote"
+  },
   "fromStall": "Vom Stand",
-  "sellingSince": "verkauft hier seit {{date}}",
   "stats": {
     "reviews_one": "{{count}} Bewertung",
     "reviews_other": "{{count}} Bewertungen",
@@ -31,13 +37,13 @@
     "cutoff": "Bestellschluss"
   },
   "seeStall": "Stand ansehen",
-  "messageStall": "Stand anschreiben",
   "details": {
     "title": "Produktdetails",
     "soldPer": "Verkauft pro",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "Haltbarkeit",
+    "shelfLifeLine_one": "{{storage}} · hält sich {{count}} Tag ab Abholung",
+    "shelfLifeLine_other": "{{storage}} · hält sich {{count}} Tage ab Abholung",
+    "shelfLifePromise": "Der Stand verspricht {{days}} Tage (meist {{suggested}}).",
     "category": "Kategorie",
     "stall": "Stand",
     "market": "Markt"
@@ -74,7 +80,6 @@
   "similar": {
     "title": "{{name}} an anderen Ständen an diesem Wochenende",
     "note": "Gleiches Gemüse, anderes Feld und anderer Preis",
-    "here": "Sie sind hier",
     "view": "Ansehen"
   },
   "also": {

@@ -5,7 +5,11 @@
     "intro_one": "Reserve this week's produce from stalls at {{count}} market around Ho Chi Minh City. Pick up at the stall and pay the Farmer directly.",
     "intro_other": "Reserve this week's produce from stalls at {{count}} markets around Ho Chi Minh City. Pick up at the stall and pay the Farmer directly.",
     "browse": "Browse markets",
-    "sell": "Sell at MarketLink"
+    "sell": "Sell at MarketLink",
+    "livePill": "Market weekend: {{count}} locations open ({{from}} – {{to}})",
+    "lead": "Reserve morning-harvested produce directly from local family farms. Pick up fresh at your weekend market and pay the grower in person.",
+    "explore": "Explore fresh produce",
+    "sellPrompt": "Grow with us? Sell at MarketLink →"
   },
   "search": {
     "scope": "Search in",
@@ -23,33 +27,107 @@
     "overline": "Open this weekend",
     "title": "Where the stalls are",
     "seeAll_one": "See the market on the map",
-    "seeAll_other": "See all {{count}} markets on the map"
+    "seeAll_other": "See all {{count}} markets on the map",
+    "takingOrders": "Taking pre-orders",
+    "hours": "Locations & hours"
   },
   "nearby": {
     "title": "Markets near you",
     "note": "Distances from your saved address in Thảo Điền",
-    "noun": "markets"
+    "noun": "markets",
+    "eyebrow": "MARKET LOCATIONS",
+    "filterAll": "All",
+    "empty": "No markets found in this area."
   },
   "fresh": {
     "title": "Fresh this week",
     "all": "All products and filters",
-    "noun": "products"
+    "noun": "products",
+    "eyebrow": "FEATURED HARVEST",
+    "cutoff": "Pre-order cutoff: 8:00 PM this Thursday & Friday evening",
+    "filterLink": "Filter by price & category →",
+    "empty": "No fresh produce available right now."
+  },
+  "deals": {
+    "title": "Near-expiry deals",
+    "note": "Cheaper because they are past half their shelf life. Each card says until when they stay good.",
+    "all": "All deals"
   },
   "how": {
     "title": "How pre-ordering works",
     "steps": {
       "reserve": {
         "title": "Reserve before the cutoff",
-        "text": "Add products from one or more stalls, pick a pickup time in each stall's window, and place the order. Stock is held for you the moment you order."
+        "text": "Add products from one or more stalls, pick a pickup time in each stall's window, and place the order. Stock is held for you the moment you order.",
+        "highlight": "No upfront card payment required"
       },
       "confirm": {
         "title": "The Farmer confirms",
-        "text": "Each stall accepts or declines its own order. You get a notification either way, and you can edit or cancel until the stall's cutoff."
+        "text": "Each stall accepts or declines its own order. You get a notification either way, and you can edit or cancel until the stall's cutoff.",
+        "highlight": "Your items are 100% held for you"
       },
       "pickup": {
         "title": "Pick up and pay at the stall",
-        "text": "When the order is marked ready, go to the stall in your time slot, collect it and pay the Farmer directly. There is no online payment."
+        "text": "When the order is marked ready, go to the stall in your time slot, collect it and pay the Farmer directly. There is no online payment.",
+        "highlight": "Reusable shopping bags encouraged"
       }
+    },
+    "eyebrow": "HOW IT WORKS",
+    "desc": "Enjoy honest farm food every weekend without the lines or uncertainty"
+  },
+  "pillars": {
+    "fresh": {
+      "title": "100% Farm Fresh",
+      "desc": "Harvested the evening before or morning of market day for peak flavor and nutrition."
+    },
+    "direct": {
+      "title": "Direct From Growers",
+      "desc": "Zero middlemen markup. Honest prices for you, 100% earnings to farm families."
+    },
+    "guarantee": {
+      "title": "Pre-Order Guarantee",
+      "desc": "Secure your harvest in advance — no early morning rush or missing out on favorites."
+    },
+    "pay": {
+      "title": "Pay At The Stall",
+      "desc": "Inspect freshness firsthand, then pay with cash or QR code directly to the farmer."
     }
+  },
+  "categories": {
+    "eyebrow": "PRODUCE CATEGORIES",
+    "title": "Browse by category",
+    "desc": "Organized by seasonal harvest and farming style",
+    "all": "View all products →",
+    "items": {
+      "vegetables": "Vegetables",
+      "fruits": "Fruits",
+      "dairy": "Eggs & Dairy",
+      "grains": "Grains & Nuts",
+      "meat": "Meat & Poultry",
+      "seafood": "Seafood",
+      "mushrooms": "Mushrooms",
+      "baked": "Baked Goods"
+    },
+    "itemsCount": "{{count}} items"
+  },
+  "farmers": {
+    "eyebrow": "FEATURED GROWERS",
+    "title": "Meet your local farmers",
+    "desc": "The dedicated growers bringing clean, honest food to our weekend markets",
+    "all": "Explore all stalls →",
+    "grower": "Grower",
+    "at": "At",
+    "visit": "Visit stall →",
+    "empty": "No growers available at the moment.",
+    "noun": "stalls",
+    "emptyText": "Browse the markets to see who sells there."
+  },
+  "banner": {
+    "badge": "FOR LOCAL GROWERS & ARTISANS",
+    "free": "· Free to list on MarketLink",
+    "title": "Ready to bring your fresh harvest directly to city tables?",
+    "desc": "Receive pre-orders mid-week, plan your exact harvest yields, and eliminate unsold waste. Connect directly with thousands of families in Thảo Điền, Phú Mỹ Hưng, and Bình Thạnh.",
+    "apply": "Apply for a farm stall →",
+    "guidelines": "Read our produce quality & stall guidelines"
   }
 }

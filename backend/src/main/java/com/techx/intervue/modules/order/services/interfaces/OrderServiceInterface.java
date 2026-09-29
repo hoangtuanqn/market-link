@@ -18,7 +18,11 @@ import java.util.List;
  */
 public interface OrderServiceInterface {
 
-    /** Read-only: no locking, changes nothing. Each group's issues live in {@code problems}. */
+    /**
+     * Read-only: no locking, changes nothing. Each group's issues live in {@code problems}. A stall
+     * listed in {@code request.pickupDates()} is priced for that day (FR-125), the others for their
+     * nearest orderable day.
+     */
     List<OrderGroupPreviewResource> preview(Long userIdOrNull, PreviewRequest request);
 
     /**
@@ -95,4 +99,11 @@ public interface OrderServiceInterface {
      * Returns false when the order is gone or no longer ready.
      */
     boolean autoComplete(long orderId);
+
+    /**
+     * FR-072: an admin permanently deactivated this customer — cancel every order of theirs still
+     * {@code placed}/{@code accepted} (D-02 restores stock through the same door every other
+     * cancellation uses), and tell each Farmer why so they do not think the customer cancelled it.
+     */
+    void cancelAllForDeactivatedCustomer(long customerId, Long adminActorId);
 }

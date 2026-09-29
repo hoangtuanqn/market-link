@@ -53,5 +53,29 @@
     "title": "¿Cancelar este pedido?",
     "text": "{{stall}} recibe el aviso al momento y los productos vuelven a la venta.",
     "keep": "Mantener pedido"
+  },
+  "spoilage": {
+    "report": "Reportar producto dañado",
+    "reportLabel": "Reportar producto dañado: {{name}}",
+    "reported": "Producto reportado · {{status}}",
+    "title": "Reportar producto dañado",
+    "intro": "Cuéntale a {{stall}} qué le pasó a {{name}}. Cada artículo se puede reportar una sola vez, hasta 2 días después de su fecha límite.",
+    "day": "Se dañó el",
+    "problem": "Qué le pasó",
+    "note": "Descríbelo (opcional)",
+    "notePlaceholder": "Las hojas se pusieron negras tras 2 días en el refrigerador.",
+    "noteCount": "{{used}} de 500 caracteres.",
+    "photo": "Añadir una foto (opcional)",
+    "photoReplace": "Cambiar foto",
+    "photoRemove": "Quitar foto",
+    "photoAlt": "Foto del producto dañado",
+    "photoHint": "JPG, PNG o WebP, hasta 5 MB.",
+    "photoTooBig": "La foto debe pesar 5 MB o menos.",
+    "photoType": "Envía una foto JPG, PNG o WebP.",
+    "uploading": "Subiendo la foto",
+    "send": "Enviar reporte",
+    "needProblem": "Elige primero qué le pasó.",
+    "sent": "Reporte enviado. El puesto puede responder, y un admin podría revisarlo.",
+    "failed": "No pudimos enviar el reporte."
   }
 }

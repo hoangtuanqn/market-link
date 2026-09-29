@@ -28,8 +28,6 @@
     "unavailable": "Một hoặc nhiều sản phẩm không còn được bán nữa.",
     "stall_suspended": "Sạp này hiện không nhận đơn."
   },
-  "changeTime": "Đổi giờ nhận hàng ở {{stall}}",
-  "pickupDay": "Ngày nhận hàng",
   "pickupDayAt": "Ngày nhận hàng ở {{stall}}",
   "pickupTime": "Giờ nhận hàng · {{day}} {{date}} · khung {{from}} – {{to}}",
   "summary": {
@@ -52,5 +50,10 @@
     "title": "Sản phẩm trong giỏ",
     "text": "Nếu có sản phẩm không còn bán, hãy xoá nó ở đây để giỏ hàng tải lại.",
     "clear": "Xoá hết giỏ hàng"
+  },
+  "deal": {
+    "badge": "Giảm {{percent}}% hàng sắp hết hạn",
+    "onlyOn": "Giảm giá chỉ áp dụng cho ngày {{day}}.",
+    "dayGone": "Ngày giảm giá {{day}} không còn chọn được. Hãy chọn một ngày để xem giá của ngày đó."
   }
 }

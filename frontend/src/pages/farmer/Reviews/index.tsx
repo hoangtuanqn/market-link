@@ -1,19 +1,24 @@
 import { isAxiosError } from 'axios';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router';
 import ReviewApi, { toReviewCard, type ReviewDto } from '@/api-requests/review.requests';
 import StallApi from '@/api-requests/stall.requests';
 import Rating from '@/components/Rating';
+import AskAssistant from '@/components/assistant/AskAssistant';
 import ReviewCard from '@/components/ReviewCard';
 import { Button } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
+import Tabs from '@/components/ui/tabs';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
 import useRequest from '@/hooks/useRequest';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import QualityReports from './QualityReports';
 
 type Filter = 'all' | 'needs' | 'replied' | 'stall' | 'products';
+type Tab = 'reviews' | 'spoiled';
 
 /** Chip labels are `filter.<id>` in FarmerReviews.json. */
 const FILTERS: { id: Filter; countable?: boolean }[] = [
@@ -30,6 +35,11 @@ const NO_REVIEWS: ReviewDto[] = [];
 const FarmerReviewsPage = () => {
   const { t, i18n } = useTranslation('FarmerReviews');
   const { t: tc } = useTranslation();
+  // The tab lives in the address, so the spoilage notifications (/farmer/reviews?tab=spoiled) open it
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab: Tab = searchParams.get('tab') === 'spoiled' ? 'spoiled' : 'reviews';
+  const setTab = (next: Tab) => setSearchParams(next === 'spoiled' ? { tab: 'spoiled' } : {}, { replace: true });
+  const { t: tAssistant } = useTranslation('common');
   const rating = (n: number) =>
     new Intl.NumberFormat(i18n.language, { minimumFractionDigits: 1, maximumFractionDigits: 1 }).format(n);
 
@@ -91,7 +101,7 @@ const FarmerReviewsPage = () => {
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
         {profile && (
@@ -107,77 +117,97 @@ const FarmerReviewsPage = () => {
         )}
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {FILTERS.map((it) => (
-          <Chip key={it.id} pressed={filter === it.id} onClick={() => setFilter(it.id)}>
-            {t(`filter.${it.id}`)}{' '}
-            {it.countable && <span className="text-[12px] tabular-nums opacity-80">{counts[it.id]}</span>}
-          </Chip>
-        ))}
-      </div>
+      <Tabs
+        label={t('tabs.label')}
+        value={tab}
+        onChange={(id) => setTab(id as Tab)}
+        tabs={[
+          { id: 'reviews', label: t('tabs.reviews') },
+          { id: 'spoiled', label: t('tabs.spoiled') },
+        ]}
+      />
 
-      {reviewsLoad.kind === 'loading' || profileLoad.kind === 'loading' ? (
-        <MarketCardSkeleton count={2} />
-      ) : reviewsLoad.kind === 'error' ? (
-        <LoadError noun={t('noun')} onRetry={retryReviews} />
-      ) : shown.length ? (
-        <div className="flex flex-col gap-4">
-          {shown.map((r) => (
-            <ReviewCard
-              key={r.id}
-              author={r.author}
-              date={r.date}
-              target={r.target}
-              rating={r.rating}
-              text={r.text}
-              reply={r.reply}
-              fluid
-              actions={
-                r.reply || openReply === r.id ? undefined : (
-                  <Button variant="secondary" size="sm" onClick={() => setOpenReply(r.id)}>
-                    {t('action.reply')}
-                  </Button>
-                )
-              }
-            >
-              {!r.reply && openReply === r.id && (
-                <form
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    void postReply(r.id, r.author);
-                  }}
-                  className="mt-2 flex flex-col gap-2"
-                >
-                  <div className="flex flex-col gap-1.5">
-                    <label htmlFor={`reply${r.id}`} className="text-small font-bold">
-                      {t('form.label')}
-                    </label>
-                    <textarea
-                      id={`reply${r.id}`}
-                      value={drafts[r.id] ?? ''}
-                      onChange={(e) => setDrafts((prev) => ({ ...prev, [r.id]: e.target.value }))}
-                      placeholder={t('form.placeholder', { name: r.author })}
-                      className="border-line-strong bg-surface-raised text-body min-h-18 rounded-sm border-[1.5px] p-3"
-                    />
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    <Button type="submit" size="sm" disabled={posting === r.id}>
-                      {t('action.post')}
-                    </Button>
-                    <Button type="button" variant="ghost" size="sm" onClick={() => setOpenReply(null)}>
-                      {tc('actions.cancel')}
-                    </Button>
-                  </div>
-                </form>
-              )}
-            </ReviewCard>
-          ))}
-        </div>
+      {tab === 'spoiled' ? (
+        <QualityReports />
       ) : (
-        <DataState title={t('empty.title')} text={t('empty.text')} />
-      )}
+        <>
+          <div className="flex flex-wrap gap-2">
+            {FILTERS.map((it) => (
+              <Chip key={it.id} pressed={filter === it.id} onClick={() => setFilter(it.id)}>
+                {t(`filter.${it.id}`)}{' '}
+                {it.countable && <span className="text-[12px] tabular-nums opacity-80">{counts[it.id]}</span>}
+              </Chip>
+            ))}
+          </div>
 
-      <p className="text-caption text-ink-muted">{t('note')}</p>
+          {reviewsLoad.kind === 'loading' || profileLoad.kind === 'loading' ? (
+            <MarketCardSkeleton count={2} />
+          ) : reviewsLoad.kind === 'error' ? (
+            <LoadError noun={t('noun')} onRetry={retryReviews} />
+          ) : shown.length ? (
+            <div className="flex flex-col gap-4">
+              {shown.map((r) => (
+                <ReviewCard
+                  key={r.id}
+                  author={r.author}
+                  date={r.date}
+                  target={r.target}
+                  rating={r.rating}
+                  text={r.text}
+                  reply={r.reply}
+                  fluid
+                  actions={
+                    r.reply || openReply === r.id ? undefined : (
+                      <>
+                        <Button variant="secondary" size="sm" onClick={() => setOpenReply(r.id)}>
+                          {t('action.reply')}
+                        </Button>
+                        {/* FR-093: the assistant drafts the reply; the Farmer still types it into the box and posts it. */}
+                        <AskAssistant question={tAssistant('assistant.ask.review', { rating: r.rating })} />
+                      </>
+                    )
+                  }
+                >
+                  {!r.reply && openReply === r.id && (
+                    <form
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        void postReply(r.id, r.author);
+                      }}
+                      className="mt-2 flex flex-col gap-2"
+                    >
+                      <div className="flex flex-col gap-1.5">
+                        <label htmlFor={`reply${r.id}`} className="text-small font-bold">
+                          {t('form.label')}
+                        </label>
+                        <textarea
+                          id={`reply${r.id}`}
+                          value={drafts[r.id] ?? ''}
+                          onChange={(e) => setDrafts((prev) => ({ ...prev, [r.id]: e.target.value }))}
+                          placeholder={t('form.placeholder', { name: r.author })}
+                          className="border-line-strong bg-surface-raised text-body min-h-18 rounded-sm border-[1.5px] p-3"
+                        />
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        <Button type="submit" size="sm" disabled={posting === r.id}>
+                          {t('action.post')}
+                        </Button>
+                        <Button type="button" variant="ghost" size="sm" onClick={() => setOpenReply(null)}>
+                          {tc('actions.cancel')}
+                        </Button>
+                      </div>
+                    </form>
+                  )}
+                </ReviewCard>
+              ))}
+            </div>
+          ) : (
+            <DataState title={t('empty.title')} text={t('empty.text')} />
+          )}
+
+          <p className="text-caption text-ink-muted">{t('note')}</p>
+        </>
+      )}
     </div>
   );
 };

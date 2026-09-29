@@ -3,20 +3,23 @@ import { Trans, useTranslation } from 'react-i18next';
 import type { TFunction } from 'i18next';
 import { Link, useNavigate } from 'react-router';
 import AuthApi from '@/api-requests/auth.requests';
+import AddressFields from '@/components/address/AddressFields';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Field } from '@/components/ui/input';
+import { VERIFY_EMAIL_PATH } from '@/constants/nav';
+import { addressErrorsFrom, cleanAddress, validateAddress } from '@/lib/address';
+import SignupStore from '@/lib/signup';
+import { emptyAddress, type AddressErrors } from '@/types/address.types';
 import type { RegisterInput } from '@/types/auth.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
-import Session from '@/utils/session';
+import { PHONE_REGEX } from '@/utils/validation';
 
-type FormErrors = Partial<Record<keyof RegisterInput, string>>;
+type FormErrors = Partial<Record<Exclude<keyof RegisterInput, 'addressParts'>, string>>;
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-/** Vietnamese mobile: 10 digits, starting with 03/05/07/08/09 (the backend's RegisterRules.PHONE_REGEX). */
-const PHONE_REGEX = /^0[35789][0-9]{8}$/;
 const PASSWORD_MIN = 6;
 const PASSWORD_MAX = 72;
 
@@ -24,17 +27,16 @@ const EMPTY_FORM: RegisterInput = {
   fullName: '',
   phone: '',
   email: '',
-  address: '',
+  addressParts: emptyAddress(),
   password: '',
   confirmPassword: '',
 };
 
-/** Client-side validation, same rules as the backend's CustomerRegisterRequest. */
+/** Client-side validation, same rules as the backend's CustomerRegisterRequest; the address has its own (lib/address). */
 const validate = (form: RegisterInput, t: TFunction<'RegisterCustomer'>): FormErrors => {
   const errors: FormErrors = {};
   const fullName = form.fullName.trim();
   const email = form.email.trim();
-  const address = form.address.trim();
 
   if (!fullName) errors.fullName = t('errors.fullNameRequired');
   else if (fullName.length > 100) errors.fullName = t('errors.fullNameMax', { max: 100 });
@@ -45,9 +47,6 @@ const validate = (form: RegisterInput, t: TFunction<'RegisterCustomer'>): FormEr
   if (!email) errors.email = t('errors.emailRequired');
   else if (!EMAIL_REGEX.test(email)) errors.email = t('errors.emailInvalid');
   else if (email.length > 100) errors.email = t('errors.emailMax', { max: 100 });
-
-  if (!address) errors.address = t('errors.addressRequired');
-  else if (address.length > 255) errors.address = t('errors.addressMax', { max: 255 });
 
   if (!form.password) errors.password = t('errors.passwordRequired');
   else if (form.password.length < PASSWORD_MIN || form.password.length > PASSWORD_MAX)
@@ -61,41 +60,66 @@ const validate = (form: RegisterInput, t: TFunction<'RegisterCustomer'>): FormEr
 
 /** FR-001 — Customer registration. */
 const RegisterCustomerPage = () => {
-  const { t } = useTranslation('RegisterCustomer');
+  const { t, i18n } = useTranslation('RegisterCustomer');
   const navigate = useNavigate();
-  const [form, setForm] = useState<RegisterInput>(EMPTY_FORM);
+  // After "Change email" on the code screen the form comes back filled in (passwords are never kept)
+  const [form, setForm] = useState<RegisterInput>(() => ({ ...EMPTY_FORM, ...SignupStore.getDraft() }));
+  const [website, setWebsite] = useState('');
   const [errors, setErrors] = useState<FormErrors>({});
+  const [addressErrors, setAddressErrors] = useState<AddressErrors>({});
   const [accepted, setAccepted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const onChange = (key: keyof RegisterInput) => (e: ChangeEvent<HTMLInputElement>) =>
+  const onChange = (key: keyof FormErrors) => (e: ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
     const clientErrors = validate(form, t);
+    const clientAddressErrors = validateAddress(form.addressParts);
     setErrors(clientErrors);
-    if (Object.keys(clientErrors).length > 0) return;
+    setAddressErrors(clientAddressErrors);
+    if (Object.keys(clientErrors).length > 0 || Object.keys(clientAddressErrors).length > 0) return;
 
     setIsSubmitting(true);
     try {
-      const response = await AuthApi.register({
+      const payload = {
         ...form,
         fullName: form.fullName.trim(),
         phone: form.phone.trim(),
         email: form.email.trim(),
-        address: form.address.trim(),
+        addressParts: cleanAddress(form.addressParts),
+      };
+      // The same address again from this tab: send its token so the waiting sign-up is corrected, not replaced
+      const previous = SignupStore.getPending();
+      const response = await AuthApi.register({
+        ...payload,
+        language: i18n.resolvedLanguage ?? i18n.language,
+        website,
+        signupToken: previous?.email === payload.email.toLowerCase() ? previous.token : undefined,
       });
 
-      // The backend signs in right after sign-up (the refresh token lives in an HttpOnly cookie)
-      Session.save(response.data);
-
-      Notification.success({ text: response.message || t('toast.created') });
-      navigate('/');
+      // FR-009: no account yet — it is created once the emailed code is entered
+      SignupStore.savePending(response.data);
+      SignupStore.saveDraft({
+        fullName: payload.fullName,
+        phone: payload.phone,
+        email: payload.email,
+        addressParts: payload.addressParts,
+      });
+      navigate(VERIFY_EMAIL_PATH);
     } catch (error) {
+      if (Helper.getErrorCode(error) === 'RATE_LIMITED') {
+        // FR-009: too many codes for this address or network, or a sign-up from another tab is still waiting
+        const minutes = Math.max(1, Math.ceil((Helper.getRetryAfterSeconds(error) ?? 60) / 60));
+        Notification.error({ text: t('errors.tooMany', { count: minutes }) });
+        return;
+      }
       // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT: per-field errors (email, phone, confirmPassword…) shown under the input
-      setErrors(Helper.getFieldErrors(error));
+      const fieldErrors = Helper.getFieldErrors(error);
+      setErrors(fieldErrors);
+      setAddressErrors(addressErrorsFrom(fieldErrors));
       Notification.error({
         text: Helper.getErrorMessage(error, t('toast.failed')),
       });
@@ -105,7 +129,7 @@ const RegisterCustomerPage = () => {
   };
 
   return (
-    <Card className="mx-auto my-8 w-full max-w-160 p-4 md:p-8">
+    <Card className="mx-auto my-4 w-full max-w-160 p-4 sm:p-6 md:my-8 md:p-8">
       <form noValidate onSubmit={onSubmit} className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <h1 className="font-hand text-h1">{t('title')}</h1>
@@ -148,17 +172,7 @@ const RegisterCustomerPage = () => {
             onChange={onChange('email')}
             error={errors.email}
             disabled={isSubmitting}
-          />
-          <Field
-            id="address"
-            label={t('fields.address')}
-            required
-            autoComplete="street-address"
-            placeholder={t('fields.addressPlaceholder')}
-            value={form.address}
-            onChange={onChange('address')}
-            error={errors.address}
-            disabled={isSubmitting}
+            containerClassName="md:col-span-2"
           />
           <Field
             id="password"
@@ -182,6 +196,28 @@ const RegisterCustomerPage = () => {
             onChange={onChange('confirmPassword')}
             error={errors.confirmPassword}
             disabled={isSubmitting}
+          />
+        </div>
+
+        <AddressFields
+          idPrefix="address"
+          value={form.addressParts}
+          onChange={(addressParts) => setForm((prev) => ({ ...prev, addressParts }))}
+          errors={addressErrors}
+          disabled={isSubmitting}
+        />
+
+        {/* FR-009: a trap for form-filling bots; people never see or reach it */}
+        <div aria-hidden="true" className="sr-only">
+          <label htmlFor="website">{t('honeypot')}</label>
+          <input
+            id="website"
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
           />
         </div>
 

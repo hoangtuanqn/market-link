@@ -26,27 +26,49 @@
     "text": "<b>{{price}}</b> auf dem Etikett · <b>{{left}}</b> übrig · wer eines bestellt, sieht <b>{{one}}</b>"
   },
   "price": {
-    "label": "Preis in ₫",
+    "label": "Preis in $",
     "hint": "Angezeigt als {{price}}."
   },
   "qty": {
     "label": "Verfügbare Menge diese Woche",
-    "error": "Die Menge muss 0 oder mehr sein. Nutzen Sie Ausverkauft, wenn nichts mehr da ist."
+    "error": "Die Menge muss 0 oder mehr sein. Nutzen Sie Ausverkauft, wenn nichts mehr da ist.",
+    "hint": "Nur ein Richtwert. Kunden bestellen aus Ihrem Wochenbestand, den Sie nach dem Speichern festlegen."
   },
   "shelfLife": {
-    "label": "Shelf life (days)",
-    "hint": "This category is usually {{min}}–{{max}} days.",
-    "error": "Enter a whole number of 1 or more.",
-    "warningTitle": "Outside the usual range",
-    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+    "label": "Haltbarkeit",
+    "group": "Lagerungsgruppe",
+    "pickGroup": "Gruppe wählen",
+    "examples": "Zum Beispiel: {{examples}}",
+    "storage": "Art der Lagerung",
+    "suggested_one": "empfohlen {{count}} Tag",
+    "suggested_other": "empfohlen {{count}} Tage",
+    "days_one": "{{count}} Tag",
+    "days_other": "{{count}} Tage",
+    "decrease": "Einen Tag weniger",
+    "increase": "Einen Tag mehr",
+    "peers_one": "Andere Stände setzen meist {{count}} Tag an",
+    "peers_other": "Andere Stände setzen meist {{count}} Tage an",
+    "shorter": "Kürzer als empfohlen. Kunden sehen genau diese Zahl.",
+    "longerTitle_one": "{{count}} Tag länger als empfohlen ({{suggested}}, {{storage}})",
+    "longerTitle_other": "{{count}} Tage länger als empfohlen ({{suggested}}, {{storage}})",
+    "ackLabel": "Ich sichere zu, dass es bei dieser Lagerung ({{storage}}) noch {{days}} Tage gut bleibt. Meldet ein Kunde vorher Verderb, kann der Admin dies dem Stand als Verstoß anrechnen.",
+    "ackRequired": "Kreuzen Sie das Versprechen an, um eine längere Haltbarkeit zu speichern.",
+    "tooLong_one": "Höchstens {{count}} Tag für diese Gruppe.",
+    "tooLong_other": "Höchstens {{count}} Tage für diese Gruppe.",
+    "locked": "Ihr Stand kann bis {{date}} nicht über die Empfehlung hinausgehen: 3 Haltbarkeitsverstöße in 90 Tagen erreicht.",
+    "overLock_one": "Ihr Stand kann die Empfehlung derzeit nicht überschreiten. Reduzieren Sie auf {{count}} Tag.",
+    "overLock_other": "Ihr Stand kann die Empfehlung derzeit nicht überschreiten. Reduzieren Sie auf {{count}} Tage.",
+    "saveBlocked": "Kreuzen Sie das Versprechen oben an, um zu speichern.",
+    "saveNeedsGroup": "Wählen Sie oben eine Lagerungsgruppe, um zu speichern.",
+    "saveNeedsGroups": "Laden Sie die Lagerungsgruppen oben neu, um zu speichern.",
+    "loading": "Lagerungsgruppen werden geladen",
+    "fallback": "Diese Kategorie hat noch keine Lagerungsgruppen. Sie hält sich meist {{min}}–{{max}} Tage.",
+    "groupGone": "Die bisherige Gruppe dieses Produkts wird nicht mehr angeboten. Wählen Sie eine andere.",
+    "noun": "Lagerungsgruppen"
   },
   "desc": {
     "label": "Beschreibung",
     "hint": "Wird auf der Produktseite angezeigt. Beschreiben Sie, wie es angebaut wird und wie man es lagert."
-  },
-  "flag": {
-    "label": "Kurzer Hinweis auf der Karte",
-    "hint": "Optional, handgeschrieben auf dem Etikett: „Heute frisch“, „Um 5 Uhr gebacken“."
   },
   "status": {
     "label": "Status",
@@ -62,7 +84,11 @@
     "uploading": "Wird hochgeladen",
     "uploadInProgress": "Warten Sie, bis das Foto hochgeladen ist, bevor Sie speichern.",
     "alt": "Produktfoto",
-    "hint": "JPEG, PNG oder WEBP, bis 8 MB. Nah, bei Tageslicht, auf Holz oder Papier."
+    "hint": "JPEG, PNG oder WEBP, bis 8 MB. Nah, bei Tageslicht, auf Holz oder Papier.",
+    "error": {
+      "tooLarge": "Das Foto darf höchstens 8 MB groß sein.",
+      "type": "Fotos müssen JPEG, PNG oder WEBP sein."
+    }
   },
   "save": "Produkt speichern",
   "add": "Produkt hinzufügen",
@@ -77,7 +103,8 @@
     "saved": "Gespeichert",
     "savedText": "{{name}} gespeichert.",
     "product": "Produkt",
-    "deletedText": "{{name}} gelöscht."
+    "deletedText": "{{name}} gelöscht.",
+    "createdText": "{{name}} gespeichert. Legen Sie fest, wie viel Sie an jedem Wochentag mitbringen, damit Kunden bestellen können."
   },
   "error": {
     "noun": "das Produkt"
@@ -88,6 +115,6 @@
   },
   "errors": {
     "required": "Dieses Feld ist erforderlich.",
-    "price": "Der Preis muss 0 oder höher sein."
+    "price": "Der Preis muss größer als 0 sein."
   }
 }

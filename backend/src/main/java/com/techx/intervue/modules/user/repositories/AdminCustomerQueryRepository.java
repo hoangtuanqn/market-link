@@ -24,7 +24,7 @@ public class AdminCustomerQueryRepository {
 
     private static final String COLUMNS =
             """
-            SELECT u.id, u.full_name, u.email, u.phone, u.status, u.created_at,
+            SELECT u.id, u.full_name, u.email, u.phone, u.status, u.created_at, u.image AS avatar_url,
                    (SELECT COUNT(*) FROM orders o WHERE o.customer_id = u.id) AS order_count
             FROM users u
             WHERE u.role = 'customer'
@@ -94,6 +94,7 @@ public class AdminCustomerQueryRepository {
                 rs.getString("phone"),
                 rs.getString("status"),
                 rs.getLong("order_count"),
-                rs.getTimestamp("created_at").toInstant().toString());
+                rs.getTimestamp("created_at").toInstant().toString(),
+                rs.getString("avatar_url"));
     }
 }

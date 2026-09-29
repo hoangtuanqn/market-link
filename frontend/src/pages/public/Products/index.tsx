@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
+import { useSearchParams } from 'react-router';
 import CatalogApi from '@/api-requests/catalog.requests';
 import ProductApi, { type ProductListParams } from '@/api-requests/product.requests';
 import MarketCardSkeleton from '@/components/MarketCardSkeleton';
@@ -10,22 +11,11 @@ import { DataState, LoadError } from '@/components/ui/data-state';
 import { SelectField } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
 import useRequest from '@/hooks/useRequest';
-import { dayName, vnd } from '@/lib/format';
+import { dayName, firstOpenDay, money, nextSevenDays } from '@/lib/format';
+import { bandOf, HIGH, LOW, PRICE_BANDS, type PriceBand } from '@/lib/priceBands';
 import type { MarketType } from '@/types/market.types';
 
 const PAGE_SIZE = 12;
-/** Monday first; 0 = Sunday. */
-const DOW = [1, 2, 3, 4, 5, 6, 0];
-const LOW = 30000;
-const HIGH = 80000;
-/** Price bands become `minPrice`/`maxPrice` on the request (contract §5); prices are whole đồng. */
-const PRICE_BANDS = [
-  { value: 'any', min: undefined, max: undefined },
-  { value: 'low', min: undefined, max: LOW - 1 },
-  { value: 'mid', min: LOW, max: HIGH },
-  { value: 'high', min: HIGH + 1, max: undefined },
-] as const;
-type PriceBand = (typeof PRICE_BANDS)[number]['value'];
 /** Chip label → the server's whitelist value. */
 const SORTS = { newest: 'newest', priceAsc: 'price_asc', priceDesc: 'price_desc', rating: 'rating' } as const;
 type SortKey = keyof typeof SORTS;
@@ -36,8 +26,21 @@ const NO_MARKETS: MarketType[] = [];
 /** FR-020 FR-021 — browse products by category, price, market and day. Filtering and paging happen on the server. */
 const ProductsPage = () => {
   const { t } = useTranslation('Products');
-  const [day, setDay] = useState(6);
-  const [categoryId, setCategoryId] = useState<number | null>(null);
+  const [picked, setPicked] = useState<number | null>(null);
+  // The category lives in the address, so the Home category tiles and the product breadcrumb open it filtered
+  const [searchParams, setSearchParams] = useSearchParams();
+  const categoryParam = Number(searchParams.get('category'));
+  const categoryId = Number.isInteger(categoryParam) && categoryParam > 0 ? categoryParam : null;
+  const setCategoryId = (next: number | null) =>
+    setSearchParams(
+      (current) => {
+        const out = new URLSearchParams(current);
+        if (next === null) out.delete('category');
+        else out.set('category', String(next));
+        return out;
+      },
+      { replace: true },
+    );
   const [priceBand, setPriceBand] = useState<PriceBand>('any');
   const [marketFilter, setMarketFilter] = useState(ALL_MARKETS);
   const [inStockOnly, setInStockOnly] = useState(true);
@@ -51,7 +54,14 @@ const ProductsPage = () => {
   const markets = marketsLoad.kind === 'ready' ? marketsLoad.data : NO_MARKETS;
   const categories = categoriesLoad.kind === 'ready' ? categoriesLoad.data : [];
 
-  const band = PRICE_BANDS.find((b) => b.value === priceBand)!;
+  /** A day no market opens on is struck through: nothing can be on sale then. */
+  const anyMarketOn = (dow: number) => marketsLoad.kind !== 'ready' || markets.some((m) => m.days.includes(dow));
+  // The coming week from today, today first (FR-021). Until the visitor picks one, the day is the first from today
+  // that some market opens on — today whenever any market is open today.
+  const [week] = useState(() => nextSevenDays());
+  const day = picked ?? firstOpenDay(anyMarketOn, week[0].date);
+
+  const band = bandOf(priceBand);
   const params: ProductListParams = {
     day,
     categoryId: categoryId ?? undefined,
@@ -72,11 +82,8 @@ const ProductsPage = () => {
   const currentPage = Math.min(page, pages);
   const from = (currentPage - 1) * PAGE_SIZE;
 
-  /** A day no market opens on is struck through: nothing can be on sale then. */
-  const anyMarketOn = (dow: number) => marketsLoad.kind !== 'ready' || markets.some((m) => m.days.includes(dow));
-
   const clearAll = () => {
-    setDay(6);
+    setPicked(null);
     setCategoryId(null);
     setPriceBand('any');
     setMarketFilter(ALL_MARKETS);
@@ -87,7 +94,7 @@ const ProductsPage = () => {
 
   const stallsSelling = new Set(pageItems.map((p) => p.farmerId)).size;
   const dayLabel = dayName(day, 'long');
-  const bandLabel = (value: PriceBand) => t(`price.${value}`, { low: vnd(LOW), high: vnd(HIGH) });
+  const bandLabel = (value: PriceBand) => t(`price.${value}`, { low: money(LOW), high: money(HIGH) });
 
   return (
     <div className="flex flex-col gap-8">
@@ -111,15 +118,15 @@ const ProductsPage = () => {
 
           <fieldset className="m-0 flex flex-col gap-2 border-0 p-0">
             <legend className="text-small mb-2 p-0 font-bold">{t('filters.day')}</legend>
-            {DOW.map((d) => (
-              <label key={d} className="flex items-center gap-2 text-[15px]">
+            {week.map(({ dow: d }) => (
+              <label key={d} className="flex min-h-11 items-center gap-2 text-[15px]">
                 <input
                   type="radio"
                   name="day"
                   disabled={!anyMarketOn(d)}
                   checked={day === d}
                   onChange={() => {
-                    setDay(d);
+                    setPicked(d);
                     setPage(1);
                   }}
                   className="accent-brand size-4.5"
@@ -139,7 +146,7 @@ const ProductsPage = () => {
                   key={c.id}
                   pressed={categoryId === c.id}
                   onClick={() => {
-                    setCategoryId((current) => (current === c.id ? null : c.id));
+                    setCategoryId(categoryId === c.id ? null : c.id);
                     setPage(1);
                   }}
                 >

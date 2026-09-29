@@ -75,6 +75,14 @@ class ProductAvailabilityResolverTest {
         return t;
     }
 
+    private static Product product() {
+        Product p = new Product();
+        p.setId(PRODUCT_ID);
+        p.setFarmerId(FARMER_ID);
+        p.setPrice(new BigDecimal("12000"));
+        return p;
+    }
+
     @Test
     void candidateDatesAreTheMatchingWeekdaysInsideTheLookaheadNearestFirst() {
         // TODAY (26/09) is a Saturday = 6; the template only sells on Monday = 1, 2 days away.
@@ -226,5 +234,140 @@ class ProductAvailabilityResolverTest {
                 .thenReturn(List.of(template(6, 30, null)));
 
         assertThat(resolver.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000")))).isEmpty();
+    }
+
+    /** FR-124: the nearest day on a near-expiry deal reports the deal price and the batch. */
+    @Test
+    void resolveCarriesTheDealOfTheDay() {
+        LocalDate monday = LocalDate.of(2026, 9, 28);
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(1, 40, null)));
+        ProductDailyStock onDeal = new ProductDailyStock();
+        onDeal.setQuantityAvailable(12);
+        onDeal.setUnitPrice(new BigDecimal("0.60"));
+        onDeal.startDeal(
+                new BigDecimal("0.48"), 20, LocalDate.of(2026, 9, 24), LocalDate.of(2026, 9, 30));
+        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, monday))
+                .thenReturn(Optional.of(onDeal));
+
+        ProductAvailabilityResolver.Availability a =
+                resolver.resolve(Map.of(PRODUCT_ID, new BigDecimal("0.60"))).get(PRODUCT_ID);
+
+        assertThat(a.price()).isEqualByComparingTo("0.48");
+        assertThat(a.deal().listPrice()).isEqualByComparingTo("0.60");
+        assertThat(a.deal().discountPercent()).isEqualTo(20);
+        assertThat(a.deal().packedOn()).isEqualTo(LocalDate.of(2026, 9, 24));
+        assertThat(a.deal().bestBefore()).isEqualTo(LocalDate.of(2026, 9, 30));
+    }
+
+    /**
+     * The days the deal dialog offers: every orderable day of the lookahead the product is sold on,
+     * nearest first, each with its own numbers.
+     */
+    @Test
+    void upcomingListsEveryOrderableDayNearestFirst() {
+        // TODAY (26/09) is a Saturday = 6; the product sells on Saturday (30) and Monday (20)
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(6, 30, null), template(1, 20, null)));
+        when(dailyStock.findByProductIdAndStockDate(any(), any())).thenReturn(Optional.empty());
+        // Today is past its cutoff; Mon 28/09, Sat 03/10 and Mon 05/10 still take orders
+        openDates(Set.of(TODAY.plusDays(2), TODAY.plusDays(7), TODAY.plusDays(9)));
+
+        List<ProductAvailabilityResolver.Availability> days = resolver.upcoming(product());
+
+        assertThat(days)
+                .extracting(ProductAvailabilityResolver.Availability::date)
+                .containsExactly(TODAY.plusDays(2), TODAY.plusDays(7), TODAY.plusDays(9));
+        assertThat(days)
+                .extracting(ProductAvailabilityResolver.Availability::quantity)
+                .containsExactly(20, 30, 20);
+        assertThat(days.getFirst().deal()).isNull();
+    }
+
+    /** FR-125: the cart asks for the one day the customer picked, deal included. */
+    @Test
+    void onDateReadsTheRowOfThatDayWithItsDeal() {
+        LocalDate saturday = LocalDate.of(2026, 10, 3);
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(6, 30, null)));
+        ProductDailyStock onDeal = new ProductDailyStock();
+        onDeal.setQuantityAvailable(12);
+        onDeal.setUnitPrice(new BigDecimal("0.60"));
+        onDeal.startDeal(
+                new BigDecimal("0.36"), 40, LocalDate.of(2026, 9, 25), LocalDate.of(2026, 10, 4));
+        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, saturday))
+                .thenReturn(Optional.of(onDeal));
+
+        ProductAvailabilityResolver.Availability a =
+                resolver.onDate(FARMER_ID, Map.of(PRODUCT_ID, new BigDecimal("0.60")), saturday)
+                        .get(PRODUCT_ID);
+
+        assertThat(a.date()).isEqualTo(saturday);
+        assertThat(a.quantity()).isEqualTo(12);
+        assertThat(a.price()).isEqualByComparingTo("0.36");
+        assertThat(a.deal().discountPercent()).isEqualTo(40);
+    }
+
+    @Test
+    void onDateFallsBackToTheTemplateOfThatWeekday() {
+        LocalDate monday = LocalDate.of(2026, 9, 28);
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(1, 20, new BigDecimal("13000"))));
+        when(dailyStock.findByProductIdAndStockDate(any(), any())).thenReturn(Optional.empty());
+
+        ProductAvailabilityResolver.Availability a =
+                resolver.onDate(FARMER_ID, Map.of(PRODUCT_ID, new BigDecimal("12000")), monday)
+                        .get(PRODUCT_ID);
+
+        assertThat(a.quantity()).isEqualTo(20);
+        assertThat(a.price()).isEqualByComparingTo("13000");
+        assertThat(a.deal()).isNull();
+    }
+
+    /** Tuesday 29/09 has no row and no template: the product is not sold that day. */
+    @Test
+    void onDateLeavesOutAProductNotSoldThatDay() {
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(1, 20, null)));
+        when(dailyStock.findByProductIdAndStockDate(any(), any())).thenReturn(Optional.empty());
+
+        assertThat(
+                        resolver.onDate(
+                                FARMER_ID,
+                                Map.of(PRODUCT_ID, new BigDecimal("12000")),
+                                LocalDate.of(2026, 9, 29)))
+                .isEmpty();
+    }
+
+    /**
+     * FR-125 fix round 1: the picked day itself may not be orderable (full, closed, past its
+     * cutoff) even though it is inside the window and the product has a template for it — onDate
+     * must apply the same "orderable" gate resolve() does, not just look up the row/template.
+     */
+    @Test
+    void onDateReturnsNothingWhenTheDayHasNoOrderableSlot() {
+        LocalDate monday = LocalDate.of(2026, 9, 28);
+        openDates(Set.of()); // no farmer has an orderable date at all
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(1, 20, null)));
+
+        assertThat(resolver.onDate(FARMER_ID, Map.of(PRODUCT_ID, new BigDecimal("12000")), monday))
+                .isEmpty();
+    }
+
+    /**
+     * Even a day the stall could in principle open a slot for is not one resolve() would ever offer
+     * once it falls outside the 14-day lookahead — onDate must refuse it the same way, before even
+     * asking slots (the open set here would say yes if onDate asked).
+     */
+    @Test
+    void onDateReturnsNothingForADayBeyondTheLookaheadWindow() {
+        LocalDate beyond = TODAY.plusDays(ProductAvailabilityResolver.LOOKAHEAD_DAYS);
+        openDates(Set.of(beyond));
+        when(templates.findByProductIdAndActiveTrue(PRODUCT_ID))
+                .thenReturn(List.of(template(beyond.getDayOfWeek().getValue() % 7, 20, null)));
+
+        assertThat(resolver.onDate(FARMER_ID, Map.of(PRODUCT_ID, new BigDecimal("12000")), beyond))
+                .isEmpty();
     }
 }

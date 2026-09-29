@@ -29,5 +29,29 @@
     "title": "Chưa có đánh giá",
     "text": "Khách có thể đánh giá sạp và món đã mua khi đơn hàng hoàn tất (D-10)."
   },
-  "note": "Sạp không thể xoá hay sửa đánh giá. Trả lời một lần — nó sẽ ở lại cùng đánh giá."
+  "note": "Sạp không thể xoá hay sửa đánh giá. Trả lời một lần — nó sẽ ở lại cùng đánh giá.",
+  "tabs": {
+    "label": "Đánh giá và báo hàng hư",
+    "reviews": "Đánh giá",
+    "spoiled": "Báo hàng hư"
+  },
+  "spoiled": {
+    "intro": "Khách có thể báo hàng bị hư sau khi nhận. Hãy phản hồi những gì bạn biết; admin sẽ quyết định.",
+    "noun": "báo cáo hàng hư",
+    "emptyTitle": "Chưa có báo hàng hư",
+    "emptyText": "Khi khách báo hư món trong đơn của sạp, báo cáo sẽ hiện ở đây để bạn phản hồi.",
+    "line": "Đơn {{code}} · {{customer}}",
+    "dates": "Nhận {{pickup}} · dùng tốt đến {{bestBefore}} · hư ngày {{spoiled}} ({{when}})",
+    "photoAlt": "Ảnh của khách",
+    "replyLabel": "Phản hồi của bạn, gửi admin",
+    "replyPlaceholder": "Hàng được bảo quản thế nào, lúc đóng gói bạn thấy gì.",
+    "save": "Lưu phản hồi",
+    "saved": "Đã lưu phản hồi.",
+    "yourReply": "Phản hồi của bạn: {{text}}",
+    "decisionNote": "Ghi chú của admin: {{text}}",
+    "alreadyDecided": "Admin đã xử lý báo cáo này.",
+    "strikesText": "Báo hư được xác nhận trên món kéo dài hạn tính là một lỗi. 3 lỗi trong 90 ngày thì bị khoá kéo dài hạn dùng.",
+    "lockTitle": "Sạp bị khoá kéo dài hạn dùng tới {{date}}",
+    "lockText": "Tới lúc đó, sản phẩm của sạp chỉ dùng được hạn gợi ý."
+  }
 }

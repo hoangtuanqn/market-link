@@ -8,12 +8,17 @@
   },
   "tabsLabel": "Petani menurut status",
   "status": {
+    "all": "Semua",
     "pending": "Menunggu persetujuan",
     "approved": "Disetujui",
     "suspended": "Ditangguhkan",
     "rejected": "Ditolak"
   },
   "empty": {
+    "all": {
+      "title": "Belum ada petani",
+      "text": "Pendaftaran petani akan muncul di sini."
+    },
     "pending": {
       "title": "Tidak ada pendaftaran yang menunggu",
       "text": "Pendaftaran petani baru masuk ke sini untuk ditinjau sebelum mereka bisa memasang produk."
@@ -55,8 +60,7 @@
     "reason": "Alasan yang akan dilihat petani",
     "confirm": "Tolak pendaftaran",
     "placeholder": "Tulis apa yang harus diperbaiki agar lapak ini disetujui.",
-    "hint": "{{used}} dari {{max}} karakter. Pelamar membaca kalimat ini apa adanya.",
-    "required": "Tulis alasan yang akan dibaca pelamar.",
+    "required": "Pilih alasan atau tulis alasan yang akan dibaca pendaftar.",
     "tooLong": "Alasan maksimal {{max}} karakter."
   },
   "suspend": {
@@ -65,8 +69,7 @@
     "confirm": "Tangguhkan lapak",
     "reason": "Alasan yang akan dilihat petani",
     "placeholder": "Tulis apa yang harus diperbaiki agar lapak bisa berjualan lagi.",
-    "hint": "{{used}} dari {{max}} karakter. Petani membaca kalimat ini apa adanya.",
-    "required": "Tulis alasan yang akan dibaca petani.",
+    "required": "Pilih alasan atau tulis alasan yang akan dibaca petani.",
     "tooLong": "Alasan maksimal {{max}} karakter."
   },
   "toast": {

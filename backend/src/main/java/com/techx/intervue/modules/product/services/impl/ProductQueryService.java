@@ -67,15 +67,20 @@ public class ProductQueryService implements ProductQueryServiceInterface {
                 overlaid.getFirst(),
                 row.description(),
                 farmer,
-                reviewService.productSummary(row.item().id()));
+                reviewService.productSummary(row.item().id()),
+                repository.shelfLife(id).orElse(null));
     }
 
     /**
      * Replaces stockQuantity/price read straight from products with the numbers for the nearest
-     * orderable pickup date. Products with no active weekly template never get here — {@link
-     * ProductQueryRepository#VISIBILITY_FILTER} leaves them out in the SQL, so the page and its
-     * total agree. A row is never dropped here: one whose template was switched off in between
-     * shows as sold out.
+     * orderable pickup date, and names that date in availableDate. Products with no active weekly
+     * template never get here — {@link ProductQueryRepository#VISIBILITY_FILTER} leaves them out in
+     * the SQL, so the page and its total agree. A row is never dropped here: one whose template was
+     * switched off in between shows as sold out.
+     *
+     * <p>FR-124: when that day is on a near-expiry deal, {@code price} stays the day's regular
+     * price (the deal's list price). The discount belongs to /deals, the product page's deal block
+     * and the cart, which name it; shown here it read as the product's normal price.
      */
     private List<ProductListItemResource> overlayAvailability(List<ProductListItemResource> items) {
         Map<Long, BigDecimal> basePrices =
@@ -91,8 +96,11 @@ public class ProductQueryService implements ProductQueryServiceInterface {
                         i -> {
                             ProductAvailabilityResolver.Availability a = resolved.get(i.id());
                             return a == null
-                                    ? i.withAvailability(0, i.price())
-                                    : i.withAvailability(a.quantity(), a.price());
+                                    ? i.withAvailability(0, i.price(), null)
+                                    : i.withAvailability(
+                                            a.quantity(),
+                                            a.deal() == null ? a.price() : a.deal().listPrice(),
+                                            a.date().toString());
                         })
                 .toList();
     }

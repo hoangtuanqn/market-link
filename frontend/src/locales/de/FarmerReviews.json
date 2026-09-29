@@ -1,7 +1,7 @@
 {
   "title": "Bewertungen",
   "intro": "Was Kunden nach dem Abholen ihrer Bestellung gesagt haben. Eine kurze Antwort bewirkt viel, besonders bei einer schlechten Bewertung.",
-  "summary": "Stand {{stall}} · Produkte {{products}} · {{reviews}}",
+  "summary": "Stand {{stall}} · {{reviews}}",
   "reviewCount_one": "{{count}} Bewertung",
   "reviewCount_other": "{{count}} Bewertungen",
   "noun": "reviews",
@@ -29,5 +29,29 @@
     "title": "Noch keine Bewertungen",
     "text": "Ein Kunde kann Ihren Stand und seine Einkäufe bewerten, sobald die Bestellung abgeschlossen ist (D-10)."
   },
-  "note": "Der Stand kann Bewertungen nicht entfernen. Verstößt eine gegen die Richtlinien, melden Sie sie, und der Admin entscheidet (FR-074)."
+  "note": "Der Stand kann Bewertungen nicht entfernen. Verstößt eine gegen die Richtlinien, melden Sie sie, und der Admin entscheidet (FR-074).",
+  "tabs": {
+    "label": "Bewertungen und Verderb-Meldungen",
+    "reviews": "Bewertungen",
+    "spoiled": "Verderb-Meldungen"
+  },
+  "spoiled": {
+    "intro": "Kunden können Erzeugnisse melden, die kurz nach der Abholung verdorben sind. Antworten Sie mit dem, was Sie wissen; ein Admin entscheidet.",
+    "noun": "Verderb-Meldungen",
+    "emptyTitle": "Keine Verderb-Meldungen",
+    "emptyText": "Wenn ein Kunde ein Erzeugnis aus einer Ihrer Bestellungen meldet, erscheint es hier, damit Sie antworten können.",
+    "line": "Bestellung {{code}} · {{customer}}",
+    "dates": "Abgeholt {{pickup}} · haltbar bis {{bestBefore}} · verdorben {{spoiled}} ({{when}})",
+    "photoAlt": "Das Foto des Kunden",
+    "replyLabel": "Ihre Antwort, für den Admin",
+    "replyPlaceholder": "Wie es gelagert wurde, was Sie beim Verpacken gesehen haben.",
+    "save": "Antwort speichern",
+    "saved": "Antwort gespeichert.",
+    "yourReply": "Ihre Antwort: {{text}}",
+    "decisionNote": "Admin-Hinweis: {{text}}",
+    "alreadyDecided": "Ein Admin hat über diese Meldung bereits entschieden.",
+    "strikesText": "Eine bestätigte Meldung zu einer verlängerten Haltbarkeit zählt als Verstoß. 3 Verstöße in 90 Tagen sperren längere Haltbarkeiten.",
+    "lockTitle": "Längere Haltbarkeiten sind bis {{date}} gesperrt",
+    "lockText": "Bis dahin können Ihre Produkte nur die vorgeschlagene Haltbarkeit verwenden."
+  }
 }

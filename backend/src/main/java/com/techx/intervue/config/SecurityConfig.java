@@ -2,6 +2,7 @@ package com.techx.intervue.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.techx.intervue.filters.JwtAuthFilter;
+import com.techx.intervue.filters.MaintenanceModeFilter;
 import com.techx.intervue.filters.TraceIdFilter;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
@@ -21,6 +22,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.expression.WebExpressionAuthorizationManager;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -31,11 +33,31 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @EnableMethodSecurity // method-based authorization (the default is URL-based authorization)
 public class SecurityConfig {
 
+    /**
+     * Who may reach /api/v1/admin/**: an admin whose two-step verification is already set up.
+     * JwtAuthFilter marks the session of an admin who has not done it yet with MFA_SETUP_PENDING
+     * (FR-008), and that session is refused here. Kept as a constant so
+     * SecurityConfigAdminAccessTest can exercise the expression — a typo inside it would otherwise
+     * only surface at runtime.
+     */
+    static final String ADMIN_ACCESS = "hasRole('ADMIN') and !hasAuthority('MFA_SETUP_PENDING')";
+
+    /**
+     * Who may reach any other signed-in route: anyone signed in, except a session still marked
+     * MFA_SETUP_PENDING (FR-008). Such a session exists only so the setup screen can call the
+     * /api/v1/auth/** routes listed below (me, settings, mfa, logout); letting it read orders,
+     * conversations or attachments would hand customer data to anyone holding the admin password.
+     * An anonymous caller still fails isAuthenticated() and gets the 401 from signInRequired().
+     */
+    static final String SIGNED_IN_ACCESS =
+            "isAuthenticated() and !hasAuthority('MFA_SETUP_PENDING')";
+
     static final String SIGN_IN_MESSAGE = "Please sign in to continue.";
 
     private final ObjectMapper objectMapper;
     private final JwtAuthFilter jwtAuthFilter;
     private final TraceIdFilter traceIdFilter;
+    private final MaintenanceModeFilter maintenanceModeFilter;
 
     @Bean
     PasswordEncoder passwordEncoder() {
@@ -54,7 +76,8 @@ public class SecurityConfig {
         config.setAllowedOrigins(allowedOrigins);
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setExposedHeaders(List.of("X-Trace-Id"));
+        // Retry-After: the sign-up screen counts down after a 429 (FR-009)
+        config.setExposedHeaders(List.of("X-Trace-Id", "Retry-After"));
         config.setAllowCredentials(true);
         config.setMaxAge(3600L);
 
@@ -70,6 +93,16 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         auth ->
                                 auth
+                                        // FR-008: an admin who has never set up two-step
+                                        // verification still gets a session, because the setup
+                                        // screen needs one to call /auth/mfa/**. That session must
+                                        // not reach the admin API — otherwise the mandatory step
+                                        // guards the screens only and anyone holding the password
+                                        // can call these endpoints directly. JwtAuthFilter marks
+                                        // such a session with MFA_SETUP_PENDING.
+                                        // Placed first so it wins over any later admin matcher.
+                                        .requestMatchers("/api/v1/admin/**")
+                                        .access(new WebExpressionAuthorizationManager(ADMIN_ACCESS))
                                         // Logout, own profile and setting a password need a valid
                                         // access
                                         // token
@@ -120,6 +153,10 @@ public class SecurityConfig {
                                         // 2. Public API
                                         .requestMatchers("/api/v1/products")
                                         .permitAll()
+                                        // FR-125: near-expiry deals can be browsed before signing
+                                        // in, like the product list
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/deals")
+                                        .permitAll()
                                         // FR-020…023, FR-011: a stall's products and stock can be
                                         // viewed
                                         // before signing in
@@ -132,6 +169,10 @@ public class SecurityConfig {
                                         // signing
                                         // in
                                         .requestMatchers(HttpMethod.GET, "/api/v1/categories")
+                                        .permitAll()
+                                        // FR-001: the sign-up form lists countries, provinces,
+                                        // wards and streets before there is an account
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/geo/**")
                                         .permitAll()
                                         // FR-010/FR-012: markets and the map can be viewed before
                                         // signing in
@@ -168,8 +209,20 @@ public class SecurityConfig {
                                         .requestMatchers(
                                                 HttpMethod.GET, "/api/v1/announcements/active")
                                         .permitAll()
+                                        // Maintenance mode: every visitor polls this, signed in or
+                                        // not
+                                        .requestMatchers(HttpMethod.GET, "/api/v1/platform/status")
+                                        .permitAll()
+                                        // FR-115: a video element cannot send the token; the
+                                        // signed link is checked in AttachmentService.stream
+                                        .requestMatchers(
+                                                HttpMethod.GET, "/api/v1/attachments/*/stream")
+                                        .permitAll()
+                                        // FR-008: a session still owing 2FA setup stops here
                                         .anyRequest()
-                                        .authenticated())
+                                        .access(
+                                                new WebExpressionAuthorizationManager(
+                                                        SIGNED_IN_ACCESS)))
                 .sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(signInRequired()))
@@ -178,7 +231,8 @@ public class SecurityConfig {
                 // UsernamePasswordAuthenticationFilter.class (which runs but does nothing)
                 // two parameters are required
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(traceIdFilter, JwtAuthFilter.class);
+                .addFilterBefore(traceIdFilter, JwtAuthFilter.class)
+                .addFilterAfter(maintenanceModeFilter, JwtAuthFilter.class);
 
         return http.build();
     }

@@ -6,6 +6,7 @@
   "caption": "{{count}} feedback messages",
   "filterLabel": "筛选反馈",
   "filter": {
+    "all": "全部",
     "new": "New",
     "reviewed": "Reviewed",
     "resolved": "Resolved",

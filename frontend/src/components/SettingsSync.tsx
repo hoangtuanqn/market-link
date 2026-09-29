@@ -6,7 +6,8 @@ import SettingsStore, { normalize } from '@/lib/settings';
 
 /**
  * - Sign in (or reopen the page while a session exists) → fetch the account's settings, the server copy wins over the one
- *   on the machine.
+ *   on the machine. An account that never saved any (the server returns null) keeps the machine's choices, and they are
+ *   saved to the account so the server knows the language to write notifications in.
  * - Language, currency, units, date/time change → rebuild the open page, because format.ts reads settings at render.
  *   Theme does not need it: it is only data-theme on <html>.
  */
@@ -20,7 +21,9 @@ const SettingsSync = ({ children }: { children: ReactNode }) => {
     let cancelled = false;
     SettingsApi.get()
       .then((res) => {
-        if (!cancelled && res.data) SettingsStore.set(normalize(res.data));
+        if (cancelled) return;
+        if (res.data) SettingsStore.set(normalize(res.data));
+        else SettingsApi.save(SettingsStore.get()).catch(() => undefined);
       })
       .catch(() => {
         // no network / an old backend without the API → use the copy on the machine

@@ -38,8 +38,6 @@
     "phone": "Số điện thoại",
     "email": "Email",
     "emailHint": "Dùng để đăng nhập. Không đổi được ở đây.",
-    "address": "Địa chỉ",
-    "addressHint": "Dùng để tính khoảng cách và chỉ đường.",
     "save": "Lưu thay đổi",
     "saving": "Đang lưu…",
     "noChanges": "Không có thay đổi nào để lưu.",

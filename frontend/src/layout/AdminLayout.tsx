@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useLocation } from 'react-router';
+import AssistantLauncher from '@/components/assistant/AssistantLauncher';
+import { AssistantProvider } from '@/components/assistant/AssistantProvider';
 import NotificationBell from '@/components/notifications/NotificationBell';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
+import MfaApi from '@/api-requests/mfa.requests';
 import {
+  BellIcon,
   ChartIcon,
   ChatIcon,
   DashboardIcon,
@@ -33,14 +37,16 @@ import {
   ADMIN_REPORTS_PATH,
   ADMIN_SECURITY_PATH,
   ADMIN_SETTINGS_PATH,
+  ADMIN_SETUP_2FA_PATH,
 } from '@/constants/nav';
 import useLogout from '@/hooks/useLogout';
 import useSession from '@/hooks/useSession';
+import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import type { TFunction } from 'i18next';
 import DashboardShell, { type ShellNavGroup } from './DashboardShell';
 
 /** Sidebar groups from docs/prototype/prototype.js (SIDE.admin). Every item now has a screen behind it. */
-const buildNav = (t: TFunction, pendingFarmers: number): ShellNavGroup[] => [
+const buildNav = (t: TFunction, pendingFarmers: number, unreadNotifications: number): ShellNavGroup[] => [
   {
     heading: t('adminNav.analytics'),
     items: [
@@ -69,6 +75,12 @@ const buildNav = (t: TFunction, pendingFarmers: number): ShellNavGroup[] => [
       { to: ADMIN_CATEGORIES_PATH, label: t('adminNav.categories'), icon: TagIcon },
       { to: ADMIN_ANNOUNCEMENTS_PATH, label: t('adminNav.announcements'), icon: MegaphoneIcon },
       { to: ADMIN_FEEDBACK_PATH, label: t('adminNav.feedback'), icon: ChatIcon },
+      {
+        to: ADMIN_NOTIFICATIONS_PATH,
+        label: t('adminNav.notifications'),
+        icon: BellIcon,
+        count: unreadNotifications || undefined,
+      },
       { to: ADMIN_SETTINGS_PATH, label: t('adminNav.settings'), icon: SlidersIcon },
       { to: ADMIN_ACCOUNT_PATH, label: t('adminNav.account'), icon: UsersIcon },
       // FR-008: turn two-step verification on / off
@@ -86,16 +98,19 @@ const initials = (name: string) =>
     .join('') || 'AD';
 
 /**
- * FR-004 — the admin area frame, separate from the Customer/Farmer layout. If not signed in or not an admin, go back to
- * the admin sign-in page. This is only UX: the real permission is checked by the backend at each admin API (FR-005).
+ * FR-004 — the admin area frame, separate from the Customer/Farmer layout. If not signed in, go back to the admin
+ * sign-in page. If signed in with another role, redirect to 403 Forbidden. This is only UX: the real permission is
+ * checked by the backend at each admin API (FR-005).
  */
 const AdminLayout = () => {
   const { t } = useTranslation();
-  const { user } = useSession();
+  const { user, isLoggedIn } = useSession();
   const { pathname } = useLocation();
   const logout = useLogout(ADMIN_LOGIN_PATH);
   const isAdmin = user?.role === USER_ROLE.ADMIN;
   const [pendingFarmers, setPendingFarmers] = useState(0);
+  const [setupRequired, setSetupRequired] = useState(false);
+  const unreadNotifications = useUnreadNotifications();
 
   // The "awaiting approval" badge on the Farmers item; reloaded on page change to match after an approve / reject.
   useEffect(() => {
@@ -105,26 +120,53 @@ const AdminLayout = () => {
       .catch(() => {});
   }, [isAdmin, pathname]);
 
-  if (!isAdmin) {
+  // Mandatory 2FA setup check: if not yet configured, redirect to the dedicated setup page
+  useEffect(() => {
+    if (!isAdmin) return;
+    MfaApi.status()
+      .then((response) => {
+        if (response.data.setupRequired) {
+          setSetupRequired(true);
+        }
+      })
+      .catch(() => {});
+  }, [isAdmin, pathname]);
+
+  if (!isLoggedIn) {
     return <Navigate to={ADMIN_LOGIN_PATH} replace />;
   }
 
+  if (!isAdmin) {
+    return <Navigate to="/403" replace />;
+  }
+
+  if (setupRequired) {
+    return <Navigate to={ADMIN_SETUP_2FA_PATH} replace />;
+  }
+
   return (
-    <DashboardShell
-      badge={t('admin.badge')}
-      navLabel={t('adminNav.navigation')}
-      homeLabel={t('adminNav.home')}
-      home={ADMIN_HOME_PATH}
-      nav={buildNav(t, pendingFarmers)}
-      context={{ mono: 'M', name: 'MarketLink', sub: t('adminNav.contextSub') }}
-      user={{ mono: initials(user.fullName ?? ''), email: user.email, line: t('adminNav.userLine') }}
-      onSignOut={logout}
-      searchId="admin-appq"
-      searchPlaceholder={t('adminNav.searchPlaceholder')}
-      accountTo={ADMIN_ACCOUNT_PATH}
-      headerActions={<NotificationBell to={ADMIN_NOTIFICATIONS_PATH} />}
-      className="bg-surface-quiet"
-    />
+    <AssistantProvider>
+      <DashboardShell
+        badge={t('admin.badge')}
+        navLabel={t('adminNav.navigation')}
+        homeLabel={t('adminNav.home')}
+        home={ADMIN_HOME_PATH}
+        nav={buildNav(t, pendingFarmers, unreadNotifications)}
+        context={{ mono: 'M', name: 'MarketLink', sub: t('adminNav.contextSub') }}
+        user={{
+          mono: initials(user.fullName ?? ''),
+          email: user.email,
+          line: t('adminNav.userLine'),
+          name: user.fullName,
+        }}
+        onSignOut={logout}
+        accountTo={ADMIN_ACCOUNT_PATH}
+        headerActions={<NotificationBell to={ADMIN_NOTIFICATIONS_PATH} />}
+        className="bg-surface-quiet"
+      />
+      {/* FR-094 */}
+      <AssistantLauncher />
+    </AssistantProvider>
   );
 };
 

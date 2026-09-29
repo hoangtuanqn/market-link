@@ -3,7 +3,6 @@
   "crumbNew": "Tambah",
   "crumbEdit": "Ubah",
   "titleNew": "Pasar baru",
-  "city": "Kota Ho Chi Minh",
   "metaStalls": "{{stalls}} lapak",
   "missing": {
     "title": "Pasar itu sudah tidak ada",
@@ -11,16 +10,12 @@
   },
   "field": {
     "name": "Nama pasar",
-    "address": "Alamat",
-    "district": "Distrik",
-    "city": "Kota",
     "days": "Hari buka",
     "open": "Buka",
     "close": "Tutup",
     "lat": "Lintang",
     "lng": "Bujur",
     "lngHint": "Atau geser penanda. Data peta berasal dari OpenStreetMap.",
-    "notes": "Catatan untuk lapak",
     "images": "Foto"
   },
   "images": {
@@ -59,7 +54,6 @@
     "announced": "Sudah diumumkan",
     "notYet": "Belum",
     "noneYet": "Belum ada",
-    "noReason": "Tidak diisi",
     "byAdminToday": "Admin · hari ini",
     "col": {
       "date": "Tanggal",

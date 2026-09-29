@@ -5,9 +5,7 @@
     "fullName": "Vollständiger Name",
     "phone": "Telefonnummer",
     "email": "E-Mail",
-    "emailHint": "Für die Anmeldung und Bestellbenachrichtigungen.",
-    "address": "Adresse",
-    "addressPlaceholder": "Straße, Bezirk, Stadtteil",
+    "emailHint": "Für die Anmeldung und Bestellbenachrichtigungen. Wir schicken einen Code dorthin, um zu bestätigen, dass die Adresse Ihnen gehört.",
     "password": "Passwort",
     "passwordHint": "{{min}} bis {{max}} Zeichen.",
     "confirmPassword": "Passwort wiederholen"
@@ -21,8 +19,8 @@
   "haveAccount": "Ich habe schon ein Konto",
   "acceptFirst": "Akzeptieren Sie die Bedingungen, um Ihr Konto zu erstellen.",
   "sharedAccount": "Ein Konto kann in der Familie geteilt werden; das System unterscheidet nicht zwischen Personen innerhalb eines Kontos.",
+  "honeypot": "Lassen Sie dieses Feld leer",
   "toast": {
-    "created": "Konto erstellt.",
     "failed": "Ihr Konto konnte nicht erstellt werden. Bitte versuchen Sie es erneut."
   },
   "errors": {
@@ -33,11 +31,11 @@
     "emailRequired": "Geben Sie Ihre E-Mail-Adresse ein.",
     "emailInvalid": "Geben Sie eine gültige E-Mail-Adresse ein.",
     "emailMax": "Die E-Mail-Adresse darf höchstens {{max}} Zeichen lang sein.",
-    "addressRequired": "Geben Sie Ihre Adresse ein.",
-    "addressMax": "Die Adresse darf höchstens {{max}} Zeichen lang sein.",
     "passwordRequired": "Geben Sie Ihr Passwort ein.",
     "passwordLength": "Das Passwort muss {{min}} bis {{max}} Zeichen lang sein.",
     "confirmRequired": "Bestätigen Sie Ihr Passwort.",
-    "confirmMismatch": "Die Passwörter stimmen nicht überein."
+    "confirmMismatch": "Die Passwörter stimmen nicht überein.",
+    "tooMany_one": "Für diese Adresse oder dieses Netzwerk wurden zu viele Codes angefordert. Versuchen Sie es in {{count}} Minute noch einmal.",
+    "tooMany_other": "Für diese Adresse oder dieses Netzwerk wurden zu viele Codes angefordert. Versuchen Sie es in {{count}} Minuten noch einmal."
   }
 }

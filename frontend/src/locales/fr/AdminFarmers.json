@@ -8,12 +8,17 @@
   },
   "tabsLabel": "Producteurs par statut",
   "status": {
+    "all": "Tous",
     "pending": "En attente de validation",
     "approved": "Validés",
     "suspended": "Suspendus",
     "rejected": "Refusés"
   },
   "empty": {
+    "all": {
+      "title": "Aucun agriculteur",
+      "text": "Les inscriptions d'agriculteurs apparaîtront ici."
+    },
     "pending": {
       "title": "Aucune candidature en attente",
       "text": "Les nouvelles candidatures de producteurs arrivent ici pour examen avant de pouvoir proposer des produits."
@@ -55,8 +60,7 @@
     "reason": "Motif que verra le producteur",
     "confirm": "Refuser la candidature",
     "placeholder": "Dites ce qui doit changer pour que ce stand soit validé.",
-    "hint": "{{used}} sur {{max}} caractères. Le demandeur lit ce texte mot pour mot.",
-    "required": "Écrivez le motif que le demandeur verra.",
+    "required": "Choisissez un motif ou écrivez celui que le candidat lira.",
     "tooLong": "Le motif ne doit pas dépasser {{max}} caractères."
   },
   "suspend": {
@@ -65,8 +69,7 @@
     "confirm": "Suspendre le stand",
     "reason": "Motif que verra le producteur",
     "placeholder": "Dites ce que le stand doit corriger pour vendre à nouveau.",
-    "hint": "{{used}} sur {{max}} caractères. Le producteur lit ce texte mot pour mot.",
-    "required": "Écrivez le motif que le producteur verra.",
+    "required": "Choisissez un motif ou écrivez celui que le producteur lira.",
     "tooLong": "Le motif ne doit pas dépasser {{max}} caractères."
   },
   "toast": {

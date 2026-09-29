@@ -39,13 +39,19 @@
     "complete": "标记为完成",
     "view": "查看"
   },
-  "greeting": "早上好，{{name}}",
-  "applyTemplate": "套用每周模板",
+  "title": "概览",
+  "editTemplate": "编辑每周模板",
   "addProduct": "添加商品",
   "banner": {
-    "title_one": "有 {{count}} 个订单在等你处理，其中 {{closing}} 个将于明天 {{time}} 截止。",
-    "title_other": "有 {{count}} 个订单在等你处理，其中 {{closing}} 个将于明天 {{time}} 截止。",
+    "title_one": "有 {{count}} 个订单在等你处理。",
+    "title_other": "有 {{count}} 个订单在等你处理。",
     "text": "未确认的订单仍占用库存。请在截止前接受或拒绝，方便顾客安排。"
+  },
+  "strikes": {
+    "title": "保鲜期违规：{{count}}/{{limit}}（{{days}} 天内）",
+    "text": "延长保鲜期的商品一经确认变质，就记一次违规。达到 3 次违规将锁定更长的保鲜期。",
+    "locked": "更长的保鲜期已被锁定至 {{date}}。",
+    "link": "查看变质报告"
   },
   "kpi": {
     "noun": "your numbers",
@@ -66,8 +72,8 @@
     }
   },
   "stock": {
-    "title": "{{day}}的库存",
-    "link": "本周库存",
+    "title": "当前库存",
+    "link": "每周模板",
     "noun": "stock",
     "empty": {
       "title": "No products yet",
@@ -82,5 +88,14 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "今天在 {{markets}}",
+    "titleNoMarket": "今天你不在任何市集出摊",
+    "orders_other": "今天有 {{count}} 张订单",
+    "waiting_other": "其中 {{count}} 张还在等你接受或拒绝",
+    "cutoffPassed_other": "其中 {{count}} 张已过截止时间，顾客无法再修改",
+    "soldOut_other": "{{count}} 个商品标记为售罄",
+    "lowStock_other": "{{count}} 个商品快卖完了"
   }
 }

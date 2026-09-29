@@ -26,11 +26,15 @@ import com.techx.intervue.modules.stall.repositories.StallQueryRepository;
 import com.techx.intervue.modules.stall.requests.JoinMarketRequest;
 import com.techx.intervue.modules.stall.requests.OperatingDaysRequest;
 import com.techx.intervue.modules.stall.requests.StallProfileRequest;
+import com.techx.intervue.modules.stall.requests.UpdateStallMarketRequest;
 import com.techx.intervue.modules.stall.resources.StallDetailResource;
+import com.techx.intervue.modules.stall.resources.StallMarketResource;
 import com.techx.intervue.resources.PageResource;
 import java.math.BigDecimal;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -83,6 +87,20 @@ class StallServiceTest {
 
     private static StallProfileRequest profile(int cutoffHours) {
         return new StallProfileRequest("Vườn Út Hiền", "Lê Thị Út Hiền", null, null, cutoffHours);
+    }
+
+    /**
+     * FR-011: the booth code and the pin come from one farmer_markets row. MIN of each column on
+     * its own gave stall 4 the code A-20 with the latitude of B-15 (checked on MySQL 8.4 with the
+     * demo seed, where the new statement returns each stall's own row).
+     */
+    @Test
+    void searchTakesTheCodeAndThePinFromOneMarketRow() {
+        assertThat(StallQueryRepository.SEARCH_STALLS)
+                .doesNotContain("MIN(fm.stall_code)")
+                .doesNotContain("MIN(fm.stall_latitude)")
+                .doesNotContain("MIN(fm.stall_longitude)")
+                .contains("WHERE p.id = MIN(fm.id)) AS stall_code");
     }
 
     /**
@@ -161,11 +179,22 @@ class StallServiceTest {
         verify(farmerMarketRepository, never()).save(any());
     }
 
+    private static StallQueryRepository.MarketSchedule sampleSchedule() {
+        return new StallQueryRepository.MarketSchedule(
+                true,
+                LocalTime.of(6, 0),
+                LocalTime.of(18, 0),
+                Set.of(0, 1, 2, 3, 4, 5, 6),
+                new BigDecimal("10.80290000"),
+                new BigDecimal("106.69920000"));
+    }
+
     @Test
     void joinMarketRejectsDuplicateMarket() {
         when(farmerProfileRepository.findByUserId(USER_ID))
                 .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
-        when(queryRepository.marketExists(MARKET_ID)).thenReturn(true);
+        when(queryRepository.findMarketSchedule(MARKET_ID))
+                .thenReturn(Optional.of(sampleSchedule()));
         when(farmerMarketRepository.findByFarmerIdAndMarketId(FARMER_ID, MARKET_ID))
                 .thenReturn(Optional.of(ownStall()));
 
@@ -183,10 +212,234 @@ class StallServiceTest {
     }
 
     @Test
+    void joinMarketRejectsUnpairedCoordinates() {
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+
+        assertThatThrownBy(
+                        () ->
+                                service.joinMarket(
+                                        USER_ID,
+                                        new JoinMarketRequest(
+                                                MARKET_ID,
+                                                "A-12",
+                                                new BigDecimal("10.80290000"),
+                                                null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("together");
+        verify(farmerMarketRepository, never()).save(any());
+    }
+
+    @Test
+    void joinMarketDefaultsCoordinatesToMarketCenterWhenNull() {
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(queryRepository.findMarketSchedule(MARKET_ID))
+                .thenReturn(Optional.of(sampleSchedule()));
+        when(farmerMarketRepository.findByFarmerIdAndMarketId(FARMER_ID, MARKET_ID))
+                .thenReturn(Optional.empty());
+        when(farmerMarketRepository.save(any()))
+                .thenAnswer(
+                        invocation -> {
+                            FarmerMarket fm = invocation.getArgument(0);
+                            fm.setId(FARMER_MARKET_ID);
+                            return fm;
+                        });
+        when(queryRepository.stallMarket(FARMER_MARKET_ID))
+                .thenReturn(
+                        Optional.of(
+                                new StallMarketResource(
+                                        FARMER_MARKET_ID,
+                                        MARKET_ID,
+                                        "Chợ Bà Chiểu",
+                                        "A-12",
+                                        new BigDecimal("10.80290000"),
+                                        new BigDecimal("106.69920000"),
+                                        List.of())));
+
+        StallMarketResource res =
+                service.joinMarket(USER_ID, new JoinMarketRequest(MARKET_ID, "A-12", null, null));
+
+        assertThat(res).isNotNull();
+        ArgumentCaptor<FarmerMarket> captor = ArgumentCaptor.forClass(FarmerMarket.class);
+        verify(farmerMarketRepository).save(captor.capture());
+        assertThat(captor.getValue().getStallLatitude()).isEqualTo(new BigDecimal("10.80290000"));
+        assertThat(captor.getValue().getStallLongitude()).isEqualTo(new BigDecimal("106.69920000"));
+    }
+
+    @Test
+    void updateMarketUpdatesStallCodeAndLocation() {
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(farmerMarketRepository.findById(FARMER_MARKET_ID)).thenReturn(Optional.of(ownStall()));
+        when(farmerMarketRepository.save(any())).thenAnswer(i -> i.getArgument(0));
+        when(queryRepository.stallMarket(FARMER_MARKET_ID))
+                .thenReturn(
+                        Optional.of(
+                                new StallMarketResource(
+                                        FARMER_MARKET_ID,
+                                        MARKET_ID,
+                                        "Chợ Bà Chiểu",
+                                        "B-99",
+                                        new BigDecimal("10.80500000"),
+                                        new BigDecimal("106.70000000"),
+                                        List.of())));
+
+        StallMarketResource updated =
+                service.updateMarket(
+                        USER_ID,
+                        FARMER_MARKET_ID,
+                        new UpdateStallMarketRequest(
+                                "B-99",
+                                new BigDecimal("10.80500000"),
+                                new BigDecimal("106.70000000")));
+
+        assertThat(updated).isNotNull();
+        ArgumentCaptor<FarmerMarket> captor = ArgumentCaptor.forClass(FarmerMarket.class);
+        verify(farmerMarketRepository).save(captor.capture());
+        assertThat(captor.getValue().getStallCode()).isEqualTo("B-99");
+        assertThat(captor.getValue().getStallLatitude()).isEqualTo(new BigDecimal("10.80500000"));
+        assertThat(captor.getValue().getStallLongitude()).isEqualTo(new BigDecimal("106.70000000"));
+    }
+
+    @Test
+    void updateMarketRejectsInactiveMarketLink() {
+        FarmerMarket inactive = ownStall();
+        inactive.setActive(false);
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(farmerMarketRepository.findById(FARMER_MARKET_ID)).thenReturn(Optional.of(inactive));
+
+        assertThatThrownBy(
+                        () ->
+                                service.updateMarket(
+                                        USER_ID,
+                                        FARMER_MARKET_ID,
+                                        new UpdateStallMarketRequest("B-99", null, null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("no longer sell");
+        verify(farmerMarketRepository, never()).save(any());
+    }
+
+    @Test
+    void updateMarketRejectsUnpairedCoordinates() {
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(farmerMarketRepository.findById(FARMER_MARKET_ID)).thenReturn(Optional.of(ownStall()));
+
+        assertThatThrownBy(
+                        () ->
+                                service.updateMarket(
+                                        USER_ID,
+                                        FARMER_MARKET_ID,
+                                        new UpdateStallMarketRequest(
+                                                "B-99", new BigDecimal("10.80500000"), null)))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("together");
+        verify(farmerMarketRepository, never()).save(any());
+    }
+
+    @Test
+    void setDaysRejectsInactiveMarketLink() {
+        FarmerMarket inactive = ownStall();
+        inactive.setActive(false);
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(farmerMarketRepository.findById(FARMER_MARKET_ID)).thenReturn(Optional.of(inactive));
+
+        OperatingDaysRequest req =
+                new OperatingDaysRequest(
+                        List.of(new OperatingDaysRequest.Day(6, "07:00", "11:00")));
+
+        assertThatThrownBy(() -> service.setDays(USER_ID, FARMER_MARKET_ID, req))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("no longer sell");
+        verify(operatingDayRepository, never()).replaceDays(anyLong(), any());
+    }
+
+    @Test
+    void setDaysRejectsEmptyDays() {
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(farmerMarketRepository.findById(FARMER_MARKET_ID)).thenReturn(Optional.of(ownStall()));
+
+        OperatingDaysRequest empty = new OperatingDaysRequest(List.of());
+
+        assertThatThrownBy(() -> service.setDays(USER_ID, FARMER_MARKET_ID, empty))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("At least one operating day");
+        verify(operatingDayRepository, never()).replaceDays(anyLong(), any());
+    }
+
+    @Test
+    void setDaysRejectsDayWhenMarketClosed() {
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(farmerMarketRepository.findById(FARMER_MARKET_ID)).thenReturn(Optional.of(ownStall()));
+        // Market only held on Saturday (6) and Sunday (0)
+        when(queryRepository.findMarketSchedule(MARKET_ID))
+                .thenReturn(
+                        Optional.of(
+                                new StallQueryRepository.MarketSchedule(
+                                        true,
+                                        LocalTime.of(6, 0),
+                                        LocalTime.of(18, 0),
+                                        Set.of(0, 6),
+                                        new BigDecimal("10.80"),
+                                        new BigDecimal("106.70"))));
+
+        OperatingDaysRequest wednesday =
+                new OperatingDaysRequest(
+                        List.of(new OperatingDaysRequest.Day(3, "07:00", "11:00")));
+
+        assertThatThrownBy(() -> service.setDays(USER_ID, FARMER_MARKET_ID, wednesday))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Market is not held on weekday 3");
+        verify(operatingDayRepository, never()).replaceDays(anyLong(), any());
+    }
+
+    @Test
+    void setDaysRejectsPickupWindowOutsideMarketHours() {
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(farmerMarketRepository.findById(FARMER_MARKET_ID)).thenReturn(Optional.of(ownStall()));
+        when(queryRepository.findMarketSchedule(MARKET_ID))
+                .thenReturn(
+                        Optional.of(
+                                new StallQueryRepository.MarketSchedule(
+                                        true,
+                                        LocalTime.of(7, 0),
+                                        LocalTime.of(12, 0),
+                                        Set.of(6),
+                                        new BigDecimal("10.80"),
+                                        new BigDecimal("106.70"))));
+
+        // Starts before market opens (06:00 < 07:00)
+        OperatingDaysRequest tooEarly =
+                new OperatingDaysRequest(
+                        List.of(new OperatingDaysRequest.Day(6, "06:00", "11:00")));
+        assertThatThrownBy(() -> service.setDays(USER_ID, FARMER_MARKET_ID, tooEarly))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("within market operating hours");
+
+        // Ends after market closes (13:00 > 12:00)
+        OperatingDaysRequest tooLate =
+                new OperatingDaysRequest(
+                        List.of(new OperatingDaysRequest.Day(6, "08:00", "13:00")));
+        assertThatThrownBy(() -> service.setDays(USER_ID, FARMER_MARKET_ID, tooLate))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("within market operating hours");
+
+        verify(operatingDayRepository, never()).replaceDays(anyLong(), any());
+    }
+
+    @Test
     void setDaysRejectsPickupEndBeforeStart() {
         when(farmerProfileRepository.findByUserId(USER_ID))
                 .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
         when(farmerMarketRepository.findById(FARMER_MARKET_ID)).thenReturn(Optional.of(ownStall()));
+        when(queryRepository.findMarketSchedule(MARKET_ID))
+                .thenReturn(Optional.of(sampleSchedule()));
         OperatingDaysRequest bad =
                 new OperatingDaysRequest(
                         List.of(new OperatingDaysRequest.Day(6, "08:00", "07:00")));
@@ -203,7 +456,19 @@ class StallServiceTest {
         when(farmerProfileRepository.findByUserId(USER_ID))
                 .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
         when(farmerMarketRepository.findById(FARMER_MARKET_ID)).thenReturn(Optional.of(ownStall()));
-        when(queryRepository.marketsOf(FARMER_ID)).thenReturn(List.of());
+        when(queryRepository.findMarketSchedule(MARKET_ID))
+                .thenReturn(Optional.of(sampleSchedule()));
+        when(queryRepository.stallMarket(FARMER_MARKET_ID))
+                .thenReturn(
+                        Optional.of(
+                                new StallMarketResource(
+                                        FARMER_MARKET_ID,
+                                        MARKET_ID,
+                                        "Chợ Bà Chiểu",
+                                        "A-12",
+                                        new BigDecimal("10.80290000"),
+                                        new BigDecimal("106.69920000"),
+                                        List.of())));
         OperatingDaysRequest saturdayOnly =
                 new OperatingDaysRequest(
                         List.of(new OperatingDaysRequest.Day(6, "07:00", "11:00")));

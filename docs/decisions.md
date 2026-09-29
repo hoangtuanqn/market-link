@@ -139,8 +139,39 @@ grep ra được đúng tập hành động server phải từ chối.
 **Còn mở, LEAD chốt nốt:** Farmer có được bỏ sản phẩm **của chính mình** vào giỏ không? Đây là phiên bản
 nhỏ của cùng một xung đột. Hiện tại là được.
 
+### D-14 · Xác minh email trước khi tạo tài khoản
+LEAD chốt 28/09/2026 (FR-009). Đăng ký bằng email trước đây tạo tài khoản và đăng nhập ngay, nên ai cũng đăng
+ký được bằng email của người khác.
+
+**Chốt:** form đăng ký chỉ được **lưu tạm trong Redis** (30 phút, mật khẩu đã băm) và gửi một **mã 6 số** tới
+email đó. Nhập đúng mã mới tạo dòng `users` và đăng nhập. Bản lưu tạm gắn với trình duyệt đã điền form bằng một
+`signupToken`: chỉ trình duyệt đó hoàn tất, gửi lại mã hay sửa form được, nên không ai thay mật khẩu của mình vào
+đăng ký đang chờ của người khác. Không thêm cột `email_verified_at`, không đổi login,
+Google hay refresh. Spec: `docs/superpowers/specs/2026-09-28-email-verification-design.md`.
+
+| Giới hạn | Giá trị |
+|---|---|
+| Mã sống | 10 phút, dùng một lần |
+| Thử mã | 5 lần mỗi mã (đếm trước khi so), rồi huỷ mã |
+| Gửi lại | chờ 60 giây giữa hai lần |
+| Theo email | 5 mã mỗi giờ |
+| Theo IP | 20 mã mỗi giờ |
+| Bot | ô bẫy `website` (honeypot), không CAPTCHA |
+
+**Lý do không tạo tài khoản "chưa xác minh":** không có dòng rác trong DB, không ai giữ chỗ trước email hay số
+điện thoại của người khác, và login không cần thêm điều kiện nào. Đổi lại, bỏ ngang quá 30 phút thì phải
+điền form lại.
+
+**Không áp dụng cho:** đăng nhập Google (provider đã xác minh email), Farmer (nâng cấp từ tài khoản Customer đã
+có), tài khoản đang có và tài khoản demo trong seed.
+
+Mã lỗi: `SIGNUP_CODE_INVALID` (400, kèm `attemptsLeft`), `SIGNUP_CODE_EXPIRED` (400), `SIGNUP_EXPIRED` (410),
+`RATE_LIMITED` (429, header `Retry-After`). Mail đi theo ngôn ngữ người dùng chọn lúc đăng ký (10 ngôn ngữ);
+chưa cấu hình SMTP thì backend ghi mail ra log.
+
 ---
 
 ### Đơn vị và locale
-Tiền tệ **VND**, hiển thị `₫` phân cách hàng nghìn. Ngày `dd/MM/yyyy`, giờ 24h.
+Tiền tệ **USD**, hiển thị `$1.50` (hai số lẻ, phân cách hàng nghìn), giá lưu trong DB là số đô. LEAD chốt lại
+27/09/2026, thay cho VND `₫` ban đầu. Ngày `dd/MM/yyyy`, giờ 24h.
 Timezone `Asia/Ho_Chi_Minh`. Lưu DATETIME theo giờ local, ghi rõ trong ReadMe.

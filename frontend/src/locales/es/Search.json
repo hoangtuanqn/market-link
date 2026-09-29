@@ -12,6 +12,21 @@
     "submit": "Buscar"
   },
   "day": "Día de mercado",
+  "filters": {
+    "category": "Categoría",
+    "allCategories": "Todas las categorías",
+    "market": "Mercado",
+    "allMarkets": "Todos los mercados",
+    "price": "Precio por unidad",
+    "clear": "Borrar filtros"
+  },
+  "price": {
+    "any": "Cualquier precio",
+    "low": "Menos de {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Más de {{high}}"
+  },
+  "stallsNotByCategory": "La categoría no filtra los puestos: un puesto no pertenece a ninguna categoría. Se aplica a los productos de abajo.",
   "sort": "Ordenar",
   "sorts": {
     "best": "Más relevante",
@@ -34,6 +49,8 @@
   },
   "results_one": "{{count}} resultado para “{{q}}” el {{day}}",
   "results_other": "{{count}} resultados para “{{q}}” el {{day}}",
+  "stallsOn_one": "{{count}} puesto que vende el {{day}}",
+  "stallsOn_other": "{{count}} puestos que venden el {{day}}",
   "noStalls": "Ningún puesto coincide.",
   "noProducts": "Ningún producto coincide.",
   "noMarket": {

@@ -1,32 +1,33 @@
 {
-  "title": "สต็อกสัปดาห์นี้",
-  "intro": "เทมเพลตรายสัปดาห์คือจำนวนเริ่มต้นของแต่ละวันตลาด ใช้เทมเพลตก่อน แล้วปรับวันที่ผลผลิตต่างออกไป สต็อกที่จองไว้ถูกหักออกจากจำนวนที่ลูกค้าเห็นแล้ว",
+  "title": "เทมเพลตสต็อกรายสัปดาห์",
+  "intro": "กำหนดว่าปกติคุณนำสินค้าแต่ละรายการมาเท่าไรในแต่ละวัน และขายราคาเท่าไร สต็อกจะเติมให้อัตโนมัติสำหรับลูกค้าที่ดูวันนั้น ไม่ต้องทำอะไรเพิ่ม",
   "saved": "บันทึกแล้ว",
   "per": "ต่อ{{unit}}",
-  "currentPrice": "now {{price}}",
-  "defaultPricePlaceholder": "Same price",
+  "currentPrice": "ตอนนี้ {{price}}",
+  "defaultPricePlaceholder": "ราคาเดิม",
   "col": {
     "product": "สินค้า"
   },
   "error": {
-    "productsNoun": "your products",
-    "templateNoun": "your weekly template"
+    "productsNoun": "สินค้าของคุณ",
+    "templateNoun": "เทมเพลตรายสัปดาห์"
   },
   "aria": {
-    "quantity": "{{product}} quantity on {{day}}",
-    "price": "ราคา {{product}}"
+    "quantity": "จำนวน {{product}} {{day}}",
+    "price": "ราคา {{product}} {{day}}"
   },
   "table": {
-    "caption": "Weekly stock template, one row per product and one column per weekday"
+    "caption": "เทมเพลตสต็อกรายสัปดาห์ หนึ่งแถวต่อสินค้า หนึ่งคอลัมน์ต่อวัน"
   },
   "template": {
     "save": "บันทึกเทมเพลต",
-    "savedText": "บันทึกเทมเพลตแล้ว จะใช้ตั้งแต่สัปดาห์หน้า เว้นแต่คุณใช้ตอนนี้",
-    "note": "วันในเทมเพลตเป็นไปตามวันเปิดขายของคุณ เปลี่ยนได้ที่ร้านและการรับสินค้า"
+    "savedText": "บันทึกเทมเพลตแล้ว",
+    "note": "เว้นจำนวนของวันใดว่างไว้เพื่อข้ามวันนั้น ราคาที่เว้นว่างจะใช้ราคาปัจจุบันของสินค้า",
+    "priceError": "กรอกราคาที่มากกว่า $0 สำหรับ {{product}} วัน{{day}} หรือเว้นว่างไว้เพื่อใช้ราคาปัจจุบัน"
   },
   "empty": {
-    "title": "Add a product first",
-    "text": "A weekly template needs at least one product.",
-    "action": "Add a product"
+    "title": "เพิ่มสินค้าก่อน",
+    "text": "เทมเพลตรายสัปดาห์ต้องมีสินค้าอย่างน้อยหนึ่งรายการ",
+    "action": "เพิ่มสินค้า"
   }
 }

@@ -2,13 +2,20 @@ package com.techx.intervue.modules.chat.services.impl;
 
 import com.techx.intervue.modules.chat.ChatbotAiProperties;
 import com.techx.intervue.modules.chat.entities.ChatMessage;
+import com.techx.intervue.modules.chat.enums.AssistantAudience;
 import com.techx.intervue.modules.chat.enums.ChatIntent;
 import com.techx.intervue.modules.chat.repositories.ChatKnowledgeRepository;
 import com.techx.intervue.modules.chat.repositories.ChatMessageRepository;
+import com.techx.intervue.modules.chat.repositories.FarmerKnowledgeRepository;
 import com.techx.intervue.modules.chat.requests.ChatRequest;
+import com.techx.intervue.modules.chat.resources.AssistantContext;
 import com.techx.intervue.modules.chat.resources.ChatMessageResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource;
 import com.techx.intervue.modules.chat.resources.ChatReplyResource.ChatResultItem;
+import com.techx.intervue.modules.chat.resources.ChatReplyResource.ProposedAction;
+import com.techx.intervue.modules.chat.resources.FarmerBriefingResource;
+import com.techx.intervue.modules.chat.resources.FarmerRows.BriefingRow;
+import com.techx.intervue.modules.chat.resources.FarmerRows.ScheduleDayRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.FarmerRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.MarketRow;
 import com.techx.intervue.modules.chat.resources.KnowledgeRows.ProductRow;
@@ -41,24 +48,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class ChatService implements ChatServiceInterface {
 
-    private static final String[] DAY_NAMES = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
     private static final DateTimeFormatter TIME = DateTimeFormatter.ofPattern("HH:mm");
     private static final int MAX_LINES = 10;
-
-    static final String GREETING_REPLY =
-            "Hi, I am the MarketLink assistant. Ask me to find products, check prices and stock,"
-                    + " market hours, which Farmers are at a market, or pickup times.";
-    static final String HELP_REPLY =
-            "You can ask, for example:\n"
-                    + "• \"Find tomatoes\"\n"
-                    + "• \"Tomato price\"\n"
-                    + "• \"Ben Thanh market hours\"\n"
-                    + "• \"Farmers at Ben Thanh market on Saturday\"\n"
-                    + "• \"Pickup times for <stall name>\"";
-    static final String FALLBACK_REPLY =
-            "Sorry, I did not understand that. Type \"help\" to see what I can answer.";
-    static final String DATA_UNAVAILABLE_REPLY =
-            "Sorry, the market data is not available right now. Please try again later.";
 
     private final IntentClassifier classifier;
     private final ChatKnowledgeRepository knowledge;
@@ -67,6 +58,7 @@ public class ChatService implements ChatServiceInterface {
     private final ProductAvailabilityResolver availability;
     private final ClaudeAssistant assistant;
     private final AssistantRateLimiter assistantLimit;
+    private final FarmerKnowledgeRepository farmerKnowledge;
     private final ChatbotAiProperties aiProperties;
 
     private record Answer(ChatIntent intent, String reply, List<ChatResultItem> results) {}
@@ -76,15 +68,17 @@ public class ChatService implements ChatServiceInterface {
      * connection. The two chat_messages rows are written together by saveAll.
      */
     @Override
-    public ChatReplyResource reply(ChatRequest request, Long userId, boolean assistantAllowed) {
+    public ChatReplyResource reply(ChatRequest request, Long userId, AssistantAudience audience) {
         Answer answer = null;
         String loggedIntent = null;
+        List<ProposedAction> actions = List.of();
 
-        if (assistantAllowed && userId != null && assistant.enabled()) {
-            AiReply ai = askAssistant(request, userId);
+        if (audience != null && userId != null && assistant.enabled()) {
+            AiReply ai = askAssistant(request, userId, audience);
             if (ai != null) {
                 answer = new Answer(ai.intent(), ai.reply(), ai.results());
                 loggedIntent = ai.loggedIntent();
+                actions = ai.actions();
             }
         }
         if (answer == null) {
@@ -107,25 +101,49 @@ public class ChatService implements ChatServiceInterface {
                                 answer.reply(),
                                 loggedIntent)));
 
-        return new ChatReplyResource(answer.reply(), answer.intent(), answer.results());
+        return new ChatReplyResource(answer.reply(), answer.intent(), answer.results(), actions);
     }
 
     /**
-     * Claude's answer, or null to fall back to the keyword engine: over the hourly cap, or the
-     * Claude API / a lookup failed. The user always gets an answer.
+     * Claude's answer, or null to fall back to the keyword engine: over the daily platform cap,
+     * over the account's hourly cap, or the Claude API / a lookup failed. The user always gets an
+     * answer.
      */
-    private AiReply askAssistant(ChatRequest request, Long userId) {
-        if (!assistantLimit.tryAcquire(userId)) {
+    private AiReply askAssistant(ChatRequest request, Long userId, AssistantAudience audience) {
+        if (!assistantLimit.tryAcquirePlatform()) {
+            log.info("Assistant daily platform cap reached, keyword engine answers");
+            return null;
+        }
+        if (!assistantLimit.tryAcquire(userId, audience)) {
             log.info("Assistant hourly cap reached for user {}, keyword engine answers", userId);
             return null;
         }
         try {
-            return assistant.reply(recentHistory(request.sessionKey(), userId), request.message());
+            return assistant.reply(
+                    recentHistory(request.sessionKey(), userId),
+                    request.message(),
+                    contextFor(userId, audience, request.context()),
+                    request.context());
         } catch (RuntimeException e) {
             // AnthropicException (network, 4xx/5xx, rate limit) or a failed lookup
             log.warn("Assistant failed, keyword engine answers: {}", e.toString());
             return null;
         }
+    }
+
+    /**
+     * Resolves the stall a Farmer owns here, once per message, from the signed-in account. It is
+     * deliberately not a tool argument: an argument is filled by the model (FR-093 note 1).
+     */
+    private AssistantContext contextFor(
+            Long userId, AssistantAudience audience, ChatRequest.PageContext page) {
+        Long farmerId =
+                audience == AssistantAudience.FARMER
+                        ? farmerKnowledge.farmerIdOf(userId).orElse(null)
+                        : null;
+        List<ChatRequest.PageContext.CartLine> cart =
+                page == null || page.cart() == null ? List.of() : page.cart();
+        return new AssistantContext(audience, userId, farmerId, cart);
     }
 
     /** The last few messages of this session that belong to this account, oldest first. */
@@ -141,13 +159,15 @@ public class ChatService implements ChatServiceInterface {
 
     private Answer keywordAnswer(String text) {
         ParsedMessage parsed = classifier.classify(text, LocalDate.now(clock));
+        // Answer in the language of the question, as the Claude assistant does
+        KeywordCopy copy = KeywordCopy.forQuestion(parsed.vietnamese());
         try {
-            return answer(parsed);
+            return answer(parsed, copy);
         } catch (DataAccessException e) {
             // The domain table does not exist or the DB failed: still answer, do not expose a 500
             // to the UI
             log.warn("Chatbot lookup failed for intent {}", parsed.intent(), e);
-            return new Answer(parsed.intent(), DATA_UNAVAILABLE_REPLY, List.of());
+            return new Answer(parsed.intent(), copy.dataUnavailable(), List.of());
         }
     }
 
@@ -173,22 +193,22 @@ public class ChatService implements ChatServiceInterface {
                 .toList();
     }
 
-    private Answer answer(ParsedMessage parsed) {
+    private Answer answer(ParsedMessage parsed, KeywordCopy copy) {
         return switch (parsed.intent()) {
-            case GREETING -> new Answer(ChatIntent.GREETING, GREETING_REPLY, List.of());
-            case HELP -> new Answer(ChatIntent.HELP, HELP_REPLY, List.of());
-            case FIND_PRODUCT -> findProducts(parsed, false);
-            case PRODUCT_DETAIL -> findProducts(parsed, true);
-            case MARKET_HOURS -> marketHours(parsed);
-            case FARMER_AVAILABILITY -> farmerAvailability(parsed);
-            case PICKUP_WINDOW -> pickupWindow(parsed);
-            case UNKNOWN -> unknown(parsed);
+            case GREETING -> new Answer(ChatIntent.GREETING, copy.greeting(), List.of());
+            case HELP -> new Answer(ChatIntent.HELP, copy.help(), List.of());
+            case FIND_PRODUCT -> findProducts(parsed, false, copy);
+            case PRODUCT_DETAIL -> findProducts(parsed, true, copy);
+            case MARKET_HOURS -> marketHours(parsed, copy);
+            case FARMER_AVAILABILITY -> farmerAvailability(parsed, copy);
+            case PICKUP_WINDOW -> pickupWindow(parsed, copy);
+            case UNKNOWN -> unknown(parsed, copy);
         };
     }
 
     // ---------------------------------------------------------------- products
 
-    private Answer findProducts(ParsedMessage parsed, boolean detail) {
+    private Answer findProducts(ParsedMessage parsed, boolean detail, KeywordCopy copy) {
         ChatIntent intent = detail ? ChatIntent.PRODUCT_DETAIL : ChatIntent.FIND_PRODUCT;
         MarketRow market = matchMarket(parsed.normalized());
         String keyword =
@@ -197,33 +217,18 @@ public class ChatService implements ChatServiceInterface {
                         : removeWords(parsed.keyword(), coreName(market.marketName()));
 
         if (keyword.isBlank()) {
-            return new Answer(
-                    intent,
-                    "What product are you looking for? For example: \"find tomatoes\".",
-                    List.of());
+            return new Answer(intent, copy.askProduct(), List.of());
         }
 
         List<ProductRow> products =
                 knowledge.searchProducts(
                         keyword, market == null ? null : market.marketId(), detail);
-        String where = market == null ? "" : " at " + market.marketName();
+        String where = market == null ? "" : copy.at(market.marketName());
         if (products.isEmpty()) {
-            return new Answer(
-                    intent,
-                    "No products found for \"" + keyword + "\"" + where + ". Try another keyword.",
-                    List.of());
+            return new Answer(intent, copy.noProducts(keyword, where), List.of());
         }
 
-        StringBuilder reply =
-                new StringBuilder(
-                        "Found "
-                                + products.size()
-                                + (products.size() == 1 ? " product" : " products")
-                                + " for \""
-                                + keyword
-                                + "\""
-                                + where
-                                + ":");
+        StringBuilder reply = new StringBuilder(copy.found(products.size(), keyword, where));
         // Per-date stock (FR-063): price and stock are those of the nearest pickup date that still
         // has stock, the same numbers the product pages show — products.price / stock_quantity are
         // only the Farmer's reference values now
@@ -239,11 +244,12 @@ public class ChatService implements ChatServiceInterface {
         for (ProductRow p : products) {
             ProductAvailabilityResolver.Availability a = resolved.get(p.productId());
             int left = a == null ? 0 : a.quantity();
-            String priceUnit = formatPrice(a == null ? p.price() : a.price()) + "/" + p.unit();
+            String unit = copy.unit(p.unit());
+            String priceUnit = formatPrice(a == null ? p.price() : a.price()) + "/" + unit;
             String stock =
                     "sold_out".equals(p.status()) || left == 0
-                            ? "sold out"
-                            : left + " " + p.unit() + " left";
+                            ? copy.soldOut()
+                            : copy.left(left, unit);
             String markets =
                     p.marketNames().isEmpty()
                             ? ""
@@ -260,25 +266,24 @@ public class ChatService implements ChatServiceInterface {
         return new Answer(intent, reply.toString(), results);
     }
 
-    private Answer unknown(ParsedMessage parsed) {
+    private Answer unknown(ParsedMessage parsed, KeywordCopy copy) {
         // A sentence with no trigger word, e.g. only typing "bơ sáp": try treating it as a product
         // search
         if (!parsed.keyword().isBlank()) {
-            Answer attempt = findProducts(parsed, false);
+            Answer attempt = findProducts(parsed, false, copy);
             if (!attempt.results().isEmpty()) {
                 return attempt;
             }
         }
-        return new Answer(ChatIntent.UNKNOWN, FALLBACK_REPLY, List.of());
+        return new Answer(ChatIntent.UNKNOWN, copy.fallback(), List.of());
     }
 
     // ---------------------------------------------------------------- markets
 
-    private Answer marketHours(ParsedMessage parsed) {
+    private Answer marketHours(ParsedMessage parsed, KeywordCopy copy) {
         List<MarketRow> markets = knowledge.activeMarkets();
         if (markets.isEmpty()) {
-            return new Answer(
-                    ChatIntent.MARKET_HOURS, "No markets are open at the moment.", List.of());
+            return new Answer(ChatIntent.MARKET_HOURS, copy.noMarketsOpen(), List.of());
         }
 
         MarketRow matched =
@@ -295,25 +300,22 @@ public class ChatService implements ChatServiceInterface {
                             .toList();
             heading =
                     shown.isEmpty()
-                            ? "No markets open on " + DAY_NAMES[parsed.dayOfWeek()] + "."
-                            : "Markets open on " + DAY_NAMES[parsed.dayOfWeek()] + ":";
+                            ? copy.noMarketsOn(parsed.dayOfWeek())
+                            : copy.marketsOn(parsed.dayOfWeek());
         } else {
             shown = markets;
-            heading = "Market hours:";
+            heading = copy.marketHours();
         }
 
         List<String> lines =
                 shown.stream()
                         .map(
                                 m ->
-                                        m.marketName()
-                                                + " ("
-                                                + m.address()
-                                                + ") opens "
-                                                + formatRange(m.openingTime(), m.closingTime())
-                                                + ", on "
-                                                + formatDays(m.operatingDays())
-                                                + ".")
+                                        copy.marketLine(
+                                                m.marketName(),
+                                                m.address(),
+                                                formatRange(m.openingTime(), m.closingTime()),
+                                                formatDays(m.operatingDays(), copy)))
                         .toList();
         List<ChatResultItem> results =
                 shown.stream()
@@ -325,24 +327,23 @@ public class ChatService implements ChatServiceInterface {
                                                 m.marketName(),
                                                 m.address()))
                         .toList();
-        String reply = matched != null ? lines.getFirst() : joinLines(heading, lines);
+        String reply = matched != null ? lines.getFirst() : joinLines(heading, lines, copy);
         return new Answer(ChatIntent.MARKET_HOURS, reply, results);
     }
 
     // ---------------------------------------------------------------- farmer
 
-    private Answer farmerAvailability(ParsedMessage parsed) {
+    private Answer farmerAvailability(ParsedMessage parsed, KeywordCopy copy) {
         MarketRow market = matchMarket(parsed.normalized());
         Integer day = parsed.dayOfWeek();
         List<ScheduleRow> schedules =
                 knowledge.farmerSchedules(null, market == null ? null : market.marketId(), day);
 
         String scope =
-                (market == null ? "" : " at " + market.marketName())
-                        + (day == null ? "" : " on " + DAY_NAMES[day]);
+                (market == null ? "" : copy.at(market.marketName()))
+                        + (day == null ? "" : copy.on(day));
         if (schedules.isEmpty()) {
-            return new Answer(
-                    ChatIntent.FARMER_AVAILABILITY, "No Farmers" + scope + " yet.", List.of());
+            return new Answer(ChatIntent.FARMER_AVAILABILITY, copy.noFarmers(scope), List.of());
         }
 
         // Merge the schedule by Farmer: "Vườn Xanh — Chợ A T7 06:00–10:00; Chợ B CN 07:00–11:00"
@@ -365,7 +366,7 @@ public class ChatService implements ChatServiceInterface {
                                                     r ->
                                                             r.marketName()
                                                                     + " "
-                                                                    + DAY_NAMES[r.dayOfWeek()]
+                                                                    + copy.day(r.dayOfWeek())
                                                                     + " "
                                                                     + formatRange(
                                                                             r.pickupStart(),
@@ -380,10 +381,12 @@ public class ChatService implements ChatServiceInterface {
                                             first.marketName()));
                         });
         return new Answer(
-                ChatIntent.FARMER_AVAILABILITY, joinLines("Farmers" + scope + ":", lines), results);
+                ChatIntent.FARMER_AVAILABILITY,
+                joinLines(copy.farmers(scope), lines, copy),
+                results);
     }
 
-    private Answer pickupWindow(ParsedMessage parsed) {
+    private Answer pickupWindow(ParsedMessage parsed, KeywordCopy copy) {
         FarmerRow farmer =
                 matchByName(
                         parsed.normalized(),
@@ -391,10 +394,7 @@ public class ChatService implements ChatServiceInterface {
                         f -> coreName(f.stallName()));
         MarketRow market = matchMarket(parsed.normalized());
         if (farmer == null && market == null) {
-            return new Answer(
-                    ChatIntent.PICKUP_WINDOW,
-                    "Which stall or market do you want pickup times for? For example: \"pickup times at Ben Thanh market\".",
-                    List.of());
+            return new Answer(ChatIntent.PICKUP_WINDOW, copy.askPickup(), List.of());
         }
 
         Integer day = parsed.dayOfWeek();
@@ -404,19 +404,18 @@ public class ChatService implements ChatServiceInterface {
                         market == null ? null : market.marketId(),
                         day);
         String scope =
-                (farmer == null ? "" : " for " + farmer.stallName())
-                        + (market == null ? "" : " at " + market.marketName())
-                        + (day == null ? "" : " on " + DAY_NAMES[day]);
+                (farmer == null ? "" : copy.forStall(farmer.stallName()))
+                        + (market == null ? "" : copy.at(market.marketName()))
+                        + (day == null ? "" : copy.on(day));
         if (schedules.isEmpty()) {
-            return new Answer(
-                    ChatIntent.PICKUP_WINDOW, "No pickup times" + scope + " yet.", List.of());
+            return new Answer(ChatIntent.PICKUP_WINDOW, copy.noPickup(scope), List.of());
         }
 
         List<String> lines =
                 schedules.stream()
                         .map(
                                 r ->
-                                        DAY_NAMES[r.dayOfWeek()]
+                                        copy.day(r.dayOfWeek())
                                                 + " · "
                                                 + (farmer == null ? r.stallName() + " · " : "")
                                                 + r.marketName()
@@ -436,8 +435,7 @@ public class ChatService implements ChatServiceInterface {
                                         market.address()));
         return new Answer(
                 ChatIntent.PICKUP_WINDOW,
-                joinLines("Pickup times" + scope + ":", lines)
-                        + "\nNote: you can edit or cancel an order only before the Farmer's cutoff.",
+                joinLines(copy.pickup(scope), lines, copy) + copy.cutoffNote(),
                 results);
     }
 
@@ -484,27 +482,27 @@ public class ChatService implements ChatServiceInterface {
                 .replaceAll("\\s+", " ");
     }
 
-    private static String formatPrice(BigDecimal price) {
-        NumberFormat format = NumberFormat.getIntegerInstance(Locale.US);
-        return format.format(price) + " ₫";
+    /** USD with cents, like every amount the app shows (docs/decisions.md, LEAD 27/09). */
+    static String formatPrice(BigDecimal price) {
+        return NumberFormat.getCurrencyInstance(Locale.US).format(price);
     }
 
     private static String formatRange(LocalTime start, LocalTime end) {
         return TIME.format(start) + "–" + TIME.format(end);
     }
 
-    private static String formatDays(List<Integer> days) {
+    private static String formatDays(List<Integer> days, KeywordCopy copy) {
         if (days.isEmpty()) {
-            return "(not set yet)";
+            return copy.notSetYet();
         }
-        return days.stream().map(d -> DAY_NAMES[d]).collect(Collectors.joining(", "));
+        return days.stream().map(copy::day).collect(Collectors.joining(", "));
     }
 
-    private static String joinLines(String heading, List<String> lines) {
+    private static String joinLines(String heading, List<String> lines, KeywordCopy copy) {
         StringBuilder text = new StringBuilder(heading);
         lines.stream().limit(MAX_LINES).forEach(line -> text.append("\n• ").append(line));
         if (lines.size() > MAX_LINES) {
-            text.append("\n… and ").append(lines.size() - MAX_LINES).append(" more.");
+            text.append(copy.more(lines.size() - MAX_LINES));
         }
         return text.toString();
     }
@@ -518,5 +516,33 @@ public class ChatService implements ChatServiceInterface {
                 .message(text)
                 .intent(intent)
                 .build();
+    }
+
+    /** Products at or below this are "running low" in the banner. Same number the tools use. */
+    private static final int BRIEFING_LOW_STOCK = 5;
+
+    @Override
+    public FarmerBriefingResource farmerBriefing(Long userId) {
+        Long farmerId = userId == null ? null : farmerKnowledge.farmerIdOf(userId).orElse(null);
+        if (farmerId == null) {
+            return new FarmerBriefingResource(List.of(), 0, 0, 0, 0, 0);
+        }
+        LocalDate today = LocalDate.now(clock);
+        // java.time: Mon = 1 … Sun = 7, schema: Sun = 0 … Sat = 6
+        int dayOfWeek = today.getDayOfWeek().getValue() % 7;
+        List<String> markets =
+                farmerKnowledge.mySchedule(farmerId).stream()
+                        .filter(day -> day.dayOfWeek() == dayOfWeek)
+                        .map(ScheduleDayRow::marketName)
+                        .distinct()
+                        .toList();
+        BriefingRow row = farmerKnowledge.briefing(farmerId, today, BRIEFING_LOW_STOCK);
+        return new FarmerBriefingResource(
+                markets,
+                row.ordersToday(),
+                row.waitingToBeAccepted(),
+                row.cutoffAlreadyPassed(),
+                row.soldOutProducts(),
+                row.lowStockProducts());
     }
 }

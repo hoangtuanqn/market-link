@@ -12,6 +12,21 @@
     "submit": "Rechercher"
   },
   "day": "Jour de marché",
+  "filters": {
+    "category": "Catégorie",
+    "allCategories": "Toutes les catégories",
+    "market": "Marché",
+    "allMarkets": "Tous les marchés",
+    "price": "Prix unitaire",
+    "clear": "Effacer les filtres"
+  },
+  "price": {
+    "any": "Tous les prix",
+    "low": "Moins de {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Plus de {{high}}"
+  },
+  "stallsNotByCategory": "La catégorie ne filtre pas les étals — un étal n'appartient à aucune catégorie. Elle s'applique aux produits ci-dessous.",
   "sort": "Trier",
   "sorts": {
     "best": "Pertinence",
@@ -34,6 +49,8 @@
   },
   "results_one": "{{count}} résultat pour « {{q}} » le {{day}}",
   "results_other": "{{count}} résultats pour « {{q}} » le {{day}}",
+  "stallsOn_one": "{{count}} stand ouvert le {{day}}",
+  "stallsOn_other": "{{count}} stands ouverts le {{day}}",
   "noStalls": "Aucun stand ne correspond.",
   "noProducts": "Aucun produit ne correspond.",
   "noMarket": {

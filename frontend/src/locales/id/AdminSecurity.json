@@ -32,21 +32,13 @@
     "title": "Pindai ini dengan aplikasi autentikator",
     "text": "Google Authenticator, Microsoft Authenticator, Authy, 1Password — yang mana saja. Tidak ada yang dikirim ke mana pun: kode di bawah digambar oleh browser Anda sendiri.",
     "qr": "Kode QR untuk aplikasi autentikator",
-    "manual": "<b>Tidak bisa memindai?</b> Ketik kunci ini secara manual:",
-    "type": "Jenis",
-    "typeValue": "Berbasis waktu (TOTP)",
-    "algorithm": "Algoritma",
-    "digits": "Digit",
-    "period": "Periode",
-    "seconds_one": "{{count}} detik",
-    "seconds_other": "{{count}} detik"
+    "manual": "<b>Tidak bisa memindai?</b> Ketik kunci ini secara manual:"
   },
   "step2": {
     "title": "Ketik kode yang ditampilkan",
     "text": "Ini memastikan ponsel dan server sepakat soal waktu sebelum apa pun diaktifkan.",
     "code": "Kode enam digit",
-    "confirm": "Konfirmasi",
-    "confirmed": "Terkonfirmasi"
+    "confirm": "Konfirmasi"
   },
   "step3": {
     "title": "Simpan kode pemulihan Anda",
@@ -80,5 +72,19 @@
     "copyFailed": "Tidak dapat menyalin. Pilih kode dan salin secara manual.",
     "downloaded": "Diunduh sebagai {{file}}.",
     "fileHeading": "Kode pemulihan admin MarketLink"
+  },
+  "setup": {
+    "overline": "Keamanan admin",
+    "title": "Siapkan verifikasi dua langkah",
+    "copySecret": "Salin kunci",
+    "secretCopied": "Kunci disalin ke papan klip.",
+    "completeTitle": "Verifikasi dua langkah kini aktif!",
+    "completeText": "Akun admin Anda kini terlindungi. Simpan kode pemulihan di bawah ini, lalu lanjut ke dasbor.",
+    "goToDashboard": "Ke Dasbor Admin",
+    "alreadyActive": "Verifikasi dua langkah sudah aktif untuk akun Anda.",
+    "backToDashboard": "Kembali ke dasbor",
+    "manageSecurity": "Pengaturan keamanan",
+    "notYou": "Bukan Anda?",
+    "signOut": "Keluar"
   }
 }

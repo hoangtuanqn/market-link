@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { applyConversationEvent, applyPresence, mergeMessage, oldestId, prependOlder, removeMessage } from './merge';
 import ConversationApi from '@/api-requests/conversation.requests';
+import { ChatUnreadStore } from '@/lib/chat/unreadStore';
 import { realtime } from '@/lib/realtime/stompClient';
 import type {
   ChatMessageItem,
@@ -35,7 +36,12 @@ const parse = <T>(body: string): T | null => {
  * screen being read.
  */
 const markRead = (conversationId: number) => {
-  ConversationApi.markRead(conversationId).catch(() => {});
+  ConversationApi.markRead(conversationId)
+    // FR-111: the backend tells only the other member about this read, so the header and sidebar badges would keep
+    // counting this thread until some later event. Refresh the count once the read is saved.
+    .then(() => ConversationApi.unreadCount())
+    .then((response) => ChatUnreadStore.setUnread(response.data.count))
+    .catch(() => {});
 };
 
 /** An open thread's badge is 0: the backend only reports "read" to the other person, not to the one who just read. */
@@ -189,6 +195,15 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     setOtherReadAt(opts.otherReadAt ?? null);
   }
 
+  // A reload or a deep link opens the thread before the thread list (which carries the read marker) has loaded: take
+  // the marker when it arrives, unless a live "read" frame has already moved "Seen" further.
+  const seed = opts.otherReadAt ?? null;
+  const [seededFrom, setSeededFrom] = useState(seed);
+  if (seed !== seededFrom) {
+    setSeededFrom(seed);
+    if (seed && (!otherReadAt || Date.parse(seed) > Date.parse(otherReadAt))) setOtherReadAt(seed);
+  }
+
   // A REST response arriving late for a thread already left is dropped. Effects run in declaration order: this one before any request.
   useEffect(() => {
     openRef.current = conversationId;
@@ -327,12 +342,14 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     [conversationId],
   );
 
-  const sendPhoto = useCallback(
-    async (file: File) => {
+  /** FR-115: the message kind follows the type the server read from the file, not the file name. */
+  const sendMedia = useCallback(
+    async (file: File, options: { onProgress?: (percent: number) => void; signal?: AbortSignal } = {}) => {
       if (conversationId === null) return;
       const id = conversationId;
-      const uploaded = await ConversationApi.uploadPhoto(file);
-      const response = await ConversationApi.send(id, { kind: 'image', attachmentId: uploaded.data.attachmentId });
+      const uploaded = await ConversationApi.uploadMedia(file, options);
+      const kind = uploaded.data.mime.startsWith('video/') ? 'video' : 'image';
+      const response = await ConversationApi.send(id, { kind, attachmentId: uploaded.data.attachmentId });
       if (openRef.current === id) setMessages((current) => mergeMessage(current, response.data));
     },
     [conversationId],
@@ -363,7 +380,7 @@ export function useConversation(conversationId: number | null, opts: { otherRead
     loadOlder,
     olderError,
     send,
-    sendPhoto,
+    sendMedia,
     typing,
     otherTyping,
     otherReadAt,

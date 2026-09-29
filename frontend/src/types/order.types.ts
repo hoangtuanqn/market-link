@@ -1,8 +1,18 @@
+import type { StorageMode } from '@/api-requests/shelf-life.requests';
 import type { ORDER_STATUS } from '@/constants/enums';
 
 export type OrderStatus = (typeof ORDER_STATUS)[keyof typeof ORDER_STATUS];
 
-export type OrderLineType = { productId: number; qty: number; name?: string; unit?: string; price?: number };
+export type OrderLineType = {
+  productId: number;
+  qty: number;
+  name?: string;
+  unit?: string;
+  price?: number;
+  /** FR-121: the last good day ("yyyy-MM-dd"); null on lines placed before the promise existed. */
+  bestBefore?: string | null;
+  storageMode?: StorageMode | null;
+};
 
 /** [status, timestamp, by] — FR-038: every status change is recorded with who made it. */
 export type OrderHistoryEntry = [OrderStatus, string, string];

@@ -3,7 +3,6 @@
   "title": "Kategorien",
   "intro": "Die einzige Liste, aus der jeder Stand beim Anlegen eines Produkts wählt. Verkaufseinheiten sind fest und kommen mit der App.",
   "link": {
-    "announcements": "Hinweise",
     "feedback": "Rückmeldungen"
   },
   "caption": {
@@ -14,11 +13,17 @@
     "category": "Kategorie",
     "products": "Produkte",
     "stalls": "Stände",
-    "nameOf": "Name von {{name}}"
+    "nameOf": "Name von {{name}}",
+    "status": "Status",
+    "shelfLife": "Haltbarkeit",
+    "shelfLifeRange": "{{min}}–{{max}} Tage",
+    "shelfLifeDays_one": "{{count}} Tag",
+    "shelfLifeDays_other": "{{count}} Tage"
   },
   "action": {
     "save": "Speichern",
-    "remove": "Entfernen"
+    "remove": "Entfernen",
+    "enable": "Aktivieren"
   },
   "categoryForm": {
     "title": "Kategorie hinzufügen",
@@ -38,7 +43,9 @@
     "textUnused": "Kein Produkt nutzt sie.",
     "moveTo": "Produkte verschieben nach",
     "keep": "Kategorie behalten",
-    "confirm": "Kategorie entfernen"
+    "confirm": "Kategorie entfernen",
+    "moveToHint": "Dieser Kategorie zugewiesene Produkte werden neu zugewiesen.",
+    "moveToNone": "Keine (Produkte behalten diese Kategorie)"
   },
   "empty": {
     "categories": {
@@ -49,12 +56,64 @@
   "toast": {
     "categorySaved": "{{name}} gespeichert.",
     "categoryAdded": "Kategorie hinzugefügt. Die Stände können sie ab sofort wählen.",
-    "categoryRemoved": "{{name}} entfernt."
+    "categoryRemoved": "{{name}} entfernt.",
+    "categoryEnabled": "{{name}} aktiviert."
   },
   "error": {
     "noun": "Kategorien",
     "nameRequired": "Gib der Kategorie einen Namen.",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "Der Name darf höchstens {{max}} Zeichen lang sein.",
+    "nameTaken": "Eine Kategorie mit diesem Namen gibt es schon."
+  },
+  "status": {
+    "active": "Aktiv",
+    "inactive": "Inaktiv"
+  },
+  "guides": {
+    "title": "Lagergruppen",
+    "intro": "Empfohlene Haltbarkeit je Gruppe und Aufbewahrungsart. Erzeuger starten von diesen Werten aus.",
+    "category": "Kategorie",
+    "col": {
+      "group": "Gruppe",
+      "storage": "Aufbewahrung",
+      "days": "Tage",
+      "daysFor": "Tage für {{group}} ({{storage}})"
+    },
+    "status": {
+      "off": "Inaktiv"
+    },
+    "action": {
+      "save": "Speichern",
+      "off": "Deaktivieren",
+      "on": "Aktivieren"
+    },
+    "form": {
+      "title": "Gruppe hinzufügen",
+      "group": "Gruppenname",
+      "groupPlaceholder": "z. B. Leafy greens",
+      "examples": "Beispiele",
+      "examplesHint": "Durch Komma getrennte Produktwörter, auf Vietnamesisch und Englisch, mit denen die Gruppe anhand des Produktnamens erkannt wird.",
+      "storage": "Art der Aufbewahrung",
+      "days": "Empfohlene Tage",
+      "submit": "Gruppe hinzufügen"
+    },
+    "empty": {
+      "title": "Noch keine Lagergruppen",
+      "text": "Erzeuger sehen hier die Spanne der Kategorie, bis du eine Gruppe hinzufügst."
+    },
+    "noun": "Lagergruppen",
+    "error": {
+      "nameRequired": "Gib der Gruppe einen Namen.",
+      "days": "Gib eine ganze Zahl von 1 bis 365 ein.",
+      "taken": "Diese Gruppe hat diese Aufbewahrungsart schon."
+    },
+    "toast": {
+      "added": "Gruppe hinzugefügt.",
+      "saved": "Gruppe gespeichert.",
+      "off": "Gruppe deaktiviert.",
+      "on": "Gruppe aktiviert."
+    }
   }
 }

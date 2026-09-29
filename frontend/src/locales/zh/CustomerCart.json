@@ -28,8 +28,6 @@
     "unavailable": "One or more items are no longer for sale.",
     "stall_suspended": "This stall is not taking orders right now."
   },
-  "changeTime": "更改在 {{stall}} 的取货时间",
-  "pickupDay": "取货日期",
   "pickupDayAt": "在 {{stall}} 的取货日期",
   "pickupTime": "取货时间 · {{day}} {{date}} · 时段 {{from}} – {{to}}",
   "summary": {
@@ -52,5 +50,10 @@
     "title": "购物车中的商品",
     "text": "如果某个商品已不再出售，请在这里删除它，购物车就会重新加载。",
     "clear": "清空购物车"
+  },
+  "deal": {
+    "badge": "−{{percent}}%临期优惠",
+    "onlyOn": "该优惠仅适用于 {{day}}。",
+    "dayGone": "优惠日 {{day}} 已无法选择。请选择日期查看价格。"
   }
 }

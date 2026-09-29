@@ -38,8 +38,6 @@
     "phone": "Nomor telepon",
     "email": "Email",
     "emailHint": "Dipakai untuk masuk. Tidak bisa diubah di sini.",
-    "address": "Alamat",
-    "addressHint": "Dipakai untuk jarak dan rute.",
     "save": "Simpan perubahan",
     "saving": "Menyimpan…",
     "noChanges": "Tidak ada perubahan untuk disimpan.",

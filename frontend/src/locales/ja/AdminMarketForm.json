@@ -3,7 +3,6 @@
   "crumbNew": "追加",
   "crumbEdit": "編集",
   "titleNew": "新しいマーケット",
-  "city": "ホーチミン市",
   "metaStalls": "{{stalls}}店舗",
   "missing": {
     "title": "このマーケットはもうありません",
@@ -11,16 +10,12 @@
   },
   "field": {
     "name": "マーケット名",
-    "address": "住所",
-    "district": "区",
-    "city": "都市",
     "days": "営業日",
     "open": "開始時刻",
     "close": "終了時刻",
     "lat": "緯度",
     "lng": "経度",
     "lngHint": "ピンをドラッグしても構いません。地図データは OpenStreetMap です。",
-    "notes": "店舗向けのメモ",
     "images": "写真"
   },
   "images": {
@@ -59,7 +54,6 @@
     "announced": "お知らせ済み",
     "notYet": "未実施",
     "noneYet": "まだなし",
-    "noReason": "記載なし",
     "byAdminToday": "管理者 · 本日",
     "col": {
       "date": "日付",

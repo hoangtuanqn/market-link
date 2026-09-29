@@ -1,32 +1,33 @@
 {
-  "title": "今週の在庫",
-  "intro": "週間テンプレートは、各マーケットの日の初期数量です。適用してから、収穫が違う日を調整してください。予約済みの在庫は、お客さまに見える数からすでに除かれています。",
+  "title": "週間在庫テンプレート",
+  "intro": "曜日ごとに、各商品をふだんどれだけ、いくらで持ってくるかを設定します。その曜日を見ているお客さまには自動で補充されるので、追加の操作は必要ありません。",
   "saved": "保存しました",
   "per": "{{unit}} あたり",
-  "currentPrice": "now {{price}}",
-  "defaultPricePlaceholder": "Same price",
+  "currentPrice": "現在 {{price}}",
+  "defaultPricePlaceholder": "同じ価格",
   "col": {
     "product": "商品"
   },
   "error": {
-    "productsNoun": "your products",
-    "templateNoun": "your weekly template"
+    "productsNoun": "商品",
+    "templateNoun": "週間テンプレート"
   },
   "aria": {
-    "quantity": "{{product}} quantity on {{day}}",
-    "price": "{{product}} の価格"
+    "quantity": "{{day}}の{{product}}の数量",
+    "price": "{{day}}の{{product}}の価格"
   },
   "table": {
-    "caption": "Weekly stock template, one row per product and one column per weekday"
+    "caption": "週間在庫テンプレート。商品ごとに 1 行、曜日ごとに 1 列"
   },
   "template": {
     "save": "テンプレートを保存",
-    "savedText": "テンプレートを保存しました。今すぐ適用しない限り、来週から使われます。",
-    "note": "テンプレートの曜日は営業日に合わせます。営業日は「出店と受け取り」で変更できます。"
+    "savedText": "テンプレートを保存しました。",
+    "note": "数量を空欄にした曜日は販売しません。価格が空欄なら商品の現在の価格のままです。",
+    "priceError": "{{day}}の{{product}}に $0 より高い価格を入力するか、空欄のままにして現在の価格を使ってください。"
   },
   "empty": {
-    "title": "Add a product first",
-    "text": "A weekly template needs at least one product.",
-    "action": "Add a product"
+    "title": "まず商品を追加してください",
+    "text": "週間テンプレートには商品が 1 つ以上必要です。",
+    "action": "商品を追加"
   }
 }

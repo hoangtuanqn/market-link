@@ -7,11 +7,10 @@
     "phone": "Teléfono",
     "address": "Dirección",
     "hours": "Horario",
-    "emailValue": "contact@marketlink.vn",
-    "phoneValue": "+84 90 123 4567",
-    "addressValue": "Por añadir. El marcador del mapa es provisional, en el Distrito 1.",
-    "hoursValue": "Lun – vie, 09:00 – 17:00",
-    "toAdd": "Por añadir"
+    "emailValue": "admin@marketlink.vn",
+    "phoneValue": "0900000001",
+    "addressValue": "3 Lê Duẩn, Phường Sài Gòn, Thành phố Hồ Chí Minh",
+    "hoursValue": "Lun – vie, 09:00 – 17:00"
   },
   "feedback": {
     "title": "¿Algo no funciona o tienes una idea?",
@@ -22,7 +21,7 @@
     "label": "Mapa de la ubicación del equipo",
     "markerLabel": "Equipo de MarketLink (provisional)",
     "popupTitle": "Equipo de MarketLink",
-    "popupLine": "Marcador provisional, Distrito 1",
+    "popupLine": "3 Lê Duẩn, Phường Sài Gòn",
     "directions": "Cómo llegar al equipo"
   }
 }

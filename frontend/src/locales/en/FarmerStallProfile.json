@@ -51,7 +51,8 @@
     "notApproved": "Markets, days and pickup windows open once an admin has approved your stall.",
     "windowError": "{{market}}: pick at least one day and end the window after it starts.",
     "joined": "{{name}} added to your stall.",
-    "left": "{{name}} removed from your stall."
+    "left": "{{name}} removed from your stall.",
+    "codeError": "{{market}}: the stall code can be at most {{max}} characters."
   },
   "map": {
     "yourStall": "Your stall"

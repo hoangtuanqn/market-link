@@ -1,7 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import ThreadList from './ThreadList';
+import i18n, { setLanguage } from '@/i18n';
 import type { ConversationSummary } from '@/types/chat.types';
 
 const thread = (id: number, unreadCount = 0, fullName = 'Cô Tư'): ConversationSummary => ({
@@ -14,6 +15,32 @@ const thread = (id: number, unreadCount = 0, fullName = 'Cô Tư'): Conversation
 });
 
 describe('ThreadList', () => {
+  afterEach(async () => {
+    await i18n.changeLanguage('en');
+  });
+
+  /** The server stores "Photo"/"Video" in English as a media message's preview; the reader sees their own language. */
+  it('shows the photo and video previews in the reader language', async () => {
+    await setLanguage('vi');
+    render(
+      <ThreadList
+        threads={[
+          { ...thread(1), lastMessageText: 'Photo' },
+          { ...thread(2, 0, 'Gió Nam'), lastMessageText: 'Video' },
+        ]}
+        activeId={null}
+        onPick={vi.fn()}
+        loading={false}
+        error={false}
+        onRetry={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByText('Ảnh')).toBeInTheDocument();
+    expect(screen.getByText('Video')).toBeInTheDocument();
+    expect(screen.queryByText('Photo')).not.toBeInTheDocument();
+  });
+
   it('shows a loading state before the first page arrives', () => {
     render(<ThreadList threads={[]} activeId={null} onPick={vi.fn()} loading error={false} onRetry={vi.fn()} />);
 

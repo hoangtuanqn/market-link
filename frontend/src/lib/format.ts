@@ -13,8 +13,8 @@ const settings = () => SettingsStore.get();
 const locale = () => settings().language;
 
 /**
- * Locked to USD (user decision 2026-09-26) — no per-reader currency choice any more. `amount` is a plain number of
- * dollars, not cents. Kept a new name (not the old `vnd`) so nobody misreads what a call site formats.
+ * Locked to USD (user decision 2026-09-26) — no per-reader currency choice. `amount` is a plain number of dollars, not
+ * cents.
  */
 export function money(amount: number): string {
   return new Intl.NumberFormat(locale(), {
@@ -23,11 +23,6 @@ export function money(amount: number): string {
     maximumFractionDigits: 2,
   }).format(amount);
 }
-
-/** Alias to money() locked to USD across the entire application. */
-export const vnd = money;
-export const usd = money;
-export const RATES_DATE = '26/09/2026';
 
 /* ---------- units ---------- */
 
@@ -44,7 +39,7 @@ const IMPERIAL: Record<string, { unit: string; factor: number }> = {
 const imperialFor = (unit?: string) => (unit && settings().units === 'imperial' ? IMPERIAL[unit] : undefined);
 
 /** A measured quantity in the reader's units: (2, 'kg') → { count: 4.4, unit: 'lb' }. Count units pass through. */
-export function measure(count: number, unit?: string): { count: number; unit?: string } {
+function measure(count: number, unit?: string): { count: number; unit?: string } {
   const to = imperialFor(unit);
   if (!to) return { count, unit };
   return { count: Math.round(count * to.factor * 10) / 10, unit: to.unit };
@@ -71,7 +66,7 @@ export function unitPrice(price: number, unit?: string): { amount: number; unit?
  * English cannot derive the plural of an arbitrary unit phrase ("tray of 30" → "trays of 30"), so this is only the
  * guess a form offers by default; a stall can override it (see `units`' third argument).
  */
-export function guessPlural(unit: string): string {
+function guessPlural(unit: string): string {
   if (UNIT_SAME.has(unit)) return unit;
   if (unit === 'loaf') return 'loaves';
   if (/(ch|sh|s|x)$/.test(unit)) return `${unit}es`;
@@ -160,9 +155,43 @@ export function weekday(date: Date): string {
  * and reveal this on hover, so you can see which market morning you are actually picking.
  */
 export function upcoming(dow: number, from: Date = new Date()): string {
+  return formatDayMonth(upcomingDate(dow, from));
+}
+
+/** The same next date as {@link upcoming}, as a Date. */
+export function upcomingDate(dow: number, from: Date = new Date()): Date {
   const d = new Date(from);
   d.setDate(d.getDate() + ((dow - d.getDay() + 7) % 7));
-  return formatDayMonth(d);
+  return d;
+}
+
+/** The market weekend to show: Friday to Sunday, the one under way on a Saturday or Sunday, else the coming one. */
+export function upcomingWeekend(from: Date = new Date()): { from: Date; to: Date } {
+  const to = upcomingDate(0, from);
+  const friday = new Date(to);
+  friday.setDate(to.getDate() - 2);
+  return { from: friday, to };
+}
+
+/**
+ * Today and the six days after it, each at local midnight, today first: the market mornings a visitor can still shop
+ * for. `dow` is 0 = Sunday … 6 = Saturday, like `market_operating_days.day_of_week`. Built from the calendar date
+ * rather than by adding 24 hours, so a daylight-saving change can neither skip nor repeat a day. Day chips use this so
+ * they always start from today instead of a fixed week.
+ */
+export function nextSevenDays(from: Date = new Date()): { dow: number; date: Date }[] {
+  return Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(from.getFullYear(), from.getMonth(), from.getDate() + i);
+    return { dow: date.getDay(), date };
+  });
+}
+
+/**
+ * The first weekday, counting from today, on which `isOpen` holds — the default "market day" of a day picker. Falls
+ * back to today's weekday when no day of the coming week is open, so a picker always has a value.
+ */
+export function firstOpenDay(isOpen: (dow: number) => boolean, from: Date = new Date()): number {
+  return nextSevenDays(from).find((d) => isOpen(d.dow))?.dow ?? from.getDay();
 }
 
 /** Date → "Thu 24/09 · 14:35" */
@@ -197,4 +226,21 @@ export function pickupLabel(date: string, slot: string): string {
 export function cutoffLabel(iso: string): string {
   const at = new Date(iso);
   return Number.isNaN(at.getTime()) ? iso : `${formatTime(at)} ${formatDate(at)}`;
+}
+
+/* ---------- text matching ---------- */
+
+/**
+ * Lower-case text without accents, for matching what a visitor types against names: "Rau Muống" and "rau muong" both
+ * become "rau muong". NFD splits a letter from its combining marks, which are then dropped; "đ" is its own letter in
+ * Unicode, not "d" plus a mark, so it is mapped by hand.
+ */
+export function foldText(text: string): string {
+  return text.normalize('NFD').replace(/\p{M}/gu, '').toLowerCase().replace(/đ/g, 'd');
+}
+
+/** Whether any of `fields` contains `query`, ignoring case and accents. An empty or blank query matches everything. */
+export function matchesQuery(query: string, ...fields: (string | undefined)[]): boolean {
+  const q = foldText(query.trim());
+  return q === '' || fields.some((f) => f != null && foldText(f).includes(q));
 }

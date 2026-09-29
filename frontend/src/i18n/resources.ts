@@ -33,19 +33,23 @@ import farmerSlots from '@/locales/en/FarmerSlots.json';
 import farmerStallProfile from '@/locales/en/FarmerStallProfile.json';
 import farmerStockWeek from '@/locales/en/FarmerStockWeek.json';
 import forgotPassword from '@/locales/en/ForgotPassword.json';
+import forbidden from '@/locales/en/Forbidden.json';
 import googleCallback from '@/locales/en/GoogleCallback.json';
 import home from '@/locales/en/Home.json';
 import login from '@/locales/en/Login.json';
+import maintenance from '@/locales/en/Maintenance.json';
 import marketDetail from '@/locales/en/MarketDetail.json';
 import markets from '@/locales/en/Markets.json';
 import notFound from '@/locales/en/NotFound.json';
 import productDetail from '@/locales/en/ProductDetail.json';
 import products from '@/locales/en/Products.json';
+import deals from '@/locales/en/Deals.json';
 import registerCustomer from '@/locales/en/RegisterCustomer.json';
 import resetPassword from '@/locales/en/ResetPassword.json';
 import search from '@/locales/en/Search.json';
 import setPassword from '@/locales/en/SetPassword.json';
 import stallProfile from '@/locales/en/StallProfile.json';
+import verifyEmail from '@/locales/en/VerifyEmail.json';
 import farmerSettings from '@/locales/en/FarmerSettings.json';
 import adminSettings from '@/locales/en/AdminSettings.json';
 import farmerMessages from '@/locales/en/FarmerMessages.json';
@@ -104,19 +108,23 @@ export const en = {
   FarmerStallProfile: farmerStallProfile,
   FarmerStockWeek: farmerStockWeek,
   ForgotPassword: forgotPassword,
+  Forbidden: forbidden,
   GoogleCallback: googleCallback,
   Home: home,
   Login: login,
+  Maintenance: maintenance,
   MarketDetail: marketDetail,
   Markets: markets,
   NotFound: notFound,
   ProductDetail: productDetail,
   Products: products,
+  Deals: deals,
   RegisterCustomer: registerCustomer,
   ResetPassword: resetPassword,
   Search: search,
   SetPassword: setPassword,
   StallProfile: stallProfile,
+  VerifyEmail: verifyEmail,
   FarmerSettings: farmerSettings,
   AdminSettings: adminSettings,
   FarmerMessages: farmerMessages,

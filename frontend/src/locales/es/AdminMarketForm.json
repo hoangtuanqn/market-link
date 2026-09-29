@@ -3,7 +3,6 @@
   "crumbNew": "Añadir",
   "crumbEdit": "Editar",
   "titleNew": "Mercado nuevo",
-  "city": "Ciudad Ho Chi Minh",
   "metaStalls": "{{stalls}} puestos",
   "missing": {
     "title": "Ese mercado ya no está aquí",
@@ -11,16 +10,12 @@
   },
   "field": {
     "name": "Nombre del mercado",
-    "address": "Dirección",
-    "district": "Distrito",
-    "city": "Ciudad",
     "days": "Días de apertura",
     "open": "Abre",
     "close": "Cierra",
     "lat": "Latitud",
     "lng": "Longitud",
     "lngHint": "O arrastra la chincheta. Los datos del mapa vienen de OpenStreetMap.",
-    "notes": "Notas para los puestos",
     "images": "Fotos"
   },
   "images": {
@@ -59,7 +54,6 @@
     "announced": "Anunciado",
     "notYet": "Todavía no",
     "noneYet": "Ninguno",
-    "noReason": "Sin indicar",
     "byAdminToday": "Administrador · hoy",
     "col": {
       "date": "Fecha",

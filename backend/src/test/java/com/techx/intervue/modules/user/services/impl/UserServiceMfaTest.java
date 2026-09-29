@@ -2,14 +2,18 @@ package com.techx.intervue.modules.user.services.impl;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.techx.intervue.config.AuthConfig;
+import com.techx.intervue.modules.geo.services.interfaces.AddressServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.enums.UserStatus;
@@ -18,6 +22,7 @@ import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.requests.LoginRequest;
 import com.techx.intervue.modules.user.resources.AuthResult;
 import com.techx.intervue.modules.user.resources.SocialProfile;
+import com.techx.intervue.modules.user.services.interfaces.EmailVerificationServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
 import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface.PendingLogin;
 import com.techx.intervue.modules.user.services.interfaces.RefreshTokenServiceInterface.IssuedToken;
@@ -26,6 +31,7 @@ import com.techx.intervue.services.interfaces.JobQueueInterface;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.InOrder;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -57,7 +63,9 @@ class UserServiceMfaTest {
                         mock(BlacklistServiceInterface.class),
                         authConfig,
                         mock(JobQueueInterface.class),
-                        mfaService);
+                        mfaService,
+                        mock(AddressServiceInterface.class),
+                        mock(EmailVerificationServiceInterface.class));
         when(passwordEncoder.matches("secret", "hash")).thenReturn(true);
         when(authConfig.getExpirationTime()).thenReturn(900_000L);
         when(jwtService.generateToken(anyLong())).thenReturn("access");
@@ -79,6 +87,27 @@ class UserServiceMfaTest {
         assertThat(result.accessToken()).isNull();
         assertThat(result.refreshToken()).isNull();
         verify(refreshTokenService, never()).issueRefreshToken(anyLong(), anyBoolean());
+    }
+
+    /** FR-008: before the code is checked the answer must not hand out the admin's profile. */
+    @Test
+    void pendingAnswerCarriesOnlyTheEmail() {
+        User admin = user(1L, RoleType.ADMIN);
+        admin.setPhone("0900000001");
+        admin.setAddress("3 Le Duan");
+        when(mfaService.isEnabled(1L)).thenReturn(true);
+        when(mfaService.startChallenge(1L, false)).thenReturn("pending-token");
+
+        AuthResult result =
+                service.authenticate(new LoginRequest(admin.getEmail(), "secret", false, null));
+
+        assertThat(result.user().email()).isEqualTo(admin.getEmail());
+        assertThat(result.user().id()).isNull();
+        assertThat(result.user().fullName()).isNull();
+        assertThat(result.user().phone()).isNull();
+        assertThat(result.user().address()).isNull();
+        assertThat(result.user().addressParts()).isNull();
+        assertThat(result.user().role()).isNull();
     }
 
     @Test
@@ -145,6 +174,29 @@ class UserServiceMfaTest {
 
         assertThatThrownBy(() -> service.completeMfaLogin("pending-token", "123456", null))
                 .isInstanceOf(DisabledException.class);
+    }
+
+    /**
+     * FR-008: a session opened with only the password before 2FA was turned on must not become a
+     * full admin session afterwards — every earlier session is signed out, like a password change,
+     * and only the caller gets a new one (not remembered, like the admin sign-in).
+     */
+    @Test
+    void turningTwoStepOnSignsOutEveryEarlierSession() {
+        user(1L, RoleType.ADMIN);
+
+        AuthResult result = service.restartSession(1L);
+
+        InOrder order = inOrder(refreshTokenService, userSessionCache, jwtService);
+        order.verify(refreshTokenService).revokeAllTokens(1L);
+        // the revoked-before marker must be written before the new token is signed
+        order.verify(userSessionCache).revokeAll(1L);
+        order.verify(jwtService).generateToken(1L);
+        order.verify(userSessionCache).set(eq(1L), any(), any(), any());
+        verify(refreshTokenService).issueRefreshToken(1L, false);
+        assertThat(result.accessToken()).isEqualTo("access");
+        assertThat(result.refreshToken()).isEqualTo("refresh");
+        assertThat(result.rememberMe()).isFalse();
     }
 
     private User user(Long id, RoleType role) {

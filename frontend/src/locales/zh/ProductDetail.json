@@ -10,17 +10,23 @@
     "remove": "移出收藏：{{name}}"
   },
   "soldPer": "按{{unit}}出售",
-  "left": "本周剩余 <b>{{qty}}</b>",
+  "left": "剩余 <b>{{qty}}</b>",
+  "leftOn": "{{day}} 剩余 <b>{{qty}}</b>",
   "stockUpdated": "库存已于今天更新，在本周末订单之前。",
-  "notifyMe": "到货时通知我",
   "added": {
     "title": "已加入购物车",
     "text": "已将 {{qty}} {{name}} 加入购物车。"
   },
   "addToCart": "加入购物车",
   "payNote": "下单后即为你保留库存。取货时在摊位支付 {{price}}。",
+  "deals": {
+    "title": "这些取货日有优惠",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}，原价 {{was}} · 最佳食用期至 {{until}} 结束 · 剩余 {{qty}}",
+    "add": "为{{day}}加入购物车",
+    "noun": "优惠"
+  },
   "fromStall": "来自摊位",
-  "sellingSince": "自 {{date}} 起在此销售",
   "stats": {
     "reviews_one": "{{count}} 条评价",
     "reviews_other": "{{count}} 条评价",
@@ -31,13 +37,13 @@
     "cutoff": "截单提前"
   },
   "seeStall": "查看摊位",
-  "messageStall": "联系摊位",
   "details": {
     "title": "商品详情",
     "soldPer": "销售单位",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "保鲜期",
+    "shelfLifeLine_one": "{{storage}} · 取货后可保存 {{count}} 天",
+    "shelfLifeLine_other": "{{storage}} · 取货后可保存 {{count}} 天",
+    "shelfLifePromise": "摊位承诺可保存 {{days}} 天（通常 {{suggested}} 天）。",
     "category": "类别",
     "stall": "摊位",
     "market": "市集"
@@ -74,7 +80,6 @@
   "similar": {
     "title": "本周末其他摊位的{{name}}",
     "note": "同样的蔬菜，不同的田地和价格",
-    "here": "当前商品",
     "view": "查看"
   },
   "also": {

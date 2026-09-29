@@ -81,5 +81,3 @@ export function VideoThumb({ url, poster, className, big = false }: VideoThumbPr
     </>
   );
 }
-
-export default VideoThumb;

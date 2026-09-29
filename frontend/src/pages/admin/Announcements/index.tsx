@@ -1,18 +1,20 @@
-import { useEffect, useState, type SubmitEvent } from 'react';
+import { useCallback, useEffect, useState, type SubmitEvent } from 'react';
 import { useTranslation } from 'react-i18next';
+import AskAssistant from '@/components/assistant/AskAssistant';
 import AnnouncementApi from '@/api-requests/announcement.requests';
 import AnnouncementBanner from '@/components/AnnouncementBanner';
 import { CheckIcon, CircleSlashIcon, ClockIcon } from '@/components/icons';
-import { Button, ButtonLink } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { DataState } from '@/components/ui/data-state';
 import { Field, SelectField } from '@/components/ui/input';
+import { Pagination } from '@/components/ui/pagination';
 import { Table, type TableColumn } from '@/components/ui/table';
-import { ADMIN_CATEGORIES_PATH, ADMIN_FEEDBACK_PATH } from '@/constants/nav';
 import { formatDate } from '@/lib/format';
 import type { Announcement, AnnouncementAudience } from '@/types/notification.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import AnnouncementTableSkeleton from './AnnouncementTableSkeleton';
 
 /** API value → the page's old translation key (audience.Everyone / Customers / Farmers). */
 const AUDIENCES: { value: AnnouncementAudience; label: 'Everyone' | 'Customers' | 'Farmers' }[] = [
@@ -23,10 +25,11 @@ const AUDIENCES: { value: AnnouncementAudience; label: 'Everyone' | 'Customers' 
 
 const TITLE_MAX = 150;
 const CONTENT_MAX = 1000;
+const PAGE_SIZE = 10;
 
 type Form = { title: string; content: string; audience: AnnouncementAudience; from: string; to: string };
 type Errors = Partial<Record<'title' | 'content' | 'to', string>>;
-type Load = { status: 'loading' } | { status: 'error' } | { status: 'ready'; items: Announcement[] };
+type Load = { status: 'loading' } | { status: 'error' } | { status: 'ready'; items: Announcement[]; total: number };
 
 const EMPTY: Form = { title: '', content: '', audience: 'all', from: '', to: '' };
 
@@ -54,19 +57,36 @@ const PHASE_BADGE = {
  */
 const AdminAnnouncementsPage = () => {
   const { t } = useTranslation('AdminAnnouncements');
+  const { t: tAssistant } = useTranslation('common');
   const [form, setForm] = useState<Form>(EMPTY);
   const [errors, setErrors] = useState<Errors>({});
   const [publishing, setPublishing] = useState(false);
   const [state, setState] = useState<Load>({ status: 'loading' });
-
-  const fetchList = () =>
-    AnnouncementApi.adminList()
-      .then((res) => setState({ status: 'ready', items: res.data.items }))
-      .catch(() => setState({ status: 'error' }));
+  const [page, setPage] = useState(1);
+  const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
-    void fetchList();
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
   }, []);
+
+  const fetchList = useCallback((targetPage: number) => {
+    return AnnouncementApi.adminList(targetPage, PAGE_SIZE)
+      .then((res) =>
+        setState({
+          status: 'ready',
+          items: res.data.items,
+          total: res.data.total,
+        }),
+      )
+      .catch(() => setState({ status: 'error' }));
+  }, []);
+
+  useEffect(() => {
+    void fetchList(1);
+  }, [fetchList]);
 
   const validate = (f: Form): Errors => {
     const e: Errors = {};
@@ -94,7 +114,8 @@ const AdminAnnouncementsPage = () => {
       });
       Notification.success({ text: t('toast.published') });
       setForm(EMPTY);
-      void fetchList();
+      setPage(1);
+      void fetchList(1);
     } catch (error) {
       setErrors(Helper.getFieldErrors(error));
       Notification.error({ text: Helper.getErrorMessage(error, t('toast.publishError')) });
@@ -107,7 +128,7 @@ const AdminAnnouncementsPage = () => {
     try {
       await AnnouncementApi.takeDown(a.id);
       Notification.success({ text: t('toast.takenDown') });
-      void fetchList();
+      void fetchList(page);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, t('toast.takeDownError')) });
     }
@@ -121,19 +142,34 @@ const AdminAnnouncementsPage = () => {
       a.endsAt ? formatDate(new Date(a.endsAt)) : t('window.open')
     }`;
 
+  const showSkeleton = state.status === 'loading' || initialLoading;
+  const totalPages = state.status === 'ready' ? Math.ceil(state.total / PAGE_SIZE) : 0;
+
   const columns: TableColumn<Announcement>[] = [
     {
       key: 'title',
       label: t('col.announcement'),
       render: (a) => (
-        <>
-          <b>{a.title}</b>
-          <span className="text-ink-muted block text-[13px]">{a.content}</span>
-        </>
+        <div className="flex flex-col gap-0.5">
+          <b className="text-ink">{a.title}</b>
+          <span className="text-ink-muted line-clamp-2 text-[13px]">{a.content}</span>
+        </div>
       ),
     },
-    { key: 'audience', label: t('col.showTo'), render: (a) => audienceLabel(a.audience) },
-    { key: 'window', label: t('col.window'), render: windowLabel },
+    {
+      key: 'audience',
+      label: t('col.showTo'),
+      render: (a) => (
+        <span className="bg-surface-sunken text-ink inline-flex items-center rounded-sm px-2 py-0.5 text-[13px] font-medium">
+          {audienceLabel(a.audience)}
+        </span>
+      ),
+    },
+    {
+      key: 'window',
+      label: t('col.window'),
+      render: (a) => <span className="text-ink-muted text-[13px] whitespace-nowrap">{windowLabel(a)}</span>,
+    },
     {
       key: 'status',
       label: t('col.status'),
@@ -142,9 +178,9 @@ const AdminAnnouncementsPage = () => {
         const { className, Icon } = PHASE_BADGE[phase];
         return (
           <span
-            className={`${className} inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[13px] leading-4.5 font-bold`}
+            className={`${className} inline-flex items-center gap-1 rounded-full py-0.75 pr-2.5 pl-2 text-[12px] leading-4.5 font-bold whitespace-nowrap`}
           >
-            <Icon size={14} />
+            <Icon size={13} />
             {t(`status.${phase}`)}
           </span>
         );
@@ -172,26 +208,19 @@ const AdminAnnouncementsPage = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
-          <p className="text-body max-w-160">{t('intro')}</p>
+    <div className="flex flex-1 flex-col gap-6">
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-wrap items-center gap-3">
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
+          <AskAssistant question={tAssistant('assistant.ask.announcement')} />
         </div>
-        <div className="flex flex-wrap gap-2">
-          <ButtonLink to={ADMIN_CATEGORIES_PATH} variant="secondary">
-            {t('link.categories')}
-          </ButtonLink>
-          <ButtonLink to={ADMIN_FEEDBACK_PATH} variant="secondary">
-            {t('link.feedback')}
-          </ButtonLink>
-        </div>
+        <p className="text-body text-ink-muted max-w-160">{t('intro')}</p>
       </div>
 
-      <div className="grid items-start gap-6 lg:grid-cols-[420px_minmax(0,1fr)]">
-        <Card className="p-6">
+      <div className="grid items-start gap-6 lg:grid-cols-[400px_minmax(0,1fr)] xl:grid-cols-[420px_minmax(0,1fr)]">
+        <Card className="flex flex-col p-6 shadow-xs">
           <form noValidate onSubmit={(e) => void publish(e)} className="flex flex-col gap-4">
-            <h2 className="text-h3">{t('form.title')}</h2>
+            <h2 className="text-h3 text-ink font-bold">{t('form.title')}</h2>
             <Field
               id="announcement-title"
               label={t('form.headline')}
@@ -204,19 +233,20 @@ const AdminAnnouncementsPage = () => {
               onChange={(e) => setForm({ ...form, title: e.target.value })}
             />
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="announcement-text" className="text-small font-bold">
+              <label htmlFor="announcement-text" className="text-small text-ink font-bold">
                 {t('form.detail')}
               </label>
               <textarea
                 id="announcement-text"
                 value={form.content}
                 maxLength={CONTENT_MAX}
+                rows={3}
                 placeholder={t('form.detailPlaceholder')}
                 aria-invalid={!!errors.content}
                 aria-describedby={errors.content ? 'announcement-text-err' : undefined}
                 onChange={(e) => setForm({ ...form, content: e.target.value })}
                 className={Helper.cn(
-                  'bg-surface-raised focus:outline-focus min-h-18 rounded-sm border-[1.5px] p-3 focus:outline-2',
+                  'bg-surface-raised focus:outline-focus min-h-20 w-full rounded-sm border-[1.5px] p-3 text-[14px] leading-relaxed transition-colors focus:outline-2',
                   errors.content ? 'border-danger' : 'border-line-strong',
                 )}
               />
@@ -253,9 +283,10 @@ const AdminAnnouncementsPage = () => {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <span className="text-small font-bold">{t('form.preview')}</span>
-              <div className="border-line-strong overflow-hidden rounded-sm border-[1.5px]">
+              <span className="text-small text-ink font-bold">{t('form.preview')}</span>
+              <div className="border-line-strong overflow-hidden rounded-md border-[1.5px]">
                 <AnnouncementBanner
+                  key={`${form.title}-${form.content}`}
                   announcement={{
                     title: form.title || t('form.previewTitle'),
                     text: form.content || t('form.previewText'),
@@ -264,18 +295,29 @@ const AdminAnnouncementsPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-2">
-              <Button type="submit" disabled={publishing}>
+            <div className="pt-2">
+              <Button type="submit" disabled={publishing} className="w-full justify-center">
                 {publishing ? t('action.publishing') : t('action.publish')}
               </Button>
             </div>
           </form>
         </Card>
 
-        <section className="flex flex-col gap-3">
-          <h2 className="text-h3">{t('list.title')}</h2>
-          {state.status === 'loading' && <p className="text-small text-ink-muted">{t('list.loading')}</p>}
-          {state.status === 'error' && (
+        <section className="flex flex-1 flex-col gap-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <h2 className="text-h3 text-ink font-bold">{t('list.title')}</h2>
+              {state.status === 'ready' && state.total > 0 && (
+                <span className="bg-surface-sunken text-ink-muted inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-[12px] font-bold">
+                  {state.total}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {showSkeleton && <AnnouncementTableSkeleton />}
+
+          {!showSkeleton && state.status === 'error' && (
             <DataState
               variant="error"
               title={t('list.errorTitle')}
@@ -286,7 +328,7 @@ const AdminAnnouncementsPage = () => {
                   size="sm"
                   onClick={() => {
                     setState({ status: 'loading' });
-                    void fetchList();
+                    void fetchList(page);
                   }}
                 >
                   {t('list.retry')}
@@ -294,11 +336,33 @@ const AdminAnnouncementsPage = () => {
               }
             />
           )}
-          {state.status === 'ready' &&
+
+          {!showSkeleton &&
+            state.status === 'ready' &&
             (state.items.length ? (
-              <Table columns={columns} rows={state.items} />
+              <div className="flex flex-1 flex-col gap-4">
+                <Table columns={columns} rows={state.items} />
+                {totalPages > 1 && (
+                  <div className="flex justify-center pt-2">
+                    <Pagination
+                      page={page}
+                      pages={totalPages}
+                      onChange={(nextPage) => {
+                        setPage(nextPage);
+                        void fetchList(nextPage);
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
             ) : (
-              <DataState title={t('empty.title')} text={t('empty.text')} />
+              <DataState
+                center
+                fill
+                title={t('empty.title')}
+                text={t('empty.text')}
+                className="min-h-[380px] w-full flex-1"
+              />
             ))}
         </section>
       </div>

@@ -1,10 +1,12 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { AxiosError } from 'axios';
 import { MemoryRouter, Route, Routes } from 'react-router';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import CustomerOrderDetailPage from './index';
 import CatalogApi from '@/api-requests/catalog.requests';
-import OrderApi, { type OrderDetailDto } from '@/api-requests/order.requests';
+import OrderApi, { type OrderDetailDto, type OrderItemDto } from '@/api-requests/order.requests';
+import QualityReportApi from '@/api-requests/quality-report.requests';
 import StallApi from '@/api-requests/stall.requests';
 import { money } from '@/lib/format';
 
@@ -14,6 +16,15 @@ vi.mock('@/api-requests/order.requests', async (importOriginal) => {
 });
 vi.mock('@/api-requests/stall.requests', () => ({ default: { get: vi.fn() } }));
 vi.mock('@/api-requests/catalog.requests', () => ({ default: { getMarket: vi.fn() } }));
+vi.mock('@/api-requests/quality-report.requests', async (importOriginal) => {
+  const real = await importOriginal<typeof import('@/api-requests/quality-report.requests')>();
+  return { ...real, default: { create: vi.fn(), uploadPhoto: vi.fn() } };
+});
+// Tuesday 06/10/2026 in Ho Chi Minh City, whatever day the test runs
+vi.mock('@/lib/spoilage', async (importOriginal) => {
+  const real = await importOriginal<typeof import('@/lib/spoilage')>();
+  return { ...real, todayInVietnam: () => '2026-10-06' };
+});
 // Leaflet does not run in jsdom; the map itself is not what this page test is about
 vi.mock('@/components/MarketMap', () => ({ default: () => <div data-testid="map" /> }));
 vi.mock('@/components/chat/MessageStallButton', () => ({
@@ -76,6 +87,8 @@ const renderAt = (path: string) =>
 beforeEach(() => {
   vi.mocked(OrderApi.get).mockReset().mockResolvedValue(detail());
   vi.mocked(OrderApi.cancel).mockReset();
+  vi.mocked(QualityReportApi.create).mockReset();
+  vi.mocked(QualityReportApi.uploadPhoto).mockReset();
   vi.mocked(StallApi.get).mockResolvedValue({
     farmerId: 15,
     stallName: 'Vườn Út Hiền',
@@ -203,5 +216,168 @@ describe('CustomerOrderDetailPage', () => {
     await screen.findByRole('heading', { level: 1, name: /Vườn Út Hiền/ });
 
     expect(screen.queryByText(/preview: after cutoff/i)).not.toBeInTheDocument();
+  });
+});
+
+/** Water spinach picked up Saturday 03/10, 5 days in the fridge: good until the end of Monday 05/10. */
+const line = (patch: Partial<OrderItemDto> = {}): OrderItemDto => ({
+  productId: 3,
+  productName: 'Water spinach',
+  unit: 'bunch',
+  unitPrice: 0.5,
+  quantity: 2,
+  subtotal: 1,
+  bestBefore: '2026-10-05',
+  storageMode: 'chilled',
+  listPrice: null,
+  qualityReport: null,
+  itemId: 501,
+  ...patch,
+});
+
+const completed = (items: OrderItemDto[]) => detail({ items, canCancel: false, canModify: false }, 'completed');
+
+const conflict = (message: string, code: string) =>
+  new AxiosError('conflict', 'ERR_BAD_REQUEST', undefined, undefined, {
+    status: 409,
+    data: { success: false, message, error: { code, details: [] } },
+  } as never);
+
+const openReport = async () => {
+  await userEvent.click(await screen.findByRole('button', { name: 'Report spoiled: Water spinach' }));
+  return screen.getByRole('dialog');
+};
+
+describe('reporting spoiled produce (FR-122)', () => {
+  it('offers "Report spoiled" on a completed line until two days after its good-until date', async () => {
+    vi.mocked(OrderApi.get).mockResolvedValue(
+      completed([
+        line(),
+        line({ productId: 4, productName: 'Cherry tomatoes', itemId: 502, bestBefore: '2026-10-03' }),
+      ]),
+    );
+    renderAt('/orders/21');
+
+    expect(await screen.findByRole('button', { name: 'Report spoiled: Water spinach' })).toBeInTheDocument();
+    // good until 03/10: the window closed at the end of 05/10, today is 06/10
+    expect(screen.queryByRole('button', { name: 'Report spoiled: Cherry tomatoes' })).not.toBeInTheDocument();
+  });
+
+  it('shows the report instead of the button, and nothing on a line without a good-until date', async () => {
+    vi.mocked(OrderApi.get).mockResolvedValue(
+      completed([
+        line({ bestBefore: null, storageMode: null }),
+        line({
+          productId: 4,
+          productName: 'Cherry tomatoes',
+          itemId: 502,
+          qualityReport: { id: 7, status: 'confirmed', spoiledOn: '2026-10-04', problem: 'mold' },
+        }),
+      ]),
+    );
+    renderAt('/orders/21');
+
+    expect(await screen.findByText('Spoilage reported · Confirmed by an admin')).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /^Report spoiled/ })).not.toBeInTheDocument();
+  });
+
+  it('is not offered before the order is completed', async () => {
+    vi.mocked(OrderApi.get).mockResolvedValue(detail({ items: [line()] }, 'ready'));
+    renderAt('/orders/21');
+
+    await screen.findByRole('heading', { level: 1, name: /Vườn Út Hiền/ });
+    expect(screen.queryByRole('button', { name: /^Report spoiled/ })).not.toBeInTheDocument();
+  });
+
+  it('sends the day, what went wrong and the note, then shows the report on the line', async () => {
+    vi.mocked(OrderApi.get).mockResolvedValue(completed([line()]));
+    vi.mocked(QualityReportApi.create).mockResolvedValue({
+      id: 77,
+      status: 'open',
+      spoiledOn: '2026-10-05',
+      problem: 'mold',
+    });
+    renderAt('/orders/21');
+    const dialog = await openReport();
+
+    expect(within(dialog).getByRole('button', { name: 'Send report' })).toBeDisabled();
+    expect(within(dialog).getByText('Pick what went wrong first.')).toBeInTheDocument();
+    await userEvent.selectOptions(within(dialog).getByLabelText(/Spoiled on/), '2026-10-05');
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Mold' }));
+    await userEvent.type(within(dialog).getByLabelText(/Describe it/), 'Leaves turned black');
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Send report' }));
+
+    expect(QualityReportApi.create).toHaveBeenCalledWith(21, 501, {
+      spoiledOn: '2026-10-05',
+      problem: 'mold',
+      note: 'Leaves turned black',
+      photoUrl: undefined,
+    });
+    expect(await screen.findByText('Spoilage reported · Waiting for a decision')).toBeInTheDocument();
+  });
+
+  it('offers only the days from pickup to today, today first', async () => {
+    vi.mocked(OrderApi.get).mockResolvedValue(completed([line()]));
+    renderAt('/orders/21');
+    const dialog = await openReport();
+
+    const days = within(within(dialog).getByLabelText(/Spoiled on/))
+      .getAllByRole('option')
+      .map((o) => (o as HTMLOptionElement).value);
+    expect(days).toEqual(['2026-10-06', '2026-10-05', '2026-10-04', '2026-10-03']);
+  });
+
+  it('uploads a photo and sends its address with the report', async () => {
+    vi.mocked(OrderApi.get).mockResolvedValue(completed([line()]));
+    vi.mocked(QualityReportApi.uploadPhoto).mockResolvedValue('/uploads/quality-report-photos/2-a.jpg');
+    vi.mocked(QualityReportApi.create).mockResolvedValue({
+      id: 77,
+      status: 'open',
+      spoiledOn: '2026-10-06',
+      problem: 'smell',
+    });
+    renderAt('/orders/21');
+    const dialog = await openReport();
+
+    await userEvent.upload(
+      within(dialog).getByLabelText(/Add a photo/),
+      new File(['x'], 'rau.png', { type: 'image/png' }),
+    );
+    expect(await within(dialog).findByAltText('Photo of the spoiled produce')).toBeInTheDocument();
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Smells off' }));
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Send report' }));
+
+    expect(QualityReportApi.create).toHaveBeenCalledWith(
+      21,
+      501,
+      expect.objectContaining({ photoUrl: '/uploads/quality-report-photos/2-a.jpg' }),
+    );
+  });
+
+  it('refuses a photo over 5 MB without uploading it', async () => {
+    vi.mocked(OrderApi.get).mockResolvedValue(completed([line()]));
+    renderAt('/orders/21');
+    const dialog = await openReport();
+
+    const big = new File([new Uint8Array(5 * 1024 * 1024 + 1)], 'big.png', { type: 'image/png' });
+    await userEvent.upload(within(dialog).getByLabelText(/Add a photo/), big);
+
+    expect(within(dialog).getByText('The photo must be 5 MB or smaller.')).toBeInTheDocument();
+    expect(QualityReportApi.uploadPhoto).not.toHaveBeenCalled();
+  });
+
+  /** Review Focus #3: a second send (another tab, a double click) is refused by the server. */
+  it('says why a second report was refused', async () => {
+    vi.mocked(OrderApi.get).mockResolvedValue(completed([line()]));
+    vi.mocked(QualityReportApi.create).mockRejectedValue(
+      conflict('You have already reported this item.', 'ALREADY_REPORTED'),
+    );
+    renderAt('/orders/21');
+    const dialog = await openReport();
+
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Mold' }));
+    await userEvent.click(within(dialog).getByRole('button', { name: 'Send report' }));
+
+    expect(await within(dialog).findByRole('alert')).toHaveTextContent('You have already reported this item.');
   });
 });

@@ -1,7 +1,7 @@
 {
   "title": "Avis",
   "intro": "Ce que les clients ont dit après avoir retiré leur commande. Une courte réponse compte beaucoup, surtout sur une note basse.",
-  "summary": "Stand {{stall}} · produits {{products}} · {{reviews}}",
+  "summary": "Stand {{stall}} · {{reviews}}",
   "reviewCount_one": "{{count}} avis",
   "reviewCount_other": "{{count}} avis",
   "noun": "reviews",
@@ -29,5 +29,29 @@
     "title": "Pas encore d’avis",
     "text": "Un client peut noter votre stand et ce qu’il a acheté une fois sa commande terminée (D-10)."
   },
-  "note": "Le stand ne peut pas supprimer un avis. S’il enfreint les règles, signalez-le et l’administrateur décide (FR-074)."
+  "note": "Le stand ne peut pas supprimer un avis. S’il enfreint les règles, signalez-le et l’administrateur décide (FR-074).",
+  "tabs": {
+    "label": "Avis et signalements d’altération",
+    "reviews": "Avis",
+    "spoiled": "Signalements d’altération"
+  },
+  "spoiled": {
+    "intro": "Les clients peuvent signaler des produits altérés peu après le retrait. Répondez avec ce que vous savez ; un admin décide.",
+    "noun": "signalements d’altération",
+    "emptyTitle": "Aucun signalement d’altération",
+    "emptyText": "Quand un client signale un produit altéré d’une de vos commandes, il apparaît ici pour que vous puissiez répondre.",
+    "line": "Commande {{code}} · {{customer}}",
+    "dates": "Retiré le {{pickup}} · bon jusqu’au {{bestBefore}} · altéré le {{spoiled}} ({{when}})",
+    "photoAlt": "La photo du client",
+    "replyLabel": "Votre réponse, pour l’admin",
+    "replyPlaceholder": "Comment le produit était conservé, ce que vous avez vu à l’emballage.",
+    "save": "Enregistrer la réponse",
+    "saved": "Réponse enregistrée.",
+    "yourReply": "Votre réponse : {{text}}",
+    "decisionNote": "Note de l’admin : {{text}}",
+    "alreadyDecided": "Un admin a déjà statué sur ce signalement.",
+    "strikesText": "Un signalement confirmé sur une durée de conservation prolongée compte comme une infraction. 3 infractions en 90 jours verrouillent les prolongations.",
+    "lockTitle": "Les prolongations sont verrouillées jusqu’au {{date}}",
+    "lockText": "D’ici là, vos produits ne peuvent utiliser que la durée de conservation suggérée."
+  }
 }

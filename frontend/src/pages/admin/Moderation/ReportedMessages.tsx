@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import ModerationApi from '@/api-requests/moderation.requests';
 import ChatPhoto from '@/components/chat/ChatPhoto';
+import ChatVideo from '@/components/chat/ChatVideo';
 import { Button } from '@/components/ui/button';
 import { DataState, LoadError } from '@/components/ui/data-state';
 import { Dialog } from '@/components/ui/dialog';
@@ -10,6 +11,7 @@ import useRequest from '@/hooks/useRequest';
 import { chatWhen } from '@/lib/chat/time';
 import type { ReportDetail, ReportListItem, ReportStatus } from '@/types/chat.types';
 import Notification from '@/utils/notification';
+import { ReportedMessagesSkeleton } from './ModerationSkeleton';
 
 function ReportDetailDialog({
   reportId,
@@ -114,6 +116,9 @@ function ReportDetailDialog({
         </>
       }
     >
+      {detail.note ? (
+        <p className="text-small mb-3 whitespace-pre-wrap">{t('messages.note', { note: detail.note })}</p>
+      ) : null}
       <ol aria-label={t('messages.context')} className="flex flex-col gap-2">
         {detail.context.map((m) => (
           <li
@@ -128,9 +133,12 @@ function ReportDetailDialog({
             </div>
             {m.hasPhoto && m.attachmentId ? (
               <ChatPhoto
-                attachment={{ attachmentId: m.attachmentId, url: '', width: null, height: null }}
+                attachment={{ attachmentId: m.attachmentId, width: null, height: null }}
                 alt={t('messages.photo')}
               />
+            ) : null}
+            {m.hasVideo && m.attachmentId ? (
+              <ChatVideo key={m.attachmentId} attachmentId={m.attachmentId} label={t('messages.video')} />
             ) : null}
             {m.body ? <div className="whitespace-pre-wrap">{m.body}</div> : null}
           </li>
@@ -145,8 +153,20 @@ export default function ReportedMessages() {
   const [status, setStatus] = useState<ReportStatus>('new');
 
   const { state, retry, mutate } = useRequest(`reports:${status}`, () =>
-    ModerationApi.reports({ status, page: 1, pageSize: 20 }).then((r) => r.data.items),
+    ModerationApi.reports({ status, page: 1, pageSize: 20 }).then((r) => r.data),
   );
+
+  /**
+   * Handled reports leave the `new` queue. Hiding a message actions every report on it, so all of them go; when that
+   * empties the page while more are waiting, fetch the next ones instead of showing an empty queue.
+   */
+  const dropFromNew = (leaves: (r: ReportListItem) => boolean) => {
+    if (status !== 'new' || state.kind !== 'ready') return;
+    const left = state.data.items.filter((r) => !leaves(r));
+    const gone = state.data.items.length - left.length;
+    if (left.length === 0 && state.data.total > gone) retry();
+    else mutate((page) => ({ ...page, items: left, total: page.total - gone }));
+  };
 
   const [reviewingId, setReviewingId] = useState<number | null>(null);
 
@@ -171,14 +191,12 @@ export default function ReportedMessages() {
       {state.kind === 'error' ? (
         <LoadError noun={t('messages.noun')} onRetry={retry} />
       ) : state.kind === 'loading' ? (
-        <p role="status" className="text-small text-ink-muted">
-          Loading...
-        </p>
-      ) : state.data.length === 0 ? (
+        <ReportedMessagesSkeleton />
+      ) : state.data.items.length === 0 ? (
         <DataState title={t('messages.emptyTitle')} text={t('messages.emptyText')} />
       ) : (
         <div className="flex flex-col gap-4">
-          {state.data.map((r: ReportListItem) => (
+          {state.data.items.map((r: ReportListItem) => (
             <div key={r.reportId} className="border-line-strong flex flex-col gap-2 rounded-md border p-4">
               <div className="flex items-start justify-between">
                 <div>
@@ -195,7 +213,15 @@ export default function ReportedMessages() {
                   {t('messages.review')}
                 </Button>
               </div>
-              <p className="text-ink">{r.preview || t('messages.photo')}</p>
+              {r.note ? <p className="text-small whitespace-pre-wrap">{t('messages.note', { note: r.note })}</p> : null}
+              {/* The server writes "Photo"/"Video" in English for a media message: show them in the admin's language. */}
+              <p className="text-ink">
+                {r.preview === 'Video'
+                  ? t('messages.video')
+                  : !r.preview || r.preview === 'Photo'
+                    ? t('messages.photo')
+                    : r.preview}
+              </p>
             </div>
           ))}
         </div>
@@ -205,16 +231,8 @@ export default function ReportedMessages() {
         <ReportDetailDialog
           reportId={reviewingId}
           onClose={() => setReviewingId(null)}
-          onHide={(reportId) => {
-            if (status === 'new') {
-              mutate((items) => items.filter((r) => r.reportId !== reportId));
-            }
-          }}
-          onDismiss={(reportId) => {
-            if (status === 'new') {
-              mutate((items) => items.filter((r) => r.reportId !== reportId));
-            }
-          }}
+          onHide={(_reportId, messageId) => dropFromNew((r) => r.messageId === messageId)}
+          onDismiss={(reportId) => dropFromNew((r) => r.reportId === reportId)}
         />
       ) : null}
     </div>

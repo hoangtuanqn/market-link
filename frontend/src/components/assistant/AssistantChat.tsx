@@ -1,14 +1,19 @@
 import { useCallback, useEffect, useRef, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router';
-import ChatApi, { type ChatResultDto } from '@/api-requests/chat.requests';
+import { Link, useLocation } from 'react-router';
+import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
+import ChatApi, { type ChatResultDto, type PageContextDto, type ProposedActionDto } from '@/api-requests/chat.requests';
+import OrderApi from '@/api-requests/order.requests';
 import ChatMessage from '@/components/ChatMessage';
-import { Button } from '@/components/ui/button';
+import { Button, ButtonLink } from '@/components/ui/button';
 import { Chip } from '@/components/ui/chip';
 import { DataState } from '@/components/ui/data-state';
+import { USER_ROLE } from '@/constants/enums';
 import useSession from '@/hooks/useSession';
+import { useAssistant } from './assistantContext';
 import { formatTime } from '@/lib/format';
 import Helper from '@/utils/helper';
+import Notification from '@/utils/notification';
 
 /** Same limit as ChatRequest on the server. */
 const MAX_LENGTH = 500;
@@ -20,15 +25,59 @@ type Entry = {
   at: Date;
   intent?: string | null;
   results?: ChatResultDto[];
+  actions?: ProposedActionDto[];
 };
 
 type Load = 'loading' | 'error' | 'ready';
+
+/**
+ * The route pattern rather than the URL: ids and codes belong in `recordRef`, and the server only accepts lowercase
+ * letters, slashes, hyphens and colons here. A path segment that looks like an id or a code is replaced by its
+ * placeholder, so /farmer/orders/ML-2026-0412 becomes farmer/orders/:code.
+ */
+const routePattern = (pathname: string) =>
+  pathname
+    .split('/')
+    .filter(Boolean)
+    .map((part) => (/^\d+$/.test(part) ? ':id' : /[0-9]/.test(part) ? ':code' : part.toLowerCase()))
+    .join('/')
+    .replace(/[^a-z/:-]/g, '')
+    .slice(0, 64);
+
+/**
+ * FR-093, FR-094: what a proposed action does when the person presses it.
+ *
+ * `run` calls the ordinary endpoint, which checks the role, the ownership and the state transition again — the
+ * assistant has written nothing up to this point. Actions that need a reason have no `run`: they link to the screen
+ * whose confirm dialog already collects one, rather than growing a second reason box inside the chat.
+ */
+const ACTIONS: Record<
+  ProposedActionDto['action'],
+  { run?: (id: number) => Promise<unknown>; href?: (a: ProposedActionDto) => string }
+> = {
+  accept_order: { run: (id) => OrderApi.accept(id) },
+  ready_order: { run: (id) => OrderApi.markReady(id) },
+  complete_order: { run: (id) => OrderApi.complete(id) },
+  approve_farmer: { run: (id) => AdminFarmerApi.approve(id) },
+  // The order page reads a numeric id; the label is the order code, which it cannot open
+  decline_order: { href: (a) => `/farmer/orders/${a.id}` },
+  reject_farmer: { href: (a) => `/admin/farmers/${a.id}` },
+  suspend_farmer: { href: (a) => `/admin/farmers/${a.id}` },
+};
 
 const RESULT_PATH: Record<ChatResultDto['type'], string> = {
   product: '/products',
   market: '/markets',
   farmer: '/stalls',
+  order: '/farmer/orders',
 };
+
+/**
+ * Where a result card leads. A stall card takes an admin to the admin stall page: the stalls in the approval queue are
+ * pending, and a pending or suspended stall has no public page.
+ */
+const resultPath = (r: ChatResultDto, role: string | undefined) =>
+  r.type === 'farmer' && role === USER_ROLE.ADMIN ? `/admin/farmers/${r.id}` : `${RESULT_PATH[r.type]}/${r.id}`;
 
 /** One conversation per account and browser; "New conversation" swaps the key (the server keeps the old rows). */
 const storageKey = (userId: number) => `ml-assistant:${userId}`;
@@ -85,6 +134,31 @@ type AssistantChatProps = {
  */
 const AssistantChat = ({ className }: AssistantChatProps) => {
   const { t } = useTranslation('common');
+  const { pathname } = useLocation();
+  const assistant = useAssistant();
+  const record = assistant?.record ?? null;
+  const cart = assistant?.cart ?? [];
+  // FR-093, FR-094: a proposed action is pressed once. `running` disables the button while the real endpoint
+  // works, `done` replaces it afterwards so the same change cannot be sent twice from scrollback.
+  const [running, setRunning] = useState<string | null>(null);
+  const [done, setDone] = useState<Record<string, boolean>>({});
+
+  const confirmAction = async (key: string, action: ProposedActionDto) => {
+    const run = ACTIONS[action.action]?.run;
+    if (!run || running) return;
+    setRunning(key);
+    try {
+      await run(action.id);
+      setDone((prev) => ({ ...prev, [key]: true }));
+      Notification.success({ title: t('assistant.action.doneTitle'), text: action.label });
+    } catch {
+      // The endpoint refused it: wrong owner, or the state moved on since the assistant looked.
+      Notification.error({ title: t('assistant.action.failedTitle'), text: t('assistant.action.failedText') });
+    } finally {
+      setRunning(null);
+    }
+  };
+
   const { user } = useSession();
   const userId = user?.id;
   // Derived from the account during render (not in an effect): another account signing in gets its own conversation
@@ -97,7 +171,11 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
   // Which key's history has answered, and how; any other key is still loading
   const [loaded, setLoaded] = useState<{ key: string; ok: boolean } | null>(null);
   const load: Load = !sessionKey || loaded?.key !== sessionKey ? 'loading' : loaded.ok ? 'ready' : 'error';
-  const [draft, setDraft] = useState('');
+  // The composer text belongs to the provider so an "ask about this" button can fill it in; the local state is the
+  // fallback for a chat mounted outside one.
+  const [localDraft, setLocalDraft] = useState('');
+  const draft = assistant ? assistant.draft : localDraft;
+  const setDraft = assistant ? assistant.setDraft : setLocalDraft;
   const [sending, setSending] = useState(false);
   const [sendFailed, setSendFailed] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
@@ -151,11 +229,25 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
     setLog((prev) => [...prev, { from: 'user', text: message, at: new Date() }]);
     setSending(true);
     try {
-      const data = await ChatApi.ask(sessionKey, message);
+      const context: PageContextDto = {
+        // The home page has an empty pattern, which the server rejects; no page is a valid answer
+        page: routePattern(pathname) || undefined,
+        recordType: record?.type,
+        recordRef: record?.ref,
+        cart: cart.length > 0 ? cart : undefined,
+      };
+      const data = await ChatApi.ask(sessionKey, message, context);
       if (data) {
         setLog((prev) => [
           ...prev,
-          { from: 'bot', text: data.reply, at: new Date(), intent: data.intent, results: data.results },
+          {
+            from: 'bot',
+            text: data.reply,
+            at: new Date(),
+            intent: data.intent,
+            results: data.results,
+            actions: data.actions,
+          },
         ]);
       }
     } catch {
@@ -232,12 +324,39 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
             intent={m.from === 'bot' ? intentLabel(m.intent, (tools) => t('assistant.aiTools', { tools })) : undefined}
           >
             <span className="whitespace-pre-line">{withBold(m.text)}</span>
+            {m.actions && m.actions.length > 0 && (
+              <ul className="m-0 mt-2 flex list-none flex-col gap-2 p-0">
+                {m.actions.map((a) => {
+                  const spec = ACTIONS[a.action];
+                  const key = `${a.action}:${a.id}`;
+                  return (
+                    <li key={key} className="bg-surface-sunken rounded-sm p-2 px-3">
+                      <b className="block text-[14px]">{t(`assistant.action.${a.action}`, { label: a.label })}</b>
+                      <span className="text-ink-muted block text-[13px]">{a.detail}</span>
+                      <div className="mt-2">
+                        {done[key] ? (
+                          <span className="text-small text-success">{t('assistant.action.done')}</span>
+                        ) : spec?.run ? (
+                          <Button size="sm" disabled={running === key} onClick={() => confirmAction(key, a)}>
+                            {t('assistant.action.confirm')}
+                          </Button>
+                        ) : spec?.href ? (
+                          <ButtonLink size="sm" variant="secondary" to={spec.href(a)}>
+                            {t('assistant.action.openPage')}
+                          </ButtonLink>
+                        ) : null}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            )}
             {m.results && m.results.length > 0 && (
               <ul className="m-0 mt-2 flex list-none flex-col gap-1.5 p-0">
                 {m.results.map((r) => (
                   <li key={`${r.type}:${r.id}`}>
                     <Link
-                      to={`${RESULT_PATH[r.type]}/${r.id}`}
+                      to={resultPath(r, user?.role)}
                       className="bg-surface-sunken text-ink hover:border-ink block rounded-sm border-[1.5px] border-transparent p-2 px-3 text-[14px] no-underline"
                     >
                       <span className="text-ink-muted block text-[12px] font-bold">

@@ -22,6 +22,7 @@
   },
   "day": "市集日",
   "all": "全部",
+  "category": "类别",
   "inStock": "有货",
   "available": "{{day}}可买",
   "productsFrom": "来自 {{stalls}} 的 {{products}}",
@@ -38,5 +39,15 @@
   "stallsNoun": "摊位",
   "stallsEmpty": {
     "title": "{{day}}没有摊位"
+  },
+  "productsEmpty": {
+    "title": "{{day}}没有在售商品",
+    "text": "换一个集市日，或清除筛选条件。"
+  },
+  "searchEmpty": {
+    "products": "没有与“{{q}}”匹配的商品",
+    "stalls": "没有与“{{q}}”匹配的摊位",
+    "text": "清除搜索即可查看{{day}}本市集的全部内容。",
+    "clear": "清除搜索"
   }
 }

@@ -13,15 +13,26 @@ type FreshProductsProps = {
 const FreshProducts = ({ products, loading = false }: FreshProductsProps) => {
   const { t } = useTranslation('Home');
   return (
-    <section className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <h2 className="text-h2">{t('fresh.title')}</h2>
-        <Link to="/products" className="text-brand underline">
-          {t('fresh.all')}
+    <section className="flex flex-col gap-6">
+      <div className="border-line flex flex-wrap items-end justify-between gap-4 border-b border-dashed pb-4">
+        <div>
+          <span className="text-brand text-[12px] font-bold tracking-widest uppercase">{t('fresh.eyebrow')}</span>
+          <h2 className="text-h2 mt-1">{t('fresh.title')}</h2>
+          <p className="text-ink-muted text-small mt-0.5">{t('fresh.cutoff')}</p>
+        </div>
+        <Link to="/products" className="text-brand inline-flex min-h-11 items-center font-semibold hover:underline">
+          {t('fresh.filterLink')}
         </Link>
       </div>
-      <div className="grid items-start gap-x-4 gap-y-6 md:grid-cols-2 lg:grid-cols-3">
-        {loading ? <MarketCardSkeleton count={3} /> : products.map((p) => <ProductCard key={p.id} product={p} />)}
+
+      <div className="grid gap-x-5 gap-y-6 md:grid-cols-2 lg:grid-cols-3">
+        {loading ? (
+          <MarketCardSkeleton count={3} />
+        ) : products.length > 0 ? (
+          products.map((p) => <ProductCard key={p.id} product={p} />)
+        ) : (
+          <p className="text-ink-muted col-span-full py-8 text-center">{t('fresh.empty')}</p>
+        )}
       </div>
     </section>
   );

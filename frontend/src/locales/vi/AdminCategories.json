@@ -3,7 +3,6 @@
   "title": "Danh mục",
   "intro": "Danh sách duy nhất mà mọi sạp chọn khi thêm sản phẩm. Đơn vị bán là danh sách cố định, đi kèm sẵn trong ứng dụng.",
   "link": {
-    "announcements": "Thông báo",
     "feedback": "Hộp thư góp ý"
   },
   "caption": {
@@ -14,11 +13,17 @@
     "category": "Danh mục",
     "products": "Sản phẩm",
     "stalls": "Sạp",
-    "nameOf": "Tên của {{name}}"
+    "nameOf": "Tên của {{name}}",
+    "status": "Trạng thái",
+    "shelfLife": "Hạn sử dụng",
+    "shelfLifeRange": "{{min}}–{{max}} ngày",
+    "shelfLifeDays_one": "{{count}} ngày",
+    "shelfLifeDays_other": "{{count}} ngày"
   },
   "action": {
     "save": "Lưu",
-    "remove": "Xoá"
+    "remove": "Xoá",
+    "enable": "Kích hoạt"
   },
   "categoryForm": {
     "title": "Thêm danh mục",
@@ -38,7 +43,9 @@
     "textUnused": "Không sản phẩm nào đang dùng danh mục này.",
     "moveTo": "Chuyển sản phẩm sang",
     "keep": "Giữ danh mục",
-    "confirm": "Xoá danh mục"
+    "confirm": "Xoá danh mục",
+    "moveToHint": "Các sản phẩm thuộc danh mục này sẽ được chuyển sang danh mục mới.",
+    "moveToNone": "Không (sản phẩm vẫn giữ danh mục này)"
   },
   "empty": {
     "categories": {
@@ -49,12 +56,64 @@
   "toast": {
     "categorySaved": "Đã lưu {{name}}.",
     "categoryAdded": "Đã thêm danh mục. Các sạp chọn được ngay.",
-    "categoryRemoved": "Đã xoá {{name}}."
+    "categoryRemoved": "Đã xoá {{name}}.",
+    "categoryEnabled": "Đã kích hoạt {{name}}."
   },
   "error": {
     "noun": "danh mục",
     "nameRequired": "Đặt tên cho danh mục.",
     "shelfLifeRequired": "Nhập một số nguyên từ 1 trở lên.",
-    "shelfLifeRange": "Tối đa phải lớn hơn hoặc bằng tối thiểu."
+    "shelfLifeRange": "Tối đa phải lớn hơn hoặc bằng tối thiểu.",
+    "nameTooLong": "Tên danh mục tối đa {{max}} ký tự.",
+    "nameTaken": "Đã có danh mục trùng tên này."
+  },
+  "status": {
+    "active": "Hoạt động",
+    "inactive": "Ngừng hoạt động"
+  },
+  "guides": {
+    "title": "Nhóm bảo quản",
+    "intro": "Hạn dùng gợi ý theo nhóm và cách bảo quản. Farmer bắt đầu từ các số này.",
+    "category": "Danh mục",
+    "col": {
+      "group": "Nhóm",
+      "storage": "Bảo quản",
+      "days": "Số ngày",
+      "daysFor": "Số ngày cho {{group}} ({{storage}})"
+    },
+    "status": {
+      "off": "Đã tắt"
+    },
+    "action": {
+      "save": "Lưu",
+      "off": "Tắt",
+      "on": "Bật lại"
+    },
+    "form": {
+      "title": "Thêm nhóm",
+      "group": "Tên nhóm",
+      "groupPlaceholder": "ví dụ: Leafy greens",
+      "examples": "Ví dụ",
+      "examplesHint": "Các từ chỉ sản phẩm, cách nhau bằng dấu phẩy, cả tiếng Việt lẫn tiếng Anh, dùng để tự chọn nhóm theo tên sản phẩm.",
+      "storage": "Cách bảo quản",
+      "days": "Số ngày gợi ý",
+      "submit": "Thêm nhóm"
+    },
+    "empty": {
+      "title": "Chưa có nhóm bảo quản",
+      "text": "Farmer trong danh mục này sẽ thấy khoảng ngày của danh mục cho tới khi bạn thêm nhóm."
+    },
+    "noun": "nhóm bảo quản",
+    "error": {
+      "nameRequired": "Đặt tên cho nhóm.",
+      "days": "Nhập số nguyên từ 1 đến 365.",
+      "taken": "Nhóm này đã có cách bảo quản đó."
+    },
+    "toast": {
+      "added": "Đã thêm nhóm.",
+      "saved": "Đã lưu nhóm.",
+      "off": "Đã tắt nhóm.",
+      "on": "Đã bật lại nhóm."
+    }
   }
 }

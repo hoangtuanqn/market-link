@@ -3,24 +3,28 @@
   "intro": "你可以上架的所有商品。集市当天卖完时标记为售罄，不当季时暂停。",
   "add": "添加商品",
   "filterAll": "全部",
+  "filterDeleted": "已删除",
   "status": {
     "available": "在售",
     "sold_out": "售罄",
-    "unavailable": "已暂停"
+    "unavailable": "已暂停",
+    "deleted": "已删除"
   },
   "caption_one": "{{count}} 件商品",
   "caption_other": "{{count}} 件商品",
   "col": {
     "product": "商品",
     "price": "价格",
-    "left": "本周剩余",
+    "left": "最近取货日 · 剩余",
     "reserved": "已预订",
     "status": "状态"
   },
   "perUnit": "每{{unit}}",
+  "nextLeft": "{{day}} · 剩余 {{qty}}",
   "statusOf": "{{name}}的状态",
   "edit": "编辑",
   "delete": "删除",
+  "restore": "恢复",
   "footNote": "删除商品会将其从商品目录中移除；历史订单保留原有条目。照片：4:3，自然光，放在木板或纸上拍摄。",
   "toast": {
     "statusSaved": "状态已保存",
@@ -30,7 +34,10 @@
       "unavailable": "商品已对顾客隐藏，直到你重新开启。"
     },
     "deleted": "已删除",
-    "deletedText": "已删除 {{name}}。"
+    "deletedText": "已删除 {{name}}。",
+    "restored": "已恢复",
+    "restoredText": "已将 {{name}} 恢复为暂停。重新上架前请再次设置每周库存。",
+    "stockAdjusted": "已更新 {{day}} 的库存。"
   },
   "dialog": {
     "title": "删除 {{name}}？",
@@ -39,6 +46,13 @@
     "text": "它会从商品目录和你的模板中消失。已包含它的订单不会改变。",
     "pauseHint": "如果只是暂时不卖，请改选“已暂停”。"
   },
+  "restoreDialog": {
+    "title": "恢复 {{name}}？",
+    "cancel": "留在回收站",
+    "confirm": "恢复商品",
+    "text": "商品将以“已暂停”状态恢复，以便您在重新上架前查看其库存和价格。",
+    "stockHint": "删除时已清空其每周库存，重新设置之前顾客无法下单。"
+  },
   "error": {
     "noun": "您的商品"
   },
@@ -46,5 +60,79 @@
   "empty": {
     "title": "还没有商品",
     "text": "添加第一件商品后，它会立刻出现在您的摊位页面。"
-  }
+  },
+  "emptyDeleted": {
+    "title": "回收站为空",
+    "text": "没有已删除的商品。"
+  },
+  "adjust": "调整",
+  "adjustDialog": {
+    "title": "调整 {{day}} 的库存",
+    "quantity": "可用数量",
+    "price": "当天价格（可选）",
+    "priceHint": "留空以保留当前价格。在此处填写价格也会结束该日期的临期优惠。",
+    "cancel": "取消",
+    "confirm": "保存",
+    "error": {
+      "quantity": "请输入0或以上的整数。",
+      "price": "请输入高于 $0 的价格，或留空。"
+    }
+  },
+  "dealAction": "临期优惠",
+  "dealActionFor": "{{name}}的临期优惠",
+  "deals": {
+    "title_one": "特价中 ({{count}})",
+    "title_other": "特价中 ({{count}})",
+    "loading": "正在加载您的优惠…",
+    "col": {
+      "product": "商品",
+      "day": "取货日",
+      "discount": "折扣",
+      "left": "剩余",
+      "until": "食用期至"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}，原价 {{was}}",
+    "until_one": "{{day}} 结束（{{count}} 天）",
+    "until_other": "{{day}} 结束（{{count}} 天）",
+    "remove": "取消优惠",
+    "removed": "已取消优惠",
+    "removedText": "{{name}} 在 {{day}} 恢复原价。",
+    "noun": "您的优惠"
+  },
+  "dealDialog": {
+    "title": "临期优惠 · {{name}}",
+    "day": "取货日",
+    "qty": "带来的数量（{{unit}}）",
+    "onSale": "该日目前有 {{qty}} 在售",
+    "packedOn": "采摘或包装日期",
+    "result_one": "食用期至 {{until}} 结束 · 顾客还有 {{count}} 天（保鲜期 {{shelfLife}} 天）",
+    "result_other": "食用期至 {{until}} 结束 · 顾客还有 {{count}} 天（保鲜期 {{shelfLife}} 天）",
+    "discount": "折扣",
+    "less": "降低折扣",
+    "more": "提高折扣",
+    "suggested": "建议 {{percent}}%",
+    "price": "价格",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "发布优惠",
+    "posting": "发布中…",
+    "posted": "优惠已发布",
+    "postedText": "{{name}} 在 {{day}} 降价 {{percent}}%。",
+    "loadingDays": "正在加载取货日…",
+    "daysNoun": "取货日",
+    "noDays": {
+      "title": "暂无可选取货日",
+      "text": "未来14天内顾客都无法预订该商品。请检查您的每周库存和取货时段。"
+    },
+    "why": {
+      "packedOn": "请输入采摘或包装日期。",
+      "qty": "至少带来 1 份。",
+      "packedInFuture": "采摘或包装日期不能晚于今天。",
+      "fresh": "取货当天采摘视为新鲜，无需设置优惠。",
+      "notNearExpiry": "到那天为止，商品的{{shelfLife}}天保鲜期还剩一半以上。优惠仅适用于已过保鲜期一半的商品。",
+      "expiredBeforePickup": "这批货到那天已不新鲜，无法在该日期出售。"
+    }
+  },
+  "noNextDate": "暂无可下单的日子",
+  "checkWeeklyStock": "设置每周库存"
 }

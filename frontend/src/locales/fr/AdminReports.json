@@ -8,9 +8,9 @@
   "kpi": {
     "noun": "dashboard totals",
     "orders": "Commandes",
-    "ordersNote": "{{month}}, tous marchés",
+    "ordersNote": "Depuis le début, tous statuts",
     "revenue": "Chiffre d'affaires terminé",
-    "revenueNote": "₫, payés aux étals"
+    "revenueNote": "$, payés aux étals"
   },
   "byMarket": {
     "title": "Chiffre d'affaires par marché",

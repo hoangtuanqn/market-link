@@ -22,6 +22,7 @@
   },
   "day": "Ngày họp chợ",
   "all": "Tất cả",
+  "category": "Loại",
   "inStock": "Còn hàng",
   "available": "Có bán vào {{day}}",
   "productsFrom": "{{products}} từ {{stalls}}",
@@ -38,5 +39,15 @@
   "stallsNoun": "các gian hàng",
   "stallsEmpty": {
     "title": "Không có gian hàng nào vào {{day}}"
+  },
+  "productsEmpty": {
+    "title": "Không có sản phẩm nào bán vào {{day}}",
+    "text": "Thử chọn ngày họp chợ khác hoặc bỏ bớt bộ lọc."
+  },
+  "searchEmpty": {
+    "products": "Không có sản phẩm nào khớp với “{{q}}”",
+    "stalls": "Không có sạp nào khớp với “{{q}}”",
+    "text": "Xoá từ khoá để xem mọi thứ ở chợ này vào {{day}}.",
+    "clear": "Xoá tìm kiếm"
   }
 }

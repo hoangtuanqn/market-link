@@ -7,15 +7,31 @@ Nhãn nút ghi theo giao diện tiếng Anh mặc định; nếu bạn chọn ng
 
 1. Bấm **Sign in** ở góc phải trên cùng, rồi chọn **Sign up** (hoặc mở trang `/register/customer`).
 2. Điền đủ các ô bắt buộc: **Full name** (họ tên), **Phone number** (số di động Việt Nam 10 số), **Email**,
-   **Address** (địa chỉ: số nhà, phường, quận) và **Password** hai lần.
+   **Address** và **Password** hai lần.
+   Địa chỉ chọn lần lượt: **Country** (quốc gia) → **Province or city** (tỉnh/thành phố) → **Ward or commune**
+   (phường/xã, theo đơn vị hành chính 2 cấp từ 01/07/2025, không còn quận/huyện) → **Street** (gõ vài chữ để chọn
+   gợi ý; đường không có trong gợi ý thì cứ giữ chữ đã gõ) → **House number and details** (số nhà, hẻm).
+   Địa chỉ ở nước ngoài thì chọn quốc gia rồi gõ tay tỉnh/bang, thành phố và địa chỉ.
 3. Mật khẩu dài từ 6 đến 72 ký tự. Ô **Repeat password** phải giống hệt ô mật khẩu.
 4. Tích ô đồng ý **Terms of service** và **Privacy policy**, rồi bấm **Create account**.
+5. MarketLink gửi một **mã 6 số** tới email vừa nhập. Nhập mã ở trang **Check your email** (`/register/verify`)
+   rồi bấm **Verify and create account** (nhập đủ 6 số là tự gửi). Tài khoản chỉ được tạo sau bước này.
 
 Địa chỉ dùng để tính khoảng cách tới chợ và điền sẵn điểm xuất phát khi xem chỉ đường.
 Họ tên và số điện thoại chỉ được gửi cho gian hàng mà bạn đặt đơn, để họ giao hàng cho bạn vào ngày chợ.
 
 Không có đăng ký riêng cho nông dân (Farmer): muốn bán hàng thì tạo tài khoản khách hàng trước, rồi gửi đơn
 đăng ký bán hàng (xem mục "Đăng ký bán hàng").
+
+## Không nhận được mã xác nhận email
+
+- Mã 6 số dùng được **một lần** và hết hạn sau **10 phút**. Sau một phút vẫn chưa thấy thì xem thư mục **Spam** hoặc
+  **Quảng cáo**, rồi bấm **Send a new code** (mỗi lần gửi cách nhau ít nhất 60 giây; mã mới thay mã cũ).
+- Nhập sai 5 lần thì mã bị huỷ, bấm **Send a new code** để nhận mã khác.
+- Mỗi email chỉ nhận tối đa 5 mã mỗi giờ. Quá giới hạn thì đợi theo số phút trang báo rồi thử lại.
+- Gõ nhầm email thì bấm **Wrong email? Change it** để sửa lại form.
+- Đăng ký chưa xong chỉ được giữ **30 phút**. Quá thời gian này (hoặc nếu bạn đã điền form ở một tab/máy khác) thì
+  điền lại form để nhận mã mới.
 
 ## Đăng nhập bằng email
 
@@ -54,7 +70,9 @@ Sau khi đổi, bạn bị đăng xuất khỏi **mọi thiết bị** và cần
 ## Sửa thông tin cá nhân
 
 1. Mở trang **Account**.
-2. Ở mục **Your details**, sửa **Full name**, **Phone number** hoặc **Address**.
+2. Ở mục **Your details**, sửa **Full name**, **Phone number** hoặc các ô **Address**.
+   Tài khoản tạo trước khi có ô địa chỉ mới sẽ thấy dòng **Current address** (địa chỉ cũ): chọn lại tỉnh, phường,
+   đường rồi mới lưu được.
 3. Bấm **Save changes**.
 
 Email là thông tin đăng nhập nên không đổi được ở đây.

@@ -2,6 +2,7 @@ import { act, renderHook, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { useConversation, useThreadList } from './useChat';
 import ConversationApi from '@/api-requests/conversation.requests';
+import { ChatUnreadStore } from '@/lib/chat/unreadStore';
 import { realtime } from '@/lib/realtime/stompClient';
 
 vi.mock('@/api-requests/conversation.requests', () => ({
@@ -10,7 +11,8 @@ vi.mock('@/api-requests/conversation.requests', () => ({
     messages: vi.fn(),
     send: vi.fn(),
     markRead: vi.fn(),
-    uploadPhoto: vi.fn(),
+    unreadCount: vi.fn(),
+    uploadMedia: vi.fn(),
   },
 }));
 
@@ -70,6 +72,7 @@ describe('useConversation', () => {
     connectListeners.clear();
     vi.mocked(ConversationApi.messages).mockResolvedValue(ok([msg(3), msg(2), msg(1)]));
     vi.mocked(ConversationApi.markRead).mockResolvedValue(ok(null));
+    vi.mocked(ConversationApi.unreadCount).mockResolvedValue(ok({ count: 0 }));
   });
 
   it('loads the newest page oldest-first', async () => {
@@ -85,6 +88,16 @@ describe('useConversation', () => {
   });
 
   /** Messages loaded fine but only the mark-as-read step failed: the thread must still show, not an error screen. */
+  /** FR-111: nobody pushes "read" to the reader, so the header badge must refresh itself after the read is saved. */
+  it('refreshes the unread badge once the thread is marked read', async () => {
+    ChatUnreadStore.setUnread(5);
+    vi.mocked(ConversationApi.unreadCount).mockResolvedValue(ok({ count: 2 }));
+    renderHook(() => useConversation(42));
+
+    await waitFor(() => expect(ChatUnreadStore.getUnread()).toBe(2));
+    expect(ConversationApi.markRead).toHaveBeenCalledWith(42);
+  });
+
   it('still shows the thread when marking it read fails', async () => {
     vi.mocked(ConversationApi.markRead).mockRejectedValue(new Error('429'));
     const { result } = renderHook(() => useConversation(42));
@@ -157,6 +170,28 @@ describe('useConversation', () => {
     emit('/user/topic/messages', msg(4, 7));
 
     await waitFor(() => expect(result.current.messages.filter((m) => m.id === 4)).toHaveLength(1));
+  });
+
+  /** The server tells the real type from the bytes; the message kind follows it, not the file name. */
+  it('sends a video message for an uploaded video and a photo message for a photo', async () => {
+    vi.mocked(ConversationApi.uploadMedia)
+      .mockResolvedValueOnce(ok({ attachmentId: 55, url: '/api/v1/attachments/55', mime: 'video/quicktime' }))
+      .mockResolvedValueOnce(ok({ attachmentId: 56, url: '/api/v1/attachments/56', mime: 'image/jpeg' }));
+    vi.mocked(ConversationApi.send)
+      .mockResolvedValueOnce(ok({ ...msg(4, 7), kind: 'video' }))
+      .mockResolvedValueOnce(ok({ ...msg(5, 7), kind: 'image' }));
+    const { result } = renderHook(() => useConversation(42));
+    await waitFor(() => expect(result.current.messages).toHaveLength(3));
+    const onProgress = vi.fn();
+    const signal = new AbortController().signal;
+
+    await act(() => result.current.sendMedia(new File(['x'], 'clip.mov'), { onProgress, signal }));
+    await act(() => result.current.sendMedia(new File(['x'], 'a.jpg')));
+
+    expect(ConversationApi.uploadMedia).toHaveBeenCalledWith(expect.any(File), { onProgress, signal });
+    expect(ConversationApi.send).toHaveBeenNthCalledWith(1, 42, { kind: 'video', attachmentId: 55 });
+    expect(ConversationApi.send).toHaveBeenNthCalledWith(2, 42, { kind: 'image', attachmentId: 56 });
+    expect(result.current.messages.map((m) => m.id)).toEqual([1, 2, 3, 4, 5]);
   });
 
   it('asks for the next page back with the oldest id it has', async () => {
@@ -271,6 +306,34 @@ describe('useConversation', () => {
     rerender({ id: 43 });
 
     expect(realtime.publish).toHaveBeenLastCalledWith('/app/typing', { conversationId: 42, typing: false });
+  });
+
+  /** FR-112 "seen" after a reload or a deep link: the thread list, and its read marker, can arrive after the thread. */
+  it('takes the read marker when the thread list arrives after the thread opened', () => {
+    const { result, rerender } = renderHook(({ readAt }) => useConversation(42, { otherReadAt: readAt }), {
+      initialProps: { readAt: undefined as string | undefined },
+    });
+    expect(result.current.otherReadAt).toBeNull();
+
+    rerender({ readAt: '2026-09-26T10:05:00Z' });
+
+    expect(result.current.otherReadAt).toBe('2026-09-26T10:05:00Z');
+  });
+
+  it('keeps a newer live "read" over an older marker from the thread list', () => {
+    const { result, rerender } = renderHook(({ readAt }) => useConversation(42, { otherReadAt: readAt }), {
+      initialProps: { readAt: undefined as string | undefined },
+    });
+    emit('/user/topic/conversations', {
+      type: 'read',
+      conversationId: 42,
+      readerId: 3,
+      readAt: '2026-09-26T10:09:00Z',
+    });
+
+    rerender({ readAt: '2026-09-26T10:05:00Z' });
+
+    expect(result.current.otherReadAt).toBe('2026-09-26T10:09:00Z');
   });
 
   /** FR-112 "seen": the backend sends "read" to the sender when the other person reads. */

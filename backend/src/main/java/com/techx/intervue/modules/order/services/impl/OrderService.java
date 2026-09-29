@@ -1,5 +1,6 @@
 package com.techx.intervue.modules.order.services.impl;
 
+import com.techx.intervue.modules.catalog.services.impl.ShelfLifePolicy;
 import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
@@ -111,7 +112,8 @@ public class OrderService implements OrderServiceInterface {
     /**
      * Read-only, no locking, changes nothing: groups the cart by farmer_id and writes each group's
      * issues into {@code problems} instead of throwing. A product id that does not exist is a
-     * malformed request → 400 (C5-12).
+     * malformed request → 400 (C5-12). A stall listed in {@code request.pickupDates()} is priced
+     * for that day (FR-125), the others for their nearest orderable day.
      */
     @Override
     @Transactional(readOnly = true)
@@ -139,11 +141,27 @@ public class OrderService implements OrderServiceInterface {
                 farmerRepository.findAllById(byFarmer.keySet()).stream()
                         .collect(Collectors.toMap(FarmerProfile::getId, Function.identity()));
         Map<Long, List<MarketOption>> markets = checkoutQueries.marketsOf(byFarmer.keySet());
-        Map<Long, BigDecimal> basePrices =
-                products.values().stream()
-                        .collect(Collectors.toMap(Product::getId, Product::getPrice));
+        // FR-125: a stall the customer has picked a day for is priced for that day; the others
+        // for their nearest orderable day, as before. Grouped by farmer, not by date, because
+        // onDate needs to know whose slots to check — a date alone is not enough.
+        Map<Long, LocalDate> pickupDates = request.pickupDateByFarmer();
+        Map<Long, BigDecimal> undated = new HashMap<>();
+        Map<Long, Map<Long, BigDecimal>> datedByFarmer = new HashMap<>();
+        for (Product p : products.values()) {
+            if (pickupDates.containsKey(p.getFarmerId())) {
+                datedByFarmer
+                        .computeIfAbsent(p.getFarmerId(), f -> new HashMap<>())
+                        .put(p.getId(), p.getPrice());
+            } else {
+                undated.put(p.getId(), p.getPrice());
+            }
+        }
         Map<Long, ProductAvailabilityResolver.Availability> resolved =
-                availability.resolve(basePrices);
+                new HashMap<>(availability.resolve(undated));
+        datedByFarmer.forEach(
+                (farmerId, prices) ->
+                        resolved.putAll(
+                                availability.onDate(farmerId, prices, pickupDates.get(farmerId))));
 
         List<OrderGroupPreviewResource> groups = new ArrayList<>();
         byFarmer.forEach(
@@ -183,6 +201,15 @@ public class OrderService implements OrderServiceInterface {
             }
             BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(qty));
             subtotal = subtotal.add(lineTotal);
+            ProductAvailabilityResolver.Deal deal = a == null ? null : a.deal();
+            // The promise placing the order will copy (FR-121, FR-124): the deal batch's own last
+            // good day, else the pickup day plus the shelf life
+            LocalDate bestBefore =
+                    a == null
+                            ? null
+                            : deal != null
+                                    ? deal.bestBefore()
+                                    : ShelfLifePolicy.bestBefore(a.date(), p.getShelfLifeDays());
             items.add(
                     new PreviewItemResource(
                             p.getId(),
@@ -192,7 +219,11 @@ public class OrderService implements OrderServiceInterface {
                             qty,
                             lineTotal,
                             available,
-                            listed(p) ? p.getStatus().value() : UNAVAILABLE));
+                            listed(p) ? p.getStatus().value() : UNAVAILABLE,
+                            deal == null ? null : deal.listPrice(),
+                            deal == null ? null : deal.discountPercent(),
+                            bestBefore == null ? null : bestBefore.toString(),
+                            p.getStorageMode().value()));
         }
         // C5-11: the pickup market is only pre-filled when the stall sells at exactly one market;
         // otherwise the cart lets the customer choose
@@ -381,7 +412,15 @@ public class OrderService implements OrderServiceInterface {
             row.setQuantityAvailable(row.getQuantityAvailable() - qty);
             BigDecimal subtotal = row.getUnitPrice().multiply(BigDecimal.valueOf(qty));
             total = total.add(subtotal);
-            items.add(OrderItem.snapshot(p, row.getUnitPrice(), qty, subtotal));
+            OrderItem item =
+                    OrderItem.snapshot(p, row.getUnitPrice(), qty, subtotal, group.pickupDate());
+            if (row.hasDeal()) {
+                // FR-124: a deal day sells an older batch — keep the price it replaced and that
+                // batch's own last good day, earlier than a fresh batch's
+                item.setListPrice(row.getListPrice());
+                item.setBestBefore(row.getBestBefore());
+            }
+            items.add(item);
         }
 
         Order order = new Order();
@@ -414,7 +453,9 @@ public class OrderService implements OrderServiceInterface {
 
     /**
      * C5-5: the slot must exist, be enabled, be on the right pickup day, and belong to the right
-     * stall at the right market in the group — the stall–market link must still be on. Any mismatch
+     * stall at the right market in the group — the stall–market link must still be on. Its weekday
+     * must also still be open for both the market and the stall (FR-060, FR-073): slots are
+     * generated ahead, and a weekday dropped since then no longer takes new bookings. Any mismatch
      * → 409 SLOT_UNAVAILABLE.
      */
     private PickupSlot bookableSlot(
@@ -430,7 +471,7 @@ public class OrderService implements OrderServiceInterface {
                         .filter(fm -> fm.getFarmerId().equals(farmer.getId()))
                         .filter(fm -> fm.getMarketId().equals(group.marketId()))
                         .isPresent();
-        if (!atThisStallAndMarket) {
+        if (!atThisStallAndMarket || !slotRepository.isOnOpenDay(slot.getId())) {
             throw new SlotNotAvailableException();
         }
         return slot;
@@ -602,6 +643,29 @@ public class OrderService implements OrderServiceInterface {
     }
 
     /**
+     * FR-072: an admin permanently deactivated this customer — every order of theirs still {@code
+     * placed}/{@code accepted} is cancelled through the same {@link #transition} door as every
+     * other cancellation (D-02 stock restore, FR-038 history), so nothing here duplicates that
+     * logic.
+     */
+    @Override
+    @Transactional
+    public void cancelAllForDeactivatedCustomer(long customerId, Long adminActorId) {
+        List<Order> openOrders =
+                orderRepository.findByCustomerIdAndStatusIn(
+                        customerId, List.of(OrderStatus.PLACED, OrderStatus.ACCEPTED));
+        for (Order summary : openOrders) {
+            Order order = orderRepository.lockById(summary.getId()).orElseThrow();
+            transition(
+                    order,
+                    OrderStatus.CANCELLED,
+                    adminActorId,
+                    "Cancelled: customer account permanently deactivated.");
+            notifyFarmer(order, NotificationKind.ORDER_CANCELLED_ACCOUNT_DEACTIVATED, Map.of());
+        }
+    }
+
+    /**
      * D-07 — only lower quantities or drop items, never add a new product: compute each product's
      * difference, then add/subtract exactly that difference from the daily-stock row for this
      * order's own pickup date (D-02 redesign — never {@code Product.stockQuantity}). Cancelling and
@@ -663,11 +727,13 @@ public class OrderService implements OrderServiceInterface {
             }
             // No row and not raising: nothing was taken from this date, nothing to give back
             if (delta != 0 && row != null) {
-                boolean wasOrderable = orderableOn(p, row);
+                // FR-041: lowering a quantity gives stock back. Whether the product as a whole
+                // could be ordered, not just this date — the row is already locked, so the
+                // resolver reads it fresh.
+                boolean wasOrderable = p != null && restock.isOrderable(p);
                 row.setQuantityAvailable(row.getQuantityAvailable() - delta);
-                // FR-041: lowering a quantity gives stock back
                 if (p != null) {
-                    restock.afterChange(p, wasOrderable, orderableOn(p, row));
+                    restock.afterChange(p, wasOrderable, restock.isOrderable(p));
                 }
             }
 
@@ -704,6 +770,8 @@ public class OrderService implements OrderServiceInterface {
             orderRepository.save(order);
             orderRepository.flush();
         }
+        // D-07: the Farmer must look at the order again — an accepted one is back to placed
+        notifyFarmer(order, NotificationKind.ORDER_CHANGED, Map.of());
         return detail(userId, orderId);
     }
 
@@ -721,11 +789,6 @@ public class OrderService implements OrderServiceInterface {
      */
     private static boolean canRaiseBy(Product p, ProductDailyStock row, int delta) {
         return p != null && sellable(p) && row.getQuantityAvailable() >= delta;
-    }
-
-    /** Can be put in a cart today, on the one pickup date this daily-stock row is for. */
-    private static boolean orderableOn(Product p, ProductDailyStock row) {
-        return p != null && sellable(p) && row.getQuantityAvailable() > 0;
     }
 
     /**
@@ -828,9 +891,11 @@ public class OrderService implements OrderServiceInterface {
      * D-02 restored per pickup date: locks each item's {@code product_daily_stock} row by natural
      * key, ascending productId (every row here shares the order's one pickup date, so productId
      * alone gives C5-2's deterministic order), adds the ordered quantity back, and tells FR-041
-     * when that date's row crossed "cannot be ordered" → "can be ordered", for a product still
-     * listed and available. An unlocked {@code Product} read is enough here: this path never
-     * mutates the product row, only the daily-stock row.
+     * when the product crossed "no date can be ordered" → "some date can" ({@link
+     * RestockNotifier#isOrderable}). Units freed on a sold-out date while another date still had
+     * stock are no restock (reproduced: a cancelled order that bought out 04/10 alerted while 03/10
+     * had 27 left). An unlocked {@code Product} read is enough here: this path never mutates the
+     * product row, only the daily-stock row.
      *
      * <p>No row for that date means the order was placed before per-date stock existed (the seed's
      * orders, or a database migrated from the shared pool): nothing was taken from that date, so
@@ -853,10 +918,10 @@ public class OrderService implements OrderServiceInterface {
                 continue;
             }
             Product p = products.get(productId);
-            boolean wasOrderable = orderableOn(p, row);
+            boolean wasOrderable = p != null && restock.isOrderable(p);
             row.setQuantityAvailable(row.getQuantityAvailable() + qty.get(productId));
             if (p != null) {
-                restock.afterChange(p, wasOrderable, orderableOn(p, row));
+                restock.afterChange(p, wasOrderable, restock.isOrderable(p));
             }
         }
     }

@@ -16,6 +16,7 @@ import com.techx.intervue.modules.product.requests.ProductSearchCriteria;
 import com.techx.intervue.modules.product.resources.ProductDetailResource;
 import com.techx.intervue.modules.product.resources.ProductDetailRow;
 import com.techx.intervue.modules.product.resources.ProductListItemResource;
+import com.techx.intervue.modules.product.resources.ShelfLifeResource;
 import com.techx.intervue.modules.review.resources.ReviewSummaryResource;
 import com.techx.intervue.modules.review.services.interfaces.ReviewServiceInterface;
 import com.techx.intervue.modules.stall.resources.StallDetailResource;
@@ -67,7 +68,8 @@ class ProductQueryServiceTest {
                 "available",
                 BigDecimal.ZERO,
                 0,
-                3);
+                3,
+                null);
     }
 
     private static ProductSearchCriteria criteria(
@@ -134,7 +136,10 @@ class ProductQueryServiceTest {
         assertThatThrownBy(() -> service.detail(5L)).isInstanceOf(ProductNotFoundException.class);
     }
 
-    /** search() overwrites stockQuantity/price with the nearest orderable date's numbers. */
+    /**
+     * search() overwrites stockQuantity/price with the nearest orderable date's numbers, and names
+     * that date.
+     */
     @Test
     void searchOverlaysTheNearestAvailableDateOntoEachItem() {
         ProductListItemResource raw = item(1L);
@@ -152,6 +157,39 @@ class ProductQueryServiceTest {
 
         assertThat(result.items().getFirst().stockQuantity()).isEqualTo(40);
         assertThat(result.items().getFirst().price()).isEqualByComparingTo("13000");
+        // FR-022: the number names the pickup date it is for
+        assertThat(result.items().getFirst().availableDate()).isEqualTo("2026-09-28");
+    }
+
+    /**
+     * FR-124: a nearest day on a near-expiry deal keeps the regular price on the card (reproduced
+     * 29/09: a 35% deal on 03/10 listed a $0.50 product at $0.33 with nothing saying it was a
+     * deal).
+     */
+    @Test
+    void searchShowsTheRegularPriceWhenTheNearestDayIsOnADeal() {
+        when(repository.search(any(), anyString(), anyInt(), anyInt()))
+                .thenReturn(new PageResource<>(List.of(item(1L)), 1, 20, 1));
+        LocalDate saturday = LocalDate.of(2026, 10, 3);
+        when(availability.resolve(any()))
+                .thenReturn(
+                        Map.of(
+                                1L,
+                                new ProductAvailabilityResolver.Availability(
+                                        saturday,
+                                        12,
+                                        new BigDecimal("0.33"),
+                                        new ProductAvailabilityResolver.Deal(
+                                                new BigDecimal("0.50"),
+                                                35,
+                                                saturday.minusDays(3),
+                                                saturday.plusDays(1)))));
+
+        ProductListItemResource shown =
+                service.search(criteria("newest", null, null, 20)).items().getFirst();
+
+        assertThat(shown.price()).isEqualByComparingTo("0.50");
+        assertThat(shown.availableDate()).isEqualTo("2026-10-03");
     }
 
     /**
@@ -287,5 +325,34 @@ class ProductQueryServiceTest {
         when(reviewService.productSummary(5L)).thenReturn(summary);
 
         assertThat(service.detail(5L).reviewsSummary()).isSameAs(summary);
+    }
+
+    /** FR-121: the public product page carries the stored shelf-life block as-is. */
+    @Test
+    void detailCarriesTheStoredShelfLife() {
+        when(repository.findVisibleById(1L))
+                .thenReturn(Optional.of(new ProductDetailRow(item(1L), "Cắt sáng")));
+        when(repository.shelfLife(1L))
+                .thenReturn(
+                        Optional.of(
+                                new ShelfLifeResource(7L, "Leafy greens", "chilled", 5, 3, true)));
+        when(stallService.publicDetail(10L))
+                .thenReturn(
+                        new StallDetailResource(
+                                10L,
+                                "Vườn Út Hiền",
+                                "Hiền",
+                                null,
+                                null,
+                                12,
+                                BigDecimal.ZERO,
+                                0,
+                                "approved",
+                                List.of()));
+
+        ProductDetailResource result = service.detail(1L);
+
+        assertThat(result.shelfLife())
+                .isEqualTo(new ShelfLifeResource(7L, "Leafy greens", "chilled", 5, 3, true));
     }
 }

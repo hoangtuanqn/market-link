@@ -11,7 +11,6 @@
     "reviews_other": "{{count}} Bewertungen",
     "markets_one": "Markt",
     "markets_other": "Märkte",
-    "since": "verkauft hier seit",
     "cutoff": "Stunden vor Abholung ist Bestellschluss"
   },
   "tabs": {
@@ -24,14 +23,13 @@
     "count_one": "{{count}} Produkt",
     "count_other": "{{count}} Produkte",
     "availableOn": "Erhältlich am",
-    "notSelling": "{{stall}} verkauft nicht am {{day}}. Die Produkte oben gibt es an den Verkaufstagen ({{days}})."
+    "notSelling": "{{stall}} verkauft nicht am {{day}}. Die Produkte oben gibt es an den Verkaufstagen ({{days}}).",
+    "emptyTitle": "Nichts für {{day}}",
+    "emptyText": "Der Stand hat für diesen Tag noch keinen Bestand eingetragen. Wählen Sie einen anderen Tag."
   },
   "reviews": {
     "summary_one": "{{count}} Bewertung aus einer abgeschlossenen Bestellung",
     "summary_other": "{{count}} Bewertungen, jede aus einer abgeschlossenen Bestellung",
-    "all": "Alle",
-    "farmer": "Zum Stand",
-    "product": "Zu Produkten",
     "newest": "Neueste zuerst",
     "emptyTitle": "No reviews yet",
     "emptyText": "Be the first to review this stall once your order is completed.",
@@ -56,12 +54,6 @@
     "findingTitle": "Den Stand finden",
     "findingText": "Stand {{code}} · Abholzeitfenster {{window}}. Zeitfenster dauern 30 Minuten und fassen je 5 Bestellungen.",
     "preorder": "Auf diesem Markt vorbestellen"
-  },
-  "report": {
-    "sentTitle": "Meldung gesendet",
-    "sentText": "Ein Admin sieht sich das an.",
-    "button": "Diesen Stand melden",
-    "note": "Wiederholtes Nichterscheinen, falscher Standort oder alles, was gegen die Plattformregeln verstößt."
   },
   "error": {
     "noun": "Stand"

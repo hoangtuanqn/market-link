@@ -51,7 +51,8 @@
     "notApproved": "Mercados, días y ventanas de recogida se activan cuando un administrador apruebe tu puesto.",
     "windowError": "{{market}}: elige al menos un día y una hora de fin posterior al inicio.",
     "joined": "{{name}} añadido a tu puesto.",
-    "left": "{{name}} quitado de tu puesto."
+    "left": "{{name}} quitado de tu puesto.",
+    "codeError": "{{market}}: el código del puesto puede tener como máximo {{max}} caracteres."
   },
   "map": {
     "yourStall": "Tu puesto"

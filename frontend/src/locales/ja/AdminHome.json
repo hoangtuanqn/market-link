@@ -1,17 +1,17 @@
 {
-  "overline": "プラットフォーム · {{year}}",
-  "title": "今日の MarketLink",
+  "overline": "プラットフォーム",
+  "title": "概要",
   "noun": "dashboard",
   "kpi": {
     "farmers": "農家",
-    "farmersNote": "{{waiting}}件が承認待ち · {{suspended}}件が停止中",
+    "farmersNote": "{{waiting}}件が承認待ち",
     "farmersLink": "申請を審査する",
     "customers": "お客様",
     "customersLink": "お客様一覧を開く",
     "markets": "マーケット",
     "marketsLink": "マーケット一覧を開く",
     "orders": "注文",
-    "ordersNote": "今週{{week}}件 · 完了{{total}}",
+    "ordersNote": "完了した注文から{{revenue}}",
     "ordersLink": "注文一覧を開く"
   },
   "attention": {
@@ -48,5 +48,12 @@
     "pickup": "受け取り",
     "total": "合計",
     "status": "ステータス"
+  },
+  "maintenance": {
+    "title": "メンテナンスモードが有効です",
+    "badge": "有効",
+    "text": "プラットフォーム全体が現在管理者のみに制限されています。訪問者や農家にはメンテナンス通知が表示されています。",
+    "reminder": "メンテナンスが完了したら、ユーザーがMarketLinkにアクセスできるよう、できるだけ早くメンテナンスモードを解除してください。",
+    "action": "設定へ移動"
   }
 }

@@ -1,9 +1,21 @@
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import QtyStepper from '@/components/QtyStepper';
 import { Card } from '@/components/ui/card';
-import { perUnit, vnd } from '@/lib/format';
+import { perUnit, money } from '@/lib/format';
 
-export type CartLineType = { id: number; name: string; unit: string; price: number; max: number; qty: number };
+export type CartLineType = {
+  id: number;
+  name: string;
+  unit: string;
+  price: number;
+  max: number;
+  qty: number;
+  /** Near-expiry deal (FR-125): the price before the discount, shown struck through. */
+  listPrice?: number | null;
+  /** A line under the price, e.g. the deal and until when it stays good. */
+  note?: ReactNode;
+};
 
 type CartGroupProps = {
   index?: number;
@@ -41,6 +53,12 @@ const CartGroup = ({ index, of, stallName, where, items, onQtyChange, onRemove }
             <span className="font-bold">
               {it.name}
               <span className="text-ink-muted block text-[13px] font-normal">
+                {it.listPrice != null && it.listPrice > it.price && (
+                  <s className="mr-1">
+                    <span className="sr-only">{t('price.was')} </span>
+                    {perUnit(it.listPrice, it.unit)}
+                  </s>
+                )}
                 {perUnit(it.price, it.unit)}{' '}
                 <button
                   type="button"
@@ -50,10 +68,11 @@ const CartGroup = ({ index, of, stallName, where, items, onQtyChange, onRemove }
                   {t('actions.remove')}
                 </button>
               </span>
+              {it.note}
             </span>
             <QtyStepper value={it.qty} max={it.max} unit={it.unit} onChange={(qty) => onQtyChange(it.id, qty)} />
             <span className="text-price min-w-22 text-right font-bold tabular-nums max-[480px]:col-span-full max-[480px]:-mt-1 max-[480px]:text-left">
-              {vnd(it.qty * it.price)}
+              {money(it.qty * it.price)}
             </span>
           </li>
         ))}
@@ -61,7 +80,7 @@ const CartGroup = ({ index, of, stallName, where, items, onQtyChange, onRemove }
 
       <div className="bg-surface-sunken flex flex-wrap items-center justify-between gap-3 p-3 px-4">
         <span className="text-ink-muted text-small">{t('cart.payAtPickup')}</span>
-        <span className="font-hand text-price text-[28px] tabular-nums">{vnd(total)}</span>
+        <span className="font-hand text-price text-[28px] tabular-nums">{money(total)}</span>
       </div>
     </Card>
   );

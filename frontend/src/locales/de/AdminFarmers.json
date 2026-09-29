@@ -8,12 +8,17 @@
   },
   "tabsLabel": "Erzeuger nach Status",
   "status": {
+    "all": "Alle",
     "pending": "Warten auf Freigabe",
     "approved": "Freigegeben",
     "suspended": "Gesperrt",
     "rejected": "Abgelehnt"
   },
   "empty": {
+    "all": {
+      "title": "Noch keine Landwirte",
+      "text": "Landwirt-Registrierungen werden hier angezeigt."
+    },
     "pending": {
       "title": "Keine wartenden Anträge",
       "text": "Neue Erzeuger-Anträge landen hier zur Prüfung, bevor Produkte eingestellt werden können."
@@ -55,8 +60,7 @@
     "reason": "Grund, den der Erzeuger sieht",
     "confirm": "Antrag ablehnen",
     "placeholder": "Schreibe, was sich ändern muss, damit dieser Stand freigegeben wird.",
-    "hint": "{{used}} von {{max}} Zeichen. Die antragstellende Person liest das wörtlich.",
-    "required": "Schreibe den Grund, den die antragstellende Person sieht.",
+    "required": "Wähle einen Grund oder schreibe den, den der Antragsteller liest.",
     "tooLong": "Der Grund darf höchstens {{max}} Zeichen haben."
   },
   "suspend": {
@@ -65,8 +69,7 @@
     "confirm": "Stand sperren",
     "reason": "Grund, den der Erzeuger sieht",
     "placeholder": "Schreibe, was der Stand ändern muss, um wieder zu verkaufen.",
-    "hint": "{{used}} von {{max}} Zeichen. Die erzeugende Person liest das wörtlich.",
-    "required": "Schreibe den Grund, den die erzeugende Person sieht.",
+    "required": "Wähle einen Grund oder schreibe den, den der Landwirt liest.",
     "tooLong": "Der Grund darf höchstens {{max}} Zeichen haben."
   },
   "toast": {

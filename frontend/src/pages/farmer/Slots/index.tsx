@@ -90,9 +90,9 @@ const FarmerSlotsPage = () => {
     state: slotsLoad,
     retry: retrySlots,
     mutate: mutateSlots,
-  } = useRequest(`slots:${activeMarket?.marketId ?? 'none'}:${activeDate ?? 'none'}`, () =>
+  } = useRequest(`slots:${activeMarket?.farmerMarketId ?? 'none'}:${activeDate ?? 'none'}`, () =>
     profile && activeMarket && activeDate
-      ? StallApi.slots(profile.farmerId, { marketId: activeMarket.marketId, date: activeDate })
+      ? StallApi.farmerSlots(activeMarket.farmerMarketId, activeDate)
       : Promise.resolve([]),
   );
   const slots = slotsLoad.kind === 'ready' ? slotsLoad.data : [];
@@ -144,12 +144,15 @@ const FarmerSlotsPage = () => {
     }
   };
 
-  const closeSlot = async (slot: SlotDto) => {
+  const toggleSlot = async (slot: SlotDto, active: boolean) => {
     setClosingId(slot.slotId);
     try {
-      await StallApi.updateSlot(slot.slotId, { isActive: false });
-      mutateSlots((rows) => rows.filter((r) => r.slotId !== slot.slotId));
-      Notification.success({ title: t('table.closedTitle'), text: t('table.closedText') });
+      const updated = await StallApi.updateSlot(slot.slotId, { isActive: active });
+      mutateSlots((rows) => rows.map((r) => (r.slotId === slot.slotId ? updated : r)));
+      Notification.success({
+        title: active ? t('table.on') : t('table.closedTitle'),
+        text: active ? t('table.on') : t('table.closedText'),
+      });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
     } finally {
@@ -218,7 +221,7 @@ const FarmerSlotsPage = () => {
             if (e.key === 'Enter') e.currentTarget.blur();
           }}
           aria-label={t('table.maxFor', { slot: clockRange(s) })}
-          className="border-line-strong bg-surface-raised min-h-9 w-21 rounded-sm border-[1.5px] px-2 text-right tabular-nums disabled:opacity-60"
+          className="border-line-strong bg-surface-raised min-h-11 w-21 rounded-sm border-[1.5px] px-2 text-right tabular-nums disabled:opacity-60"
         />
       ),
     },
@@ -236,10 +239,10 @@ const FarmerSlotsPage = () => {
       render: (s) => (
         <Checkbox
           id={`open-${s.slotId}`}
-          checked
+          checked={s.isActive}
           disabled={closingId === s.slotId}
           onChange={(e) => {
-            if (!e.target.checked) void closeSlot(s);
+            void toggleSlot(s, e.target.checked);
           }}
         >
           {t('table.on')}
@@ -259,7 +262,7 @@ const FarmerSlotsPage = () => {
 
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
         <Button onClick={() => setGenOpen(true)} disabled={!activeMarket}>
@@ -329,7 +332,7 @@ const FarmerSlotsPage = () => {
                 <Trans
                   t={t}
                   i18nKey="table.reenableNote"
-                  components={{ link: <Link to="/contact" className="text-brand underline" /> }}
+                  components={{ a: <Link to="/contact" className="text-brand underline" /> }}
                 />
               </p>
             </>

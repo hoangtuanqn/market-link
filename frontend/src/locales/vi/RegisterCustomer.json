@@ -5,9 +5,7 @@
     "fullName": "Họ và tên",
     "phone": "Số điện thoại",
     "email": "Email",
-    "emailHint": "Dùng để đăng nhập và nhận thông báo đơn hàng.",
-    "address": "Địa chỉ",
-    "addressPlaceholder": "Số nhà, đường, phường, quận",
+    "emailHint": "Dùng để đăng nhập và nhận thông báo đơn hàng. Chúng tôi gửi mã tới địa chỉ này để xác nhận nó là của bạn.",
     "password": "Mật khẩu",
     "passwordHint": "Từ {{min}} đến {{max}} ký tự.",
     "confirmPassword": "Nhập lại mật khẩu"
@@ -21,8 +19,8 @@
   "haveAccount": "Tôi đã có tài khoản",
   "acceptFirst": "Hãy đồng ý với điều khoản để tạo tài khoản.",
   "sharedAccount": "Một tài khoản có thể dùng chung trong gia đình; hệ thống không phân biệt từng người trong một tài khoản.",
+  "honeypot": "Để trống ô này",
   "toast": {
-    "created": "Đã tạo tài khoản.",
     "failed": "Không tạo được tài khoản. Vui lòng thử lại."
   },
   "errors": {
@@ -33,11 +31,11 @@
     "emailRequired": "Nhập email.",
     "emailInvalid": "Nhập địa chỉ email hợp lệ.",
     "emailMax": "Email tối đa {{max}} ký tự.",
-    "addressRequired": "Nhập địa chỉ.",
-    "addressMax": "Địa chỉ tối đa {{max}} ký tự.",
     "passwordRequired": "Nhập mật khẩu.",
     "passwordLength": "Mật khẩu phải có từ {{min}} đến {{max}} ký tự.",
     "confirmRequired": "Nhập lại mật khẩu.",
-    "confirmMismatch": "Mật khẩu không khớp."
+    "confirmMismatch": "Mật khẩu không khớp.",
+    "tooMany_one": "Địa chỉ hoặc mạng này đã yêu cầu quá nhiều mã. Thử lại sau {{count}} phút.",
+    "tooMany_other": "Địa chỉ hoặc mạng này đã yêu cầu quá nhiều mã. Thử lại sau {{count}} phút."
   }
 }

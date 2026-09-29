@@ -5,7 +5,11 @@
     "intro_one": "Réservez les produits de la semaine auprès des stands de {{count}} marché à Hô Chi Minh-Ville. Retirez au stand et payez directement le producteur.",
     "intro_other": "Réservez les produits de la semaine auprès des stands de {{count}} marchés à Hô Chi Minh-Ville. Retirez au stand et payez directement le producteur.",
     "browse": "Voir les marchés",
-    "sell": "Vendre sur MarketLink"
+    "sell": "Vendre sur MarketLink",
+    "livePill": "Week-end de marché : {{count}} marchés ouverts ({{from}} – {{to}})",
+    "lead": "Réservez des produits récoltés le matin même auprès des fermes familiales locales. Retirez au marché du week-end et payez directement le producteur.",
+    "explore": "Découvrir les produits frais",
+    "sellPrompt": "Vous êtes producteur ? Vendez sur MarketLink →"
   },
   "search": {
     "scope": "Rechercher dans",
@@ -23,33 +27,107 @@
     "overline": "Ouverts ce week-end",
     "title": "Où sont les stands",
     "seeAll_one": "Voir le marché sur la carte",
-    "seeAll_other": "Voir les {{count}} marchés sur la carte"
+    "seeAll_other": "Voir les {{count}} marchés sur la carte",
+    "takingOrders": "Précommandes ouvertes",
+    "hours": "Emplacements et horaires"
   },
   "nearby": {
     "title": "Marchés près de chez vous",
     "note": "Distances depuis votre adresse enregistrée à Thảo Điền",
-    "noun": "marchés"
+    "noun": "marchés",
+    "eyebrow": "EMPLACEMENTS DES MARCHÉS",
+    "filterAll": "Tous",
+    "empty": "Aucun marché trouvé dans cette zone."
   },
   "fresh": {
     "title": "Frais cette semaine",
     "all": "Tous les produits et filtres",
-    "noun": "produits"
+    "noun": "produits",
+    "eyebrow": "RÉCOLTE À L'HONNEUR",
+    "cutoff": "Clôture des précommandes : 20h00 ce jeudi et vendredi soir",
+    "filterLink": "Filtrer par prix et catégorie →",
+    "empty": "Aucun produit frais disponible pour le moment."
+  },
+  "deals": {
+    "title": "Promos date proche",
+    "note": "Moins cher parce qu'ils ont dépassé la moitié de leur durée de conservation. Chaque fiche indique jusqu'à quand ils restent bons.",
+    "all": "Toutes les promos"
   },
   "how": {
     "title": "Comment fonctionne la précommande",
     "steps": {
       "reserve": {
         "title": "Réservez avant l'heure limite",
-        "text": "Ajoutez des produits d'un ou plusieurs stands, choisissez une heure de retrait dans le créneau de chaque stand, puis passez commande. Le stock vous est réservé dès la commande."
+        "text": "Ajoutez des produits d'un ou plusieurs stands, choisissez une heure de retrait dans le créneau de chaque stand, puis passez commande. Le stock vous est réservé dès la commande.",
+        "highlight": "Aucun prépaiement par carte bancaire exigé"
       },
       "confirm": {
         "title": "Le producteur confirme",
-        "text": "Chaque stand accepte ou refuse sa propre commande. Vous êtes prévenu dans les deux cas, et vous pouvez modifier ou annuler jusqu'à l'heure limite du stand."
+        "text": "Chaque stand accepte ou refuse sa propre commande. Vous êtes prévenu dans les deux cas, et vous pouvez modifier ou annuler jusqu'à l'heure limite du stand.",
+        "highlight": "Vos articles sont 100% réservés pour vous"
       },
       "pickup": {
         "title": "Retirez et payez au stand",
-        "text": "Quand la commande est prête, rendez-vous au stand pendant votre créneau, récupérez-la et payez directement le producteur. Il n'y a pas de paiement en ligne."
+        "text": "Quand la commande est prête, rendez-vous au stand pendant votre créneau, récupérez-la et payez directement le producteur. Il n'y a pas de paiement en ligne.",
+        "highlight": "Sacs réutilisables vivement encouragés"
       }
+    },
+    "eyebrow": "COMMENT ÇA MARCHE",
+    "desc": "Savourez de bons produits de la ferme chaque week-end, sans file d'attente ni mauvaise surprise"
+  },
+  "pillars": {
+    "fresh": {
+      "title": "100% Frais de la Ferme",
+      "desc": "Récolté la veille au soir ou le matin même du marché pour une saveur et une nutrition optimales."
+    },
+    "direct": {
+      "title": "En Direct des Producteurs",
+      "desc": "Zéro marge d'intermédiaire. Des prix justes pour vous, 100% de revenus pour les familles paysannes."
+    },
+    "guarantee": {
+      "title": "Garantie Précommande",
+      "desc": "Sécurisez votre récolte à l'avance — pas besoin de se lever tôt ni de risquer une rupture."
+    },
+    "pay": {
+      "title": "Paiement au Stand",
+      "desc": "Vérifiez la fraîcheur en personne, puis payez en espèces ou par QR code directement au producteur."
     }
+  },
+  "categories": {
+    "eyebrow": "CATÉGORIES DE PRODUITS",
+    "title": "Parcourir par catégorie",
+    "desc": "Classé selon la saisonnalité et le mode d'agriculture",
+    "all": "Voir tous les produits →",
+    "items": {
+      "vegetables": "Légumes",
+      "fruits": "Fruits",
+      "dairy": "Œufs & Produits Laitiers",
+      "grains": "Céréales & Noix",
+      "meat": "Viandes & Volailles",
+      "seafood": "Poissons & Fruits de Mer",
+      "mushrooms": "Champignons",
+      "baked": "Boulangerie & Pâtisserie"
+    },
+    "itemsCount": "{{count}} articles"
+  },
+  "farmers": {
+    "eyebrow": "NOS PRODUCTEURS",
+    "title": "Rencontrez vos producteurs locaux",
+    "desc": "Des agriculteurs passionnés qui apportent des produits sains et authentiques à nos marchés",
+    "all": "Découvrir tous les stands →",
+    "grower": "Producteur",
+    "at": "À",
+    "visit": "Visiter le stand →",
+    "empty": "Aucun producteur disponible pour l'instant.",
+    "noun": "stands",
+    "emptyText": "Parcourez les marchés pour voir qui y vend."
+  },
+  "banner": {
+    "badge": "POUR LES PRODUCTEURS ET ARTISANS LOCAUX",
+    "free": "· Inscription gratuite sur MarketLink",
+    "title": "Prêt à faire découvrir vos récoltes fraîches aux citadins ?",
+    "desc": "Recevez vos précommandes en milieu de semaine, planifiez vos récoltes et évitez le gaspillage.",
+    "apply": "Demander un stand fermier →",
+    "guidelines": "Consulter nos chartes de qualité et de stand"
   }
 }

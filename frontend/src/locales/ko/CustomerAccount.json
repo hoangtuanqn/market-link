@@ -38,8 +38,6 @@
     "phone": "전화번호",
     "email": "이메일",
     "emailHint": "로그인에 사용해요. 여기서는 바꿀 수 없어요.",
-    "address": "주소",
-    "addressHint": "거리와 길 찾기에 사용해요.",
     "save": "변경 사항 저장",
     "saving": "저장 중…",
     "noChanges": "저장할 변경 사항이 없어요.",

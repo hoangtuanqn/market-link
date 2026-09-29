@@ -1,6 +1,8 @@
 package com.techx.intervue.modules.catalog.entities;
 
+import com.techx.intervue.modules.geo.entities.AddressColumns;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,14 +32,12 @@ public class Market {
     @Column(name = "market_name", nullable = false, length = 150)
     private String marketName;
 
+    /** Composed from addressParts by AddressService. */
     @Column(nullable = false, length = 255)
     private String address;
 
-    @Column(length = 100)
-    private String district;
-
-    @Column(nullable = false, length = 100)
-    private String city;
+    /** Always in Vietnam (V20260927002); null only on a market saved before it. */
+    @Embedded private AddressColumns addressParts;
 
     @Column(nullable = false, precision = 10, scale = 8)
     private BigDecimal latitude;

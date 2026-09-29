@@ -6,7 +6,6 @@ Mở menu tài khoản → **Settings** (trang `/settings`). Bạn chỉnh đư�
 
 - **Ngôn ngữ**: English, Tiếng Việt, 中文, 日本語, 한국어, Français, Español, Deutsch, ไทย, Bahasa Indonesia.
 - **Giao diện (Theme)**: sáng, tối, hoặc theo thiết bị.
-- **Tiền tệ hiển thị**: VND, USD, EUR, JPY (chỉ để hiển thị; bạn vẫn trả tiền cho Farmer tại gian hàng).
 - **Đơn vị đo**: hệ mét (kg) hoặc hệ Anh (lb).
 - **Định dạng ngày** (ngày/tháng/năm, tháng/ngày/năm hoặc ISO) và **giờ** (24 giờ hoặc 12 giờ).
 - **Market you shop at most**: chợ bạn hay đi nhất, được xếp đầu trang Markets.

@@ -1,7 +1,10 @@
 package com.techx.intervue.modules.user.requests;
 
+import com.techx.intervue.modules.geo.requests.AddressPartsRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
@@ -17,13 +20,19 @@ public record CustomerRegisterRequest(
                 @Email(regexp = RegisterRules.EMAIL_REGEX, message = RegisterRules.EMAIL_MESSAGE)
                 @Size(max = 100, message = "Email can be at most 100 characters.")
                 String email,
-        @NotBlank(message = "Enter your address.")
-                @Size(max = 255, message = "Address can be at most 255 characters.")
-                String address,
+        // The rules that depend on the country (province/ward for Vietnam…) are in AddressService
+        @NotNull(message = "Choose your address.") @Valid AddressPartsRequest addressParts,
         @NotBlank(message = "Enter your password.")
                 @Size(
                         min = RegisterRules.PASSWORD_MIN,
                         max = RegisterRules.PASSWORD_MAX,
                         message = RegisterRules.PASSWORD_MESSAGE)
+                @FitsBcrypt
                 String password,
-        @NotBlank(message = "Confirm your password.") String confirmPassword) {}
+        @NotBlank(message = "Confirm your password.") String confirmPassword,
+        // FR-009: language of the code email; anything unknown becomes English
+        @Size(max = 16, message = "Language can be at most 16 characters.") String language,
+        // FR-009: honeypot — the real form always sends it empty
+        String website,
+        // FR-009: the token this browser got for an earlier submit of the same address, if any
+        @Size(max = 64, message = "Fill in the form again.") String signupToken) {}

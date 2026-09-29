@@ -3,10 +3,7 @@
   "intro": "Google アカウント <b>{{email}}</b> でログインしました。Google から受け取るのは氏名とメールアドレスだけなので、電話番号と住所を一度だけお聞きします。注文先の店舗が、マーケット当日の受け渡しに使います。",
   "fields": {
     "fullName": "氏名",
-    "phone": "電話番号",
-    "address": "住所",
-    "addressPlaceholder": "通り、坊、区",
-    "addressHint": "距離と道案内に使います。"
+    "phone": "電話番号"
   },
   "submit": "保存して続ける",
   "saving": "保存中…",

@@ -11,7 +11,6 @@
     "reviews_other": "{{count}} avis",
     "markets_one": "marché",
     "markets_other": "marchés",
-    "since": "vend ici depuis",
     "cutoff": "heures avant le retrait, commandes closes"
   },
   "tabs": {
@@ -24,14 +23,13 @@
     "count_one": "{{count}} produit",
     "count_other": "{{count}} produits",
     "availableOn": "Disponible le",
-    "notSelling": "{{stall}} ne vend pas le {{day}}. Les produits ci-dessus sont ceux proposés les jours de vente ({{days}})."
+    "notSelling": "{{stall}} ne vend pas le {{day}}. Les produits ci-dessus sont ceux proposés les jours de vente ({{days}}).",
+    "emptyTitle": "Rien pour {{day}}",
+    "emptyText": "Ce stand n'a pas encore de stock pour ce jour. Essayez un autre jour."
   },
   "reviews": {
     "summary_one": "{{count}} avis, issu d'une commande terminée",
     "summary_other": "{{count}} avis, tous issus de commandes terminées",
-    "all": "Tous",
-    "farmer": "Sur le stand",
-    "product": "Sur les produits",
     "newest": "Plus récents d'abord",
     "emptyTitle": "No reviews yet",
     "emptyText": "Be the first to review this stall once your order is completed.",
@@ -56,12 +54,6 @@
     "findingTitle": "Trouver le stand",
     "findingText": "Stand {{code}} · créneau de retrait {{window}}. Les créneaux durent 30 minutes et acceptent 5 commandes chacun.",
     "preorder": "Précommander sur ce marché"
-  },
-  "report": {
-    "sentTitle": "Signalement envoyé",
-    "sentText": "Un administrateur va s'en occuper.",
-    "button": "Signaler ce stand",
-    "note": "Absences répétées, mauvais emplacement du stand ou tout ce qui enfreint les règles de la plateforme."
   },
   "error": {
     "noun": "stand"

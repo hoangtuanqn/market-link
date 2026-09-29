@@ -10,17 +10,23 @@
     "remove": "Remove from favorites: {{name}}"
   },
   "soldPer": "sold per {{unit}}",
-  "left": "<b>{{qty}}</b> left this week",
+  "left": "<b>{{qty}}</b> left",
+  "leftOn": "<b>{{qty}}</b> left for {{day}}",
   "stockUpdated": "Stock updated today, before this weekend's orders.",
-  "notifyMe": "Notify me when back",
   "added": {
     "title": "Added to cart",
     "text": "Added {{qty}} of {{name}} to your cart."
   },
   "addToCart": "Add to cart",
   "payNote": "Stock is held for you when you place the order. You pay {{price}} at the stall on pickup.",
+  "deals": {
+    "title": "On sale for these pickup days",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, was {{was}} · good until end of {{until}} · {{qty}} left",
+    "add": "Add for {{day}}",
+    "noun": "deals"
+  },
   "fromStall": "From the stall",
-  "sellingSince": "selling here since {{date}}",
   "stats": {
     "reviews_one": "{{count}} review",
     "reviews_other": "{{count}} reviews",
@@ -31,13 +37,13 @@
     "cutoff": "order cutoff"
   },
   "seeStall": "See the stall",
-  "messageStall": "Message the stall",
   "details": {
     "title": "Product details",
     "soldPer": "Sold per",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "Shelf life",
+    "shelfLifeLine_one": "{{storage}} · good for {{count}} day from pickup",
+    "shelfLifeLine_other": "{{storage}} · good for {{count}} days from pickup",
+    "shelfLifePromise": "The stall promises {{days}} days (usually {{suggested}}).",
     "category": "Category",
     "stall": "Stall",
     "market": "Market"
@@ -74,7 +80,6 @@
   "similar": {
     "title": "{{name}} at other stalls this weekend",
     "note": "Same vegetable, different plot and price",
-    "here": "You are here",
     "view": "View"
   },
   "also": {

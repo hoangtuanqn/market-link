@@ -1,9 +1,15 @@
 package com.techx.intervue.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.techx.intervue.modules.user.entities.User;
+import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.enums.UserStatus;
+import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.resources.CustomUserDetails;
+import com.techx.intervue.modules.user.services.impl.DeactivationMessage;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
+import com.techx.intervue.modules.user.services.interfaces.MfaServiceInterface;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
 import com.techx.intervue.services.interfaces.BlacklistServiceInterface;
@@ -19,6 +25,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,8 +47,19 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private final BlacklistServiceInterface blacklistService;
     private final ObjectMapper objectMapper;
     private final UserSessionCache userSessionCache;
+    private final MfaServiceInterface mfaService;
+    private final UserRepository userRepository;
 
     public static final String TOKEN_ATTRIBUTE = "jwt_token";
+
+    /**
+     * FR-008: marks a session belonging to an admin who has never set up two-step verification.
+     * Sign-in still hands them a working session — the setup screen needs one to call
+     * /auth/mfa/setup — but SecurityConfig refuses every signed-in route outside the /auth/** ones
+     * the setup screen uses while this is present, so the mandatory step cannot be walked around by
+     * calling the API directly.
+     */
+    public static final String MFA_SETUP_PENDING = "MFA_SETUP_PENDING";
 
     private static final Map<Class<? extends JwtException>, String> JWT_ERRORS_MESSAGES =
             Map.of(
@@ -91,25 +109,25 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
                 if (session == null) {
                     // Session expired or was evicted → force logout
-                    writeErrorResponse(response, "Your session has expired.");
+                    writeDeactivationAwareError(response, userId);
                     return;
                 }
 
-                // Token issued before the sign-out of all devices (password change / reset)
+                // Token issued before the sign-out of all devices (password change / reset / ban)
                 if (userSessionCache.isRevoked(userId, jwtService.extractIssuedAt(token))) {
-                    writeErrorResponse(response, "Your session has expired.");
+                    writeDeactivationAwareError(response, userId);
                     return;
                 }
-
-                // Load permissions from the Redis cache by roles
-                // Set<String> permissions = permissionCacheService.getPermissionsByRoles(
-                // session.roles().stream().toList());
 
                 // Build authorities
                 Set<GrantedAuthority> authorities = new HashSet<>();
                 session.roles()
                         .forEach(r -> authorities.add(new SimpleGrantedAuthority("ROLE_" + r)));
-                // permissions.forEach(p -> authorities.add(new SimpleGrantedAuthority(p)));
+                // Only admins have a row in admin_mfa; for anyone else the question does not apply.
+                if (session.roles().contains(RoleType.ADMIN)
+                        && mfaService.isSetupRequired(userId)) {
+                    authorities.add(new SimpleGrantedAuthority(MFA_SETUP_PENDING));
+                }
 
                 // Build principal
                 CustomUserDetails userDetails =
@@ -152,6 +170,31 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     private void writeErrorResponse(HttpServletResponse response, String message)
             throws IOException {
         writeErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "UNAUTHORIZED", message);
+    }
+
+    /**
+     * The session/token was rejected — usually just an expired or evicted session, but if the user
+     * is currently INACTIVE it is a ban: say so with the real reason (FR-072) instead of the
+     * generic message, so the FE can send the page home instead of retrying a refresh that can
+     * never succeed.
+     */
+    private void writeDeactivationAwareError(HttpServletResponse response, Long userId)
+            throws IOException {
+        Optional<User> banned =
+                userId == null
+                        ? Optional.empty()
+                        : userRepository
+                                .findById(userId)
+                                .filter(u -> u.getStatus() == UserStatus.INACTIVE);
+        if (banned.isPresent()) {
+            writeErrorResponse(
+                    response,
+                    HttpServletResponse.SC_UNAUTHORIZED,
+                    "ACCOUNT_DEACTIVATED",
+                    DeactivationMessage.of(banned.get()));
+            return;
+        }
+        writeErrorResponse(response, "Your session has expired.");
     }
 
     private void writeErrorResponse(

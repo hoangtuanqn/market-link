@@ -198,6 +198,17 @@ class PlaceOrderConcurrencyTest {
                         "INSERT INTO farmer_markets (farmer_id, market_id) VALUES (?, ?)",
                         farmerId,
                         marketId);
+        // The market is held and the stall attends on the pickup weekday (FR-032, FR-060)
+        int pickupDow = PICKUP.getDayOfWeek().getValue() % 7;
+        insert(
+                "INSERT INTO market_operating_days (market_id, day_of_week) VALUES (?, ?)",
+                marketId,
+                pickupDow);
+        insert(
+                "INSERT INTO farmer_operating_days (farmer_market_id, day_of_week,"
+                        + " pickup_start_time, pickup_end_time) VALUES (?, ?, '07:00', '10:00')",
+                farmerMarketId,
+                pickupDow);
         customers.add(insertUser("customer"));
         customers.add(insertUser("customer"));
     }

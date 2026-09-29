@@ -4,6 +4,7 @@ import com.techx.intervue.modules.catalog.exceptions.CategoryNotFoundException;
 import com.techx.intervue.modules.catalog.exceptions.DuplicateCategoryException;
 import com.techx.intervue.modules.catalog.exceptions.MarketClosureNotFoundException;
 import com.techx.intervue.modules.catalog.exceptions.MarketNotFoundException;
+import com.techx.intervue.modules.catalog.exceptions.ShelfLifeGuideNotFoundException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
@@ -32,7 +33,9 @@ import org.springframework.web.multipart.MultipartException;
             MarketController.class,
             AdminMarketController.class,
             AdminMarketImageController.class,
-            AdminMarketClosureController.class
+            AdminMarketClosureController.class,
+            ShelfLifeGuideController.class,
+            AdminShelfLifeGuideController.class
         })
 public class CatalogExceptionHandler {
 
@@ -101,6 +104,11 @@ public class CatalogExceptionHandler {
         return error(HttpStatus.NOT_FOUND, "MARKET_CLOSURE_NOT_FOUND", e.getMessage(), List.of());
     }
 
+    @ExceptionHandler(ShelfLifeGuideNotFoundException.class)
+    ResponseEntity<ApiResource<Void>> shelfLifeGuideNotFound(ShelfLifeGuideNotFoundException e) {
+        return error(HttpStatus.NOT_FOUND, "SHELF_LIFE_GUIDE_NOT_FOUND", e.getMessage(), List.of());
+    }
+
     @ExceptionHandler(DuplicateCategoryException.class)
     ResponseEntity<ApiResource<Void>> duplicateCategory(DuplicateCategoryException e) {
         return error(HttpStatus.CONFLICT, "DUPLICATE_CATEGORY", e.getMessage(), List.of());
@@ -113,6 +121,18 @@ public class CatalogExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
+        if (cause.contains("uq_shelf_life_guide")) {
+            String message = "This group already has that way of keeping.";
+            return error(
+                    HttpStatus.CONFLICT,
+                    "DUPLICATE_SHELF_LIFE_GUIDE",
+                    message,
+                    List.of(
+                            FieldErrorResource.builder()
+                                    .field("groupName")
+                                    .message(message)
+                                    .build()));
+        }
         if (cause.contains("categories.")) {
             return duplicateCategory(new DuplicateCategoryException(""));
         }

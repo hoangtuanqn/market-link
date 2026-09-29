@@ -5,7 +5,11 @@
     "intro_one": "Reservieren Sie die Erzeugnisse dieser Woche an Ständen auf {{count}} Markt in Ho-Chi-Minh-Stadt. Abholung am Stand, Bezahlung direkt beim Erzeuger.",
     "intro_other": "Reservieren Sie die Erzeugnisse dieser Woche an Ständen auf {{count}} Märkten in Ho-Chi-Minh-Stadt. Abholung am Stand, Bezahlung direkt beim Erzeuger.",
     "browse": "Märkte ansehen",
-    "sell": "Auf MarketLink verkaufen"
+    "sell": "Auf MarketLink verkaufen",
+    "livePill": "Marktwochenende: {{count}} Standorte geöffnet ({{from}} – {{to}})",
+    "lead": "Reservieren Sie morgens geerntete Produkte direkt von lokalen Familienbetrieben. Am Wochenende am Markt abholen und direkt beim Erzeuger bezahlen.",
+    "explore": "Frische Produkte entdecken",
+    "sellPrompt": "Erzeuger werden? Bei MarketLink verkaufen →"
   },
   "search": {
     "scope": "Suchen in",
@@ -23,33 +27,107 @@
     "overline": "Dieses Wochenende geöffnet",
     "title": "Wo die Stände sind",
     "seeAll_one": "Markt auf der Karte ansehen",
-    "seeAll_other": "Alle {{count}} Märkte auf der Karte ansehen"
+    "seeAll_other": "Alle {{count}} Märkte auf der Karte ansehen",
+    "takingOrders": "Vorbestellungen geöffnet",
+    "hours": "Standorte & Öffnungszeiten"
   },
   "nearby": {
     "title": "Märkte in Ihrer Nähe",
     "note": "Entfernungen ab Ihrer gespeicherten Adresse in Thảo Điền",
-    "noun": "Märkte"
+    "noun": "Märkte",
+    "eyebrow": "STANDORTE",
+    "filterAll": "Alle",
+    "empty": "Keine Märkte in diesem Bereich gefunden."
   },
   "fresh": {
     "title": "Frisch diese Woche",
     "all": "Alle Produkte und Filter",
-    "noun": "Produkte"
+    "noun": "Produkte",
+    "eyebrow": "AKTUELLE ERNTE",
+    "cutoff": "Bestellschluss: Donnerstag & Freitag 20:00 Uhr",
+    "filterLink": "Nach Preis & Kategorie filtern →",
+    "empty": "Derzeit sind keine frischen Produkte verfügbar."
+  },
+  "deals": {
+    "title": "Angebote: kurze Haltbarkeit",
+    "note": "Günstiger, weil sie schon über die Hälfte ihrer Haltbarkeit hinaus sind. Jede Karte nennt, bis wann sie noch gut bleiben.",
+    "all": "Alle Angebote"
   },
   "how": {
     "title": "So funktioniert die Vorbestellung",
     "steps": {
       "reserve": {
         "title": "Vor dem Bestellschluss reservieren",
-        "text": "Legen Sie Produkte von einem oder mehreren Ständen in den Warenkorb, wählen Sie im Zeitfenster jedes Stands eine Abholzeit und bestellen Sie. Die Ware wird ab der Bestellung für Sie zurückgelegt."
+        "text": "Legen Sie Produkte von einem oder mehreren Ständen in den Warenkorb, wählen Sie im Zeitfenster jedes Stands eine Abholzeit und bestellen Sie. Die Ware wird ab der Bestellung für Sie zurückgelegt.",
+        "highlight": "Keine Kreditkartenvorauszahlung erforderlich"
       },
       "confirm": {
         "title": "Der Erzeuger bestätigt",
-        "text": "Jeder Stand nimmt seine eigene Bestellung an oder lehnt sie ab. Sie werden in beiden Fällen benachrichtigt und können bis zum Bestellschluss des Stands ändern oder stornieren."
+        "text": "Jeder Stand nimmt seine eigene Bestellung an oder lehnt sie ab. Sie werden in beiden Fällen benachrichtigt und können bis zum Bestellschluss des Stands ändern oder stornieren.",
+        "highlight": "Ihre Ware wird zu 100% für Sie reserviert"
       },
       "pickup": {
         "title": "Am Stand abholen und bezahlen",
-        "text": "Sobald die Bestellung bereit ist, gehen Sie in Ihrem Zeitfenster zum Stand, holen sie ab und bezahlen direkt beim Erzeuger. Eine Online-Zahlung gibt es nicht."
+        "text": "Sobald die Bestellung bereit ist, gehen Sie in Ihrem Zeitfenster zum Stand, holen sie ab und bezahlen direkt beim Erzeuger. Eine Online-Zahlung gibt es nicht.",
+        "highlight": "Wiederverwendbare Taschen empfohlen"
       }
+    },
+    "eyebrow": "SO FUNKTIONIERT ES",
+    "desc": "Jedes Wochenende ehrliche Hofprodukte ohne Schlangen oder Unsicherheit genießen"
+  },
+  "pillars": {
+    "fresh": {
+      "title": "100% Frisch vom Hof",
+      "desc": "Am Vorabend oder Marktmorgen geerntet für besten Geschmack und Nährwert."
+    },
+    "direct": {
+      "title": "Direkt vom Erzeuger",
+      "desc": "Keine Zwischenhändler. Faire Preise für Sie, 100% Erlös für Bauernfamilien."
+    },
+    "guarantee": {
+      "title": "Vorbestell-Garantie",
+      "desc": "Ernte vorab sichern – kein frühes Aufstehen oder verpasste Lieblingsware."
+    },
+    "pay": {
+      "title": "Zahlung am Stand",
+      "desc": "Frische vor Ort prüfen und bar oder per QR direkt beim Erzeuger bezahlen."
     }
+  },
+  "categories": {
+    "eyebrow": "PRODUKTKATEGORIEN",
+    "title": "Nach Kategorie stöbern",
+    "desc": "Nach Saison und Anbauweise geordnet",
+    "all": "Alle Produkte anzeigen →",
+    "items": {
+      "vegetables": "Gemüse",
+      "fruits": "Obst",
+      "dairy": "Eier & Milchprodukte",
+      "grains": "Getreide & Nüsse",
+      "meat": "Fleisch & Geflügel",
+      "seafood": "Fisch & Meeresfrüchte",
+      "mushrooms": "Pilze",
+      "baked": "Backwaren"
+    },
+    "itemsCount": "{{count}} Artikel"
+  },
+  "farmers": {
+    "eyebrow": "UNSERE ERZEUGER",
+    "title": "Lernen Sie lokale Erzeuger kennen",
+    "desc": "Engagierte Höfe, die saubere, ehrliche Lebensmittel auf unsere Märkte bringen",
+    "all": "Alle Stände entdecken →",
+    "grower": "Erzeuger",
+    "at": "Bei",
+    "visit": "Stand ansehen →",
+    "empty": "Derzeit sind keine Erzeuger verfügbar.",
+    "noun": "Stände",
+    "emptyText": "Sehen Sie sich die Märkte an, um zu erfahren, wer dort verkauft."
+  },
+  "banner": {
+    "badge": "FÜR LOKALE ERZEUGER & MANUFAKTUREN",
+    "free": "· Kostenlose Eintragung auf MarketLink",
+    "title": "Bereit, frische Ernte direkt auf die Tische der Stadt zu bringen?",
+    "desc": "Vorbestellungen mitten in der Woche erhalten, Ernte exakt planen und Lebensmittelverschwendung vermeiden.",
+    "apply": "Marktstand beantragen →",
+    "guidelines": "Qualitäts- und Standrichtlinien lesen"
   }
 }

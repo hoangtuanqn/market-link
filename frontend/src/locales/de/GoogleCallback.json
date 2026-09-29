@@ -17,5 +17,8 @@
     "google": "Google konnte Sie nicht anmelden. Bitte versuchen Sie es erneut.",
     "invalidState": "Dieser Anmeldeversuch ist ungültig. Beginnen Sie erneut auf der Anmeldeseite.",
     "failed": "Die Google-Anmeldung ist fehlgeschlagen. Bitte versuchen Sie es erneut."
+  },
+  "deactivated": {
+    "browseAsVisitor": "Als Gast ansehen"
   }
 }

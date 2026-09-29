@@ -12,6 +12,21 @@
     "submit": "Search"
   },
   "day": "Market day",
+  "filters": {
+    "category": "Category",
+    "allCategories": "All categories",
+    "market": "Market",
+    "allMarkets": "All markets",
+    "price": "Price per unit",
+    "clear": "Clear filters"
+  },
+  "price": {
+    "any": "Any price",
+    "low": "Under {{low}}",
+    "mid": "{{low}} – {{high}}",
+    "high": "Over {{high}}"
+  },
+  "stallsNotByCategory": "The category does not narrow stalls — a stall belongs to no category. It applies to the products below.",
   "sort": "Sort",
   "sorts": {
     "best": "Best match",
@@ -34,6 +49,8 @@
   },
   "results_one": "{{count}} result for “{{q}}” on {{day}}",
   "results_other": "{{count}} results for “{{q}}” on {{day}}",
+  "stallsOn_one": "{{count}} stall selling on {{day}}",
+  "stallsOn_other": "{{count}} stalls selling on {{day}}",
   "noStalls": "No stalls matched.",
   "noProducts": "No products matched.",
   "noMarket": {

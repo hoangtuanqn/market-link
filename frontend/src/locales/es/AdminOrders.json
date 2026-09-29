@@ -3,7 +3,7 @@
   "intro": "Todos los pedidos de MarketLink, en los cuatro mercados. Los administradores los leen; solo el puesto mueve un pedido de un estado a otro.",
   "noun": "orders",
   "list": {
-    "inPeriod": "{{count}} en {{month}}",
+    "inPeriod": "{{count}} pedidos",
     "filterLabel": "Filtrar pedidos por estado",
     "market": "Mercado",
     "allMarkets": "Todos los mercados",

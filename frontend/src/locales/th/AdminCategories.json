@@ -3,7 +3,6 @@
   "title": "หมวดหมู่",
   "intro": "รายการเดียวที่ทุกแผงเลือกเมื่อเพิ่มสินค้า หน่วยขายเป็นรายการตายตัวที่มาพร้อมแอป",
   "link": {
-    "announcements": "ประกาศ",
     "feedback": "กล่องข้อเสนอแนะ"
   },
   "caption": {
@@ -14,11 +13,17 @@
     "category": "หมวดหมู่",
     "products": "สินค้า",
     "stalls": "ร้านค้า",
-    "nameOf": "ชื่อของ {{name}}"
+    "nameOf": "ชื่อของ {{name}}",
+    "status": "สถานะ",
+    "shelfLife": "อายุการเก็บรักษา",
+    "shelfLifeRange": "{{min}}–{{max}} วัน",
+    "shelfLifeDays_one": "{{count}} วัน",
+    "shelfLifeDays_other": "{{count}} วัน"
   },
   "action": {
     "save": "บันทึก",
-    "remove": "ลบ"
+    "remove": "ลบ",
+    "enable": "เปิดใช้งาน"
   },
   "categoryForm": {
     "title": "เพิ่มหมวดหมู่",
@@ -38,7 +43,9 @@
     "textUnused": "ไม่มีสินค้าใช้หมวดนี้",
     "moveTo": "ย้ายสินค้าไปที่",
     "keep": "เก็บหมวดหมู่ไว้",
-    "confirm": "ลบหมวดหมู่"
+    "confirm": "ลบหมวดหมู่",
+    "moveToHint": "สินค้าที่อยู่ในหมวดหมู่นี้จะได้รับการจัดหมวดหมู่ใหม่",
+    "moveToNone": "ไม่มี (สินค้ายังคงอยู่ในหมวดหมู่นี้)"
   },
   "empty": {
     "categories": {
@@ -49,12 +56,64 @@
   "toast": {
     "categorySaved": "บันทึก {{name}} แล้ว",
     "categoryAdded": "เพิ่มหมวดหมู่แล้ว ร้านค้าเลือกใช้ได้ทันที",
-    "categoryRemoved": "ลบ {{name}} แล้ว"
+    "categoryRemoved": "ลบ {{name}} แล้ว",
+    "categoryEnabled": "เปิดใช้งาน {{name}} แล้ว"
   },
   "error": {
     "noun": "หมวดหมู่",
     "nameRequired": "ตั้งชื่อหมวดหมู่",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "ชื่อต้องยาวไม่เกิน {{max}} ตัวอักษร",
+    "nameTaken": "มีหมวดหมู่ชื่อนี้อยู่แล้ว"
+  },
+  "status": {
+    "active": "เปิดใช้งาน",
+    "inactive": "ปิดใช้งาน"
+  },
+  "guides": {
+    "title": "กลุ่มการเก็บรักษา",
+    "intro": "อายุการเก็บรักษาที่แนะนำตามกลุ่มและวิธีเก็บรักษา เกษตรกรเริ่มต้นจากตัวเลขเหล่านี้",
+    "category": "หมวดหมู่",
+    "col": {
+      "group": "กลุ่ม",
+      "storage": "การเก็บรักษา",
+      "days": "จำนวนวัน",
+      "daysFor": "จำนวนวันสำหรับ {{group}} ({{storage}})"
+    },
+    "status": {
+      "off": "ปิดใช้งาน"
+    },
+    "action": {
+      "save": "บันทึก",
+      "off": "ปิดใช้งาน",
+      "on": "เปิดใช้งาน"
+    },
+    "form": {
+      "title": "เพิ่มกลุ่ม",
+      "group": "ชื่อกลุ่ม",
+      "groupPlaceholder": "เช่น Leafy greens",
+      "examples": "ตัวอย่าง",
+      "examplesHint": "คำของสินค้า คั่นด้วยจุลภาค ทั้งภาษาเวียดนามและภาษาอังกฤษ ใช้เลือกกลุ่มจากชื่อสินค้า",
+      "storage": "วิธีเก็บรักษา",
+      "days": "จำนวนวันที่แนะนำ",
+      "submit": "เพิ่มกลุ่ม"
+    },
+    "empty": {
+      "title": "ยังไม่มีกลุ่มการเก็บรักษา",
+      "text": "เกษตรกรในหมวดหมู่นี้จะเห็นช่วงของหมวดหมู่จนกว่าคุณจะเพิ่มกลุ่ม"
+    },
+    "noun": "กลุ่มการเก็บรักษา",
+    "error": {
+      "nameRequired": "ตั้งชื่อให้กลุ่มนี้",
+      "days": "ป้อนจำนวนเต็มตั้งแต่ 1 ถึง 365",
+      "taken": "กลุ่มนี้มีวิธีเก็บรักษานั้นอยู่แล้ว"
+    },
+    "toast": {
+      "added": "เพิ่มกลุ่มแล้ว",
+      "saved": "บันทึกกลุ่มแล้ว",
+      "off": "ปิดใช้งานกลุ่มแล้ว",
+      "on": "เปิดใช้งานกลุ่มแล้ว"
+    }
   }
 }

@@ -3,6 +3,7 @@ package com.techx.intervue.modules.notification.services.interfaces;
 import com.techx.intervue.modules.notification.entities.Announcement;
 import com.techx.intervue.modules.notification.resources.NotificationEvent;
 import com.techx.intervue.modules.notification.resources.NotificationResource;
+import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.resources.PageResource;
 import java.util.Collection;
 
@@ -34,6 +35,9 @@ public interface NotificationServiceInterface {
 
     int markAllRead(Long userId);
 
-    /** The "Send test" button: not stored, at most once every 10 seconds. */
-    void sendTest(Long userId);
+    /**
+     * The "Send test" button: not stored, at most once every 10 seconds. Its link opens the
+     * Settings page of the role's own panel.
+     */
+    void sendTest(Long userId, RoleType role);
 }

@@ -1,0 +1,11 @@
+{
+  "overline": "403 Forbidden",
+  "title": "Access restricted",
+  "text": "You do not have permission to access the administration area with your current account.",
+  "backHome": "Back to home page",
+  "backDashboard": "Back to dashboard",
+  "backFarmer": "Back to farmer portal",
+  "switchAccount": "Sign in as administrator",
+  "needHelp": "Need assistance?",
+  "contactSupport": "Contact support"
+}

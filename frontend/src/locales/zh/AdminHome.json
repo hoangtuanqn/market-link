@@ -1,17 +1,17 @@
 {
-  "overline": "平台 · {{year}}",
-  "title": "MarketLink 今日概览",
+  "overline": "平台",
+  "title": "概览",
   "noun": "dashboard",
   "kpi": {
     "farmers": "农户",
-    "farmersNote": "{{waiting}} 个待审核 · {{suspended}} 个已停用",
+    "farmersNote": "{{waiting}} 个待审核",
     "farmersLink": "审核申请",
     "customers": "顾客",
     "customersLink": "打开顾客列表",
     "markets": "集市",
     "marketsLink": "打开集市列表",
     "orders": "订单",
-    "ordersNote": "本周 {{week}} 单 · 已完成 {{total}}",
+    "ordersNote": "已完成订单共 {{revenue}}",
     "ordersLink": "打开订单列表"
   },
   "attention": {
@@ -48,5 +48,12 @@
     "pickup": "取货",
     "total": "合计",
     "status": "状态"
+  },
+  "maintenance": {
+    "title": "维护模式已开启",
+    "badge": "已启用",
+    "text": "整个平台当前仅限管理员访问。所有访客和农户都会看到维护通知。",
+    "reminder": "维护完成后，请尽快关闭维护模式，以便用户能够正常访问 MarketLink。",
+    "action": "前往设置"
   }
 }

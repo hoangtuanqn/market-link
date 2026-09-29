@@ -17,8 +17,7 @@
     "title": "Al guardar, el pedido vuelve a Realizado y {{stall}} lo aprueba de nuevo.",
     "text": "Tus productos siguen reservados mientras lo revisan. Recibirás una notificación cuando se acepte."
   },
-  "help": "Aquí puedes reducir cantidades o quitar artículos. Para añadir algo más de {{stall}}, haz un pedido nuevo. Las cantidades tienen como límite lo que le queda hoy al puesto.",
-  "note": "Nota para el puesto",
+  "help": "Aquí puedes cambiar cantidades o quitar artículos hasta la hora límite. Una línea puede subir hasta lo que le queda a {{stall}} para este día de recogida. Para añadir algo más, haz un pedido nuevo.",
   "submit": "Enviar cambios para aprobación",
   "discard": "Descartar cambios",
   "toast": {

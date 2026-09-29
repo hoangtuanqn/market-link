@@ -9,6 +9,9 @@
     "backToSignIn": "Back to sign in",
     "registerWithEmail": "Create an account with email instead"
   },
+  "deactivated": {
+    "browseAsVisitor": "Browse as a visitor"
+  },
   "toast": {
     "signedIn": "Signed in."
   },

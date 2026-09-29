@@ -26,27 +26,49 @@
     "text": "<b>{{price}}</b> di label · sisa <b>{{left}}</b> · pemesan satu akan melihat <b>{{one}}</b>"
   },
   "price": {
-    "label": "Harga dalam ₫",
+    "label": "Harga dalam $",
     "hint": "Ditampilkan sebagai {{price}}."
   },
   "qty": {
     "label": "Jumlah tersedia minggu ini",
-    "error": "Jumlah harus 0 atau lebih. Gunakan Habis jika tidak tersisa."
+    "error": "Jumlah harus 0 atau lebih. Gunakan Habis jika tidak tersisa.",
+    "hint": "Hanya angka awal. Pelanggan memesan dari stok mingguan Anda, yang diatur setelah menyimpan."
   },
   "shelfLife": {
-    "label": "Shelf life (days)",
-    "hint": "This category is usually {{min}}–{{max}} days.",
-    "error": "Enter a whole number of 1 or more.",
-    "warningTitle": "Outside the usual range",
-    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+    "label": "Masa simpan",
+    "group": "Kelompok penyimpanan",
+    "pickGroup": "Pilih kelompok",
+    "examples": "Contoh: {{examples}}",
+    "storage": "Cara penyimpanan",
+    "suggested_one": "disarankan {{count}} hari",
+    "suggested_other": "disarankan {{count}} hari",
+    "days_one": "{{count}} hari",
+    "days_other": "{{count}} hari",
+    "decrease": "Kurangi satu hari",
+    "increase": "Tambah satu hari",
+    "peers_one": "Lapak lain biasanya menetapkan {{count}} hari",
+    "peers_other": "Lapak lain biasanya menetapkan {{count}} hari",
+    "shorter": "Lebih pendek dari saran. Pelanggan melihat angka ini persis.",
+    "longerTitle_one": "{{count}} hari lebih lama dari saran ({{suggested}}, {{storage}})",
+    "longerTitle_other": "{{count}} hari lebih lama dari saran ({{suggested}}, {{storage}})",
+    "ackLabel": "Saya berjanji produk ini tetap baik selama {{days}} hari jika disimpan dengan cara ini ({{storage}}). Jika pelanggan melaporkan rusak sebelum itu, admin dapat mencatat pelanggaran untuk lapak ini.",
+    "ackRequired": "Centang janji ini untuk menyimpan masa simpan yang lebih lama.",
+    "tooLong_one": "Paling lama {{count}} hari untuk kelompok ini.",
+    "tooLong_other": "Paling lama {{count}} hari untuk kelompok ini.",
+    "locked": "Lapak Anda tidak dapat melebihi saran sampai {{date}}: sudah mencapai 3 pelanggaran masa simpan dalam 90 hari.",
+    "overLock_one": "Lapak Anda untuk saat ini tidak dapat melebihi saran. Turunkan ke {{count}} hari.",
+    "overLock_other": "Lapak Anda untuk saat ini tidak dapat melebihi saran. Turunkan ke {{count}} hari.",
+    "saveBlocked": "Centang janji di atas untuk menyimpan.",
+    "saveNeedsGroup": "Pilih kelompok penyimpanan di atas untuk menyimpan.",
+    "saveNeedsGroups": "Muat ulang kelompok penyimpanan di atas untuk menyimpan.",
+    "loading": "Memuat kelompok penyimpanan",
+    "fallback": "Kategori ini belum memiliki kelompok penyimpanan. Biasanya bertahan {{min}}–{{max}} hari.",
+    "groupGone": "Kelompok yang digunakan produk ini sudah tidak tersedia. Pilih kelompok lain.",
+    "noun": "kelompok penyimpanan"
   },
   "desc": {
     "label": "Deskripsi",
     "hint": "Ditampilkan di halaman produk. Ceritakan cara menanam dan cara menyimpannya."
-  },
-  "flag": {
-    "label": "Tag pendek di kartu",
-    "hint": "Opsional, ditulis tangan di label: “Segar hari ini”, “Dipanggang jam 5 pagi”."
   },
   "status": {
     "label": "Status",
@@ -62,7 +84,11 @@
     "uploading": "Uploading",
     "uploadInProgress": "Wait for the photo to finish uploading, then save.",
     "alt": "Product photo",
-    "hint": "JPG atau PNG, 4:3, maks. 5 MB. Dari dekat, cahaya alami, di atas kayu atau kertas."
+    "hint": "JPG atau PNG, 4:3, maks. 5 MB. Dari dekat, cahaya alami, di atas kayu atau kertas.",
+    "error": {
+      "tooLarge": "Foto harus berukuran 8 MB atau kurang.",
+      "type": "Foto harus berformat JPEG, PNG, atau WEBP."
+    }
   },
   "save": "Simpan produk",
   "add": "Tambah produk",
@@ -77,7 +103,8 @@
     "saved": "Disimpan",
     "savedText": "{{name}} disimpan.",
     "product": "Produk",
-    "deletedText": "{{name}} dihapus."
+    "deletedText": "{{name}} dihapus.",
+    "createdText": "{{name}} disimpan. Atur berapa banyak yang Anda bawa tiap hari agar pelanggan bisa memesan."
   },
   "error": {
     "noun": "produk"
@@ -88,6 +115,6 @@
   },
   "errors": {
     "required": "Kolom ini wajib diisi.",
-    "price": "Harga harus 0 atau lebih."
+    "price": "Harga harus lebih besar dari 0."
   }
 }

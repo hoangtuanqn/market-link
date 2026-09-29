@@ -100,7 +100,7 @@ class FarmerDailyStockServiceTest {
     @Test
     void overrideRejectsADateWithNoTemplate() {
         approvedStall();
-        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.empty());
+        when(dailyStock.lockByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.empty());
 
         assertThatThrownBy(
                         () ->
@@ -121,7 +121,7 @@ class FarmerDailyStockServiceTest {
         row.setStockDate(DATE);
         row.setQuantityAvailable(40);
         row.setUnitPrice(new BigDecimal("12000"));
-        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
+        when(dailyStock.lockByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
         when(dailyStock.save(any())).thenAnswer(i -> i.getArgument(0));
 
         DailyStockResource result =
@@ -147,7 +147,7 @@ class FarmerDailyStockServiceTest {
         row.setId(500L);
         row.setQuantityAvailable(40);
         row.setUnitPrice(new BigDecimal("12000"));
-        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
+        when(dailyStock.lockByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
         when(dailyStock.save(any())).thenAnswer(i -> i.getArgument(0));
 
         DailyStockResource result =
@@ -167,12 +167,64 @@ class FarmerDailyStockServiceTest {
         row.setId(500L);
         row.setQuantityAvailable(0);
         row.setUnitPrice(new BigDecimal("12000"));
-        when(dailyStock.findByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
+        when(dailyStock.lockByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
         when(dailyStock.save(any())).thenAnswer(i -> i.getArgument(0));
         when(restock.isOrderable(any())).thenReturn(false, true);
 
         service.override(USER_ID, PRODUCT_ID, DATE, new FarmerDailyStockRequest(15, null));
 
         verify(restock).afterChange(any(Product.class), eq(false), eq(true));
+    }
+
+    /**
+     * FR-124: an explicit price for the day ends its near-expiry deal, so the percent shown on
+     * /deals always matches what customers pay.
+     */
+    @Test
+    void overrideWithAPriceEndsTheDeal() {
+        approvedStall();
+        ProductDailyStock row = dealRow();
+        when(dailyStock.lockByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
+        when(dailyStock.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        DailyStockResource result =
+                service.override(
+                        USER_ID,
+                        PRODUCT_ID,
+                        DATE,
+                        new FarmerDailyStockRequest(15, new BigDecimal("0.55")));
+
+        assertThat(result.unitPrice()).isEqualByComparingTo("0.55");
+        assertThat(result.listPrice()).isNull();
+        assertThat(result.discountPercent()).isNull();
+        assertThat(row.hasDeal()).isFalse();
+    }
+
+    /** Changing only the quantity keeps the deal and its price. */
+    @Test
+    void overrideWithoutAPriceKeepsTheDeal() {
+        approvedStall();
+        ProductDailyStock row = dealRow();
+        when(dailyStock.lockByProductIdAndStockDate(PRODUCT_ID, DATE)).thenReturn(Optional.of(row));
+        when(dailyStock.save(any())).thenAnswer(i -> i.getArgument(0));
+
+        DailyStockResource result =
+                service.override(USER_ID, PRODUCT_ID, DATE, new FarmerDailyStockRequest(15, null));
+
+        assertThat(result.quantityAvailable()).isEqualTo(15);
+        assertThat(result.unitPrice()).isEqualByComparingTo("0.48");
+        assertThat(result.listPrice()).isEqualByComparingTo("0.60");
+        assertThat(result.discountPercent()).isEqualTo(20);
+    }
+
+    private static ProductDailyStock dealRow() {
+        ProductDailyStock row = new ProductDailyStock();
+        row.setId(500L);
+        row.setProductId(PRODUCT_ID);
+        row.setStockDate(DATE);
+        row.setQuantityAvailable(12);
+        row.setUnitPrice(new BigDecimal("0.60"));
+        row.startDeal(new BigDecimal("0.48"), 20, DATE.minusDays(4), DATE.plusDays(2));
+        return row;
     }
 }

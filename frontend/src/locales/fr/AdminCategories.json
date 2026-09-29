@@ -3,7 +3,6 @@
   "title": "Catégories",
   "intro": "La seule liste dans laquelle chaque stand choisit quand il ajoute un produit. Les unités de vente sont fixes et livrées avec l'application.",
   "link": {
-    "announcements": "Annonces",
     "feedback": "Boîte de retours"
   },
   "caption": {
@@ -14,11 +13,17 @@
     "category": "Catégorie",
     "products": "Produits",
     "stalls": "Étals",
-    "nameOf": "Nom de {{name}}"
+    "nameOf": "Nom de {{name}}",
+    "status": "Statut",
+    "shelfLife": "Durée de conservation",
+    "shelfLifeRange": "{{min}}–{{max}} jours",
+    "shelfLifeDays_one": "{{count}} jour",
+    "shelfLifeDays_other": "{{count}} jours"
   },
   "action": {
     "save": "Enregistrer",
-    "remove": "Supprimer"
+    "remove": "Supprimer",
+    "enable": "Activer"
   },
   "categoryForm": {
     "title": "Ajouter une catégorie",
@@ -38,7 +43,9 @@
     "textUnused": "Aucun produit ne l'utilise.",
     "moveTo": "Déplacer les produits vers",
     "keep": "Garder la catégorie",
-    "confirm": "Supprimer la catégorie"
+    "confirm": "Supprimer la catégorie",
+    "moveToHint": "Les produits attribués à cette catégorie seront réassignés.",
+    "moveToNone": "Aucune (les produits gardent cette catégorie)"
   },
   "empty": {
     "categories": {
@@ -49,12 +56,64 @@
   "toast": {
     "categorySaved": "{{name}} enregistrée.",
     "categoryAdded": "Catégorie ajoutée. Les étals peuvent la choisir dès maintenant.",
-    "categoryRemoved": "{{name}} supprimée."
+    "categoryRemoved": "{{name}} supprimée.",
+    "categoryEnabled": "{{name}} activé."
   },
   "error": {
     "noun": "catégories",
     "nameRequired": "Donnez un nom à la catégorie.",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "Le nom doit faire {{max}} caractères au plus.",
+    "nameTaken": "Une catégorie porte déjà ce nom."
+  },
+  "status": {
+    "active": "Actif",
+    "inactive": "Inactif"
+  },
+  "guides": {
+    "title": "Groupes de conservation",
+    "intro": "Durée de conservation suggérée par groupe et par mode de conservation. Les producteurs partent de ces chiffres.",
+    "category": "Catégorie",
+    "col": {
+      "group": "Groupe",
+      "storage": "Conservation",
+      "days": "Jours",
+      "daysFor": "Jours pour {{group}} ({{storage}})"
+    },
+    "status": {
+      "off": "Inactif"
+    },
+    "action": {
+      "save": "Enregistrer",
+      "off": "Désactiver",
+      "on": "Activer"
+    },
+    "form": {
+      "title": "Ajouter un groupe",
+      "group": "Nom du groupe",
+      "groupPlaceholder": "par ex. Leafy greens",
+      "examples": "Exemples",
+      "examplesHint": "Mots de produit séparés par des virgules, en vietnamien et en anglais, utilisés pour choisir le groupe à partir du nom du produit.",
+      "storage": "Mode de conservation",
+      "days": "Jours suggérés",
+      "submit": "Ajouter le groupe"
+    },
+    "empty": {
+      "title": "Pas encore de groupe de conservation",
+      "text": "Les producteurs de cette catégorie voient la plage de la catégorie tant que vous n'ajoutez pas de groupe."
+    },
+    "noun": "groupes de conservation",
+    "error": {
+      "nameRequired": "Donnez un nom au groupe.",
+      "days": "Saisissez un nombre entier de 1 à 365.",
+      "taken": "Ce groupe a déjà ce mode de conservation."
+    },
+    "toast": {
+      "added": "Groupe ajouté.",
+      "saved": "Groupe enregistré.",
+      "off": "Groupe désactivé.",
+      "on": "Groupe activé."
+    }
   }
 }

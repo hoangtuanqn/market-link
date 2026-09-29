@@ -3,24 +3,28 @@
   "intro": "出品できるすべての商品です。市場の日に売り切れたら売り切れに、季節外れのときは一時停止にしてください。",
   "add": "商品を追加",
   "filterAll": "すべて",
+  "filterDeleted": "削除済み",
   "status": {
     "available": "販売中",
     "sold_out": "売り切れ",
-    "unavailable": "一時停止"
+    "unavailable": "一時停止",
+    "deleted": "削除済み"
   },
   "caption_one": "{{count}} 件の商品",
   "caption_other": "{{count}} 件の商品",
   "col": {
     "product": "商品",
     "price": "価格",
-    "left": "今週の残り",
+    "left": "次の受取日 · 残り",
     "reserved": "予約済み",
     "status": "ステータス"
   },
   "perUnit": "{{unit}} あたり",
+  "nextLeft": "{{day}} · 残り {{qty}}",
   "statusOf": "{{name}} のステータス",
   "edit": "編集",
   "delete": "削除",
+  "restore": "復元",
   "footNote": "商品を削除するとカタログから外れますが、過去の注文の明細は残ります。写真：4:3、自然光、木や紙の上で。",
   "toast": {
     "statusSaved": "ステータスを保存しました",
@@ -30,7 +34,10 @@
       "unavailable": "元に戻すまで、商品はお客様に表示されません。"
     },
     "deleted": "削除しました",
-    "deletedText": "{{name}} を削除しました。"
+    "deletedText": "{{name}} を削除しました。",
+    "restored": "復元完了",
+    "restoredText": "{{name}} を一時停止として復元しました。販売を再開する前に週間在庫をもう一度設定してください。",
+    "stockAdjusted": "{{day}} の在庫を更新しました。"
   },
   "dialog": {
     "title": "{{name}} を削除しますか？",
@@ -39,6 +46,13 @@
     "text": "カタログとテンプレートから消えます。すでにこの商品を含む注文は変わりません。",
     "pauseHint": "しばらく販売を止めたいだけなら、一時停止を選んでください。"
   },
+  "restoreDialog": {
+    "title": "{{name}} を復元しますか？",
+    "cancel": "ゴミ箱に残す",
+    "confirm": "商品を復元",
+    "text": "商品は「一時停止」の状態で復元されます。再販する前に在庫や価格を確認できます。",
+    "stockHint": "削除したときに週間在庫が消えたため、もう一度設定するまでお客様は注文できません。"
+  },
   "error": {
     "noun": "あなたの商品"
   },
@@ -46,5 +60,79 @@
   "empty": {
     "title": "商品はまだありません",
     "text": "最初の商品を追加すると、すぐに出店ページに表示されます。"
-  }
+  },
+  "emptyDeleted": {
+    "title": "ゴミ箱は空です",
+    "text": "削除された商品はありません。"
+  },
+  "adjust": "調整",
+  "adjustDialog": {
+    "title": "{{day}} の在庫を調整",
+    "quantity": "利用可能な数量",
+    "price": "この日の価格（任意）",
+    "priceHint": "空欄のままにすると現在の価格を維持します。ここに価格を入力すると、この日の賞味期限間近セールも終了します。",
+    "cancel": "キャンセル",
+    "confirm": "保存",
+    "error": {
+      "quantity": "0以上の整数を入力してください。",
+      "price": "$0 より高い価格を入力するか、空欄のままにしてください。"
+    }
+  },
+  "dealAction": "賞味期限間近セール",
+  "dealActionFor": "{{name}} の賞味期限間近セール",
+  "deals": {
+    "title_one": "セール中 ({{count}})",
+    "title_other": "セール中 ({{count}})",
+    "loading": "あなたのセールを読み込み中…",
+    "col": {
+      "product": "商品",
+      "day": "受取日",
+      "discount": "割引",
+      "left": "残り",
+      "until": "賞味期限"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}（元の価格 {{was}}）",
+    "until_one": "{{day}}まで（あと{{count}}日）",
+    "until_other": "{{day}}まで（あと{{count}}日）",
+    "remove": "セールを取り消す",
+    "removed": "セールを取り消しました",
+    "removedText": "{{name}}は{{day}}分、通常価格に戻ります。",
+    "noun": "あなたのセール"
+  },
+  "dealDialog": {
+    "title": "賞味期限間近セール · {{name}}",
+    "day": "受取日",
+    "qty": "持ち込む数量（{{unit}}）",
+    "onSale": "その日は現在 {{qty}} がセール中",
+    "packedOn": "収穫または梱包日",
+    "result_one": "{{until}}まで良好 · お客様は{{count}}日利用できます（賞味期限{{shelfLife}}日）",
+    "result_other": "{{until}}まで良好 · お客様は{{count}}日利用できます（賞味期限{{shelfLife}}日）",
+    "discount": "割引",
+    "less": "割引を下げる",
+    "more": "割引を上げる",
+    "suggested": "おすすめ {{percent}}%",
+    "price": "価格",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "セールを登録",
+    "posting": "登録中…",
+    "posted": "セールを登録しました",
+    "postedText": "{{name}}は{{day}}に{{percent}}%引きになります。",
+    "loadingDays": "受取日を読み込み中…",
+    "daysNoun": "受取日",
+    "noDays": {
+      "title": "利用できる受取日がありません",
+      "text": "今後14日間、お客様はこの商品を注文できません。週の在庫と受取枠を確認してください。"
+    },
+    "why": {
+      "packedOn": "収穫または梱包日を入力してください。",
+      "qty": "1以上を持ち込んでください。",
+      "packedInFuture": "収穫または梱包日は今日より後にはできません。",
+      "fresh": "受取日に収穫したものは新鮮とみなされるため、セールは不要です。",
+      "notNearExpiry": "その日の時点で{{shelfLife}}日の賞味期限の半分以上が残っています。セールは賞味期限の半分を過ぎた商品のみが対象です。",
+      "expiredBeforePickup": "この商品はその日にはもう鮮度が保てないため、販売できません。"
+    }
+  },
+  "noNextDate": "注文できる日がありません",
+  "checkWeeklyStock": "週間在庫を設定"
 }

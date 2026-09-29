@@ -39,13 +39,19 @@
     "complete": "완료로 표시",
     "view": "보기"
   },
-  "greeting": "좋은 아침이에요, {{name}}님",
-  "applyTemplate": "주간 템플릿 적용",
+  "title": "개요",
+  "editTemplate": "주간 템플릿 편집",
   "addProduct": "상품 추가",
   "banner": {
-    "title_one": "주문 {{count}}건이 기다리고 있어요. 그중 {{closing}}건은 내일 {{time}}에 마감돼요.",
-    "title_other": "주문 {{count}}건이 기다리고 있어요. 그중 {{closing}}건은 내일 {{time}}에 마감돼요.",
+    "title_one": "주문 {{count}}건이 기다리고 있어요.",
+    "title_other": "주문 {{count}}건이 기다리고 있어요.",
     "text": "승인하지 않은 주문도 재고를 잡고 있어요. 고객이 계획을 세울 수 있도록 마감 전에 수락하거나 거절하세요."
+  },
+  "strikes": {
+    "title": "유통기한 위반: {{count}}/{{limit}} ({{days}}일 이내)",
+    "text": "연장된 유통기한 상품에서 확인된 신고는 위반 1회로 기록됩니다. 위반이 3회면 더 긴 유통기한이 잠깁니다.",
+    "locked": "더 긴 유통기한 설정이 {{date}}까지 잠겨 있습니다.",
+    "link": "손상 신고 보기"
   },
   "kpi": {
     "noun": "your numbers",
@@ -66,8 +72,8 @@
     }
   },
   "stock": {
-    "title": "{{day}} 재고",
-    "link": "이번 주 재고",
+    "title": "현재 재고",
+    "link": "주간 템플릿",
     "noun": "stock",
     "empty": {
       "title": "No products yet",
@@ -82,5 +88,14 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "오늘은 {{markets}}",
+    "titleNoMarket": "오늘은 어느 시장에도 나가지 않아요",
+    "orders_other": "오늘 주문 {{count}}건",
+    "waiting_other": "그중 {{count}}건이 수락 또는 거절을 기다리고 있어요",
+    "cutoffPassed_other": "그중 {{count}}건은 마감이 지나 고객이 변경할 수 없어요",
+    "soldOut_other": "품절로 표시된 상품 {{count}}개",
+    "lowStock_other": "재고가 얼마 남지 않은 상품 {{count}}개"
   }
 }

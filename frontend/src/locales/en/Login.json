@@ -1,6 +1,6 @@
 {
   "title": "Sign in",
-  "intro": "Customers and Farmers sign in here. Admins use the <link>separate admin sign-in</link>.",
+  "intro": "Customers and Farmers sign in here. Admins use the <a>separate admin sign-in</a>.",
   "fields": {
     "email": "Email",
     "password": "Password"
@@ -19,7 +19,9 @@
   "newHere": "Don't have an account? <customer>Sign up</customer>",
   "toast": {
     "signedIn": "Signed in.",
-    "failed": "Could not sign you in. Please try again."
+    "failed": "Could not sign you in. Please try again.",
+    "tooMany_one": "Too many failed sign-in attempts. Try again in {{count}} minute.",
+    "tooMany_other": "Too many failed sign-in attempts. Try again in {{count}} minutes."
   },
   "errors": {
     "emailRequired": "Enter your email.",

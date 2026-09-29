@@ -14,6 +14,7 @@ import com.techx.intervue.modules.conversation.exceptions.OrderNotInConversation
 import com.techx.intervue.modules.conversation.exceptions.RateLimitedException;
 import com.techx.intervue.modules.conversation.exceptions.SelfConversationException;
 import com.techx.intervue.modules.conversation.exceptions.StallNotOpenException;
+import com.techx.intervue.modules.conversation.exceptions.StreamLinkInvalidException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedImageTypeException;
 import com.techx.intervue.modules.conversation.exceptions.UnsupportedMessageKindException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
@@ -34,6 +35,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.multipart.MultipartException;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 /**
  * HTTP codes per spec section 6.3, for the chat module's controllers. An oversized multipart error
@@ -85,6 +88,24 @@ public class ConversationExceptionHandler {
                 "VALIDATION_ERROR",
                 INVALID_MESSAGE,
                 List.of(FieldErrorResource.builder().message(INVALID_MESSAGE).build()));
+    }
+
+    /**
+     * FR-115: POST /attachments sent without a multipart body, or without its `file` part → 400 on
+     * the `file` field instead of a 500. An oversized file never reaches this: it fails while the
+     * body is read, before a controller is picked, and UploadExceptionHandler answers it (413).
+     */
+    @ExceptionHandler({MultipartException.class, MissingServletRequestPartException.class})
+    ResponseEntity<ApiResource<Void>> missingFile(Exception e) {
+        return error(
+                HttpStatus.BAD_REQUEST,
+                "VALIDATION_ERROR",
+                INVALID_MESSAGE,
+                List.of(
+                        FieldErrorResource.builder()
+                                .field("file")
+                                .message("Choose a photo or a video to upload.")
+                                .build()));
     }
 
     @ExceptionHandler({
@@ -142,6 +163,12 @@ public class ConversationExceptionHandler {
     @ExceptionHandler(AttachmentNotYoursException.class)
     ResponseEntity<ApiResource<Void>> notYourAttachment(AttachmentNotYoursException e) {
         return error(HttpStatus.FORBIDDEN, "ATTACHMENT_NOT_YOURS", e.getMessage(), List.of());
+    }
+
+    /** FR-115 §5: a forged, expired or incomplete video link → 403. */
+    @ExceptionHandler(StreamLinkInvalidException.class)
+    ResponseEntity<ApiResource<Void>> streamLinkInvalid(StreamLinkInvalidException e) {
+        return error(HttpStatus.FORBIDDEN, "STREAM_LINK_INVALID", e.getMessage(), List.of());
     }
 
     /** An image attaches to exactly one message → 409. */

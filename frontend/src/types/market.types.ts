@@ -1,8 +1,12 @@
+import type { AddressParts } from './address.types';
+
 export type MarketType = {
   id: number;
   name: string;
   address: string;
-  district: string;
+  /** Where the market is, for filters and map popups: its ward (or its province for an old record). */
+  area: string;
+  addressParts?: AddressParts;
   /** Day of week, 0 = Sunday … 6 = Saturday */
   days: number[];
   open: string;

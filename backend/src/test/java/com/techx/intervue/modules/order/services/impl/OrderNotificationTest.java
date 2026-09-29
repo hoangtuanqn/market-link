@@ -1,6 +1,8 @@
 package com.techx.intervue.modules.order.services.impl;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -97,6 +99,8 @@ class OrderNotificationTest {
         farmerRepository = mock(FarmerProfileRepository.class);
         farmerMarketRepository = mock(FarmerMarketRepository.class);
         slotRepository = mock(PickupSlotRepository.class);
+        // Every slot's weekday is still open for its market and stall unless a test says otherwise
+        when(slotRepository.isOnOpenDay(anyLong())).thenReturn(true);
         productRepository = mock(ProductRepository.class);
         dailyStockRepository = mock(ProductDailyStockRepository.class);
         orderRepository = mock(OrderRepository.class);
@@ -184,7 +188,8 @@ class OrderNotificationTest {
                 1,
                 "2026-09-26T02:00:00Z",
                 7L,
-                "Khách 7");
+                "Khách 7",
+                false);
     }
 
     private static OrderDetailRow aDetailRow() {
@@ -400,6 +405,44 @@ class OrderNotificationTest {
                         argThat(
                                 e ->
                                         e.kind() == NotificationKind.ORDER_CANCELLED
+                                                && e.link()
+                                                        .equals(
+                                                                "/farmer/orders/"
+                                                                        + order.getId())));
+    }
+
+    /**
+     * FR-035/D-07 (reproduced 29/09): editing an accepted order sent it back to placed with no word
+     * to the Farmer, who had to accept it again without knowing.
+     */
+    @Test
+    void modifyingAnAcceptedOrderTellsTheFarmerToAcceptItAgain() {
+        Order order = orderWithStatus(OrderStatus.ACCEPTED);
+        order.setCutoffAt(LocalDateTime.of(2026, 9, 29, 1, 0));
+        when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.of(order));
+        OrderItem item = new OrderItem();
+        item.setOrderId(ORDER_ID);
+        item.setProductId(PRODUCT_ID);
+        item.setProductName("Rau muống");
+        item.setUnitPrice(new BigDecimal("12000"));
+        item.setUnit("bó");
+        item.setQuantity(2);
+        item.setSubtotal(new BigDecimal("24000"));
+        when(orderItemRepository.findByOrderId(ORDER_ID)).thenReturn(List.of(item));
+        when(productRepository.findAllById(any())).thenReturn(List.of());
+        when(dailyStockRepository.lockByProductIdAndStockDate(PRODUCT_ID, PICKUP))
+                .thenReturn(Optional.of(dailyStock(PRODUCT_ID, 5)));
+
+        service.modifyItems(
+                CUSTOMER_ID, ORDER_ID, new ModifyOrderRequest(List.of(line(PRODUCT_ID, 1))));
+
+        assertThat(order.getStatus()).isEqualTo(OrderStatus.PLACED);
+        verify(notifications)
+                .dispatch(
+                        eq(List.of(FARMER_USER_ID)),
+                        argThat(
+                                e ->
+                                        e.kind() == NotificationKind.ORDER_CHANGED
                                                 && e.link()
                                                         .equals(
                                                                 "/farmer/orders/"

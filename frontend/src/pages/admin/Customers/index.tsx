@@ -1,11 +1,14 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import { AdminReportApi, type AdminCustomerDto } from '@/api-requests/report.requests';
+import Avatar from '@/components/Avatar';
+import BanDurationPicker, { type BanDuration } from '@/components/BanDurationPicker';
 import { CheckIcon, CloseIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { Chip } from '@/components/ui/chip';
 import { DataState, LoadError } from '@/components/ui/data-state';
+import Tabs from '@/components/ui/tabs';
+import ReasonPicker from '@/components/ReasonPicker';
 import { Dialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/input';
 import { Pagination } from '@/components/ui/pagination';
@@ -13,12 +16,14 @@ import { Table, type TableColumn } from '@/components/ui/table';
 import { ADMIN_CUSTOMERS_PATH } from '@/constants/nav';
 import useRequest from '@/hooks/useRequest';
 import { formatDate } from '@/lib/format';
+import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
+import CustomerTableSkeleton from './CustomerTableSkeleton';
 
 const FILTERS = ['all', 'active', 'inactive'] as const;
 type Filter = (typeof FILTERS)[number];
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 10;
 const NO_ROWS: AdminCustomerDto[] = [];
 
 /** Pill for the account state. Colour never carries the meaning alone — each state has its own word and glyph. */
@@ -41,9 +46,9 @@ type ConfirmKind = 'deactivate' | 'reactivate';
 type ConfirmAction = { kind: ConfirmKind; item: AdminCustomerDto } | null;
 
 /**
- * FR-072 — deactivate an account for a policy violation; it can no longer sign in or order. Reactivate when it is
- * resolved. Past orders stay with the stalls either way. The server does not store a reason (`AdminReportApi.
- * setCustomerStatus` takes only the new status) — the reason box here is echoed in the toast only, not sent.
+ * FR-072 — deactivate an account for a policy violation; it can no longer sign in or order, and every session is
+ * revoked right away. Permanent or temporary (auto-reactivates); a permanent ban also cancels open orders. Reactivate
+ * when it is resolved. Past orders otherwise stay with the stalls.
  */
 const AdminCustomersPage = () => {
   const { t } = useTranslation('AdminCustomers');
@@ -54,7 +59,16 @@ const AdminCustomersPage = () => {
   const [page, setPage] = useState(1);
   const [busyId, setBusyId] = useState<number | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState<ReasonValue>(emptyReason);
+  const [duration, setDuration] = useState<BanDuration>({ kind: 'permanent' });
+  const [initialLoading, setInitialLoading] = useState(true);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   const {
     state: load,
@@ -86,6 +100,7 @@ const AdminCustomersPage = () => {
 
   const rows = load.kind === 'ready' ? load.data.items : NO_ROWS;
   const total = load.kind === 'ready' ? load.data.total : 0;
+  const showSkeleton = load.kind === 'loading' || initialLoading;
 
   const changeFilter = (f: Filter) => {
     if (f === filter) return;
@@ -100,7 +115,8 @@ const AdminCustomersPage = () => {
   };
 
   const openConfirm = (kind: ConfirmKind, item: AdminCustomerDto) => {
-    setReason('');
+    setReason(emptyReason());
+    setDuration({ kind: 'permanent' });
     setConfirmAction({ kind, item });
   };
 
@@ -108,13 +124,19 @@ const AdminCustomersPage = () => {
     if (!confirmAction) return;
     const { kind, item } = confirmAction;
     const status = kind === 'deactivate' ? 'inactive' : 'active';
+    const trimmedReason = composeReason('deactivate', reason);
+    const until = kind === 'deactivate' && duration.kind === 'temporary' ? duration.until : null;
     setBusyId(item.userId);
     setConfirmAction(null);
     try {
-      const updated = await AdminReportApi.setCustomerStatus(item.userId, status);
+      const updated = await AdminReportApi.setCustomerStatus(
+        item.userId,
+        status,
+        kind === 'deactivate' ? trimmedReason : null,
+        until,
+      );
       mutate((data) => ({ ...data, items: data.items.map((c) => (c.userId === item.userId ? updated : c)) }));
       retryCounts();
-      const trimmedReason = reason.trim();
       const toastKey =
         kind === 'deactivate'
           ? trimmedReason
@@ -134,14 +156,20 @@ const AdminCustomersPage = () => {
       key: 'name',
       label: t('col.customer'),
       render: (c) => (
-        <>
-          <Link to={`${ADMIN_CUSTOMERS_PATH}/${c.userId}`} className="text-brand underline">
-            <b>{c.fullName}</b>
-          </Link>
-          <span className="text-ink-muted block text-[13px]">
-            {c.email} {c.phone ? `· ${c.phone}` : ''}
-          </span>
-        </>
+        <div className="flex items-center gap-3">
+          <Avatar name={c.fullName} email={c.email} url={c.avatarUrl ?? undefined} size={36} className="shrink-0" />
+          <div className="min-w-0">
+            <Link
+              to={`${ADMIN_CUSTOMERS_PATH}/${c.userId}`}
+              className="text-brand block truncate font-bold underline hover:opacity-85"
+            >
+              {c.fullName}
+            </Link>
+            <span className="text-ink-muted block truncate text-[13px]">
+              {c.email} {c.phone ? `· ${c.phone}` : ''}
+            </span>
+          </div>
+        </div>
       ),
     },
     { key: 'joined', label: t('col.joined'), render: (c) => formatDate(new Date(c.createdAt)) },
@@ -167,10 +195,10 @@ const AdminCustomersPage = () => {
   ];
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-1 flex-col gap-6">
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
         <form role="search" onSubmit={submitSearch} className="flex min-w-70 flex-1 items-end gap-2">
@@ -189,26 +217,31 @@ const AdminCustomersPage = () => {
         </form>
       </div>
 
-      <div role="group" aria-label={t('filterLabel')} className="flex flex-wrap gap-2">
-        {FILTERS.map((f) => (
-          <Chip key={f} pressed={filter === f} onClick={() => changeFilter(f)}>
-            {t(`filter.${f}`)}
-            {counts[f] !== undefined && <span className="text-ink-muted ml-1">({counts[f]})</span>}
-          </Chip>
-        ))}
-      </div>
+      <Tabs
+        label={t('filterLabel')}
+        value={filter}
+        onChange={(id) => changeFilter(id as Filter)}
+        tabs={FILTERS.map((f) => ({
+          id: f,
+          label: t(`filter.${f}`),
+          count: counts[f],
+        }))}
+      />
 
-      {load.kind === 'loading' ? (
-        <p role="status" className="text-ink-muted">
-          {tc('notify.list.loading')}
-        </p>
+      {showSkeleton ? (
+        <CustomerTableSkeleton />
       ) : load.kind === 'error' ? (
-        <LoadError noun={t('noun')} onRetry={retry} />
+        <LoadError noun={t('noun')} onRetry={retry} className="w-full flex-1" />
       ) : rows.length ? (
-        <div className="flex flex-col gap-4">
-          <Table caption={t('caption', { count: total })} columns={columns} rows={rows} />
+        <div className="flex flex-1 flex-col justify-between gap-4">
+          <Table
+            caption={t('caption', { count: total })}
+            columns={columns}
+            rows={rows}
+            className="min-h-[380px] w-full flex-1"
+          />
           {total > PAGE_SIZE && (
-            <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
               <span className="text-small text-ink-muted">
                 {t('showing', { from: (page - 1) * PAGE_SIZE + 1, to: (page - 1) * PAGE_SIZE + rows.length, total })}
               </span>
@@ -217,7 +250,7 @@ const AdminCustomersPage = () => {
           )}
         </div>
       ) : (
-        <DataState fill title={t('empty.title')} text={t('empty.text')} />
+        <DataState fill title={t('empty.title')} text={t('empty.text')} className="min-h-[380px] w-full flex-1" />
       )}
 
       <Dialog
@@ -232,7 +265,9 @@ const AdminCustomersPage = () => {
             </Button>
             <Button
               variant={confirmAction?.kind === 'deactivate' ? 'danger' : 'primary'}
-              disabled={busyId !== null}
+              disabled={
+                busyId !== null || (confirmAction?.kind === 'deactivate' && !composeReason('deactivate', reason))
+              }
               onClick={() => void runConfirmedAction()}
             >
               {confirmAction ? t(`${confirmAction.kind}.confirm`) : ''}
@@ -243,18 +278,18 @@ const AdminCustomersPage = () => {
         <div className="flex flex-col gap-3">
           <p>{confirmAction ? t(`${confirmAction.kind}.text`) : ''}</p>
           {confirmAction?.kind === 'deactivate' && (
-            <div className="flex flex-col gap-1.5">
-              <label htmlFor="deactivate-reason" className="text-small font-bold">
-                {t('deactivate.reason')}
-              </label>
-              <textarea
+            <>
+              <BanDurationPicker value={duration} onChange={setDuration} />
+              <ReasonPicker
                 id="deactivate-reason"
+                kind="deactivate"
+                label={t('deactivate.reason')}
                 value={reason}
-                onChange={(e) => setReason(e.target.value)}
-                className="border-line-strong bg-surface-raised focus:outline-focus min-h-18 rounded-sm border-[1.5px] p-3 focus:outline-2"
+                onChange={setReason}
+                required
+                error={!composeReason('deactivate', reason) ? t('deactivate.reasonRequired') : undefined}
               />
-              <span className="text-ink-muted text-[13px]">{t('deactivate.reasonHint')}</span>
-            </div>
+            </>
           )}
         </div>
       </Dialog>

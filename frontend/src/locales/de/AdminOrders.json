@@ -3,7 +3,7 @@
   "intro": "Alle Bestellungen auf MarketLink, über die vier Märkte hinweg. Administratoren lesen sie; nur der Stand bringt eine Bestellung in den nächsten Status.",
   "noun": "orders",
   "list": {
-    "inPeriod": "{{count}} im {{month}}",
+    "inPeriod": "{{count}} Bestellungen",
     "filterLabel": "Bestellungen nach Status filtern",
     "market": "Markt",
     "allMarkets": "Alle Märkte",

@@ -5,9 +5,7 @@
     "fullName": "Nama lengkap",
     "phone": "Nomor telepon",
     "email": "Email",
-    "emailHint": "Dipakai untuk masuk dan notifikasi pesanan.",
-    "address": "Alamat",
-    "addressPlaceholder": "Jalan, kelurahan, distrik",
+    "emailHint": "Dipakai untuk masuk dan notifikasi pesanan. Kami mengirim kode ke alamat ini untuk memastikan alamat ini milik Anda.",
     "password": "Kata sandi",
     "passwordHint": "{{min}} sampai {{max}} karakter.",
     "confirmPassword": "Ulangi kata sandi"
@@ -21,8 +19,8 @@
   "haveAccount": "Saya sudah punya akun",
   "acceptFirst": "Setujui ketentuan untuk membuat akun.",
   "sharedAccount": "Satu akun bisa dipakai bersama dalam keluarga; sistem tidak membedakan orang di dalam satu akun.",
+  "honeypot": "Kosongkan kolom ini",
   "toast": {
-    "created": "Akun dibuat.",
     "failed": "Tidak dapat membuat akun. Silakan coba lagi."
   },
   "errors": {
@@ -33,11 +31,11 @@
     "emailRequired": "Masukkan email.",
     "emailInvalid": "Masukkan alamat email yang valid.",
     "emailMax": "Email maksimal {{max}} karakter.",
-    "addressRequired": "Masukkan alamat.",
-    "addressMax": "Alamat maksimal {{max}} karakter.",
     "passwordRequired": "Masukkan kata sandi.",
     "passwordLength": "Kata sandi harus {{min}} sampai {{max}} karakter.",
     "confirmRequired": "Konfirmasi kata sandi.",
-    "confirmMismatch": "Kata sandi tidak cocok."
+    "confirmMismatch": "Kata sandi tidak cocok.",
+    "tooMany_one": "Terlalu banyak kode diminta untuk alamat atau jaringan ini. Coba lagi dalam {{count}} menit.",
+    "tooMany_other": "Terlalu banyak kode diminta untuk alamat atau jaringan ini. Coba lagi dalam {{count}} menit."
   }
 }

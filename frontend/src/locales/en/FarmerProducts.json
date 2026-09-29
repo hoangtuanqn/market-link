@@ -3,25 +3,30 @@
   "intro": "Everything you can list. Mark a product sold out when it runs out on market day, or pause it when it is not in season.",
   "add": "Add product",
   "filterAll": "All",
+  "filterDeleted": "Deleted",
   "status": {
     "available": "Available",
     "sold_out": "Sold out",
-    "unavailable": "Paused"
+    "unavailable": "Paused",
+    "deleted": "Deleted"
   },
   "caption_one": "{{count}} product",
   "caption_other": "{{count}} products",
   "col": {
     "product": "Product",
     "price": "Price",
-    "left": "Left this week",
+    "left": "Next pickup day · left",
     "reserved": "Reserved",
     "status": "Status"
   },
   "perUnit": "per {{unit}}",
+  "nextLeft": "{{day}} · {{qty}} left",
   "statusOf": "Status of {{name}}",
   "edit": "Edit",
+  "adjust": "Adjust",
   "delete": "Delete",
-  "footNote": "Deleting a product removes it from the catalogue; past orders keep their lines. Photos: 4:3, natural light, on wood or paper.",
+  "restore": "Restore",
+  "footNote": "Deleting a product moves it to trash and removes it from the catalogue; past orders keep their lines. Photos: 4:3, natural light, on wood or paper.",
   "toast": {
     "statusSaved": "Status saved",
     "status": {
@@ -30,14 +35,40 @@
       "unavailable": "The product is hidden from customers until you set it back."
     },
     "deleted": "Deleted",
-    "deletedText": "{{name}} deleted."
+    "deletedText": "{{name}} deleted.",
+    "restored": "Restored",
+    "restoredText": "Restored {{name}} to Paused. Set its weekly stock again before putting it back on sale.",
+    "stockAdjusted": "Stock updated for {{day}}."
   },
   "dialog": {
     "title": "Delete {{name}}?",
     "keep": "Keep product",
     "confirm": "Delete product",
-    "text": "It disappears from the catalogue and from your template. Orders that already include it are not changed.",
-    "pauseHint": "To stop selling it for a while, choose Paused instead."
+    "text": "It moves to trash and disappears from the catalogue. You can restore it anytime from the Deleted tab.",
+    "pauseHint": "To stop selling it for a while without deleting, choose Paused instead."
+  },
+  "restoreDialog": {
+    "title": "Restore {{name}}?",
+    "cancel": "Keep in trash",
+    "confirm": "Restore product",
+    "text": "The product will be restored in “Paused” status so you can review its stock and price before putting it back on sale.",
+    "stockHint": "Its weekly stock was cleared when it was deleted, so customers cannot order it until you set it again."
+  },
+  "emptyDeleted": {
+    "title": "Trash is empty",
+    "text": "There are no deleted products in trash."
+  },
+  "adjustDialog": {
+    "title": "Adjust stock for {{day}}",
+    "quantity": "Units available",
+    "price": "Price for this day (optional)",
+    "priceHint": "Leave blank to keep the current price. A price here also ends a near-expiry deal on this day.",
+    "cancel": "Cancel",
+    "confirm": "Save",
+    "error": {
+      "quantity": "Enter a whole number of 0 or more.",
+      "price": "Enter a price above $0, or leave it blank."
+    }
   },
   "error": {
     "noun": "your products"
@@ -46,5 +77,62 @@
   "empty": {
     "title": "No products yet",
     "text": "Add your first product and it appears on your stall page right away."
-  }
+  },
+  "dealAction": "Near-expiry deal",
+  "dealActionFor": "Near-expiry deal for {{name}}",
+  "deals": {
+    "title_one": "On sale ({{count}})",
+    "title_other": "On sale ({{count}})",
+    "loading": "Loading your deals",
+    "col": {
+      "product": "Product",
+      "day": "Pickup day",
+      "discount": "Discount",
+      "left": "Left",
+      "until": "Good until"
+    },
+    "off": "−{{percent}}%",
+    "price": "{{price}}, was {{was}}",
+    "until_one": "End of {{day}} ({{count}} day)",
+    "until_other": "End of {{day}} ({{count}} days)",
+    "remove": "Remove deal",
+    "removed": "Deal removed",
+    "removedText": "{{name}} is back to its usual price for {{day}}.",
+    "noun": "your deals"
+  },
+  "dealDialog": {
+    "title": "Near-expiry deal · {{name}}",
+    "day": "Pickup day",
+    "qty": "Quantity you bring ({{unit}})",
+    "onSale": "{{qty}} on sale for that day now",
+    "packedOn": "Harvested or packed on",
+    "result_one": "Good until end of {{until}} · the customer has {{count}} day (shelf life {{shelfLife}} days)",
+    "result_other": "Good until end of {{until}} · the customer has {{count}} days (shelf life {{shelfLife}} days)",
+    "discount": "Discount",
+    "less": "Lower the discount",
+    "more": "Raise the discount",
+    "suggested": "Suggested {{percent}}%",
+    "price": "Price",
+    "priceLine": "{{from}} → {{to}}",
+    "post": "Post deal",
+    "posting": "Posting…",
+    "posted": "Deal posted",
+    "postedText": "{{name}} is {{percent}}% off for {{day}}.",
+    "loadingDays": "Loading pickup days…",
+    "daysNoun": "pickup days",
+    "noDays": {
+      "title": "No pickup day open",
+      "text": "Customers cannot order this product for any of the next 14 days. Check your weekly stock and pickup slots."
+    },
+    "why": {
+      "packedOn": "Enter the harvest or packing date.",
+      "qty": "Bring at least 1.",
+      "packedInFuture": "The harvest or packing date cannot be after today.",
+      "fresh": "Picked on the pickup day counts as fresh, so it needs no deal.",
+      "notNearExpiry": "More than half of its {{shelfLife}}-day shelf life is left on that day. Deals are only for produce past half its shelf life.",
+      "expiredBeforePickup": "This batch is no longer good on that day, so it cannot be sold for it."
+    }
+  },
+  "noNextDate": "No day open to order",
+  "checkWeeklyStock": "Set weekly stock"
 }

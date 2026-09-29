@@ -9,10 +9,14 @@ import com.techx.intervue.modules.feedback.repositories.FeedbackRepository;
 import com.techx.intervue.modules.feedback.requests.CreateFeedbackRequest;
 import com.techx.intervue.modules.feedback.resources.FeedbackResource;
 import com.techx.intervue.modules.feedback.services.interfaces.FeedbackServiceInterface;
+import com.techx.intervue.modules.notification.enums.NotificationKind;
+import com.techx.intervue.modules.notification.resources.NotificationEvent;
+import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.PageResource;
 import java.time.Clock;
 import java.time.Instant;
+import java.util.Map;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +33,7 @@ public class FeedbackService implements FeedbackServiceInterface {
     private final FeedbackRepository feedbacks;
     private final FeedbackQueryRepository queries;
     private final FeedbackRateLimiter rateLimiter;
+    private final NotificationServiceInterface notifications;
     private final Clock clock;
 
     @Override
@@ -53,18 +58,27 @@ public class FeedbackService implements FeedbackServiceInterface {
         row.setMessage(message);
         row.setCreatedAt(Instant.now(clock));
         Feedback saved = feedbacks.save(row);
-        return queries.findOne(saved.getId())
-                .orElseGet(
-                        () ->
-                                new FeedbackResource(
-                                        saved.getId(),
-                                        type.value(),
-                                        message,
-                                        saved.getStatus().value(),
-                                        userIdOrNull,
-                                        null,
-                                        null,
-                                        saved.getCreatedAt().toString()));
+        FeedbackResource res =
+                queries.findOne(saved.getId())
+                        .orElseGet(
+                                () ->
+                                        new FeedbackResource(
+                                                saved.getId(),
+                                                type.value(),
+                                                message,
+                                                saved.getStatus().value(),
+                                                userIdOrNull,
+                                                null,
+                                                null,
+                                                saved.getCreatedAt().toString()));
+        String sender =
+                res.userName() != null && !res.userName().isBlank() ? res.userName() : "Someone";
+        notifications.notifyAdmins(
+                NotificationEvent.of(
+                        NotificationKind.FEEDBACK,
+                        "/admin/feedback",
+                        Map.of("sender", sender, "type", type.value())));
+        return res;
     }
 
     @Override

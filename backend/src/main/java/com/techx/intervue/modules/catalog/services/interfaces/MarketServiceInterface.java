@@ -7,11 +7,11 @@ import com.techx.intervue.resources.PageResource;
 
 public interface MarketServiceInterface {
     /**
-     * FR-010: browse by location (q/city/district) and day. page counts from 1, pageSize is clamped
-     * to 1…50.
+     * FR-010: browse by location (q/provinceCode/wardCode) and day. page counts from 1, pageSize is
+     * clamped to 1…50.
      */
     PageResource<MarketResource> search(
-            String q, Integer day, String city, String district, int page, int pageSize);
+            String q, Integer day, String provinceCode, String wardCode, int page, int pageSize);
 
     MarketDetailResource detail(long id);
 

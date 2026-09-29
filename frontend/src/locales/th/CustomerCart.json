@@ -28,8 +28,6 @@
     "unavailable": "One or more items are no longer for sale.",
     "stall_suspended": "This stall is not taking orders right now."
   },
-  "changeTime": "เปลี่ยนเวลารับสินค้าที่ {{stall}}",
-  "pickupDay": "วันรับสินค้า",
   "pickupDayAt": "วันรับสินค้าที่ {{stall}}",
   "pickupTime": "เวลารับสินค้า · {{day}} {{date}} · ช่วง {{from}} – {{to}}",
   "summary": {
@@ -52,5 +50,10 @@
     "title": "สินค้าในตะกร้า",
     "text": "หากมีสินค้าที่ไม่ได้ขายแล้ว ให้ลบออกที่นี่ แล้วตะกร้าจะโหลดใหม่",
     "clear": "ล้างตะกร้า"
+  },
+  "deal": {
+    "badge": "−{{percent}}% ดีลใกล้หมดอายุ",
+    "onlyOn": "ดีลนี้ใช้ได้เฉพาะวัน {{day}} เท่านั้น",
+    "dayGone": "วันที่มีดีล {{day}} เลือกไม่ได้แล้ว เลือกวันที่เพื่อดูราคา"
   }
 }

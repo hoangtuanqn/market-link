@@ -2,55 +2,59 @@ import { useCallback, useEffect, useState, type FormEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 import AdminFarmerApi from '@/api-requests/admin-farmer.requests';
-import { Button, ButtonLink } from '@/components/ui/button';
+import Avatar from '@/components/Avatar';
+import { Button } from '@/components/ui/button';
 import { DataState } from '@/components/ui/data-state';
-import { Dialog } from '@/components/ui/dialog';
-import { Pagination } from '@/components/ui/pagination';
 import { Field } from '@/components/ui/input';
-import { ReasonField } from '@/components/ReasonField';
+import { Pagination } from '@/components/ui/pagination';
 import Tabs from '@/components/ui/tabs';
 import { Table, type TableColumn } from '@/components/ui/table';
 import { REASON_MAX } from '@/constants/approvalStatus';
 import { ADMIN_FARMERS_PATH } from '@/constants/nav';
 import { formatDate } from '@/lib/format';
-import type { AdminFarmerListItemType, FarmerApproval } from '@/types/farmer.types';
+import { composeReason, emptyReason, type ReasonValue } from '@/lib/reasons';
+import type { AdminFarmerListItemType } from '@/types/farmer.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
-
-type Status =
-  { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; items: AdminFarmerListItemType[]; total: number };
-
-/** Docs/prototype/admin/farmers.html — tabs by approval status, each tab has its own empty content (`empty.<tab>`). */
-const TABS: FarmerApproval[] = ['pending', 'approved', 'suspended', 'rejected'];
-
-type ConfirmKind = 'approve' | 'suspend' | 'reinstate';
-type ConfirmAction = { kind: ConfirmKind; item: AdminFarmerListItemType } | null;
-
-/** Enough to see a whole screen without a long scroll; the rest goes to the next page. */
-const PAGE_SIZE = 10;
-
-/** The number of fake rows while waiting — equal to a full page so the frame does not jump when data arrives. */
-const SKELETON_ROWS = 5;
-
-/** Toast after an action finishes: `toast.<key>`. */
-const DONE_TOAST = { approve: 'approved', suspend: 'suspended', reinstate: 'reinstated' } as const;
+import ConfirmActionDialog from './ConfirmActionDialog';
+import {
+  DONE_TOAST,
+  PAGE_SIZE,
+  TABS,
+  type ConfirmAction,
+  type ConfirmKind,
+  type FarmerTab,
+  type Status,
+} from './constants';
+import FarmerActions from './FarmerActions';
+import FarmerTableSkeleton from './FarmerTableSkeleton';
+import RejectDialog from './RejectDialog';
 
 /** §6, §7, §8 — an Admin views, approves, rejects, suspends, reinstates a Farmer (FR-071/D-09). */
 const AdminFarmersPage = () => {
   const { t } = useTranslation('AdminFarmers');
-  const [activeTab, setActiveTab] = useState<FarmerApproval>('pending');
+  const [activeTab, setActiveTab] = useState<FarmerTab>('all');
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
-  const [counts, setCounts] = useState<Partial<Record<FarmerApproval, number>>>({});
+  const [counts, setCounts] = useState<Partial<Record<FarmerTab, number>>>({});
   const [busyId, setBusyId] = useState<number | null>(null);
   const [confirmAction, setConfirmAction] = useState<ConfirmAction>(null);
   const [rejectTarget, setRejectTarget] = useState<AdminFarmerListItemType | null>(null);
   /** One reason used for both reject and suspend — only one dialog can be open at a time. */
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [reasonError, setReasonError] = useState<string>();
   /** The text being typed in the search box, separate from the applied keyword: only Enter or the button calls the API. */
   const [queryDraft, setQueryDraft] = useState('');
   const [query, setQuery] = useState('');
   const [page, setPage] = useState(1);
+  const [initialLoading, setInitialLoading] = useState(import.meta.env.MODE !== 'test');
+
+  useEffect(() => {
+    if (import.meta.env.MODE === 'test') return;
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, []);
 
   // only setState in a promise callback (the initial state is already loading)
   const fetchList = useCallback(() => {
@@ -63,7 +67,7 @@ const AdminFarmersPage = () => {
   const fetchCounts = useCallback(() => {
     Promise.all(TABS.map((tab) => AdminFarmerApi.list({ status: tab, q: query || undefined, page: 1, pageSize: 1 })))
       .then((responses) => {
-        const next: Partial<Record<FarmerApproval, number>> = {};
+        const next: Partial<Record<FarmerTab, number>> = {};
         TABS.forEach((tab, i) => {
           next[tab] = responses[i]?.data.total;
         });
@@ -77,7 +81,7 @@ const AdminFarmersPage = () => {
 
   // Changing tab, searching or going to another page is a fresh fetch each time: build the skeleton right away so the screen
   // does not sit still with old data while waiting.
-  const changeTab = (tab: FarmerApproval) => {
+  const changeTab = (tab: FarmerTab) => {
     if (tab === activeTab) return;
     setStatus({ kind: 'loading' });
     setActiveTab(tab);
@@ -108,7 +112,7 @@ const AdminFarmersPage = () => {
   };
 
   const openConfirm = (kind: ConfirmKind, item: AdminFarmerListItemType) => {
-    setReason('');
+    setReason(emptyReason());
     setReasonError(undefined);
     setConfirmAction({ kind, item });
   };
@@ -116,7 +120,7 @@ const AdminFarmersPage = () => {
   const runConfirmedAction = async () => {
     if (!confirmAction) return;
     const { kind, item } = confirmAction;
-    const written = reason.trim();
+    const written = composeReason('suspend', reason);
     // Suspension needs a reason too: the Farmer reads this sentence back on their own profile page.
     if (kind === 'suspend') {
       if (!written) return setReasonError(t('suspend.required'));
@@ -141,7 +145,7 @@ const AdminFarmersPage = () => {
   const submitReject = async () => {
     if (!rejectTarget) return;
     // The server requires a reason (@NotBlank, at most 255) — block it here so the admin does not lose the dialog.
-    const written = reason.trim();
+    const written = composeReason('reject', reason);
     if (!written) return setReasonError(t('reject.required'));
     if (written.length > REASON_MAX) return setReasonError(t('reject.tooLong', { max: REASON_MAX }));
     setReasonError(undefined);
@@ -160,6 +164,17 @@ const AdminFarmersPage = () => {
     }
   };
 
+  const openReject = (f: AdminFarmerListItemType) => {
+    setRejectTarget(f);
+    setReason(emptyReason());
+    setReasonError(undefined);
+  };
+
+  const onReasonChange = (next: ReasonValue) => {
+    setReason(next);
+    if (reasonError) setReasonError(undefined);
+  };
+
   const columns: TableColumn<AdminFarmerListItemType>[] = [
     {
       // docs/prototype/admin/farmers.html: the stall name is a link, below it is "contact person · phone".
@@ -176,67 +191,32 @@ const AdminFarmersPage = () => {
         </div>
       ),
     },
-    { key: 'email', label: t('col.email') },
+    {
+      key: 'email',
+      label: t('col.email'),
+      render: (f) => (
+        <div className="flex items-center gap-3">
+          <Avatar
+            name={f.contactPerson || f.stallName}
+            email={f.email}
+            url={f.avatarUrl ?? undefined}
+            size={36}
+            className="shrink-0"
+          />
+          <span className="truncate">{f.email}</span>
+        </div>
+      ),
+    },
     { key: 'createdAt', label: t('col.registered'), render: (f) => formatDate(new Date(f.createdAt)) },
     {
       key: 'action',
       label: '',
       align: 'actions',
-      render: (f) => {
-        const busy = busyId === f.id;
-        if (f.approvalStatus === 'pending') {
-          return (
-            <div className="flex justify-end gap-2">
-              <Button size="sm" disabled={busy} onClick={() => openConfirm('approve', f)}>
-                {t('action.approve')}
-              </Button>
-              <Button
-                variant="danger"
-                size="sm"
-                disabled={busy}
-                onClick={() => {
-                  setRejectTarget(f);
-                  setReason('');
-                  setReasonError(undefined);
-                }}
-              >
-                {t('action.reject')}
-              </Button>
-            </div>
-          );
-        }
-        if (f.approvalStatus === 'approved') {
-          return (
-            <div className="flex justify-end gap-2">
-              <ButtonLink to={`${ADMIN_FARMERS_PATH}/${f.id}`} variant="secondary" size="sm">
-                {t('action.view')}
-              </ButtonLink>
-              <Button variant="danger" size="sm" disabled={busy} onClick={() => openConfirm('suspend', f)}>
-                {t('action.suspend')}
-              </Button>
-            </div>
-          );
-        }
-        if (f.approvalStatus === 'suspended') {
-          return (
-            <div className="flex justify-end gap-2">
-              <ButtonLink to={`${ADMIN_FARMERS_PATH}/${f.id}`} variant="secondary" size="sm">
-                {t('action.view')}
-              </ButtonLink>
-              <Button size="sm" disabled={busy} onClick={() => openConfirm('reinstate', f)}>
-                {t('action.reinstate')}
-              </Button>
-            </div>
-          );
-        }
-        return (
-          <Link to={`${ADMIN_FARMERS_PATH}/${f.id}`} className="text-brand underline">
-            {t('action.view')}
-          </Link>
-        );
-      },
+      render: (f) => <FarmerActions farmer={f} busy={busyId === f.id} onConfirm={openConfirm} onReject={openReject} />,
     },
   ];
+
+  const showSkeleton = status.kind === 'loading' || initialLoading;
 
   return (
     // The shell's <main> is flex-col so flex-1 here takes all the remaining height — that way the
@@ -245,7 +225,7 @@ const AdminFarmersPage = () => {
       {/* docs/prototype/admin/farmers.html: the title on the left, the search box on the right in the same row. */}
       <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-h1">{t('title')}</h1>
+          <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
           <p className="text-body max-w-160">{t('intro')}</p>
         </div>
         {/* The search box takes all the remaining space up to the right margin; too narrow and it drops to its own row. */}
@@ -269,40 +249,13 @@ const AdminFarmersPage = () => {
       <Tabs
         label={t('tabsLabel')}
         value={activeTab}
-        onChange={(id) => changeTab(id as FarmerApproval)}
+        onChange={(id) => changeTab(id as FarmerTab)}
         tabs={TABS.map((tab) => ({ id: tab, label: t(`status.${tab}`), count: counts[tab] }))}
       />
 
-      {/* The skeleton is built to the exact shape of the table about to appear: same row height so it does not jerk when data arrives. */}
-      {status.kind === 'loading' && (
-        <div
-          aria-busy="true"
-          className="border-line-strong bg-surface-raised animate-pulse overflow-hidden rounded-md border-[1.5px]"
-        >
-          <span className="sr-only">{t('loading')}</span>
-          <div className="border-line-strong border-b-[1.5px] p-3 px-4">
-            <div className="bg-surface-sunken h-5 w-28 rounded-sm" />
-          </div>
-          <div className="bg-surface-sunken/60 border-line-strong flex gap-4 border-b-[1.5px] px-4 py-2.5">
-            {['w-24', 'w-20', 'w-24', 'w-16'].map((w) => (
-              <div key={w} className={`bg-surface-sunken h-3 rounded-sm ${w}`} />
-            ))}
-          </div>
-          {Array.from({ length: SKELETON_ROWS }, (_, i) => (
-            <div key={i} className="border-line flex items-center gap-4 border-b px-4 py-3 last:border-b-0">
-              <div className="flex flex-1 flex-col gap-1.5">
-                <div className="bg-surface-sunken h-4 w-40 max-w-full rounded-sm" />
-                <div className="bg-surface-sunken h-3 w-52 max-w-full rounded-sm" />
-              </div>
-              <div className="bg-surface-sunken hidden h-4 w-48 rounded-sm sm:block" />
-              <div className="bg-surface-sunken hidden h-4 w-20 rounded-sm md:block" />
-              <div className="bg-surface-sunken h-9 w-28 rounded-sm" />
-            </div>
-          ))}
-        </div>
-      )}
+      {showSkeleton && <FarmerTableSkeleton />}
 
-      {status.kind === 'error' && (
+      {!showSkeleton && status.kind === 'error' && (
         <DataState
           variant="error"
           title={t('loadError.title')}
@@ -315,7 +268,8 @@ const AdminFarmersPage = () => {
         />
       )}
 
-      {status.kind === 'ready' &&
+      {!showSkeleton &&
+        status.kind === 'ready' &&
         (status.items.length ? (
           <div className="flex flex-col gap-4">
             <Table caption={t('caption', { count: status.total })} columns={columns} rows={status.items} />
@@ -337,67 +291,23 @@ const AdminFarmersPage = () => {
           <DataState fill title={t(`empty.${activeTab}.title`)} text={t(`empty.${activeTab}.text`)} />
         ))}
 
-      <Dialog
-        open={confirmAction !== null}
-        title={confirmAction ? t(`${confirmAction.kind}.title`, { stall: confirmAction.item.stallName }) : ''}
-        tone={confirmAction?.kind === 'suspend' ? 'danger' : undefined}
+      <ConfirmActionDialog
+        action={confirmAction}
+        reason={reason}
+        reasonError={reasonError}
+        onReasonChange={onReasonChange}
         onClose={() => setConfirmAction(null)}
-        actions={
-          <>
-            <Button variant="secondary" onClick={() => setConfirmAction(null)}>
-              {t('notYet')}
-            </Button>
-            <Button variant={confirmAction?.kind === 'suspend' ? 'dangerFill' : 'primary'} onClick={runConfirmedAction}>
-              {confirmAction ? t(`${confirmAction.kind}.confirm`) : ''}
-            </Button>
-          </>
-        }
-      >
-        <div className="flex flex-col gap-3">
-          <p>{confirmAction ? t(`${confirmAction.kind}.text`) : ''}</p>
-          {confirmAction?.kind === 'suspend' && (
-            <ReasonField
-              kind="suspend"
-              value={reason}
-              error={reasonError}
-              onChange={(next) => {
-                setReason(next);
-                if (reasonError) setReasonError(undefined);
-              }}
-            />
-          )}
-        </div>
-      </Dialog>
+        onConfirm={runConfirmedAction}
+      />
 
-      <Dialog
-        open={rejectTarget !== null}
-        tone="danger"
-        title={rejectTarget ? t('reject.title', { stall: rejectTarget.stallName }) : ''}
+      <RejectDialog
+        target={rejectTarget}
+        reason={reason}
+        reasonError={reasonError}
+        onReasonChange={onReasonChange}
         onClose={() => setRejectTarget(null)}
-        actions={
-          <>
-            <Button variant="secondary" onClick={() => setRejectTarget(null)}>
-              {t('keepReviewing')}
-            </Button>
-            <Button variant="dangerFill" onClick={submitReject}>
-              {t('reject.confirm')}
-            </Button>
-          </>
-        }
-      >
-        <div className="flex flex-col gap-3">
-          <p>{t('reject.text')}</p>
-          <ReasonField
-            kind="reject"
-            value={reason}
-            error={reasonError}
-            onChange={(next) => {
-              setReason(next);
-              if (reasonError) setReasonError(undefined);
-            }}
-          />
-        </div>
-      </Dialog>
+        onConfirm={submitReject}
+      />
     </div>
   );
 };

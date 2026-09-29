@@ -4,6 +4,7 @@ import com.techx.intervue.modules.farmer.entities.FarmerProfile;
 import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
+import com.techx.intervue.modules.farmer.services.impl.StallSuspensionMessage;
 import com.techx.intervue.modules.stall.entities.FarmerMarket;
 import com.techx.intervue.modules.stall.entities.FarmerOperatingDay;
 import com.techx.intervue.modules.stall.entities.PickupSlot;
@@ -12,7 +13,6 @@ import com.techx.intervue.modules.stall.exceptions.FarmerMarketNotYoursException
 import com.techx.intervue.modules.stall.exceptions.SlotBelowBookedException;
 import com.techx.intervue.modules.stall.exceptions.SlotNotFoundException;
 import com.techx.intervue.modules.stall.exceptions.SlotNotYoursException;
-import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
 import com.techx.intervue.modules.stall.repositories.FarmerMarketRepository;
 import com.techx.intervue.modules.stall.repositories.FarmerOperatingDayRepository;
 import com.techx.intervue.modules.stall.repositories.PickupSlotRepository;
@@ -28,6 +28,7 @@ import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -83,11 +84,33 @@ public class SlotService implements SlotServiceInterface {
         return LocalTime.of(m / 60, m % 60);
     }
 
+    /**
+     * FR-067: whether the window [w0, w1) overlaps a slot of that day still inside the day's time
+     * window — generating again with another slot length must not lay new slots over those. A slot
+     * outside the window is no longer offered or bookable ({@link PickupSlotRepository#OPEN_DAYS}),
+     * so it does not block the window's new slots.
+     */
+    static boolean overlapsAnOfferedSlot(
+            List<PickupSlot> sameDay, FarmerOperatingDay day, LocalTime[] w) {
+        if (sameDay == null) {
+            return false;
+        }
+        for (PickupSlot s : sameDay) {
+            boolean offered =
+                    !s.getStartTime().isBefore(day.getPickupStartTime())
+                            && !s.getEndTime().isAfter(day.getPickupEndTime());
+            if (offered && s.getStartTime().isBefore(w[1]) && w[0].isBefore(s.getEndTime())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     @Transactional
     public List<SlotResource> generateSlots(long userId, GenerateSlotsRequest request) {
         FarmerProfile profile = mine(userId);
-        requireApproved(profile);
+        StallSuspensionMessage.assertUsable(profile);
         FarmerMarket link = owned(profile, request.farmerMarketId());
         if (!link.isActive()) {
             throw new IllegalArgumentException("You no longer sell at this market.");
@@ -115,11 +138,13 @@ public class SlotService implements SlotServiceInterface {
         List<PickupSlot> existing =
                 slotRepository.findByFarmerMarketIdAndSlotDateBetween(link.getId(), from, to);
         // Idempotent: an existing slot (even a disabled one, or one whose capacity was already
-        // edited) is left unchanged; uq_slot also blocks
+        // edited) is left unchanged, and no new window is laid over it; uq_slot also blocks
         // two simultaneous requests
         Set<String> taken = new HashSet<>();
+        Map<LocalDate, List<PickupSlot>> existingByDate = new HashMap<>();
         for (PickupSlot s : existing) {
             taken.add(s.getSlotDate() + "@" + s.getStartTime());
+            existingByDate.computeIfAbsent(s.getSlotDate(), k -> new ArrayList<>()).add(s);
         }
 
         List<PickupSlot> fresh = new ArrayList<>();
@@ -133,7 +158,8 @@ public class SlotService implements SlotServiceInterface {
                             day.getPickupStartTime(),
                             day.getPickupEndTime(),
                             request.slotMinutes())) {
-                if (taken.contains(d + "@" + w[0])) {
+                if (taken.contains(d + "@" + w[0])
+                        || overlapsAnOfferedSlot(existingByDate.get(d), day, w)) {
                     continue;
                 }
                 PickupSlot slot = new PickupSlot();
@@ -162,6 +188,7 @@ public class SlotService implements SlotServiceInterface {
     @Transactional
     public SlotResource updateSlot(long userId, long slotId, UpdateSlotRequest request) {
         FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
         // Locked the same way as placing an order (C5): the order count read here cannot change
         // until this write finishes
         PickupSlot slot = slotRepository.lockById(slotId).orElseThrow(SlotNotFoundException::new);
@@ -199,6 +226,23 @@ public class SlotService implements SlotServiceInterface {
         return queryRepository.publicSlots(farmerId, marketId, from, to, LocalDateTime.now(clock));
     }
 
+    @Override
+    public List<SlotResource> farmerSlots(long userId, long farmerMarketId, LocalDate date) {
+        FarmerProfile profile = mine(userId);
+        StallSuspensionMessage.assertUsable(profile);
+        FarmerMarket link = owned(profile, farmerMarketId);
+        LocalDate from = date != null ? date : today();
+        LocalDate to = date != null ? date : from.plusDays(DEFAULT_PUBLIC_DAYS - 1L);
+        List<PickupSlot> slots =
+                slotRepository.findByFarmerMarketIdAndSlotDateBetween(link.getId(), from, to);
+        return slots.stream()
+                .sorted(
+                        Comparator.comparing(PickupSlot::getSlotDate)
+                                .thenComparing(PickupSlot::getStartTime))
+                .map(s -> SlotResource.of(s, link.getMarketId()))
+                .toList();
+    }
+
     private LocalDate today() {
         return LocalDate.now(clock);
     }
@@ -211,12 +255,6 @@ public class SlotService implements SlotServiceInterface {
         return farmerProfileRepository
                 .findByUserId(userId)
                 .orElseThrow(FarmerProfileNotFoundException::new);
-    }
-
-    private static void requireApproved(FarmerProfile profile) {
-        if (profile.getApprovalStatus() != ApprovalStatus.APPROVED) {
-            throw new StallNotApprovedException();
-        }
     }
 
     private FarmerMarket owned(FarmerProfile profile, long farmerMarketId) {

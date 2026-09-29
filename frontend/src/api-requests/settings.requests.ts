@@ -4,8 +4,9 @@ import { privateApi } from '@/utils/axiosInstance';
 
 /** Settings of the signed-in user themself (proposal: docs/proposals/settings-api.md). */
 class SettingsApi {
+  /** `data` is null when the account never saved any settings. */
   static get = async () => {
-    const response = await privateApi.get<ApiResponse<Settings>>('/auth/me/settings');
+    const response = await privateApi.get<ApiResponse<Settings | null>>('/auth/me/settings');
     return response.data;
   };
 

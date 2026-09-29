@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router';
 import { describe, expect, it, vi } from 'vitest';
@@ -45,7 +45,8 @@ describe('MessageStallButton', () => {
     await userEvent.click(screen.getByRole('button', { name: /message this stall/i }));
 
     expect(ConversationApi.open).toHaveBeenCalledWith(30);
-    expect(screen.getByTestId('location')).toHaveTextContent('/messages?c=42&product=8');
+    // The thread opens only after the API answers, so the navigation lands a tick after the click.
+    await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/messages?c=42&product=8'));
   });
 
   /** FR-114, order part: messaging from an order pins that order in the composer. */
@@ -64,7 +65,8 @@ describe('MessageStallButton', () => {
 
     await userEvent.click(screen.getByRole('button', { name: /message this stall/i }));
 
-    expect(screen.getByTestId('location')).toHaveTextContent('/messages?c=42&order=21');
+    // The thread opens only after the API answers, so the navigation lands a tick after the click.
+    await waitFor(() => expect(screen.getByTestId('location')).toHaveTextContent('/messages?c=42&order=21'));
   });
 
   it('sends a signed-out visitor to sign in first, then back here', async () => {

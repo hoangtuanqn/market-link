@@ -1,32 +1,33 @@
 {
-  "title": "Stok minggu ini",
-  "intro": "Templat mingguan adalah jumlah awal untuk setiap hari pasar. Terapkan, lalu sesuaikan hari yang panennya berbeda. Stok yang dipesan sudah dikurangkan dari yang dilihat pelanggan.",
+  "title": "Templat stok mingguan",
+  "intro": "Atur berapa banyak setiap produk yang biasanya Anda bawa pada suatu hari, dan dengan harga berapa. Stok terisi ulang otomatis untuk pelanggan yang melihat hari itu, tanpa langkah tambahan.",
   "saved": "Tersimpan",
   "per": "per {{unit}}",
-  "currentPrice": "now {{price}}",
-  "defaultPricePlaceholder": "Same price",
+  "currentPrice": "sekarang {{price}}",
+  "defaultPricePlaceholder": "Harga sama",
   "col": {
     "product": "Produk"
   },
   "error": {
-    "productsNoun": "your products",
-    "templateNoun": "your weekly template"
+    "productsNoun": "produk Anda",
+    "templateNoun": "templat mingguan Anda"
   },
   "aria": {
-    "quantity": "{{product}} quantity on {{day}}",
-    "price": "Harga {{product}}"
+    "quantity": "Jumlah {{product}} pada {{day}}",
+    "price": "Harga {{product}} pada {{day}}"
   },
   "table": {
-    "caption": "Weekly stock template, one row per product and one column per weekday"
+    "caption": "Templat stok mingguan, satu baris per produk dan satu kolom per hari"
   },
   "template": {
     "save": "Simpan templat",
-    "savedText": "Templat tersimpan. Berlaku mulai minggu depan kecuali Anda menerapkannya sekarang.",
-    "note": "Hari di templat mengikuti hari buka Anda. Ubah di Lapak & pengambilan."
+    "savedText": "Templat tersimpan.",
+    "note": "Kosongkan jumlah suatu hari untuk melewatinya. Harga kosong memakai harga produk saat ini.",
+    "priceError": "Masukkan harga di atas $0 untuk {{product}} pada {{day}}, atau biarkan kosong untuk memakai harga saat ini."
   },
   "empty": {
-    "title": "Add a product first",
-    "text": "A weekly template needs at least one product.",
-    "action": "Add a product"
+    "title": "Tambahkan produk dulu",
+    "text": "Templat mingguan memerlukan setidaknya satu produk.",
+    "action": "Tambah produk"
   }
 }

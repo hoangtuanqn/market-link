@@ -1,0 +1,11 @@
+{
+  "overline": "403 アクセス拒否",
+  "title": "アクセス権がありません",
+  "text": "現在のアカウントには管理エリアへのアクセス権限がありません。",
+  "backHome": "ホームページへ戻る",
+  "backDashboard": "ダッシュボードへ戻る",
+  "backFarmer": "農家ポータルへ戻る",
+  "switchAccount": "管理者としてログイン",
+  "needHelp": "お困りですか？",
+  "contactSupport": "サポートへ問い合わせ"
+}

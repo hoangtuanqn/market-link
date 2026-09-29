@@ -21,7 +21,8 @@ spring:
   # FarmerUploadService; avatars are still capped by the service at 2 MB with a clear message.
   servlet:
     multipart:
-      max-file-size: 40MB
+      # FR-115: chat photos and videos up to 50 MB; every other upload keeps its own, smaller cap
+      max-file-size: 50MB
       max-request-size: 60MB
 
   flyway:
@@ -51,8 +52,8 @@ spring:
 
 server:
   shutdown: graceful
-  # FR-081 rate limit keys on the client address: behind a trusted proxy Tomcat takes it from
-  # X-Forwarded-For (RemoteIpValve, private ranges only); a spoofed header from the internet is ignored.
+  # FR-081 feedback and the per-IP limits (IpHelper) key on the client address: behind a trusted proxy Tomcat
+  # takes it from X-Forwarded-For (RemoteIpValve, private ranges only); a spoofed header from the internet is ignored.
   forward-headers-strategy: native
 
 logging:
@@ -63,19 +64,20 @@ logging:
 
 app:
   # Personal achievements (not in the SRS, requested by the LEAD): tier thresholds. All three must be met —
-  # completed orders, total spent (₫, completed orders only), completion rate (% of completed + self-cancelled).
+  # completed orders, total spent (USD like every amount in the app, completed orders only), completion rate
+  # (% of completed + self-cancelled).
   tiers:
     silver:
       min-completed: 5
-      min-spent: 500000
+      min-spent: 20
       min-completion-rate: 60
     gold:
       min-completed: 15
-      min-spent: 2000000
+      min-spent: 80
       min-completion-rate: 75
     diamond:
       min-completed: 40
-      min-spent: 6000000
+      min-spent: 240
       min-completion-rate: 85
   # FR-042 N3: Web Push (RFC 8291/8292). Generate keys: make vapid-keys. Empty → push off, the app still runs.
   push:
@@ -89,6 +91,10 @@ app:
     # Origins of the React frontend allowed to call the API, several origins separated by commas.
     # The default is the Vite dev server (frontend/vite.config.ts, port 3000). Prod requires the variable to be passed.
     allowed-origins: ${CORS_ALLOWED_ORIGINS:http://localhost:3000}
+  # FR-003: Secure flag of the refresh_token cookie. Browsers drop a Secure cookie sent over plain HTTP on any
+  # host but localhost, so set COOKIE_SECURE=false only when the site is served over plain http://.
+  cookie:
+    secure: ${COOKIE_SECURE:true}
   # Google sign-in. Client id/secret are overridden in application-dev.yaml (git-ignored) or
   # passed through environment variables; when empty the endpoint returns 503 "not configured".
   # redirect-uri must match 100% the URI declared in the Google Cloud Console and the URI
@@ -100,6 +106,9 @@ app:
       redirect-uri: ${GOOGLE_REDIRECT_URI:http://localhost:3000/auth/google/callback}
   mail:
     from-name: MarketLink
+    # FR-072 account status emails: where "Sign in" points, and the address a locked-out customer writes to.
+    sign-in-url: ${SIGN_IN_URL:http://localhost:3000/login}
+    support-email: ${SUPPORT_EMAIL:admin@marketlink.vn}
   # Stores Farmer application images/videos on the local disk (FarmerUploadService) — for test/demo only.
   uploads:
     dir: ${UPLOAD_DIR:uploads}
@@ -111,6 +120,21 @@ app:
     max-requests: 5
     # Block one IP from sending many different emails
     max-requests-per-ip: 20
+    window-seconds: 3600
+  # FR-003: wrong passwords on POST /auth/login → 429 LOGIN_LOCKED with Retry-After until the window ends
+  login-rate-limit:
+    max-failures: 10
+    # Blocks one IP from trying passwords against many accounts
+    max-failures-per-ip: 50
+    window-seconds: 900
+  # FR-009: 6-digit email code at sign-up (docs/superpowers/specs/2026-09-28-email-verification-design.md)
+  email-verification:
+    code-ttl-seconds: 600
+    pending-ttl-seconds: 1800
+    resend-cooldown-seconds: 60
+    max-attempts: 5
+    max-sends-per-email: 5
+    max-sends-per-ip: 20
     window-seconds: 3600
   # FR-008: TOTP two-step verification for admins. encryption-key = 32 bytes Base64 that encrypts the TOTP key in the DB
   # (openssl rand -base64 32). The default value is for dev only; prod requires MFA_ENCRYPTION_KEY.
@@ -140,6 +164,8 @@ app:
       max-tool-rounds: 4
       history-messages: 10
       messages-per-hour: ${CHATBOT_AI_MESSAGES_PER_HOUR:30}
+      admin-messages-per-hour: ${CHATBOT_AI_ADMIN_MESSAGES_PER_HOUR:60}
+      platform-messages-per-day: ${CHATBOT_AI_PLATFORM_MESSAGES_PER_DAY:1500}
   chat:
     rabbitmq:
       host: ${RABBITMQ_HOST:}
@@ -155,7 +181,12 @@ app:
     # Spec §8.2: chat images live SEPARATE from app.storage.dir (that directory is served publicly through /uploads).
     # Docker: the chat-uploads volume at /var/lib/marketlink/chat.
     upload-dir: ${CHAT_UPLOAD_DIR:./chat-uploads}
-    max-upload-bytes: ${CHAT_MAX_UPLOAD_BYTES:5242880}
+    # FR-115: 50 MB for photos and videos
+    max-upload-bytes: ${CHAT_MAX_UPLOAD_BYTES:52428800}
+    # Where an upload waits while it is checked (default: the JVM temp dir)
+    temp-dir: ${CHAT_TEMP_DIR:${java.io.tmpdir}}
+    # FR-115: lifetime of a signed video link
+    stream-url-ttl-seconds: 300
 
 jwt:
   secret: ${JWT_SECRET:a1M8O206XTw5ITl6NzReN3BKTTNVaWY1L1dnfWFPQjIjaysvV2F3Tm5fZA==}

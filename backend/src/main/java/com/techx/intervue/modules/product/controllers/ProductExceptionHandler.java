@@ -1,9 +1,14 @@
 package com.techx.intervue.modules.product.controllers;
 
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
+import com.techx.intervue.modules.product.exceptions.DateNotOrderableException;
+import com.techx.intervue.modules.product.exceptions.ExpiredBeforePickupException;
+import com.techx.intervue.modules.product.exceptions.NotNearExpiryException;
 import com.techx.intervue.modules.product.exceptions.ProductNotFoundException;
 import com.techx.intervue.modules.product.exceptions.ProductNotYoursException;
+import com.techx.intervue.modules.quality.exceptions.ShelfLifeExtensionLockedException;
 import com.techx.intervue.modules.stall.exceptions.StallNotApprovedException;
+import com.techx.intervue.modules.stall.exceptions.StallSuspendedException;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.resources.ApiResource;
 import com.techx.intervue.resources.ErrorResource;
@@ -17,6 +22,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 
@@ -31,6 +37,8 @@ import org.springframework.web.multipart.MultipartException;
             FarmerProductController.class,
             FarmerProductImageController.class,
             FarmerStockTemplateController.class,
+            FarmerDealController.class,
+            DealController.class,
             AdminProductController.class
         })
 public class ProductExceptionHandler {
@@ -104,6 +112,23 @@ public class ProductExceptionHandler {
         return error(HttpStatus.FORBIDDEN, "STALL_NOT_APPROVED", e.getMessage(), List.of());
     }
 
+    /**
+     * FR-123 (spec §4.2): the stall is locked out of longer shelf lives — 409, attached to
+     * shelfLifeDays so the product form marks that box.
+     */
+    @ExceptionHandler(ShelfLifeExtensionLockedException.class)
+    ResponseEntity<ApiResource<Void>> extensionLocked(ShelfLifeExtensionLockedException e) {
+        return error(
+                HttpStatus.CONFLICT,
+                "SHELF_LIFE_EXTENSION_LOCKED",
+                e.getMessage(),
+                List.of(
+                        FieldErrorResource.builder()
+                                .field("shelfLifeDays")
+                                .message(e.getMessage())
+                                .build()));
+    }
+
     /** Last safety net: UNIQUE (farmer_id, name) when a stall posts a duplicate name. */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
@@ -122,9 +147,31 @@ public class ProductExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
-    /**
-     * @PreAuthorize sai role → 403.
-     */
+    /** FR-124: the batch is fresh on that day, or more than half of its shelf life is left. */
+    @ExceptionHandler(NotNearExpiryException.class)
+    ResponseEntity<ApiResource<Void>> notNearExpiry(NotNearExpiryException e) {
+        return error(HttpStatus.BAD_REQUEST, "NOT_NEAR_EXPIRY", e.getMessage(), List.of());
+    }
+
+    /** FR-124: the batch is no longer good on the pickup day. */
+    @ExceptionHandler(ExpiredBeforePickupException.class)
+    ResponseEntity<ApiResource<Void>> expiredBeforePickup(ExpiredBeforePickupException e) {
+        return error(HttpStatus.BAD_REQUEST, "EXPIRED_BEFORE_PICKUP", e.getMessage(), List.of());
+    }
+
+    /** FR-124: customers can no longer order for that day — a state conflict, like a full slot. */
+    @ExceptionHandler(DateNotOrderableException.class)
+    ResponseEntity<ApiResource<Void>> dateNotOrderable(DateNotOrderableException e) {
+        return error(HttpStatus.CONFLICT, "DATE_NOT_ORDERABLE", e.getMessage(), List.of());
+    }
+
+    /** A path or query value of the wrong type, e.g. a {date} that is not yyyy-MM-dd → 400. */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    ResponseEntity<ApiResource<Void>> wrongType(MethodArgumentTypeMismatchException e) {
+        return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
+    }
+
+    /** Wrong role for @PreAuthorize → 403. */
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> forbidden(AccessDeniedException e) {
         return error(
@@ -142,6 +189,12 @@ public class ProductExceptionHandler {
     @ExceptionHandler(HttpMessageNotReadableException.class)
     ResponseEntity<ApiResource<Void>> unreadableBody(HttpMessageNotReadableException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
+    }
+
+    /** FR-071/D-09: approved once, suspended now — carries the admin's reason. */
+    @ExceptionHandler(StallSuspendedException.class)
+    ResponseEntity<ApiResource<Void>> suspended(StallSuspendedException e) {
+        return error(HttpStatus.FORBIDDEN, "STALL_SUSPENDED", e.getMessage(), List.of());
     }
 
     private static ResponseEntity<ApiResource<Void>> error(

@@ -22,6 +22,7 @@
   },
   "day": "Jour de marché",
   "all": "Tout",
+  "category": "Catégorie",
   "inStock": "En stock",
   "available": "Disponible le {{day}}",
   "productsFrom": "{{products}} de {{stalls}}",
@@ -38,5 +39,15 @@
   "stallsNoun": "stands",
   "stallsEmpty": {
     "title": "Aucun stand le {{day}}"
+  },
+  "productsEmpty": {
+    "title": "Rien en vente le {{day}}",
+    "text": "Essayez un autre jour de marché ou effacez les filtres."
+  },
+  "searchEmpty": {
+    "products": "Aucun produit ne correspond à « {{q}} »",
+    "stalls": "Aucun stand ne correspond à « {{q}} »",
+    "text": "Effacez la recherche pour tout voir sur ce marché le {{day}}.",
+    "clear": "Effacer la recherche"
   }
 }

@@ -17,5 +17,8 @@
     "google": "Google 无法让你登录，请重试。",
     "invalidState": "此次登录请求无效，请从登录页面重新开始。",
     "failed": "Google 登录失败，请重试。"
+  },
+  "deactivated": {
+    "browseAsVisitor": "以访客身份浏览"
   }
 }

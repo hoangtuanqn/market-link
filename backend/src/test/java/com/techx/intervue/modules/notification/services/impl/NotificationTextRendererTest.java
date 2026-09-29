@@ -18,11 +18,29 @@ class NotificationTextRendererTest {
     private static final List<NotificationKind> RENDERED =
             List.of(
                     NotificationKind.FARMER_APPLICATION,
+                    NotificationKind.FEEDBACK,
                     NotificationKind.FARMER_APPROVED,
                     NotificationKind.FARMER_REJECTED,
                     NotificationKind.FARMER_SUSPENDED,
                     NotificationKind.FARMER_REINSTATED,
                     NotificationKind.TEST);
+
+    private static final List<NotificationKind> SPOILAGE =
+            List.of(
+                    NotificationKind.QUALITY_REPORTED,
+                    NotificationKind.QUALITY_ESCALATED,
+                    NotificationKind.QUALITY_DECIDED,
+                    NotificationKind.SHELF_LIFE_VIOLATION,
+                    NotificationKind.SHELF_LIFE_LOCKED);
+
+    private static final Map<String, String> SPOILAGE_PARAMS =
+            Map.of(
+                    "product", "Rau muống",
+                    "order", "ML-20260920-0007",
+                    "stall", "Vườn Út Hiền",
+                    "days", "2",
+                    "count", "3",
+                    "until", "30/11/2026");
 
     @Test
     void rendersVietnameseAndFillsTheParams() {
@@ -72,6 +90,23 @@ class NotificationTextRendererTest {
     }
 
     @Test
+    void aMessageKeyPicksAnotherMessageText() {
+        NotificationEvent video =
+                new NotificationEvent(
+                        NotificationKind.MESSAGE,
+                        Map.of("sender", "Cô Tư"),
+                        "/messages?c=1",
+                        1L,
+                        "Cô Tư",
+                        null,
+                        "message.video");
+
+        assertThat(renderer.render(video, "en"))
+                .isEqualTo(new RenderedText("Cô Tư", "Cô Tư sent a video"));
+        assertThat(renderer.render(video, "vi").message()).isEqualTo("Cô Tư đã gửi một video");
+    }
+
+    @Test
     void longTextIsCutToTheColumnSize() {
         NotificationEvent e =
                 new NotificationEvent(
@@ -94,7 +129,8 @@ class NotificationTextRendererTest {
             for (NotificationKind k : RENDERED) {
                 RenderedText t =
                         renderer.render(
-                                NotificationEvent.of(k, "/", Map.of("stall", "S", "reason", "R")),
+                                NotificationEvent.of(
+                                        k, "/", Map.of("stall", "S", "reason", "R", "sender", "S")),
                                 lang);
                 assertThat(t.title())
                         .as(lang + " " + k)
@@ -113,6 +149,22 @@ class NotificationTextRendererTest {
                                     null),
                             lang);
             assertThat(photo.message()).as(lang + " photo").contains("S").doesNotContain("{");
+            RenderedText video =
+                    renderer.render(
+                            new NotificationEvent(
+                                    NotificationKind.MESSAGE,
+                                    Map.of("sender", "S"),
+                                    "/",
+                                    1L,
+                                    "S",
+                                    null,
+                                    "message.video"),
+                            lang);
+            assertThat(video.message())
+                    .as(lang + " video")
+                    .contains("S")
+                    .doesNotContain("{")
+                    .isNotEqualTo(photo.message());
         }
     }
 
@@ -131,5 +183,42 @@ class NotificationTextRendererTest {
                     .as(lang)
                     .isNotEqualTo(en);
         }
+    }
+
+    /** FR-122, FR-123: all 10 languages carry both texts of the five new kinds. */
+    @Test
+    void everyLanguageHasTheSpoilageTexts() {
+        for (String lang : List.of("en", "vi", "zh", "ja", "ko", "fr", "es", "de", "th", "id")) {
+            for (NotificationKind k : SPOILAGE) {
+                RenderedText t =
+                        renderer.render(NotificationEvent.of(k, "/", SPOILAGE_PARAMS), lang);
+                assertThat(t.title())
+                        .as(lang + " " + k)
+                        .doesNotStartWith("notification.")
+                        .doesNotContain("{")
+                        .isNotBlank();
+                assertThat(t.message())
+                        .as(lang + " " + k)
+                        .doesNotStartWith("notification.")
+                        .doesNotContain("{")
+                        .isNotBlank();
+            }
+        }
+    }
+
+    /** Spec §4.4.1: the admins read the stall, the product and how much longer it was set. */
+    @Test
+    void theEscalationNamesTheStallTheProductAndTheExtraDays() {
+        RenderedText t =
+                renderer.render(
+                        NotificationEvent.of(
+                                NotificationKind.QUALITY_ESCALATED,
+                                "/admin/moderation?tab=quality",
+                                SPOILAGE_PARAMS),
+                        "vi");
+
+        assertThat(t.title()).isEqualTo("Báo hư hàng kéo dài hạn");
+        assertThat(t.message())
+                .isEqualTo("Vườn Út Hiền · Rau muống (+2 ngày), đơn ML-20260920-0007.");
     }
 }

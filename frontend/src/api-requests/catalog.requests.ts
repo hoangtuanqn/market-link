@@ -1,15 +1,20 @@
+import type { AddressParts } from '@/types/address.types';
 import type { ApiResponse, PageType } from '@/types/api.types';
 import type { ClosureHandling, ClosureType, MarketType } from '@/types/market.types';
 import { privateApi, publicApi } from '@/utils/axiosInstance';
+import Session from '@/utils/session';
 import { dayName, formatDate } from '@/lib/format';
 
 /** A market exactly as contract §3 returns it: camelCase, times "HH:mm", operating days 0…6 (0 = Sunday). */
 export type MarketDto = {
   id: number;
   marketName: string;
+  /** The whole address as one line, composed by the server from `addressParts`. */
   address: string;
-  district?: string | null;
-  city: string;
+  /** Null only for a market saved before addresses had parts. */
+  addressParts?: AddressParts | null;
+  wardName?: string | null;
+  provinceName?: string | null;
   latitude: number;
   longitude: number;
   mapProvider: string;
@@ -42,14 +47,14 @@ export type CategoryDto = {
   /** The standard shelf-life range — no official FR yet, see migration V20260926015. */
   minShelfLifeDays: number;
   maxShelfLifeDays: number;
+  /** Live products pointing at this category. Always 0 on the public `/categories` list. */
+  productCount: number;
 };
 
-/** Body of POST/PUT /admin/markets. If `city` is left empty the server fills in "TP. Hồ Chí Minh". */
+/** Body of POST/PUT /admin/markets. The address must be in Vietnam; the server composes `address` from it. */
 export type MarketInput = {
   marketName: string;
-  address: string;
-  district?: string;
-  city?: string;
+  addressParts: AddressParts;
   latitude: number;
   longitude: number;
   openingTime: string;
@@ -84,10 +89,7 @@ export type CategoryInput = {
   maxShelfLifeDays: number;
 };
 
-/**
- * The shape the Admin → Categories screen uses. `count` is the number of products — real from cluster C3, 0 before
- * that.
- */
+/** The shape the Admin → Categories screen uses. `count` is the number of live products in the category. */
 export type CategoryType = {
   id: number;
   name: string;
@@ -107,7 +109,9 @@ export const toMarket = (dto: MarketDto): MarketType => ({
   id: dto.id,
   name: dto.marketName,
   address: dto.address,
-  district: dto.district ?? '',
+  // The area markets are browsed by (FR-010): the ward, since Vietnam has no districts any more
+  area: dto.wardName ?? dto.provinceName ?? '',
+  addressParts: dto.addressParts ?? undefined,
   days: dto.operatingDays,
   open: dto.openingTime.slice(0, 5),
   close: dto.closingTime.slice(0, 5),
@@ -138,13 +142,13 @@ export const toClosure = (dto: MarketClosureDto): ClosureType => {
   };
 };
 
-export const toCategory = (dto: CategoryDto): CategoryType => ({
+const toCategory = (dto: CategoryDto): CategoryType => ({
   id: dto.id,
   name: dto.name,
   slug: dto.slug,
   sortOrder: dto.sortOrder,
   isActive: dto.isActive,
-  count: 0,
+  count: dto.productCount,
   minShelfLifeDays: dto.minShelfLifeDays,
   maxShelfLifeDays: dto.maxShelfLifeDays,
 });
@@ -152,24 +156,30 @@ export const toCategory = (dto: CategoryDto): CategoryType => ({
 export type MarketListParams = {
   q?: string;
   day?: number;
-  city?: string;
-  district?: string;
+  provinceCode?: string;
+  wardCode?: string;
   page?: number;
   pageSize?: number;
 };
+
+/**
+ * FR-078: these reads are public, but an admin still browses them from the admin screens while maintenance mode is on,
+ * and MaintenanceModeFilter only lets an authenticated admin through. Signed in → `privateApi` (token + refresh).
+ */
+const readApi = () => (Session.getRawUser() ? privateApi : publicApi);
 
 /** FR-010, FR-012, FR-073, FR-076 — markets and categories (docs/api-contract.md §3, §5). */
 class CatalogApi {
   /** Public. At most 50 markets per page; `page` counts from 1. */
   static listMarkets = async (params: MarketListParams = {}) => {
-    const response = await publicApi.get<ApiResponse<PageType<MarketDto>>>('/markets', { params });
+    const response = await readApi().get<ApiResponse<PageType<MarketDto>>>('/markets', { params });
     const page = response.data.data;
     return { ...page, items: page.items.map(toMarket) };
   };
 
   /** Public. 404 `MARKET_NOT_FOUND` when the market does not exist or was removed. */
   static getMarket = async (id: number) => {
-    const response = await publicApi.get<ApiResponse<{ market: MarketDto; farmers: StallSummaryDto[] }>>(
+    const response = await readApi().get<ApiResponse<{ market: MarketDto; farmers: StallSummaryDto[] }>>(
       `/markets/${id}`,
     );
     return { market: toMarket(response.data.data.market), farmers: response.data.data.farmers };
@@ -182,6 +192,8 @@ class CatalogApi {
     const response = await privateApi.post<ApiResponse<{ url: string }>>('/admin/markets/images', form, {
       // Drop the default application/json header so the browser sets multipart/form-data with the boundary itself.
       headers: { 'Content-Type': undefined },
+      // No timeout, like the chat upload: the instance's 10 s cuts a photo off on a slow connection.
+      timeout: 0,
     });
     return response.data.data.url;
   };
@@ -222,6 +234,12 @@ class CatalogApi {
     return response.data.data.map(toCategory);
   };
 
+  /** Admin — every category, active or not, so a disabled one can be found and turned back on. */
+  static listAllCategoriesAdmin = async () => {
+    const response = await privateApi.get<ApiResponse<CategoryDto[]>>('/admin/categories');
+    return response.data.data.map(toCategory);
+  };
+
   static createCategory = async (input: CategoryInput) => {
     const response = await privateApi.post<ApiResponse<CategoryDto>>('/admin/categories', input);
     return toCategory(response.data.data);
@@ -232,8 +250,14 @@ class CatalogApi {
     return toCategory(response.data.data);
   };
 
-  static deactivateCategory = async (id: number) => {
-    await privateApi.delete<ApiResponse<null>>(`/admin/categories/${id}`);
+  /** `moveToCategoryId`, when given, reassigns this category's live products before turning it off. */
+  static deactivateCategory = async (id: number, moveToCategoryId?: number) => {
+    await privateApi.delete<ApiResponse<null>>(`/admin/categories/${id}`, { params: { moveToCategoryId } });
+  };
+
+  static activateCategory = async (id: number) => {
+    const response = await privateApi.patch<ApiResponse<CategoryDto>>(`/admin/categories/${id}/activate`);
+    return toCategory(response.data.data);
   };
 }
 

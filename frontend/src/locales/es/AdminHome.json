@@ -1,17 +1,17 @@
 {
-  "overline": "Plataforma · {{year}}",
-  "title": "MarketLink hoy",
+  "overline": "Plataforma",
+  "title": "Resumen",
   "noun": "dashboard",
   "kpi": {
     "farmers": "Productores",
-    "farmersNote": "{{waiting}} pendientes de aprobación · {{suspended}} suspendidos",
+    "farmersNote": "{{waiting}} pendientes de aprobación",
     "farmersLink": "Revisar solicitudes",
     "customers": "Clientes",
     "customersLink": "Abrir clientes",
     "markets": "Mercados",
     "marketsLink": "Abrir mercados",
     "orders": "Pedidos",
-    "ordersNote": "{{week}} esta semana · {{total}} completados",
+    "ordersNote": "{{revenue}} de pedidos completados",
     "ordersLink": "Abrir pedidos"
   },
   "attention": {
@@ -48,5 +48,12 @@
     "pickup": "Recogida",
     "total": "Total",
     "status": "Estado"
+  },
+  "maintenance": {
+    "title": "El modo de mantenimiento está activo",
+    "badge": "Activo",
+    "text": "Toda la plataforma está restringida únicamente a administradores. Todos los visitantes y agricultores ven el aviso de mantenimiento.",
+    "reminder": "Recuerde desactivar el modo de mantenimiento lo antes posible una vez finalizado para que los usuarios puedan acceder a MarketLink.",
+    "action": "Ir a Configuración"
   }
 }

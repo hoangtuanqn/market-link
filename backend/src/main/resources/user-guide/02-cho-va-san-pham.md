@@ -7,7 +7,7 @@ của Farmer để nhận hàng và trả tiền. Mục này hướng dẫn các
 
 1. Bấm **Markets** trên thanh đầu trang (trang `/markets`).
 2. Chọn **Market day** (ngày họp chợ) bạn muốn đi.
-3. Lọc theo **Area** (khu vực/quận) và sắp xếp bằng **Sort by**: **Nearest first** (gần nhất),
+3. Lọc theo **Area** (phường có chợ) và sắp xếp bằng **Sort by**: **Nearest first** (gần nhất),
    **Most stalls** (nhiều gian hàng nhất) hoặc **Opens earliest** (mở cửa sớm nhất).
 
 Mỗi chợ hiện địa chỉ, giờ mở cửa, các ngày họp chợ và số gian hàng. Không có chợ nào mở vào ngày bạn chọn thì
@@ -47,7 +47,8 @@ Mỗi gian hàng tự khoá nhận đơn trước giờ nhận hàng từ 12 đ�
 
 ## Xem chi tiết sản phẩm
 
-Trang chi tiết sản phẩm cho biết: giá theo đơn vị (kg, bó, quả…), **số lượng còn lại tuần này**, gian hàng bán,
+Trang chi tiết sản phẩm cho biết: giá theo đơn vị (kg, bó, quả…) bằng **đô la Mỹ (USD)**, **số lượng còn lại của
+ngày lấy hàng gần nhất còn hàng** (mỗi ngày lấy hàng có tồn kho riêng), gian hàng bán,
 các chợ và **khung giờ nhận hàng**, thời gian **cutoff** (đóng nhận đơn trước giờ nhận bao nhiêu tiếng),
 thời gian giữ tươi và đánh giá của khách khác.
 

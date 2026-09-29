@@ -11,14 +11,6 @@
     "language": "Idioma",
     "languageNote": "El idioma de los menús, botones y mensajes. Los nombres de puestos, productos y lugares se quedan como los escribió el puesto.",
     "format": "Dinero, fechas y unidades",
-    "currency": "Mostrar precios en",
-    "currencyNote": "En el puesto siempre pagas en dong vietnamita. Otra moneda se muestra al lado solo como referencia, con tipos fijos del {{date}}.",
-    "currencies": {
-      "VND": "Solo ₫ dong vietnamita",
-      "USD": "₫ y $ dólar estadounidense",
-      "EUR": "₫ y € euro",
-      "JPY": "₫ y ¥ yen japonés"
-    },
     "units": "Pesos y volúmenes",
     "unitsNote": "Solo convierte unidades que miden algo. Un puesto que vende por manojo, por cabeza o por bandeja conserva su propia palabra.",
     "metric": "Métrico · kg, g, litro",
@@ -53,15 +45,20 @@
     "orderOf": "Pedido {{index}} de {{of}}",
     "payAtPickup": "Paga en el puesto al recoger"
   },
-  "chart": {
-    "showNumbers": "Ver los números"
-  },
   "chat": {
     "assistant": "Asistente de MarketLink",
     "you": "Tú",
     "intent": "Intención: {{intent}}",
     "photoUnavailable": "Esta foto no está disponible.",
+    "previewPhoto": "Foto",
+    "previewVideo": "Video",
     "photoFrom": "Foto de {{name}}",
+    "videoFrom": "Video de {{name}}",
+    "playVideo": "Reproducir video",
+    "loadingVideo": "Cargando el video…",
+    "videoUnavailable": "Este video no está disponible.",
+    "videoCantPlay": "Este navegador no puede reproducir este video.",
+    "downloadVideo": "Descargar el video",
     "seen": "Visto",
     "loadingThreads": "Cargando conversaciones…",
     "threadsErrorTitle": "No pudimos cargar tus conversaciones",
@@ -72,8 +69,8 @@
     "unreadCount_one": "{{count}} mensaje sin leer",
     "unreadCount_other": "{{count}} mensajes sin leer",
     "sendFailed": "Tu mensaje no se envió. Inténtalo de nuevo.",
-    "photoFailed": "La foto no se envió. Elige un JPEG, PNG o WebP de menos de 5 MB.",
-    "attachPhoto": "Añadir una foto",
+    "mediaFailed": "El archivo no se envió. Elige una foto o un video de menos de 50 MB.",
+    "attachMedia": "Añadir foto o video",
     "draftLabel": "Escribe un mensaje",
     "draftPlaceholder": "Escribe un mensaje",
     "send": "Enviar",
@@ -101,8 +98,14 @@
     "unpin": "Quitar",
     "productGone": "Este producto ya no está a la venta.",
     "tooFast": "Estás enviando demasiado rápido. Espera un momento e inténtalo de nuevo.",
-    "photoTooBig": "La foto supera los 5 MB. Elige una más pequeña.",
-    "photoType": "Elige una foto JPEG, PNG o WebP.",
+    "mediaTooBig": "Ese archivo supera los 50 MB. Elige uno más pequeño.",
+    "mediaTooBigForServer": "Ese archivo supera el tamaño que el servidor acepta ahora. Elige uno más pequeño.",
+    "mediaType": "Elige una foto (JPEG, PNG, WebP, GIF, AVIF o HEIC) o un video (MP4, MOV o WebM).",
+    "converting": "Convirtiendo la foto…",
+    "convertFailed": "No se pudo convertir esta foto. Guárdala como JPEG e inténtalo de nuevo.",
+    "uploading": "Enviando… {{percent}} %",
+    "uploadProgress": "Progreso de la subida",
+    "cancelUpload": "Cancelar",
     "moreThreads": "Cargar más conversaciones",
     "reportTitle": "Denunciar este mensaje",
     "reportWhy": "¿Por qué lo denuncias?",
@@ -141,17 +144,15 @@
     "collapse": "Contraer la barra lateral",
     "approvedMarkets_one": "Aprobado · {{count}} mercado",
     "approvedMarkets_other": "Aprobado · {{count}} mercados",
-    "changeMarket": "Cambiar el mercado que estás viendo",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Abrir navegación",
-    "searchPlaceholder": "Código de pedido o cliente",
     "yourAccount": "Tu cuenta",
     "today": "Hoy",
     "overview": "Resumen",
-    "incomingOrders": "Pedidos entrantes",
+    "incomingOrders": "Pedidos",
     "pickupSlots": "Horarios de recogida",
     "stock": "Existencias",
-    "weekStock": "Existencias de esta semana",
+    "weekStock": "Plantilla semanal",
     "products": "Productos",
     "stall": "Puesto",
     "stallPickup": "Puesto y recogida",
@@ -171,6 +172,7 @@
     "shop": "Comprar",
     "marketsNearYou": "Mercados cerca de ti",
     "inSeason": "De temporada",
+    "deals": "Ofertas por vencer",
     "marketMap": "Mapa de mercados",
     "favoriteStalls": "Puestos favoritos",
     "sell": "Vender",
@@ -187,6 +189,11 @@
     "mapDataFrom": "Datos del mapa {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Buenos días",
+      "afternoon": "Buenas tardes",
+      "evening": "Buenas noches"
+    },
     "cart": "Carrito",
     "cartItems_one": "Carrito, {{count}} artículo",
     "cartItems_other": "Carrito, {{count}} artículos",
@@ -210,8 +217,8 @@
   "loadError": {
     "title": "No pudimos cargar los {{noun}}",
     "text": "Esta vez la lista no llegó. Lo que guardaste o pediste no se ve afectado.",
-    "help": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <link>cuéntanos qué pasó</link> y lo revisaremos.",
-    "helpAlt": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <alt />, o <link>cuéntanos qué pasó</link> y lo revisaremos."
+    "help": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <a>cuéntanos qué pasó</a> y lo revisaremos.",
+    "helpAlt": "Suele ser la conexión, no algo que hayas hecho. Si reintentar no ayuda, <alt />, o <a>cuéntanos qué pasó</a> y lo revisaremos."
   },
   "loading": {
     "markets": "Cargando mercados"
@@ -243,6 +250,7 @@
   "nav": {
     "markets": "Mercados",
     "products": "Productos",
+    "deals": "Ofertas",
     "map": "Mapa",
     "aboutUs": "Quiénes somos",
     "myOrders": "Mis pedidos",
@@ -299,24 +307,16 @@
     "show": "Mostrar contraseña",
     "hide": "Ocultar contraseña"
   },
-  "period": {
-    "length": "Duración del periodo",
-    "day": "Día",
-    "week": "Semana",
-    "month": "Mes",
-    "quarter": "Trimestre",
-    "year": "Año",
-    "custom": "Personalizado",
-    "from": "Desde",
-    "to": "Hasta",
-    "compareWith": "Comparar con",
-    "cmpBefore": "El periodo anterior, misma duración",
-    "cmpLastYear": "El mismo periodo del año pasado",
-    "cmpNone": "Sin comparación",
-    "comparedWith": "comparado con <b>{{compare}}</b>, misma duración"
-  },
   "price": {
     "was": "Antes"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "Recogida {{day}} · bueno hasta el final de {{until}} · quedan {{qty}}",
+    "added": {
+      "title": "Añadido al carrito",
+      "text": "{{name}} al precio de oferta, para recoger el {{day}}."
+    }
   },
   "product": {
     "notThisWeek": "No esta semana",
@@ -382,12 +382,9 @@
     "fullNameRequired": "Escribe tu nombre completo.",
     "fullNameMax": "El nombre completo puede tener como máximo {{max}} caracteres.",
     "phoneRequired": "Escribe tu número de teléfono.",
-    "phoneInvalid": "Escribe un número de móvil vietnamita válido (10 dígitos).",
-    "addressRequired": "Escribe tu dirección.",
-    "addressMax": "La dirección puede tener como máximo {{max}} caracteres."
+    "phoneInvalid": "Escribe un número de móvil vietnamita válido (10 dígitos)."
   },
   "adminNav": {
-    "sections": "Secciones de administración",
     "overview": "Resumen",
     "farmers": "Productores",
     "customers": "Clientes",
@@ -398,6 +395,7 @@
     "categories": "Categorías",
     "announcements": "Anuncios",
     "feedback": "Comentarios",
+    "notifications": "Notificaciones",
     "settings": "Ajustes",
     "account": "Tu cuenta",
     "analytics": "Analítica",
@@ -407,18 +405,7 @@
     "navigation": "Navegación de administración",
     "home": "MarketLink — Resumen de administración",
     "contextSub": "Plataforma · todo el mercado",
-    "userLine": "Admin · toda la plataforma",
-    "searchPlaceholder": "Puesto, cliente o mercado"
-  },
-  "carousel": {
-    "roleCarousel": "carrusel",
-    "roleSlide": "diapositiva",
-    "slideOf": "{{n}} de {{total}}: {{topic}}",
-    "previous": "Diapositiva anterior",
-    "next": "Diapositiva siguiente",
-    "show": "Mostrar la diapositiva {{n}}: {{topic}}",
-    "pause": "Pausar la presentación",
-    "play": "Reproducir la presentación"
+    "userLine": "Admin · toda la plataforma"
   },
   "geo": {
     "denied": "Desactivaste la ubicación para este sitio. Cámbialo en la configuración del sitio de tu navegador o usa una dirección.",
@@ -435,8 +422,8 @@
     "address": "Una dirección",
     "addressNote": "Una calle o un punto de referencia en Ciudad Ho Chi Minh.",
     "addressLabel": "Dirección de salida",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "La calle y el distrito funcionan mejor. A menudo faltan los números de casa en el mapa, y OpenStreetMap te pedirá elegir un lugar si no encuentra uno.",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "La calle y el barrio funcionan mejor. A menudo faltan los números de casa en el mapa, y OpenStreetMap te pedirá elegir un lugar si no encuentra uno.",
     "useSaved": "Usar mi dirección guardada",
     "none": "Lo escribiré en el mapa",
     "noneNote": "Abre OpenStreetMap solo con el destino rellenado.",
@@ -504,9 +491,25 @@
           "title": "Tu solicitud de puesto",
           "note": "Cuando se aprueba, rechaza, suspende o reabre"
         },
+        "orders": {
+          "title": "Pedidos",
+          "note": "Cuando cambia el estado de un pedido que hiciste o recibiste"
+        },
+        "favorites": {
+          "title": "Favoritos",
+          "note": "Cuando un producto que guardaste vuelve a estar disponible"
+        },
         "farmerApplications": {
           "title": "Solicitudes de Farmer",
           "note": "Cuando alguien solicita vender en MarketLink"
+        },
+        "feedback": {
+          "title": "Comentarios",
+          "note": "Cuando alguien envía un informe de fallo, una sugerencia o una pregunta"
+        },
+        "qualityReports": {
+          "title": "Informes de producto dañado",
+          "note": "Cuando se informa que un producto con vida útil ampliada se echó a perder antes de su fecha"
         }
       },
       "sound": "Reproducir un sonido",
@@ -563,13 +566,40 @@
     "result": {
       "product": "Producto",
       "market": "Mercado",
-      "farmer": "Puesto"
+      "farmer": "Puesto",
+      "order": "Pedido"
     },
     "suggest": {
       "find": "¿Dónde compro tomates este fin de semana?",
       "hours": "¿A qué hora abre el mercado Bến Thành?",
       "stalls": "¿Qué puestos hay en el mercado Thảo Điền el sábado?",
       "cancel": "¿Cómo cancelo un pedido?"
+    },
+    "action": {
+      "confirm": "Confirmar",
+      "openPage": "Abrir la página",
+      "done": "Hecho",
+      "doneTitle": "Hecho",
+      "failedTitle": "No se hizo",
+      "failedText": "Se rechazó el cambio. Abre la página para ver por qué.",
+      "accept_order": "¿Aceptar el pedido {{label}}?",
+      "decline_order": "¿Rechazar el pedido {{label}}?",
+      "ready_order": "¿Marcar el pedido {{label}} como listo?",
+      "complete_order": "¿Marcar el pedido {{label}} como completado?",
+      "approve_farmer": "¿Aprobar {{label}}?",
+      "reject_farmer": "¿Rechazar {{label}}?",
+      "suspend_farmer": "¿Suspender {{label}}?"
+    },
+    "askAboutThis": "Preguntar al asistente",
+    "ask": {
+      "order": "Pedido {{code}}: qué lleva, ¿sigue antes de la hora de cierre? ¿lo acepto?",
+      "review": "Redacta una respuesta breve y honesta a esta reseña de {{rating}} estrellas.",
+      "application": "¿Esta solicitud de puesto está completa? ¿Hay algo que revisar antes de aprobarla?",
+      "reports": "Explica estos números del {{from}} al {{to}}: qué mercado va mejor, cuál está flojo y por qué.",
+      "cart": "Explícame el carrito: ¿por qué se divide, cuánto cuesta cada puesto y llego a todas las horas de cierre?",
+      "announcement": "Redacta un anuncio para toda la plataforma. Yo te digo de qué trata.",
+      "product": "Escribe una descripción corta y una nota manuscrita para la etiqueta de {{name}}.",
+      "feedback": "Resume la bandeja de comentarios: qué está reportando la gente, qué mensajes son en realidad el mismo problema y qué debería mirar primero."
     }
   },
   "tour": {
@@ -648,8 +678,8 @@
         "body": "Define las franjas en las que los clientes pueden recoger sus pedidos en tu puesto."
       },
       "farmerStock": {
-        "title": "Existencias de la semana",
-        "body": "Actualiza cuánto puedes vender de cada producto esta semana."
+        "title": "Plantilla semanal de existencias",
+        "body": "Indica cuánto sueles traer de cada producto cada día de la semana. Se repone sola cada semana."
       },
       "farmerProducts": {
         "title": "Productos",
@@ -677,16 +707,146 @@
       },
       "farmerSettings": {
         "title": "Ajustes",
-        "body": "Cambia el idioma, la moneda y tus opciones de venta predeterminadas."
+        "body": "Cambia el tema, el idioma, los formatos de fecha y unidades, y tus notificaciones."
       },
       "farmerDone": {
         "title": "Tu puesto está listo",
-        "body": "Empieza revisando las existencias de esta semana y tus horarios de recogida."
+        "body": "Empieza revisando tu plantilla semanal y tus horarios de recogida."
       },
       "dashboardMenu": {
         "title": "Menú",
         "body": "Abre el menú para ir a cualquier sección del panel."
       }
     }
+  },
+  "address": {
+    "legend": "Dirección",
+    "country": "País",
+    "province": "Provincia o ciudad",
+    "ward": "Barrio o comuna",
+    "street": "Calle",
+    "addressLine": "Número y detalles",
+    "addressLineOptional": "Número (si lo hay)",
+    "addressLinePlaceholder": "12, o 12/3A",
+    "region": "Estado o provincia",
+    "city": "Ciudad",
+    "choose": {
+      "country": "Elige un país",
+      "province": "Elige una provincia o ciudad",
+      "ward": "Elige un barrio o comuna"
+    },
+    "wardNeedsProvince": "Elige primero la provincia.",
+    "loading": "Cargando…",
+    "loadFailed": "No se pudo cargar esta lista.",
+    "retry": "Reintentar",
+    "streetPlaceholder": "Empieza a escribir, p. ej. Lê Lợi",
+    "streetHint": "Elige una sugerencia o deja lo que escribiste si tu calle no aparece.",
+    "useTyped": "Usar «{{text}}»",
+    "noSuggestions": "Sin sugerencias: se usará lo que escribiste.",
+    "suggestions": "Sugerencias de calles",
+    "current": "Dirección actual: {{address}}. Vuelve a elegirla abajo para guardar los cambios.",
+    "vietnamOnly": "Los mercados están en Vietnam.",
+    "errors": {
+      "countryRequired": "Elige un país.",
+      "provinceRequired": "Elige una provincia o ciudad.",
+      "wardRequired": "Elige un barrio o comuna.",
+      "streetRequired": "Escribe la calle.",
+      "lineRequired": "Escribe el número y los detalles.",
+      "regionRequired": "Escribe el estado o la provincia.",
+      "cityRequired": "Escribe la ciudad.",
+      "tooLong": "Máximo {{max}} caracteres."
+    }
+  },
+  "reasons": {
+    "pick": "Elige uno o varios motivos",
+    "note": "Algo que añadir",
+    "noteOptional": "Algo que añadir (opcional)",
+    "preview": "Leerá: «{{text}}»",
+    "length": "{{used}} de {{max}} caracteres.",
+    "reject": {
+      "incompleteInfo": "Los datos del puesto están incompletos",
+      "unclearPhotos": "Las fotos no son claras o no son de tu finca",
+      "unreachable": "No pudimos contactarte en tu número de teléfono",
+      "notFarmProduce": "Lo que quieres vender no es producto agrícola",
+      "duplicate": "Este puesto ya está registrado"
+    },
+    "suspend": {
+      "complaints": "Quejas repetidas de clientes",
+      "notAsDescribed": "El producto no coincidía con el anuncio",
+      "missedPickups": "El puesto no estaba a la hora de recogida",
+      "rulesBroken": "Se incumplieron las normas de la plataforma",
+      "ownerRequest": "A petición del responsable del puesto",
+      "shelfLifeViolations": "Infracciones de vida útil"
+    },
+    "deactivate": {
+      "noShows": "Pidió varias veces y no recogió",
+      "abusiveMessages": "Mensajes ofensivos o spam",
+      "fakeAccount": "Cuenta falsa o duplicada",
+      "fakeReviews": "Reseñas falsas",
+      "ownerRequest": "A petición del titular de la cuenta"
+    }
+  },
+  "cookieConsent": {
+    "label": "Aviso de cookies",
+    "text": "Usamos solo cookies esenciales para mantener tu sesión iniciada y tu carrito funcionando. No usamos cookies de publicidad ni de análisis. <a>Política de privacidad</a>.",
+    "decline": "Rechazar",
+    "accept": "Aceptar"
+  },
+  "banDuration": {
+    "label": "Duración",
+    "permanent": "Permanente",
+    "temporary": "Temporal",
+    "days_one": "{{count}} día",
+    "days_other": "{{count}} días",
+    "specificTime": "O elegir una hora de fin exacta"
+  },
+  "accountDeactivated": {
+    "title": "Tu cuenta ha sido desactivada",
+    "generic": "Un administrador ha desactivado esta cuenta, por eso se ha cerrado tu sesión.",
+    "whatNow": "Puedes seguir viendo los mercados y los productos como visitante, pero no podrás iniciar sesión ni hacer pedidos mientras tanto.",
+    "contactIntro": "Si crees que es un error, escríbenos a",
+    "acknowledge": "Entendido"
+  },
+  "stallSuspended": {
+    "title": "Tu puesto está suspendido",
+    "generic": "Un administrador ha suspendido este puesto, por lo que ahora mismo no aparece ante los clientes.",
+    "whatNow": "Los pedidos que los clientes ya hicieron deben completarse igualmente — termínalos, por favor. No podrás publicar productos, cambiar tu stock ni aceptar pedidos nuevos hasta que se levante la suspensión.",
+    "contactIntro": "Si crees que es un error, escríbenos a",
+    "acknowledge": "Entendido"
+  },
+  "storageMode": {
+    "room": "Temperatura ambiente",
+    "chilled": "Refrigerado 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Bueno hasta el final de {{day}} · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "Magullado o aplastado",
+      "mold": "Moho",
+      "smell": "Huele mal",
+      "wilted": "Marchito o reseco",
+      "other": "Otra cosa"
+    },
+    "problemWithNote": "{{problem}} · «{{note}}»",
+    "status": {
+      "open": "Esperando una decisión",
+      "confirmed": "Confirmado por un admin",
+      "dismissed": "No es culpa del puesto"
+    },
+    "extended_one": "Ampliado +{{count}} día",
+    "extended_other": "Ampliado +{{count}} días",
+    "beforePromise": "antes de su fecha",
+    "afterPromise": "después de su fecha",
+    "strikes": "Infracciones de vida útil: {{count}}/{{limit}} en {{days}} días"
+  },
+  "gallery": {
+    "label": "Fotos de {{name}}",
+    "previous": "Foto anterior",
+    "next": "Foto siguiente",
+    "goTo": "Ir a la foto {{n}}",
+    "slide": "{{n}} de {{total}}",
+    "photoAlt": "{{name}}, foto {{n}}"
   }
 }

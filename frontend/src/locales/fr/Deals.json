@@ -1,0 +1,27 @@
+{
+  "title": "Promos date proche",
+  "intro": "Des produits ayant dépassé la moitié de leur durée de conservation, vendus moins cher par le stand. Chaque promo vaut pour un jour de retrait, et chaque fiche indique jusqu'à quand le produit reste bon.",
+  "filters": {
+    "category": "Catégorie",
+    "allCategories": "Tous",
+    "market": "Marché",
+    "allMarkets": "Tous les marchés"
+  },
+  "clear": "Effacer les filtres",
+  "noun": "promos",
+  "results": "Promos que vous pouvez encore commander",
+  "empty": {
+    "title": "Aucune promo aujourd'hui",
+    "text": "Un stand publie une promo quand un lot a dépassé la moitié de sa durée de conservation. Revenez demain, ou parcourez tous les produits.",
+    "browse": "Voir les produits"
+  },
+  "emptyFiltered": {
+    "title": "Aucune promo ne correspond à ces filtres",
+    "text": "Essayez une autre catégorie ou un autre marché."
+  },
+  "pager": {
+    "showing": "{{from}}–{{to}} sur {{total}}",
+    "count_one": "{{count}} promo",
+    "count_other": "{{count}} promos"
+  }
+}

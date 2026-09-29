@@ -22,6 +22,7 @@ Vai: `LEAD` · `BE1` (auth, RBAC, **vòng đời đơn hàng**) · `BE2` (sản 
 | FR-005 | RBAC: mỗi role chỉ truy cập được chức năng của mình; gọi API sai quyền trả 403 | MUST | All | BE1 | STAGING |
 | FR-006 | Đăng xuất | MUST | All | BE1 | STAGING |
 | FR-007 | Quên mật khẩu / đặt lại qua token link | SHOULD | All | BE1 | STAGING |
+| FR-009 | Xác thực email bằng mã 6 số khi Customer đăng ký bằng email; chống spam gửi mã (chờ 60s, 5 lần/email/giờ, 20 lần/IP/giờ, sai tối đa 5 lần) | SHOULD | Guest | BE1/FE2 | WIP |
 
 ## B · Chợ, Farmer, bản đồ
 
@@ -102,6 +103,7 @@ Vai: `LEAD` · `BE1` (auth, RBAC, **vòng đời đơn hàng**) · `BE2` (sản 
 | FR-075 | Báo cáo nền tảng: total orders, revenue theo chợ, Farmer hoạt động nhiều nhất | MUST | Admin | BE2/FE2 | STAGING |
 | FR-076 | Master data: quản product categories | MUST | Admin | BE2/FE2 | STAGING |
 | FR-077 | Publish thông báo toàn nền tảng | MUST | Admin | BE2/FE2 | STAGING |
+| FR-078 | **Chế độ bảo trì toàn nền tảng** (không có trong đề gốc, đội tự thêm): Admin bật/tắt ở Settings, khi bật thì mọi request trừ Admin đã đăng nhập và `/api/v1/auth/**` trả 503 `MAINTENANCE_MODE` | NICE | Admin | BE2/FE2 | STAGING |
 
 ## I · Chung, UI, nội dung
 
@@ -121,9 +123,18 @@ Vai: `LEAD` · `BE1` (auth, RBAC, **vòng đời đơn hàng**) · `BE2` (sản 
 | FR-090 | Chatbot giúp tìm sản phẩm **xuyên các chợ và Farmer** | SHOULD | Customer | BE2 | STAGING |
 | FR-091 | Chatbot trả lời FAQ: giờ chợ, Farmer có mặt, pickup window, chi tiết sản phẩm | SHOULD | Customer | BE2 | STAGING |
 | FR-092 | Lưu `chat_messages` kèm **intent đã nhận diện** (để giải thích với giám khảo) | SHOULD | System | BE2 | STAGING |
+| FR-093 | Trợ lý cho **Farmer**: tra đơn chờ duyệt, hàng sắp hết, lịch bán, doanh thu, review chưa trả lời; tóm tắt đầu buổi chợ trên Overview | SHOULD | Farmer | BE2 | STAGING |
+| FR-094 | Trợ lý cho **Admin**: thống kê nền tảng, hàng đợi duyệt Farmer, hàng đợi kiểm duyệt; soạn thông báo `FR-077` theo giọng brand và dịch sẵn 10 ngôn ngữ | SHOULD | Admin | BE2 | STAGING |
 
 > Cách làm FR-090/091 an toàn: phân loại **intent** rồi map sang **câu SQL có sẵn với tham số**.
 > Tuyệt đối không để LLM sinh SQL tự do. Giải thích được và không có rủi ro injection.
+
+> FR-093/094 giữ nguyên luật đó và thêm bốn ràng buộc, vì hai vai này đọc dữ liệu riêng tư:
+> 1. Quyền sở hữu lấy từ JWT ở server, **không bao giờ** là tham số do model điền.
+> 2. Danh sách tool lọc theo role ở server; model không nhìn thấy tool ngoài vai của nó.
+> 3. Mọi hành động ghi đi hai bước: model đề xuất → người dùng xác nhận → server kiểm quyền lại (R-06).
+> 4. `tool_result` chứa chữ do người dùng nhập (tên sạp, mô tả sản phẩm, review) nên phải bọc rõ là
+>    **dữ liệu**, không phải chỉ thị — nếu không, một Farmer đặt tên sản phẩm thành câu lệnh là điều khiển được trợ lý.
 
 ## K · Dữ liệu mẫu — rủi ro số 1 của đề này
 
@@ -140,11 +151,12 @@ Vai: `LEAD` · `BE1` (auth, RBAC, **vòng đời đơn hàng**) · `BE2` (sản 
 ```
 MUST:   56 tổng · 54 STAGING · ___ DONE   → cần 40% ở H38 · 80% ở H60 · 100% ở H84
 SHOULD:  6 tổng ·  6 STAGING · ___ DONE
-NICE:    2 tổng ·  0 STAGING · ___ DONE   → cắt đầu tiên khi trượt gate
+NICE:    3 tổng ·  1 STAGING · ___ DONE   → cắt đầu tiên khi trượt gate
 ```
 
 STAGING = nối API, chờ QA kiểm tay để tick DONE (Task 13). FR-082/083 (About/Contact) đang `WIP`,
-chờ dữ liệu thật của đội (Task 11). FR-043, FR-085 (NICE) vẫn `TODO`.
+chờ dữ liệu thật của đội (Task 11). FR-043, FR-085 (NICE) vẫn `TODO`. FR-078 (maintenance mode,
+NICE) đã build xong (BE + FE + test) và ở `STAGING`, chờ QA kiểm 7 điều kiện Definition of Done.
 
 **Không nằm trong scope** (đề miễn trừ, ghi vào ReadMe): cổng thanh toán · giao hàng/logistics
 · xác thực danh tính hoặc chứng nhận organic của Farmer · multi-profile trong một tài khoản (D-08).

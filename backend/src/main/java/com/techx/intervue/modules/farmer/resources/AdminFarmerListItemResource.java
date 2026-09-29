@@ -20,4 +20,5 @@ public record AdminFarmerListItemResource(
          */
         String phone,
         ApprovalStatus approvalStatus,
-        Instant createdAt) {}
+        Instant createdAt,
+        String avatarUrl) {}

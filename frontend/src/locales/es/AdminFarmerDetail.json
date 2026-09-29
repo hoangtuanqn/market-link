@@ -36,6 +36,26 @@
     "customer": "Cuenta creada como cliente",
     "byAdmin": "Un administrador"
   },
+  "statusHistory": {
+    "title": "Historial del puesto",
+    "noun": "historial del puesto",
+    "system": "Sistema (automático)",
+    "col": {
+      "when": "Cuándo",
+      "action": "Acción",
+      "reason": "Motivo",
+      "until": "Hasta",
+      "by": "Por"
+    },
+    "action": {
+      "approved": "Restablecido",
+      "suspended": "Suspendido"
+    },
+    "empty": {
+      "title": "Aún no hay historial",
+      "text": "Cada suspensión o restablecimiento de este puesto aparecerá aquí."
+    }
+  },
   "applicant": {
     "title": "Solicitante",
     "name": "Nombre",
@@ -54,5 +74,12 @@
   "attempts": {
     "title": "Historial de solicitudes",
     "text": "Cada solicitud de esta cuenta, con lo que envió y lo que se respondió."
+  },
+  "strikes": {
+    "title": "Infracciones de vida útil",
+    "count": "{{count}}/{{limit}} en los últimos {{days}} días",
+    "locked": "Fijar una vida útil más larga queda bloqueado hasta el {{date}}.",
+    "clear": "El puesto todavía puede fijar una vida útil más larga con una promesa.",
+    "text": "Se registra una infracción cuando un administrador confirma un reporte de deterioro sobre una vida útil ampliada."
   }
 }

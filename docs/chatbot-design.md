@@ -13,19 +13,22 @@ Trợ lý tra cứu cho Customer: tìm sản phẩm xuyên chợ/Farmer và tr�
 3. Chấp nhận gõ **có dấu, không dấu và tiếng Anh**. Văn bản được chuẩn hoá: chữ thường, bỏ dấu, `đ → d`.
 4. Mọi lượt hỏi–đáp lưu vào `chat_messages` kèm intent (FR-092) để xem lại vì sao bot trả lời như vậy.
 
-## Hai engine: Claude (tài khoản khách hàng) và luật từ khoá (dự phòng)
+## Hai engine: Claude (tài khoản đã đăng nhập) và luật từ khoá (dự phòng)
 
-Từ 27/09/2026, tài khoản **Customer / Farmer đã đăng nhập** (các vai dùng panel khách hàng) được
-**Claude** trả lời; khách vãng lai và admin vẫn dùng **luật từ khoá** bên dưới. Claude cũng tự
-lùi về luật từ khoá khi: chưa cấu hình API key, vượt hạn mức mỗi giờ, hoặc API lỗi / timeout —
-người dùng luôn nhận được câu trả lời.
+Tài khoản **Customer, Farmer và Admin đã đăng nhập** được **Claude** trả lời, mỗi vai một bộ tool
+riêng (FR-093 Farmer, FR-094 Admin — `docs/superpowers/specs/2026-09-27-role-assistant-design.md`).
+Khách vãng lai, và admin **chưa cài xong 2FA bắt buộc** (phiên mang `MFA_SETUP_PENDING`, FR-008), dùng
+**luật từ khoá** bên dưới. Claude cũng tự lùi về luật từ khoá khi: chưa cấu hình API key, vượt hạn mức,
+hoặc API lỗi / timeout — người dùng luôn nhận được câu trả lời.
 
 ```
-POST /api/v1/chat (có token Customer/Farmer)
+POST /api/v1/chat (có token Customer / Farmer / Admin đã cài 2FA)
   │
-  ├─ AssistantRateLimiter   30 tin/giờ/tài khoản (Redis bucket4j) — vượt → luật từ khoá
+  ├─ AssistantRateLimiter   1500 tin/ngày toàn nền tảng (Redis lỗi → không gọi Claude), rồi
+  │                         30 tin/giờ/tài khoản, Admin 60 (Redis bucket4j) — vượt → luật từ khoá
   ├─ ClaudeAssistant        vòng lặp tool use thủ công, model claude-haiku-4-5
-  │     ├─ system prompt cố định (cache) + "hôm nay là …" + 10 tin gần nhất của phiên
+  │     ├─ system prompt cố định (cache) + "hôm nay là …, bây giờ là HH:mm, ngày mai là …"
+  │     │     + 10 tin gần nhất của phiên
   │     ├─ Claude chọn tool ─► AssistantTools (chỉ đọc)
   │     │     search_products · list_markets · find_stalls · get_pickup_times
   │     │        └─ ChatKnowledgeRepository: vẫn là các câu SQL viết sẵn có tham số (R-04)
@@ -52,10 +55,12 @@ embedding hay vector DB. **Sửa hướng dẫn = sửa file .md**, khởi độ
 | `api-key` | `ANTHROPIC_API_KEY` | trống → chỉ luật từ khoá |
 | `model` | `CHATBOT_AI_MODEL` | `claude-haiku-4-5` |
 | `messages-per-hour` | `CHATBOT_AI_MESSAGES_PER_HOUR` | 30 |
+| `admin-messages-per-hour` | `CHATBOT_AI_ADMIN_MESSAGES_PER_HOUR` | 60 |
+| `platform-messages-per-day` | `CHATBOT_AI_PLATFORM_MESSAGES_PER_DAY` | 1500 |
 | `max-tool-rounds` / `history-messages` / `max-tokens` | — | 4 / 10 / 1024 |
 
-UI: nút chat nổi ở góc phải panel khách hàng (`AssistantLauncher`, chỉ hiện cho Customer/Farmer đã
-đăng nhập) và trang `/assistant`; cả hai dùng chung `AssistantChat`.
+UI: nút chat nổi ở góc phải của cả ba panel (`AssistantLauncher`, hiện cho Customer, Farmer và Admin
+đã đăng nhập) và trang `/assistant`; cả hai dùng chung `AssistantChat`.
 
 ## Luồng (luật từ khoá)
 
@@ -110,7 +115,8 @@ Ký tự `%`, `_`, `\` trong keyword được escape trước khi truyền vào.
 | GET | `/api/v1/chat/history` | Public | `?sessionKey=` | `[{ role, message, intent, createdAt }]` (50 dòng gần nhất) |
 
 - `sessionKey`: FE tự sinh (UUID) và lưu localStorage, 8–64 ký tự `[A-Za-z0-9_-]`. `message`: 1–500 ký tự.
-- `results[]`: `{ type: "product"|"market"|"farmer", id, title, subtitle }`, để FE render link/thẻ.
+- `results[]`: `{ type: "product"|"market"|"farmer"|"order", id, title, subtitle }`, để FE render
+  link/thẻ. `order` chỉ có ở tool của Farmer và mở trang đơn của Farmer theo id.
 - Khớp contract: LEAD chốt `/api/v1` và `camelCase` cho toàn dự án ngày 25/09/2026, nên hai endpoint
   trên là chuẩn. Xem mục Quy ước trong `docs/api-contract.md`.
 
@@ -118,7 +124,7 @@ Ký tự `%`, `_`, `\` trong keyword được escape trước khi truyền vào.
 
 1. "xin chào" → `GREETING`, bot giới thiệu các loại câu hỏi.
 2. "tìm cà chua" → `FIND_PRODUCT`, danh sách sản phẩm + stall + chợ.
-3. "ca chua gia bao nhieu" (không dấu) → `PRODUCT_DETAIL`, giá ₫ + tồn kho.
+3. "ca chua gia bao nhieu" (không dấu) → `PRODUCT_DETAIL`, giá (USD) + tồn kho.
 4. "chợ Bến Thành mở cửa mấy giờ" → `MARKET_HOURS`.
 5. "thứ 7 có farmer nào ở chợ Bến Thành" → `FARMER_AVAILABILITY`.
 6. "khung giờ lấy hàng của <stall>" → `PICKUP_WINDOW`.
@@ -128,6 +134,7 @@ Ký tự `%`, `_`, `\` trong keyword được escape trước khi truyền vào.
 ## Giới hạn đã biết
 
 - Luật từ khoá không hiểu câu phức (hai ý trong một câu) — trả intent ưu tiên cao hơn.
-- Chưa giới hạn tần suất gọi (rate limit); có sẵn `bucket4j-redis` trong pom nếu cần.
-- Các bảng markets/products/farmer_* chưa có migration; tới lúc đó bot trả lời
-  "dữ liệu chưa sẵn sàng" thay vì lỗi 500.
+- Luật từ khoá chỉ trả lời tiếng Việt hoặc tiếng Anh, theo ngôn ngữ của câu hỏi (`KeywordCopy`); câu hỏi
+  bằng ngôn ngữ khác nhận câu tiếng Anh. Tên sản phẩm trong catalogue là tiếng Việt, nên "tomatoes" không
+  tìm ra "Cà chua" — chỉ Claude tự dịch được.
+- DB lỗi khi tra cứu thì bot trả lời "dữ liệu chưa sẵn sàng" thay vì lỗi 500.

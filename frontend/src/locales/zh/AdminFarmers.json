@@ -8,12 +8,17 @@
   },
   "tabsLabel": "按状态查看农户",
   "status": {
+    "all": "全部",
     "pending": "待审核",
     "approved": "已通过",
     "suspended": "已暂停",
     "rejected": "已拒绝"
   },
   "empty": {
+    "all": {
+      "title": "暂无农户",
+      "text": "农户注册申请将在此处显示。"
+    },
     "pending": {
       "title": "没有待审核的申请",
       "text": "新的农户申请会先到这里审核，通过后才能上架商品。"
@@ -55,8 +60,7 @@
     "reason": "农户会看到的原因",
     "confirm": "拒绝申请",
     "placeholder": "写清楚这个摊位要改什么才能通过。",
-    "hint": "{{used}} / {{max}} 个字符。申请人会逐字看到这段话。",
-    "required": "请写出申请人会看到的理由。",
+    "required": "请选择一个理由或写下申请人会看到的理由。",
     "tooLong": "理由不能超过 {{max}} 个字符。"
   },
   "suspend": {
@@ -65,8 +69,7 @@
     "confirm": "暂停摊位",
     "reason": "农户会看到的原因",
     "placeholder": "写清楚这个摊位要改什么才能重新营业。",
-    "hint": "{{used}} / {{max}} 个字符。摊主会逐字看到这段话。",
-    "required": "请写出摊主会看到的理由。",
+    "required": "请选择一个理由或写下农户会看到的理由。",
     "tooLong": "理由不能超过 {{max}} 个字符。"
   },
   "toast": {

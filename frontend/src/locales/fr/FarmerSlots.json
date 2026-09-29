@@ -32,7 +32,7 @@
     "on": "Ouvert",
     "closedTitle": "Slot closed",
     "closedText": "This slot is off and no longer takes orders. This screen cannot turn it back on yet; contact the team if you need it reopened.",
-    "reenableNote": "A slot you turn off drops off this list, the same way it drops off the market page. There is no way to turn it back on from here yet; <link>contact the team</link> if you need it reopened.",
+    "reenableNote": "A slot you turn off drops off this list, the same way it drops off the market page. There is no way to turn it back on from here yet; <a>contact the team</a> if you need it reopened.",
     "caption_one": "{{day}} {{date}} · {{market}} · {{count}} créneau",
     "caption_other": "{{day}} {{date}} · {{market}} · {{count}} créneaux"
   },
@@ -57,7 +57,7 @@
   },
   "generate": {
     "open": "Générer les créneaux de la semaine prochaine",
-    "title": "Générer les créneaux du {{from}} au {{to}} ?",
+    "title": "Générer les créneaux à {{market}}",
     "from": "From",
     "to": "To",
     "rangeError": "Pick an end date on or after the start date.",

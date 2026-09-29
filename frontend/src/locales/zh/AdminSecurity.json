@@ -32,21 +32,13 @@
     "title": "用验证器扫描此码",
     "text": "Google Authenticator、Microsoft Authenticator、Authy、1Password——任何一个都可以。不会发送任何数据：下面的二维码由你自己的浏览器生成。",
     "qr": "验证器应用的二维码",
-    "manual": "<b>无法扫描？</b>请手动输入此密钥：",
-    "type": "类型",
-    "typeValue": "基于时间（TOTP）",
-    "algorithm": "算法",
-    "digits": "位数",
-    "period": "周期",
-    "seconds_one": "{{count}} 秒",
-    "seconds_other": "{{count}} 秒"
+    "manual": "<b>无法扫描？</b>请手动输入此密钥："
   },
   "step2": {
     "title": "输入它显示的验证码",
     "text": "这可以在开启之前确认手机和服务器的时间一致。",
     "code": "六位验证码",
-    "confirm": "确认",
-    "confirmed": "已确认"
+    "confirm": "确认"
   },
   "step3": {
     "title": "保存恢复码",
@@ -80,5 +72,19 @@
     "copyFailed": "无法复制。请选中恢复码后手动复制。",
     "downloaded": "已下载为 {{file}}。",
     "fileHeading": "MarketLink 管理员恢复码"
+  },
+  "setup": {
+    "overline": "管理员安全",
+    "title": "设置两步验证",
+    "copySecret": "复制密钥",
+    "secretCopied": "密钥已复制到剪贴板。",
+    "completeTitle": "两步验证已开启！",
+    "completeText": "您的管理员账户现已受到保护。请先保存下方的恢复码，然后再进入后台。",
+    "goToDashboard": "前往管理后台",
+    "alreadyActive": "您的账户已开启两步验证。",
+    "backToDashboard": "返回后台",
+    "manageSecurity": "安全设置",
+    "notYou": "不是您本人？",
+    "signOut": "退出登录"
   }
 }

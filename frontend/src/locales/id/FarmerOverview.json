@@ -39,13 +39,19 @@
     "complete": "Tandai selesai",
     "view": "Lihat"
   },
-  "greeting": "Selamat pagi, {{name}}",
-  "applyTemplate": "Terapkan templat mingguan",
+  "title": "Ringkasan",
+  "editTemplate": "Ubah templat mingguan",
   "addProduct": "Tambah produk",
   "banner": {
-    "title_one": "{{count}} pesanan menunggu Anda. {{closing}} di antaranya ditutup pukul {{time}} besok.",
-    "title_other": "{{count}} pesanan menunggu Anda. {{closing}} di antaranya ditutup pukul {{time}} besok.",
+    "title_one": "{{count}} pesanan menunggu Anda.",
+    "title_other": "{{count}} pesanan menunggu Anda.",
     "text": "Pesanan yang belum disetujui tetap menahan stok. Terima atau tolak sebelum batas waktu agar pelanggan bisa merencanakan."
+  },
+  "strikes": {
+    "title": "Pelanggaran masa simpan: {{count}}/{{limit}} dalam {{days}} hari",
+    "text": "Laporan kerusakan yang dikonfirmasi pada masa simpan yang diperpanjang dihitung sebagai satu pelanggaran. 3 pelanggaran mengunci masa simpan yang lebih lama.",
+    "locked": "Masa simpan yang lebih lama dikunci hingga {{date}}.",
+    "link": "Lihat laporan kerusakan"
   },
   "kpi": {
     "noun": "your numbers",
@@ -66,8 +72,8 @@
     }
   },
   "stock": {
-    "title": "Stok untuk {{day}}",
-    "link": "Stok minggu ini",
+    "title": "Stok saat ini",
+    "link": "Templat mingguan",
     "noun": "stock",
     "empty": {
       "title": "No products yet",
@@ -82,5 +88,14 @@
       "title": "Nothing sold yet",
       "text": "Your best-selling products will show up here once orders complete."
     }
+  },
+  "briefing": {
+    "title": "Hari ini di {{markets}}",
+    "titleNoMarket": "Hari ini kamu tidak berjualan di pasar mana pun",
+    "orders_other": "{{count}} pesanan untuk hari ini",
+    "waiting_other": "{{count}} masih menunggu kamu terima atau tolak",
+    "cutoffPassed_other": "{{count}} di antaranya sudah lewat batas waktu, pembeli tidak bisa mengubahnya lagi",
+    "soldOut_other": "{{count}} produk ditandai habis",
+    "lowStock_other": "{{count}} produk hampir habis"
   }
 }

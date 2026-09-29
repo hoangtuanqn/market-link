@@ -10,17 +10,23 @@
     "remove": "즐겨찾기에서 빼기: {{name}}"
   },
   "soldPer": "{{unit}} 단위 판매",
-  "left": "이번 주 <b>{{qty}}</b> 남음",
+  "left": "<b>{{qty}}</b> 남음",
+  "leftOn": "{{day}} <b>{{qty}}</b> 남음",
   "stockUpdated": "이번 주말 주문 전에 오늘 재고를 업데이트했어요.",
-  "notifyMe": "다시 들어오면 알림 받기",
   "added": {
     "title": "장바구니에 담았어요",
     "text": "{{name}} {{qty}}을(를) 장바구니에 담았어요."
   },
   "addToCart": "장바구니에 담기",
   "payNote": "주문하면 재고가 확보돼요. 픽업할 때 가게에서 {{price}}을(를) 결제해요.",
+  "deals": {
+    "title": "픽업일별 할인",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, 원래 가격 {{was}} · {{until}}까지 신선 · {{qty}} 남음",
+    "add": "{{day}}에 담기",
+    "noun": "할인"
+  },
   "fromStall": "가게 소개",
-  "sellingSince": "{{date}}부터 판매 중",
   "stats": {
     "reviews_one": "리뷰 {{count}}개",
     "reviews_other": "리뷰 {{count}}개",
@@ -31,13 +37,13 @@
     "cutoff": "주문 마감"
   },
   "seeStall": "가게 보기",
-  "messageStall": "가게에 메시지",
   "details": {
     "title": "상품 정보",
     "soldPer": "판매 단위",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "유통기한",
+    "shelfLifeLine_one": "{{storage}} · 픽업 후 {{count}}일 신선",
+    "shelfLifeLine_other": "{{storage}} · 픽업 후 {{count}}일 신선",
+    "shelfLifePromise": "이 가게는 {{days}}일을 약속해요(보통 {{suggested}}일).",
     "category": "카테고리",
     "stall": "가게",
     "market": "장터"
@@ -74,7 +80,6 @@
   "similar": {
     "title": "이번 주말 다른 가게의 {{name}}",
     "note": "같은 채소, 다른 밭과 가격",
-    "here": "지금 보는 상품",
     "view": "보기"
   },
   "also": {

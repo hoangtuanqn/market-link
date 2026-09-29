@@ -3,6 +3,7 @@ import SettingsRow from '@/components/SettingsRow';
 import SettingsPanel from '@/components/settings/SettingsPanel';
 import { Card } from '@/components/ui/card';
 import { SelectField } from '@/components/ui/input';
+import WebsiteStatusCard from './WebsiteStatusCard';
 
 /**
  * Admin settings (prototype admin/settings.html). Platform defaults are saved on the admin's own account for now:
@@ -11,19 +12,23 @@ import { SelectField } from '@/components/ui/input';
 const AdminSettingsPage = () => {
   const { t } = useTranslation('AdminSettings');
   return (
-    <div className="mx-auto flex w-full max-w-180 flex-col gap-6">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-h1">{t('title')}</h1>
-        <p className="text-body-lg">{t('intro')}</p>
+    <div className="flex w-full flex-col gap-6">
+      <div className="flex flex-col gap-1">
+        <h1 className="text-h1 text-ink font-bold">{t('title')}</h1>
+        <p className="text-body-lg text-ink-muted">{t('intro')}</p>
       </div>
+
+      <WebsiteStatusCard />
 
       <SettingsPanel role="admin">
         {(draft, set) => (
           <Card as="section" aria-labelledby="set-platform" className="flex flex-col gap-4 p-6">
-            <h2 id="set-platform" className="text-h3">
-              {t('platform')}
-            </h2>
-            <p className="text-small text-ink-muted">{t('platformNote')}</p>
+            <div className="flex flex-col gap-1">
+              <h2 id="set-platform" className="text-h3 text-ink font-bold">
+                {t('platform')}
+              </h2>
+              <p className="text-small text-ink-muted">{t('platformNote')}</p>
+            </div>
             <ul className="m-0 flex flex-col p-0">
               <SettingsRow title={t('cutoff')}>
                 <SelectField

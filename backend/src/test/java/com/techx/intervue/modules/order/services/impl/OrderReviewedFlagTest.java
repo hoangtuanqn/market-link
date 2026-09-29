@@ -110,7 +110,8 @@ class OrderReviewedFlagTest {
                         2,
                         "2026-09-14T01:00:00Z",
                         7L,
-                        "Khách 7");
+                        "Khách 7",
+                        false);
         return new OrderDetailRow(
                 summary,
                 OrderStatus.COMPLETED,

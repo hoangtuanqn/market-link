@@ -1,17 +1,17 @@
 {
-  "overline": "Platform · {{year}}",
-  "title": "MarketLink hari ini",
+  "overline": "Platform",
+  "title": "Ringkasan",
   "noun": "dashboard",
   "kpi": {
     "farmers": "Petani",
-    "farmersNote": "{{waiting}} menunggu persetujuan · {{suspended}} ditangguhkan",
+    "farmersNote": "{{waiting}} menunggu persetujuan",
     "farmersLink": "Tinjau pengajuan",
     "customers": "Pelanggan",
     "customersLink": "Buka daftar pelanggan",
     "markets": "Pasar",
     "marketsLink": "Buka daftar pasar",
     "orders": "Pesanan",
-    "ordersNote": "{{week}} minggu ini · {{total}} selesai",
+    "ordersNote": "{{revenue}} dari pesanan selesai",
     "ordersLink": "Buka daftar pesanan"
   },
   "attention": {
@@ -48,5 +48,12 @@
     "pickup": "Pengambilan",
     "total": "Total",
     "status": "Status"
+  },
+  "maintenance": {
+    "title": "Mode pemeliharaan sedang aktif",
+    "badge": "Aktif",
+    "text": "Seluruh platform saat ini dibatasi hanya untuk administrator. Semua pengunjung dan petani melihat pemberitahuan pemeliharaan.",
+    "reminder": "Ingatlah untuk mematikan mode pemeliharaan sesegera mungkin setelah selesai agar pengguna dapat mengakses MarketLink.",
+    "action": "Buka Pengaturan"
   }
 }

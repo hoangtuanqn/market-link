@@ -3,7 +3,6 @@
   "title": "カテゴリ",
   "intro": "屋台が商品を追加するときに選ぶ唯一のリストです。販売単位はアプリに組み込まれた固定の一覧です。",
   "link": {
-    "announcements": "お知らせ",
     "feedback": "フィードバック受信箱"
   },
   "caption": {
@@ -14,11 +13,17 @@
     "category": "カテゴリー",
     "products": "商品数",
     "stalls": "店舗数",
-    "nameOf": "{{name}} の名称"
+    "nameOf": "{{name}} の名称",
+    "status": "ステータス",
+    "shelfLife": "賞味期限",
+    "shelfLifeRange": "{{min}}〜{{max}}日",
+    "shelfLifeDays_one": "{{count}}日",
+    "shelfLifeDays_other": "{{count}}日"
   },
   "action": {
     "save": "保存",
-    "remove": "削除"
+    "remove": "削除",
+    "enable": "有効化"
   },
   "categoryForm": {
     "title": "カテゴリーを追加",
@@ -38,7 +43,9 @@
     "textUnused": "使っている商品はありません。",
     "moveTo": "商品の移動先",
     "keep": "カテゴリーを残す",
-    "confirm": "カテゴリーを削除"
+    "confirm": "カテゴリーを削除",
+    "moveToHint": "このカテゴリーに属する商品は再割り当てされます。",
+    "moveToNone": "なし（商品はこのカテゴリーのままになります）"
   },
   "empty": {
     "categories": {
@@ -49,12 +56,64 @@
   "toast": {
     "categorySaved": "{{name}} を保存しました。",
     "categoryAdded": "カテゴリーを追加しました。店舗はすぐ選べます。",
-    "categoryRemoved": "{{name}} を削除しました。"
+    "categoryRemoved": "{{name}} を削除しました。",
+    "categoryEnabled": "{{name}} を有効にしました。"
   },
   "error": {
     "noun": "カテゴリー",
     "nameRequired": "カテゴリー名を入力してください。",
     "shelfLifeRequired": "Enter a whole number of 1 or more.",
-    "shelfLifeRange": "Max must be at least the minimum."
+    "shelfLifeRange": "Max must be at least the minimum.",
+    "nameTooLong": "名前は{{max}}文字以内にしてください。",
+    "nameTaken": "同じ名前のカテゴリーがすでにあります。"
+  },
+  "status": {
+    "active": "有効",
+    "inactive": "無効"
+  },
+  "guides": {
+    "title": "保存グループ",
+    "intro": "グループと保存方法ごとの推奨賞味期限です。農家はこの数値を基準に設定します。",
+    "category": "カテゴリー",
+    "col": {
+      "group": "グループ",
+      "storage": "保存方法",
+      "days": "日数",
+      "daysFor": "{{group}} の日数（{{storage}}）"
+    },
+    "status": {
+      "off": "無効"
+    },
+    "action": {
+      "save": "保存",
+      "off": "無効にする",
+      "on": "有効にする"
+    },
+    "form": {
+      "title": "グループを追加",
+      "group": "グループ名",
+      "groupPlaceholder": "例：Leafy greens",
+      "examples": "例",
+      "examplesHint": "商品名からグループを判定するための、カンマ区切りの商品キーワード（ベトナム語と英語）。",
+      "storage": "保存方法",
+      "days": "推奨日数",
+      "submit": "グループを追加"
+    },
+    "empty": {
+      "title": "保存グループはまだありません",
+      "text": "グループを追加するまで、このカテゴリーの農家にはカテゴリーの範囲が表示されます。"
+    },
+    "noun": "保存グループ",
+    "error": {
+      "nameRequired": "グループ名を入力してください。",
+      "days": "1から365までの整数を入力してください。",
+      "taken": "このグループには、その保存方法がすでに登録されています。"
+    },
+    "toast": {
+      "added": "グループを追加しました。",
+      "saved": "グループを保存しました。",
+      "off": "グループを無効にしました。",
+      "on": "グループを有効にしました。"
+    }
   }
 }

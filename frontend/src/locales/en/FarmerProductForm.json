@@ -31,22 +31,44 @@
   },
   "qty": {
     "label": "Quantity available this week",
-    "error": "Quantity must be 0 or more. Use Sold out for none left."
+    "error": "Quantity must be 0 or more. Use Sold out for none left.",
+    "hint": "A starting number only. Customers order from your weekly stock, which you set after saving."
   },
   "shelfLife": {
-    "label": "Shelf life (days)",
-    "hint": "This category is usually {{min}}–{{max}} days.",
-    "error": "Enter a whole number of 1 or more.",
-    "warningTitle": "Outside the usual range",
-    "warningText": "This category is usually {{min}}–{{max}} days. You can still save this, but you're responsible if it doesn't hold up that long."
+    "label": "Shelf life",
+    "group": "Storage group",
+    "pickGroup": "Choose a group",
+    "examples": "For example: {{examples}}",
+    "storage": "How it is kept",
+    "suggested_one": "suggested {{count}} day",
+    "suggested_other": "suggested {{count}} days",
+    "days_one": "{{count}} day",
+    "days_other": "{{count}} days",
+    "decrease": "One day less",
+    "increase": "One day more",
+    "peers_one": "Other stalls usually set {{count}} day",
+    "peers_other": "Other stalls usually set {{count}} days",
+    "shorter": "Shorter than suggested. Customers see exactly this number.",
+    "longerTitle_one": "{{count}} day longer than suggested ({{suggested}}, {{storage}})",
+    "longerTitle_other": "{{count}} days longer than suggested ({{suggested}}, {{storage}})",
+    "ackLabel": "I promise this still keeps well for {{days}} days when stored this way ({{storage}}). If a customer reports it spoiled before then, the admin can record a violation for the stall.",
+    "ackRequired": "Tick the promise to save a longer shelf life.",
+    "tooLong_one": "At most {{count}} day for this group.",
+    "tooLong_other": "At most {{count}} days for this group.",
+    "locked": "Your stall can't go above the suggestion until {{date}}: it reached 3 shelf-life strikes in 90 days.",
+    "overLock_one": "Your stall can't go above the suggestion for now. Lower it to {{count}} day.",
+    "overLock_other": "Your stall can't go above the suggestion for now. Lower it to {{count}} days.",
+    "saveBlocked": "Tick the promise above to save.",
+    "saveNeedsGroup": "Pick a storage group above to save.",
+    "saveNeedsGroups": "Reload the storage groups above to save.",
+    "loading": "Loading the storage groups",
+    "fallback": "This category has no storage groups yet. It usually keeps {{min}}–{{max}} days.",
+    "groupGone": "The group this product used is no longer offered. Pick another.",
+    "noun": "storage groups"
   },
   "desc": {
     "label": "Description",
     "hint": "Shown on the product page. Say how it is grown and how to keep it."
-  },
-  "flag": {
-    "label": "Short tag on the card",
-    "hint": "Optional, hand-lettered on the tag: “Fresh today”, “Baked at 5am”."
   },
   "status": {
     "label": "Status",
@@ -62,7 +84,11 @@
     "uploading": "Uploading",
     "uploadInProgress": "Wait for the photo to finish uploading, then save.",
     "alt": "Product photo",
-    "hint": "JPEG, PNG or WEBP, up to 8 MB. Close up, natural light, on wood or paper."
+    "hint": "JPEG, PNG or WEBP, up to 8 MB. Close up, natural light, on wood or paper.",
+    "error": {
+      "tooLarge": "The photo must be 8 MB or smaller.",
+      "type": "Photos must be JPEG, PNG or WEBP."
+    }
   },
   "save": "Save product",
   "add": "Add product",
@@ -77,7 +103,8 @@
     "saved": "Saved",
     "savedText": "{{name}} saved.",
     "product": "Product",
-    "deletedText": "{{name}} deleted."
+    "deletedText": "{{name}} deleted.",
+    "createdText": "{{name}} saved. Set how many you bring on each weekday so customers can order it."
   },
   "error": {
     "noun": "the product"
@@ -88,6 +115,6 @@
   },
   "errors": {
     "required": "This field is required.",
-    "price": "Price must be 0 or more."
+    "price": "Price must be greater than 0."
   }
 }

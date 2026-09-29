@@ -22,6 +22,7 @@
   },
   "day": "Market day",
   "all": "All",
+  "category": "Category",
   "inStock": "In stock",
   "available": "Available on {{day}}",
   "productsFrom": "{{products}} from {{stalls}}",
@@ -38,5 +39,15 @@
   "stallsNoun": "stalls",
   "stallsEmpty": {
     "title": "No stalls on {{day}}"
+  },
+  "productsEmpty": {
+    "title": "Nothing on sale on {{day}}",
+    "text": "Try another market day or clear the filters."
+  },
+  "searchEmpty": {
+    "products": "No products match “{{q}}”",
+    "stalls": "No stalls match “{{q}}”",
+    "text": "Clear the search to see everything at this market on {{day}}.",
+    "clear": "Clear search"
   }
 }

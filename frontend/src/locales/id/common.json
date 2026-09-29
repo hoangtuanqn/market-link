@@ -11,14 +11,6 @@
     "language": "Bahasa",
     "languageNote": "Bahasa untuk menu, tombol, dan pesan. Nama lapak, produk, dan tempat tetap seperti yang ditulis lapak.",
     "format": "Uang, tanggal, dan satuan",
-    "currency": "Tampilkan harga dalam",
-    "currencyNote": "Anda selalu membayar dengan dong Vietnam di lapak. Mata uang lain ditampilkan di sebelahnya hanya sebagai acuan, dengan kurs tetap per {{date}}.",
-    "currencies": {
-      "VND": "Hanya ₫ dong Vietnam",
-      "USD": "₫ dan $ dolar AS",
-      "EUR": "₫ dan € euro",
-      "JPY": "₫ dan ¥ yen Jepang"
-    },
     "units": "Berat dan volume",
     "unitsNote": "Hanya satuan ukur yang dikonversi. Lapak yang menjual per ikat, per umbi, atau per nampan tetap memakai istilahnya sendiri.",
     "metric": "Metrik · kg, g, liter",
@@ -53,15 +45,20 @@
     "orderOf": "Pesanan {{index}} dari {{of}}",
     "payAtPickup": "Bayar di lapak saat mengambil"
   },
-  "chart": {
-    "showNumbers": "Lihat angkanya"
-  },
   "chat": {
     "assistant": "Asisten MarketLink",
     "you": "Anda",
     "intent": "Maksud: {{intent}}",
     "photoUnavailable": "Foto ini tidak tersedia.",
+    "previewPhoto": "Foto",
+    "previewVideo": "Video",
     "photoFrom": "Foto dari {{name}}",
+    "videoFrom": "Video dari {{name}}",
+    "playVideo": "Putar video",
+    "loadingVideo": "Memuat video…",
+    "videoUnavailable": "Video ini tidak tersedia.",
+    "videoCantPlay": "Browser ini tidak dapat memutar video ini.",
+    "downloadVideo": "Unduh video",
     "seen": "Dilihat",
     "loadingThreads": "Memuat percakapan…",
     "threadsErrorTitle": "Percakapan Anda tidak dapat dimuat",
@@ -72,8 +69,8 @@
     "unreadCount_one": "{{count}} unread message",
     "unreadCount_other": "{{count}} pesan belum dibaca",
     "sendFailed": "Pesan Anda tidak terkirim. Coba lagi.",
-    "photoFailed": "Foto tidak terkirim. Pilih JPEG, PNG, atau WebP di bawah 5 MB.",
-    "attachPhoto": "Tambah foto",
+    "mediaFailed": "File tidak terkirim. Pilih foto atau video di bawah 50 MB.",
+    "attachMedia": "Tambahkan foto atau video",
     "draftLabel": "Tulis pesan",
     "draftPlaceholder": "Tulis pesan",
     "send": "Kirim",
@@ -101,8 +98,14 @@
     "unpin": "Hapus",
     "productGone": "Produk ini sudah tidak dijual.",
     "tooFast": "Anda mengirim terlalu cepat. Tunggu sebentar lalu coba lagi.",
-    "photoTooBig": "Foto lebih dari 5 MB. Pilih foto yang lebih kecil.",
-    "photoType": "Pilih foto JPEG, PNG, atau WebP.",
+    "mediaTooBig": "File itu lebih dari 50 MB. Pilih yang lebih kecil.",
+    "mediaTooBigForServer": "File itu lebih besar dari yang diterima server saat ini. Pilih yang lebih kecil.",
+    "mediaType": "Pilih foto (JPEG, PNG, WebP, GIF, AVIF, atau HEIC) atau video (MP4, MOV, atau WebM).",
+    "converting": "Mengonversi foto…",
+    "convertFailed": "Foto ini tidak dapat dikonversi. Simpan sebagai JPEG lalu coba lagi.",
+    "uploading": "Mengirim… {{percent}}%",
+    "uploadProgress": "Progres unggahan",
+    "cancelUpload": "Batal",
     "moreThreads": "Muat percakapan lainnya",
     "reportTitle": "Laporkan pesan ini",
     "reportWhy": "Mengapa Anda melaporkannya?",
@@ -141,17 +144,15 @@
     "collapse": "Ciutkan bilah samping",
     "approvedMarkets_one": "Disetujui · {{count}} pasar",
     "approvedMarkets_other": "Disetujui · {{count}} pasar",
-    "changeMarket": "Ganti pasar yang sedang dilihat",
     "roleStall": "Farmer · {{stall}}",
     "openNavigation": "Buka navigasi",
-    "searchPlaceholder": "Kode pesanan atau pelanggan",
     "yourAccount": "Akun Anda",
     "today": "Hari ini",
     "overview": "Ringkasan",
-    "incomingOrders": "Pesanan masuk",
+    "incomingOrders": "Pesanan",
     "pickupSlots": "Jadwal pengambilan",
     "stock": "Stok",
-    "weekStock": "Stok minggu ini",
+    "weekStock": "Templat mingguan",
     "products": "Produk",
     "stall": "Lapak",
     "stallPickup": "Lapak & pengambilan",
@@ -171,6 +172,7 @@
     "shop": "Belanja",
     "marketsNearYou": "Pasar di dekat Anda",
     "inSeason": "Sedang musim",
+    "deals": "Diskon hampir kedaluwarsa",
     "marketMap": "Peta pasar",
     "favoriteStalls": "Lapak favorit",
     "sell": "Jual",
@@ -187,6 +189,11 @@
     "mapDataFrom": "Data peta {{credit}}"
   },
   "header": {
+    "greeting": {
+      "morning": "Selamat pagi",
+      "afternoon": "Selamat siang",
+      "evening": "Selamat malam"
+    },
     "cart": "Keranjang",
     "cartItems_one": "Keranjang, {{count}} barang",
     "cartItems_other": "Keranjang, {{count}} barang",
@@ -210,8 +217,8 @@
   "loadError": {
     "title": "Kami tidak dapat memuat {{noun}}",
     "text": "Daftarnya tidak kembali kali ini. Apa pun yang Anda simpan atau pesan tidak terpengaruh.",
-    "help": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <link>ceritakan apa yang terjadi</link> dan kami akan memeriksanya.",
-    "helpAlt": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <alt />, atau <link>ceritakan apa yang terjadi</link> dan kami akan memeriksanya."
+    "help": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <a>ceritakan apa yang terjadi</a> dan kami akan memeriksanya.",
+    "helpAlt": "Biasanya ini masalah koneksi, bukan karena tindakan Anda. Jika mencoba lagi tidak membantu, <alt />, atau <a>ceritakan apa yang terjadi</a> dan kami akan memeriksanya."
   },
   "loading": {
     "markets": "Memuat pasar"
@@ -243,6 +250,7 @@
   "nav": {
     "markets": "Pasar",
     "products": "Produk",
+    "deals": "Diskon",
     "map": "Peta",
     "aboutUs": "Tentang kami",
     "myOrders": "Pesanan saya",
@@ -299,24 +307,16 @@
     "show": "Tampilkan kata sandi",
     "hide": "Sembunyikan kata sandi"
   },
-  "period": {
-    "length": "Panjang periode",
-    "day": "Hari",
-    "week": "Minggu",
-    "month": "Bulan",
-    "quarter": "Kuartal",
-    "year": "Tahun",
-    "custom": "Kustom",
-    "from": "Dari",
-    "to": "Sampai",
-    "compareWith": "Bandingkan dengan",
-    "cmpBefore": "Periode sebelumnya, panjang sama",
-    "cmpLastYear": "Periode yang sama tahun lalu",
-    "cmpNone": "Tanpa perbandingan",
-    "comparedWith": "dibanding <b>{{compare}}</b>, panjang sama"
-  },
   "price": {
     "was": "Sebelumnya"
+  },
+  "deal": {
+    "off": "−{{percent}}%",
+    "pickupLine": "Ambil {{day}} · baik hingga akhir {{until}} · sisa {{qty}}",
+    "added": {
+      "title": "Ditambahkan ke keranjang",
+      "text": "{{name}} dengan harga diskon, untuk diambil pada {{day}}."
+    }
   },
   "product": {
     "notThisWeek": "Tidak ada minggu ini",
@@ -382,12 +382,9 @@
     "fullNameRequired": "Masukkan nama lengkap Anda.",
     "fullNameMax": "Nama lengkap maksimal {{max}} karakter.",
     "phoneRequired": "Masukkan nomor telepon Anda.",
-    "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit).",
-    "addressRequired": "Masukkan alamat Anda.",
-    "addressMax": "Alamat maksimal {{max}} karakter."
+    "phoneInvalid": "Masukkan nomor ponsel Vietnam yang valid (10 digit)."
   },
   "adminNav": {
-    "sections": "Bagian admin",
     "overview": "Ringkasan",
     "farmers": "Petani",
     "customers": "Pelanggan",
@@ -398,6 +395,7 @@
     "categories": "Kategori",
     "announcements": "Pengumuman",
     "feedback": "Masukan",
+    "notifications": "Notifikasi",
     "settings": "Pengaturan",
     "account": "Akun Anda",
     "analytics": "Analitik",
@@ -407,18 +405,7 @@
     "navigation": "Navigasi admin",
     "home": "MarketLink — Ringkasan admin",
     "contextSub": "Platform · seluruh pasar",
-    "userLine": "Admin · seluruh platform",
-    "searchPlaceholder": "Lapak, pelanggan, atau pasar"
-  },
-  "carousel": {
-    "roleCarousel": "korsel",
-    "roleSlide": "slide",
-    "slideOf": "{{n}} dari {{total}}: {{topic}}",
-    "previous": "Slide sebelumnya",
-    "next": "Slide berikutnya",
-    "show": "Tampilkan slide {{n}}: {{topic}}",
-    "pause": "Jeda tayangan slide",
-    "play": "Putar tayangan slide"
+    "userLine": "Admin · seluruh platform"
   },
   "geo": {
     "denied": "Anda mematikan lokasi untuk situs ini. Ubah di pengaturan situs browser Anda, atau gunakan alamat.",
@@ -435,8 +422,8 @@
     "address": "Sebuah alamat",
     "addressNote": "Jalan atau landmark di Kota Ho Chi Minh.",
     "addressLabel": "Alamat awal",
-    "addressPlaceholder": "Lê Lợi, Quận 1",
-    "addressHint": "Nama jalan dan distrik paling efektif. Nomor rumah sering tidak ada di peta, dan OpenStreetMap akan meminta Anda memilih tempat jika tidak menemukannya.",
+    "addressPlaceholder": "Lê Lợi, Phường Bến Thành",
+    "addressHint": "Nama jalan dan kelurahan paling efektif. Nomor rumah sering tidak ada di peta, dan OpenStreetMap akan meminta Anda memilih tempat jika tidak menemukannya.",
     "useSaved": "Gunakan alamat tersimpan",
     "none": "Saya akan mengetiknya di peta",
     "noneNote": "Membuka OpenStreetMap dengan tujuan saja yang terisi.",
@@ -504,9 +491,25 @@
           "title": "Pendaftaran lapak Anda",
           "note": "Saat disetujui, ditolak, ditangguhkan, atau dibuka kembali"
         },
+        "orders": {
+          "title": "Pesanan",
+          "note": "Saat status pesanan yang Anda buat atau terima berubah"
+        },
+        "favorites": {
+          "title": "Favorit",
+          "note": "Saat produk yang Anda simpan tersedia lagi"
+        },
         "farmerApplications": {
           "title": "Pendaftaran Farmer",
           "note": "Saat seseorang mendaftar berjualan di MarketLink"
+        },
+        "feedback": {
+          "title": "Masukan",
+          "note": "Saat seseorang mengirim laporan bug, saran, atau pertanyaan"
+        },
+        "qualityReports": {
+          "title": "Laporan produk rusak",
+          "note": "Saat produk dengan masa simpan yang diperpanjang dilaporkan rusak sebelum tanggalnya"
         }
       },
       "sound": "Putar suara",
@@ -563,13 +566,40 @@
     "result": {
       "product": "Produk",
       "market": "Pasar",
-      "farmer": "Lapak"
+      "farmer": "Lapak",
+      "order": "Pesanan"
     },
     "suggest": {
       "find": "Di mana beli tomat akhir pekan ini?",
       "hours": "Jam berapa pasar Bến Thành buka?",
       "stalls": "Lapak apa saja di pasar Thảo Điền hari Sabtu?",
       "cancel": "Bagaimana cara membatalkan pesanan?"
+    },
+    "action": {
+      "confirm": "Konfirmasi",
+      "openPage": "Buka halaman",
+      "done": "Selesai",
+      "doneTitle": "Selesai",
+      "failedTitle": "Tidak jadi",
+      "failedText": "Perubahan ditolak. Buka halaman untuk melihat alasannya.",
+      "accept_order": "Terima pesanan {{label}}?",
+      "decline_order": "Tolak pesanan {{label}}?",
+      "ready_order": "Tandai pesanan {{label}} siap?",
+      "complete_order": "Tandai pesanan {{label}} selesai?",
+      "approve_farmer": "Setujui {{label}}?",
+      "reject_farmer": "Tolak {{label}}?",
+      "suspend_farmer": "Hentikan sementara {{label}}?"
+    },
+    "askAboutThis": "Tanya asisten",
+    "ask": {
+      "order": "Pesanan {{code}}: isinya apa, masih sebelum batas waktu? Sebaiknya saya terima?",
+      "review": "Buatkan balasan singkat dan jujur untuk ulasan {{rating}} bintang ini.",
+      "application": "Pengajuan lapak ini sudah lengkap belum, ada yang perlu dicek sebelum saya setujui?",
+      "reports": "Jelaskan angka dari {{from}} sampai {{to}}: pasar mana yang paling ramai, mana yang sepi, dan kenapa.",
+      "cart": "Jelaskan keranjang saya: kenapa terpisah, berapa biaya tiap lapak, dan apakah saya masih keburu semua batas waktu?",
+      "announcement": "Buatkan pengumuman untuk seluruh platform. Isinya saya beri tahu.",
+      "product": "Tulis deskripsi singkat dan catatan tulisan tangan untuk label {{name}}.",
+      "feedback": "Ringkas kotak masukan: orang melaporkan apa, pesan mana yang sebenarnya masalah yang sama, dan mana yang harus saya lihat dulu?"
     }
   },
   "tour": {
@@ -648,8 +678,8 @@
         "body": "Atur rentang waktu pelanggan dapat mengambil pesanan di lapak Anda."
       },
       "farmerStock": {
-        "title": "Stok minggu ini",
-        "body": "Perbarui jumlah setiap produk yang bisa Anda jual minggu ini."
+        "title": "Templat stok mingguan",
+        "body": "Atur berapa banyak setiap produk yang biasanya Anda bawa di tiap hari. Templat terisi ulang sendiri setiap minggu."
       },
       "farmerProducts": {
         "title": "Produk",
@@ -677,16 +707,146 @@
       },
       "farmerSettings": {
         "title": "Pengaturan",
-        "body": "Ubah bahasa, mata uang, dan pengaturan default penjualan."
+        "body": "Ubah tema, bahasa, format tanggal dan satuan, serta notifikasi Anda."
       },
       "farmerDone": {
         "title": "Lapak Anda siap",
-        "body": "Mulailah dengan memeriksa stok minggu ini dan slot pengambilan."
+        "body": "Mulailah dengan memeriksa templat mingguan dan slot pengambilan Anda."
       },
       "dashboardMenu": {
         "title": "Menu",
         "body": "Buka menu untuk menuju setiap bagian panel."
       }
     }
+  },
+  "address": {
+    "legend": "Alamat",
+    "country": "Negara",
+    "province": "Provinsi atau kota",
+    "ward": "Kelurahan atau desa",
+    "street": "Jalan",
+    "addressLine": "Nomor rumah dan detail",
+    "addressLineOptional": "Nomor rumah (jika ada)",
+    "addressLinePlaceholder": "12, atau 12/3A",
+    "region": "Negara bagian atau provinsi",
+    "city": "Kota",
+    "choose": {
+      "country": "Pilih negara",
+      "province": "Pilih provinsi atau kota",
+      "ward": "Pilih kelurahan atau desa"
+    },
+    "wardNeedsProvince": "Pilih provinsi terlebih dahulu.",
+    "loading": "Memuat…",
+    "loadFailed": "Daftar ini tidak dapat dimuat.",
+    "retry": "Coba lagi",
+    "streetPlaceholder": "Mulai mengetik, mis. Lê Lợi",
+    "streetHint": "Pilih saran, atau biarkan yang Anda ketik jika jalan Anda tidak ada di daftar.",
+    "useTyped": "Gunakan “{{text}}”",
+    "noSuggestions": "Tidak ada saran — yang Anda ketik akan dipakai.",
+    "suggestions": "Saran nama jalan",
+    "current": "Alamat saat ini: {{address}}. Pilih ulang di bawah untuk menyimpan perubahan.",
+    "vietnamOnly": "Pasar berada di Vietnam.",
+    "errors": {
+      "countryRequired": "Pilih negara.",
+      "provinceRequired": "Pilih provinsi atau kota.",
+      "wardRequired": "Pilih kelurahan atau desa.",
+      "streetRequired": "Isi nama jalan.",
+      "lineRequired": "Isi nomor rumah dan detail.",
+      "regionRequired": "Isi negara bagian atau provinsi.",
+      "cityRequired": "Isi kota.",
+      "tooLong": "Maksimal {{max}} karakter."
+    }
+  },
+  "reasons": {
+    "pick": "Pilih satu atau beberapa",
+    "note": "Tambahan",
+    "noteOptional": "Tambahan (opsional)",
+    "preview": "Yang akan dibaca: “{{text}}”",
+    "length": "{{used}} dari {{max}} karakter.",
+    "reject": {
+      "incompleteInfo": "Data lapak belum lengkap",
+      "unclearPhotos": "Foto tidak jelas atau bukan kebun Anda",
+      "unreachable": "Kami tidak dapat menghubungi nomor telepon Anda",
+      "notFarmProduce": "Yang akan dijual bukan hasil pertanian",
+      "duplicate": "Lapak ini sudah terdaftar"
+    },
+    "suspend": {
+      "complaints": "Keluhan pelanggan berulang kali",
+      "notAsDescribed": "Barang tidak sesuai deskripsi",
+      "missedPickups": "Lapak tidak ada saat waktu pengambilan",
+      "rulesBroken": "Melanggar aturan platform",
+      "ownerRequest": "Atas permintaan pemilik lapak",
+      "shelfLifeViolations": "Pelanggaran masa simpan"
+    },
+    "deactivate": {
+      "noShows": "Berulang kali memesan tanpa mengambil",
+      "abusiveMessages": "Pesan kasar atau spam",
+      "fakeAccount": "Akun palsu atau ganda",
+      "fakeReviews": "Ulasan palsu",
+      "ownerRequest": "Atas permintaan pemilik akun"
+    }
+  },
+  "cookieConsent": {
+    "label": "Pemberitahuan cookie",
+    "text": "Kami hanya menggunakan cookie esensial agar Anda tetap masuk dan keranjang belanja berfungsi. Tidak ada cookie iklan atau analitik. <a>Kebijakan privasi</a>.",
+    "decline": "Tolak",
+    "accept": "Terima"
+  },
+  "banDuration": {
+    "label": "Durasi",
+    "permanent": "Permanen",
+    "temporary": "Sementara",
+    "days_one": "{{count}} hari",
+    "days_other": "{{count}} hari",
+    "specificTime": "Atau pilih waktu berakhir yang pasti"
+  },
+  "accountDeactivated": {
+    "title": "Akun Anda telah dinonaktifkan",
+    "generic": "Administrator telah menonaktifkan akun ini, sehingga Anda telah keluar.",
+    "whatNow": "Anda tetap bisa menjelajahi pasar dan produk sebagai pengunjung, tetapi tidak bisa masuk atau memesan selama masa ini.",
+    "contactIntro": "Jika Anda merasa ini keliru, hubungi kami di",
+    "acknowledge": "Saya mengerti"
+  },
+  "stallSuspended": {
+    "title": "Lapak Anda ditangguhkan",
+    "generic": "Administrator telah menangguhkan lapak ini, sehingga saat ini tidak terlihat oleh pelanggan.",
+    "whatNow": "Pesanan yang sudah dibuat pelanggan tetap harus diselesaikan — mohon selesaikan pesanan tersebut. Anda tidak dapat menambahkan produk, mengubah stok, atau menerima pesanan baru sampai penangguhan dicabut.",
+    "contactIntro": "Jika Anda merasa ini keliru, hubungi kami di",
+    "acknowledge": "Saya mengerti"
+  },
+  "storageMode": {
+    "room": "Suhu ruang",
+    "chilled": "Kulkas 0–5 °C"
+  },
+  "bestBefore": {
+    "line": "Baik hingga akhir {{day}} · {{storage}}"
+  },
+  "spoilage": {
+    "problem": {
+      "bruised": "Memar atau hancur",
+      "mold": "Berjamur",
+      "smell": "Baunya tidak enak",
+      "wilted": "Layu atau kering",
+      "other": "Lainnya"
+    },
+    "problemWithNote": "{{problem}} · “{{note}}”",
+    "status": {
+      "open": "Menunggu keputusan",
+      "confirmed": "Dikonfirmasi oleh admin",
+      "dismissed": "Bukan kesalahan lapak"
+    },
+    "extended_one": "Diperpanjang +{{count}} hari",
+    "extended_other": "Diperpanjang +{{count}} hari",
+    "beforePromise": "sebelum tanggalnya",
+    "afterPromise": "setelah tanggalnya",
+    "strikes": "Pelanggaran masa simpan: {{count}}/{{limit}} dalam {{days}} hari"
+  },
+  "gallery": {
+    "label": "Foto {{name}}",
+    "previous": "Foto sebelumnya",
+    "next": "Foto berikutnya",
+    "goTo": "Buka foto {{n}}",
+    "slide": "{{n}} dari {{total}}",
+    "photoAlt": "{{name}}, foto {{n}}"
   }
 }

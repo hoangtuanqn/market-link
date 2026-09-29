@@ -123,6 +123,17 @@ class NotificationPreferenceServiceTest {
                 .isEqualTo(new Alert(true, false, true));
     }
 
+    /** Muting farmer applications must not mute feedback: each has its own row in Settings. */
+    @Test
+    void feedbackFollowsItsOwnGroupNotFarmerApplications() {
+        when(settings.findById(1L)).thenReturn(Optional.empty());
+        when(prefs.findByUserIdAndCategory(1L, "feedback")).thenReturn(Optional.empty());
+
+        assertThat(service.alertFor(1L, NotificationKind.FEEDBACK, at("12:00")))
+                .isEqualTo(new Alert(true, true, true));
+        verify(prefs, never()).findByUserIdAndCategory(1L, "farmerApplications");
+    }
+
     @Test
     void soundIsOffWhenBothChannelsAreOff() {
         when(settings.findById(1L)).thenReturn(Optional.empty());
@@ -153,7 +164,10 @@ class NotificationPreferenceServiceTest {
         NotificationPreferencesResource got = service.get(1L);
 
         assertThat(got.categories())
-                .containsExactly(new CategoryPreference("farmerApplications", true, true));
+                .containsExactly(
+                        new CategoryPreference("farmerApplications", true, true),
+                        new CategoryPreference("feedback", true, true),
+                        new CategoryPreference("qualityReports", true, true));
         assertThat(got.sound()).isTrue();
         assertThat(got.quietOn()).isFalse();
         assertThat(got.quietFrom()).isEqualTo("22:00");

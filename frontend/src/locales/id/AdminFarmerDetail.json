@@ -36,6 +36,26 @@
     "customer": "Akun dibuat sebagai pelanggan",
     "byAdmin": "Admin"
   },
+  "statusHistory": {
+    "title": "Riwayat lapak",
+    "noun": "riwayat lapak",
+    "system": "Sistem (otomatis)",
+    "col": {
+      "when": "Kapan",
+      "action": "Tindakan",
+      "reason": "Alasan",
+      "until": "Sampai",
+      "by": "Oleh"
+    },
+    "action": {
+      "approved": "Dibuka kembali",
+      "suspended": "Ditangguhkan"
+    },
+    "empty": {
+      "title": "Belum ada riwayat",
+      "text": "Setiap penangguhan atau pembukaan kembali lapak ini akan tampil di sini."
+    }
+  },
   "applicant": {
     "title": "Pemohon",
     "name": "Nama",
@@ -54,5 +74,12 @@
   "attempts": {
     "title": "Riwayat lamaran",
     "text": "Setiap kali akun ini melamar, beserta isinya dan jawabannya."
+  },
+  "strikes": {
+    "title": "Pelanggaran masa simpan",
+    "count": "{{count}}/{{limit}} dalam {{days}} hari terakhir",
+    "locked": "Masa simpan yang lebih lama dikunci hingga {{date}}.",
+    "clear": "Lapak masih dapat menetapkan masa simpan yang lebih lama dengan sebuah janji.",
+    "text": "Pelanggaran dicatat saat admin mengonfirmasi laporan kerusakan pada masa simpan yang diperpanjang."
   }
 }

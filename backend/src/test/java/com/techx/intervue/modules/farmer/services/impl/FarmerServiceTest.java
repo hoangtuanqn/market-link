@@ -3,6 +3,7 @@ package com.techx.intervue.modules.farmer.services.impl;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -17,6 +18,7 @@ import com.techx.intervue.modules.farmer.enums.ApprovalStatus;
 import com.techx.intervue.modules.farmer.exceptions.FarmerApplicationExistsException;
 import com.techx.intervue.modules.farmer.exceptions.FarmerProfileNotFoundException;
 import com.techx.intervue.modules.farmer.exceptions.InvalidApprovalTransitionException;
+import com.techx.intervue.modules.farmer.repositories.AdminFarmerStatusHistoryQueryRepository;
 import com.techx.intervue.modules.farmer.repositories.FarmerApplicationHistoryRepository;
 import com.techx.intervue.modules.farmer.repositories.FarmerProfileRepository;
 import com.techx.intervue.modules.farmer.requests.FarmerApplicationRequest;
@@ -26,11 +28,15 @@ import com.techx.intervue.modules.farmer.resources.AdminFarmerDetailResource;
 import com.techx.intervue.modules.farmer.resources.FarmerProfileResource;
 import com.techx.intervue.modules.notification.enums.NotificationKind;
 import com.techx.intervue.modules.notification.services.interfaces.NotificationServiceInterface;
+import com.techx.intervue.modules.quality.resources.ShelfLifeStandingResource;
+import com.techx.intervue.modules.quality.services.interfaces.ShelfLifeStandingServiceInterface;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
 import com.techx.intervue.modules.user.exceptions.InvalidFieldException;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
+import com.techx.intervue.services.interfaces.JobQueueInterface;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -50,6 +56,10 @@ class FarmerServiceTest {
     private UserRepository userRepository;
     private UserSessionCache userSessionCache;
     private NotificationServiceInterface notifications;
+    private ShelfLifeStandingServiceInterface shelfLifeStanding;
+    private FarmerStatusHistoryWriter statusHistory;
+    private JobQueueInterface jobQueue;
+    private AdminFarmerStatusHistoryQueryRepository statusHistoryQueries;
     private FarmerService service;
 
     @BeforeEach
@@ -65,6 +75,12 @@ class FarmerServiceTest {
         userRepository = mock(UserRepository.class);
         userSessionCache = mock(UserSessionCache.class);
         notifications = mock(NotificationServiceInterface.class);
+        shelfLifeStanding = mock(ShelfLifeStandingServiceInterface.class);
+        when(shelfLifeStanding.standing(anyLong()))
+                .thenReturn(new ShelfLifeStandingResource(0, 3, 90, null));
+        statusHistory = mock(FarmerStatusHistoryWriter.class);
+        jobQueue = mock(JobQueueInterface.class);
+        statusHistoryQueries = mock(AdminFarmerStatusHistoryQueryRepository.class);
         service =
                 new FarmerService(
                         farmerProfileRepository,
@@ -72,7 +88,11 @@ class FarmerServiceTest {
                         uploadService,
                         userRepository,
                         userSessionCache,
-                        notifications);
+                        notifications,
+                        shelfLifeStanding,
+                        statusHistory,
+                        jobQueue,
+                        statusHistoryQueries);
     }
 
     private static FarmerProfile pendingProfile() {
@@ -286,7 +306,7 @@ class FarmerServiceTest {
         when(userRepository.findById(USER_ID)).thenReturn(Optional.of(owner));
         when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows"), ADMIN_ID);
+        service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows", null), ADMIN_ID);
 
         verify(userSessionCache, never()).updateRoles(any(), any());
     }
@@ -321,7 +341,8 @@ class FarmerServiceTest {
         when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
         AdminFarmerDetailResource result =
-                service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows"), ADMIN_ID);
+                service.suspend(
+                        FARMER_ID, new SuspendFarmerRequest("Repeated no-shows", null), ADMIN_ID);
 
         assertThat(result.approvalStatus()).isEqualTo(ApprovalStatus.SUSPENDED);
         assertThat(owner.getRole()).isEqualTo(RoleType.FARMER);
@@ -337,7 +358,7 @@ class FarmerServiceTest {
                         () ->
                                 service.suspend(
                                         FARMER_ID,
-                                        new SuspendFarmerRequest("Repeated no-shows"),
+                                        new SuspendFarmerRequest("Repeated no-shows", null),
                                         ADMIN_ID))
                 .isInstanceOf(InvalidApprovalTransitionException.class);
     }
@@ -380,7 +401,7 @@ class FarmerServiceTest {
         when(userRepository.findById(USER_ID)).thenReturn(Optional.of(owner));
         when(farmerProfileRepository.save(any())).thenAnswer(inv -> inv.getArgument(0));
 
-        AdminFarmerDetailResource result = service.reinstate(FARMER_ID);
+        AdminFarmerDetailResource result = service.reinstate(FARMER_ID, ADMIN_ID);
 
         assertThat(result.approvalStatus()).isEqualTo(ApprovalStatus.APPROVED);
         assertThat(owner.getRole()).isEqualTo(RoleType.FARMER);
@@ -391,7 +412,7 @@ class FarmerServiceTest {
         FarmerProfile profile = pendingProfile();
         when(farmerProfileRepository.findById(FARMER_ID)).thenReturn(Optional.of(profile));
 
-        assertThatThrownBy(() -> service.reinstate(FARMER_ID))
+        assertThatThrownBy(() -> service.reinstate(FARMER_ID, ADMIN_ID))
                 .isInstanceOf(InvalidApprovalTransitionException.class);
     }
 
@@ -471,7 +492,7 @@ class FarmerServiceTest {
     void suspendingTellsTheOwner() {
         withStatus(ApprovalStatus.APPROVED);
 
-        service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows"), ADMIN_ID);
+        service.suspend(FARMER_ID, new SuspendFarmerRequest("Repeated no-shows", null), ADMIN_ID);
 
         verify(notifications)
                 .dispatch(
@@ -486,7 +507,7 @@ class FarmerServiceTest {
     void reinstatingTellsTheOwner() {
         withStatus(ApprovalStatus.SUSPENDED);
 
-        service.reinstate(FARMER_ID);
+        service.reinstate(FARMER_ID, ADMIN_ID);
 
         verify(notifications)
                 .dispatch(
@@ -504,5 +525,19 @@ class FarmerServiceTest {
         assertThatThrownBy(() -> service.approve(FARMER_ID, ADMIN_ID))
                 .isInstanceOf(InvalidApprovalTransitionException.class);
         verifyNoInteractions(notifications);
+    }
+
+    /** FR-123 (spec §4.4.4): the admin sees the stall's strikes and when a lock ends. */
+    @Test
+    void theDetailCarriesTheShelfLifeStrikesAndTheLockEnd() {
+        withStatus(ApprovalStatus.APPROVED);
+        Instant until = Instant.parse("2026-11-30T03:00:00Z");
+        when(shelfLifeStanding.standing(FARMER_ID))
+                .thenReturn(new ShelfLifeStandingResource(3, 3, 90, until));
+
+        AdminFarmerDetailResource detail = service.getDetailForAdmin(FARMER_ID);
+
+        assertThat(detail.activeViolations()).isEqualTo(3);
+        assertThat(detail.extensionLockedUntil()).isEqualTo(until);
     }
 }

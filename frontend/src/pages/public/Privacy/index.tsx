@@ -14,7 +14,7 @@ const PrivacyPage = () => {
       meta={t('meta', { date: formatDate(LEGAL_UPDATED) })}
       onThisPage={t('onThisPage')}
       seeAlso={
-        <Trans t={t} i18nKey="seeAlso" components={{ link: <Link to="/terms" className="text-brand underline" /> }} />
+        <Trans t={t} i18nKey="seeAlso" components={{ a: <Link to="/terms" className="text-brand underline" /> }} />
       }
       sections={t('sections', { returnObjects: true }) as LegalSection[]}
       cta={{

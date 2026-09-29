@@ -22,7 +22,6 @@
     "text": "Puede que el cliente lo haya cancelado o que el enlace sea antiguo. Ábrelo de nuevo desde tu lista de pedidos.",
     "back": "Mis pedidos"
   },
-  "item": "artículo",
   "noun": "order",
   "col": {
     "product": "Producto",

@@ -210,6 +210,48 @@ class SlotServiceTest {
         assertThat(again).hasSize(4);
     }
 
+    /**
+     * FR-067: generating again with a shorter length only skipped windows starting at the same
+     * minute, so 60-minute slots got 30-minute ones laid over them (07:30–08:00 inside
+     * 07:00–08:00). A window that overlaps a slot still offered that day is now skipped.
+     */
+    @Test
+    void generateAgainWithAnotherLengthNeverOverlapsAnExistingSlot() {
+        operatingDays(0, "07:00", "09:00");
+        LocalDate sunday = LocalDate.of(2026, 10, 4);
+        service.generateSlots(USER_ID, generate(sunday, sunday));
+
+        List<SlotResource> again =
+                service.generateSlots(
+                        USER_ID, new GenerateSlotsRequest(FARMER_MARKET_ID, sunday, sunday, 30, 5));
+
+        assertThat(again)
+                .extracting(SlotResource::startTime, SlotResource::endTime)
+                .containsExactly(
+                        org.assertj.core.groups.Tuple.tuple("07:00", "08:00"),
+                        org.assertj.core.groups.Tuple.tuple("08:00", "09:00"));
+    }
+
+    /**
+     * FR-067: a slot left outside a moved time window is no longer offered (it is dropped by the
+     * open-day rule), so it does not stop the new window from getting its slots.
+     */
+    @Test
+    void generateAfterTheWindowMovedFillsTheNewWindow() {
+        operatingDays(0, "07:00", "09:00");
+        LocalDate sunday = LocalDate.of(2026, 10, 4);
+        service.generateSlots(USER_ID, generate(sunday, sunday));
+        operatingDays(0, "08:30", "10:30");
+
+        List<SlotResource> again = service.generateSlots(USER_ID, generate(sunday, sunday));
+
+        // 08:00–09:00 starts before 08:30, so it is not offered any more and does not block
+        // 08:30–09:30; both old slots stay in the table, untouched
+        assertThat(again)
+                .extracting(SlotResource::startTime)
+                .containsExactly("07:00", "08:00", "08:30", "09:30");
+    }
+
     @Test
     void generateRejectsRangeLongerThanSixtyDays() {
         operatingDays(0, "07:00", "11:00");
@@ -358,5 +400,56 @@ class SlotServiceTest {
         assertThatThrownBy(() -> service.publicSlots(FARMER_ID, null, TODAY))
                 .isInstanceOf(FarmerProfileNotFoundException.class);
         verify(queryRepository, never()).publicSlots(anyLong(), any(), any(), any(), any());
+    }
+
+    @Test
+    void farmerSlotsReturnsBothActiveAndInactiveSlots() {
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(farmerMarketRepository.findById(FARMER_MARKET_ID))
+                .thenReturn(Optional.of(link(FARMER_ID, true)));
+
+        PickupSlot activeSlot = new PickupSlot();
+        activeSlot.setId(101L);
+        activeSlot.setFarmerMarketId(FARMER_MARKET_ID);
+        activeSlot.setSlotDate(TODAY);
+        activeSlot.setStartTime(LocalTime.of(7, 0));
+        activeSlot.setEndTime(LocalTime.of(8, 0));
+        activeSlot.setMaxOrders(5);
+        activeSlot.setBookedCount(1);
+        activeSlot.setActive(true);
+
+        PickupSlot inactiveSlot = new PickupSlot();
+        inactiveSlot.setId(102L);
+        inactiveSlot.setFarmerMarketId(FARMER_MARKET_ID);
+        inactiveSlot.setSlotDate(TODAY);
+        inactiveSlot.setStartTime(LocalTime.of(8, 0));
+        inactiveSlot.setEndTime(LocalTime.of(9, 0));
+        inactiveSlot.setMaxOrders(5);
+        inactiveSlot.setBookedCount(0);
+        inactiveSlot.setActive(false);
+
+        when(slotRepository.findByFarmerMarketIdAndSlotDateBetween(FARMER_MARKET_ID, TODAY, TODAY))
+                .thenReturn(List.of(activeSlot, inactiveSlot));
+
+        List<SlotResource> result = service.farmerSlots(USER_ID, FARMER_MARKET_ID, TODAY);
+
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).slotId()).isEqualTo(101L);
+        assertThat(result.get(0).isActive()).isTrue();
+        assertThat(result.get(1).slotId()).isEqualTo(102L);
+        assertThat(result.get(1).isActive()).isFalse();
+    }
+
+    @Test
+    void farmerSlotsRejectsNonOwnedMarket() {
+        FarmerMarket otherMarket = link(999L, true);
+        when(farmerProfileRepository.findByUserId(USER_ID))
+                .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
+        when(farmerMarketRepository.findById(FARMER_MARKET_ID))
+                .thenReturn(Optional.of(otherMarket));
+
+        assertThatThrownBy(() -> service.farmerSlots(USER_ID, FARMER_MARKET_ID, TODAY))
+                .isInstanceOf(FarmerMarketNotYoursException.class);
     }
 }

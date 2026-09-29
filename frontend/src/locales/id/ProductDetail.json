@@ -10,17 +10,23 @@
     "remove": "Hapus dari favorit: {{name}}"
   },
   "soldPer": "dijual per {{unit}}",
-  "left": "Sisa <b>{{qty}}</b> minggu ini",
+  "left": "Sisa <b>{{qty}}</b>",
+  "leftOn": "Sisa <b>{{qty}}</b> untuk {{day}}",
   "stockUpdated": "Stok diperbarui hari ini, sebelum pesanan akhir pekan ini.",
-  "notifyMe": "Kabari saat tersedia lagi",
   "added": {
     "title": "Ditambahkan ke keranjang",
     "text": "{{qty}} {{name}} ditambahkan ke keranjang Anda."
   },
   "addToCart": "Tambah ke keranjang",
   "payNote": "Stok disisihkan untuk Anda saat memesan. Anda membayar {{price}} di lapak saat pengambilan.",
+  "deals": {
+    "title": "Diskon untuk hari pengambilan berikut",
+    "day": "{{day}} · −{{percent}}%",
+    "detail": "{{price}}, sebelumnya {{was}} · baik hingga akhir {{until}} · sisa {{qty}}",
+    "add": "Tambah untuk {{day}}",
+    "noun": "diskon"
+  },
   "fromStall": "Dari lapak",
-  "sellingSince": "berjualan di sini sejak {{date}}",
   "stats": {
     "reviews_one": "{{count}} ulasan",
     "reviews_other": "{{count}} ulasan",
@@ -31,13 +37,13 @@
     "cutoff": "batas pesanan"
   },
   "seeStall": "Lihat lapak",
-  "messageStall": "Kirim pesan ke lapak",
   "details": {
     "title": "Detail produk",
     "soldPer": "Dijual per",
-    "shelfLife": "Stays fresh for",
-    "shelfLifeValue_one": "{{count}} day",
-    "shelfLifeValue_other": "{{count}} days",
+    "shelfLife": "Masa simpan",
+    "shelfLifeLine_one": "{{storage}} · bertahan {{count}} hari sejak pengambilan",
+    "shelfLifeLine_other": "{{storage}} · bertahan {{count}} hari sejak pengambilan",
+    "shelfLifePromise": "Lapak menjanjikan {{days}} hari (biasanya {{suggested}}).",
     "category": "Kategori",
     "stall": "Lapak",
     "market": "Pasar"
@@ -74,7 +80,6 @@
   "similar": {
     "title": "{{name}} di lapak lain akhir pekan ini",
     "note": "Sayur yang sama, kebun dan harga berbeda",
-    "here": "Anda di sini",
     "view": "Lihat"
   },
   "also": {

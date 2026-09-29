@@ -111,6 +111,12 @@ public class MfaService implements MfaServiceInterface {
     }
 
     @Override
+    public boolean isSetupRequired(Long userId) {
+        AdminMfa row = mfaRepository.findById(userId).orElse(null);
+        return row == null || (row.getEnabledAt() == null && row.getDisabledAt() == null);
+    }
+
+    @Override
     public String startChallenge(Long userId, boolean rememberMe) {
         byte[] raw = new byte[TOKEN_BYTES];
         RANDOM.nextBytes(raw);
@@ -157,8 +163,9 @@ public class MfaService implements MfaServiceInterface {
     @Override
     public MfaStatusResource status(Long userId) {
         boolean enabled = isEnabled(userId);
+        boolean setupRequired = isSetupRequired(userId);
         long left = enabled ? recoveryCodeRepository.countByUserIdAndUsedAtIsNull(userId) : 0;
-        return new MfaStatusResource(enabled, left);
+        return new MfaStatusResource(enabled, setupRequired, left);
     }
 
     @Override
@@ -175,6 +182,8 @@ public class MfaService implements MfaServiceInterface {
             row = AdminMfa.builder().userId(userId).build();
         }
         row.setSecretEncrypted(cipher.encrypt(secret));
+        row.setEnabledAt(null);
+        row.setDisabledAt(null);
         row.setLastUsedStep(null);
         mfaRepository.save(row);
 
@@ -200,6 +209,7 @@ public class MfaService implements MfaServiceInterface {
             throw registerFailure(userId);
         }
         row.setEnabledAt(clock.instant());
+        row.setDisabledAt(null);
         mfaRepository.save(row);
         redis.delete(FAIL_PREFIX + userId);
         return issueRecoveryCodes(userId);
@@ -214,7 +224,9 @@ public class MfaService implements MfaServiceInterface {
             throw registerFailure(userId);
         }
         recoveryCodeRepository.deleteAllByUserId(userId);
-        mfaRepository.deleteById(userId);
+        row.setEnabledAt(null);
+        row.setDisabledAt(clock.instant());
+        mfaRepository.save(row);
         redis.delete(FAIL_PREFIX + userId);
     }
 

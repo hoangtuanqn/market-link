@@ -13,8 +13,10 @@ import com.techx.intervue.modules.conversation.repositories.MessageAttachmentRep
 import com.techx.intervue.modules.conversation.repositories.MessageReportRepository;
 import com.techx.intervue.modules.conversation.repositories.MessageRepository;
 import com.techx.intervue.modules.conversation.services.impl.AttachmentService;
+import com.techx.intervue.modules.user.entities.AdminMfa;
 import com.techx.intervue.modules.user.entities.User;
 import com.techx.intervue.modules.user.enums.RoleType;
+import com.techx.intervue.modules.user.repositories.AdminMfaRepository;
 import com.techx.intervue.modules.user.repositories.UserRepository;
 import com.techx.intervue.modules.user.services.impl.UserSessionCache;
 import com.techx.intervue.modules.user.services.interfaces.JwtServiceInterface;
@@ -27,6 +29,8 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.Set;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,6 +58,7 @@ class AttachmentDownloadControllerTest {
     @LocalServerPort int port;
 
     @Autowired UserRepository users;
+    @Autowired AdminMfaRepository adminMfa;
     @Autowired ConversationRepository conversations;
     @Autowired MessageRepository messages;
     @Autowired MessageAttachmentRepository attachments;
@@ -172,6 +177,47 @@ class AttachmentDownloadControllerTest {
         assertThat(download(url(), recipient).statusCode()).isEqualTo(404);
     }
 
+    /**
+     * FR-115 §5 through the real filter chain: a video element sends no Authorization header, so
+     * the signed link alone must be enough — and a link edited to name someone else must not be.
+     */
+    @Test
+    void aSignedStreamLinkPlaysWithoutATokenAndSeeks() throws Exception {
+        HttpResponse<String> issued = download(url() + "/stream-url", recipient);
+        assertThat(issued.statusCode()).isEqualTo(200);
+        Matcher found = Pattern.compile("\"url\":\"([^\"]+)\"").matcher(issued.body());
+        assertThat(found.find()).isTrue();
+        String link = found.group(1);
+
+        HttpResponse<byte[]> played =
+                HttpClient.newHttpClient()
+                        .send(
+                                HttpRequest.newBuilder(URI.create(base() + link))
+                                        .header("Range", "bytes=1-2")
+                                        .GET()
+                                        .build(),
+                                HttpResponse.BodyHandlers.ofByteArray());
+        assertThat(played.statusCode()).isEqualTo(206);
+        assertThat(played.body()).containsExactly(2, 3);
+
+        String someoneElse =
+                link.replace("u=" + recipient.getId() + "&", "u=" + outsider.getId() + "&");
+        HttpResponse<String> refused =
+                HttpClient.newHttpClient()
+                        .send(
+                                HttpRequest.newBuilder(URI.create(base() + someoneElse))
+                                        .GET()
+                                        .build(),
+                                HttpResponse.BodyHandlers.ofString());
+        assertThat(refused.statusCode()).isEqualTo(403);
+        assertThat(refused.body()).contains("STREAM_LINK_INVALID");
+    }
+
+    @Test
+    void someoneOutsideTheThreadGetsNoStreamLink() throws Exception {
+        assertThat(download(url() + "/stream-url", outsider).statusCode()).isEqualTo(403);
+    }
+
     private String base() {
         return "http://localhost:" + port;
     }
@@ -221,6 +267,16 @@ class AttachmentDownloadControllerTest {
                                 .passwordHash("x")
                                 .role(role)
                                 .build());
+        if (role == RoleType.ADMIN) {
+            // FR-008: a session still owing the 2FA setup is refused every non-auth route, so the
+            // admin in these tests is one that finished it
+            adminMfa.save(
+                    AdminMfa.builder()
+                            .userId(saved.getId())
+                            .secretEncrypted("test-secret")
+                            .enabledAt(Instant.now())
+                            .build());
+        }
         sessions.set(saved.getId(), saved.getEmail(), Set.of(role), Duration.ofMinutes(10));
         return saved;
     }

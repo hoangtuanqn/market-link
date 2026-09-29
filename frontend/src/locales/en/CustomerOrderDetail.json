@@ -53,5 +53,29 @@
     "title": "Cancel this order?",
     "text": "{{stall}} is told right away and the items go back on sale.",
     "keep": "Keep order"
+  },
+  "spoilage": {
+    "report": "Report spoiled",
+    "reportLabel": "Report spoiled: {{name}}",
+    "reported": "Spoilage reported · {{status}}",
+    "title": "Report spoiled produce",
+    "intro": "Tell {{stall}} what went wrong with {{name}}. Each item can be reported once, until 2 days after its good-until date.",
+    "day": "Spoiled on",
+    "problem": "What went wrong",
+    "note": "Describe it (optional)",
+    "notePlaceholder": "Leaves turned black after 2 days in the fridge.",
+    "noteCount": "{{used}} of 500 characters.",
+    "photo": "Add a photo (optional)",
+    "photoReplace": "Replace photo",
+    "photoRemove": "Remove photo",
+    "photoAlt": "Photo of the spoiled produce",
+    "photoHint": "JPG, PNG or WebP, up to 5 MB.",
+    "photoTooBig": "The photo must be 5 MB or smaller.",
+    "photoType": "Send a JPG, PNG or WebP photo.",
+    "uploading": "Uploading the photo",
+    "send": "Send report",
+    "needProblem": "Pick what went wrong first.",
+    "sent": "Report sent. The stall can reply, and an admin may review it.",
+    "failed": "We could not send the report."
   }
 }

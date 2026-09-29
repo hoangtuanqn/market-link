@@ -81,6 +81,16 @@ public class ReviewService implements ReviewServiceInterface {
         if (order.getStatus() != OrderStatus.COMPLETED) {
             throw new OrderNotCompletedException();
         }
+        // D-13 conflict of interest: a Farmer who bought at their own stall must not rate it or
+        // its products (FR-052 ratings)
+        boolean ownStall =
+                farmerRepository
+                        .findById(order.getFarmerId())
+                        .filter(f -> Objects.equals(f.getUserId(), userId))
+                        .isPresent();
+        if (ownStall) {
+            throw new AccessDeniedException("You cannot review your own stall or its products.");
+        }
 
         Review review = new Review();
         review.setCustomerId(userId);

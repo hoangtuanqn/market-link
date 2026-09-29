@@ -23,7 +23,15 @@ const dem = ['Văn','Thị','Đức','Minh','Thanh','Hữu','Quốc','Ngọc','H
 const ten_nam = ['An','Bình','Cường','Đạt','Em','Phúc','Gia','Hào','Khang','Lâm','Minh','Nam','Phong','Quang','Sơn','Thắng','Trung','Vinh','Huy','Dũng','Tài','Kiệt','Long','Toàn','Hiếu'];
 const ten_nu = ['Anh','Bích','Chi','Diễm','Hà','Hương','Lan','Mai','Ngọc','Phượng','Quyên','Trang','Uyên','Vân','Yến','Thảo','Linh','Nhung','Hoa','Trinh','Tuyết','Hiền','Oanh','Thuỷ','My'];
 
-const districts = ['Quận 1','Quận 3','Quận 5','Quận 7','Quận 10','Bình Thạnh','Phú Nhuận','Tân Bình','Gò Vấp','TP. Thủ Đức','Tân Phú','Bình Tân'];
+// Wards of Ho Chi Minh City after the 2025 reform (two levels, no district): code + full name, as in the wards
+// table of migration V20260927001 (FR-001).
+const HCM = { code: '79', name: 'Thành phố Hồ Chí Minh' };
+const wards = [
+  ['26740', 'Phường Sài Gòn'], ['27154', 'Phường Bàn Cờ'], ['27343', 'Phường Chợ Lớn'], ['27487', 'Phường Tân Mỹ'],
+  ['27169', 'Phường Diên Hồng'], ['26929', 'Phường Bình Thạnh'], ['27073', 'Phường Phú Nhuận'],
+  ['27004', 'Phường Tân Bình'], ['26884', 'Phường Gò Vấp'], ['26824', 'Phường Thủ Đức'], ['27031', 'Phường Tân Phú'],
+  ['27442', 'Phường Bình Tân'],
+];
 const streets = ['Nguyễn Huệ','Lê Lợi','Hai Bà Trưng','Pasteur','Điện Biên Phủ','Võ Văn Tần','Cách Mạng Tháng 8','Phan Đình Phùng','Nguyễn Văn Trỗi','Lý Tự Trọng','Trần Hưng Đạo','Lê Duẩn','Nguyễn Đình Chiểu','Sương Nguyệt Ánh','Bùi Viện','Nam Kỳ Khởi Nghĩa','Nguyễn Thị Minh Khai','Trương Định','Lê Văn Sỹ','Hoàng Sa'];
 
 function vietName(gender) {
@@ -33,8 +41,15 @@ function vietName(gender) {
   return `${h} ${d} ${t}`;
 }
 
-function vietAddress() {
-  return `${rnd(1,200)} ${pick(streets)}, ${pick(districts)}`;
+/** A structured Ho Chi Minh City address: the parts plus the text AddressService would compose from them. */
+function vietAddress(line = String(rnd(1, 200)), street = pick(streets), ward = pick(wards)) {
+  return { line, street, wardCode: ward[0], text: `${line} ${street}, ${ward[1]}, ${HCM.name}` };
+}
+
+/** The columns and values of an address, for an INSERT INTO users (…) row. */
+const ADDRESS_COLS = 'address, country_code, province_code, ward_code, street_name, address_line';
+function addressValues(a) {
+  return `'${esc(a.text)}', 'VN', '${HCM.code}', '${a.wardCode}', '${esc(a.street)}', '${esc(a.line)}'`;
 }
 
 // --- Markets (existing) ---
@@ -68,68 +83,69 @@ const newFarmerStalls = [
   { n: 20, name: 'Cá khô Châu Đốc', desc: 'Khô cá lóc, khô cá sặc, mắm Châu Đốc truyền thống.', cat: 'seafood', mkts: ['Chợ Bến Thành','Chợ Thảo Điền'], cutoff: 48 },
 ];
 
-// New products for new farmers
+// New products for new farmers. Prices are in US dollars, the app's display currency (docs/decisions.md), the
+// same ~25,000 VND to the dollar as db/seed.sql.
 const newProducts = {
   11: [
-    { name: 'Rau cải bó xôi', desc: 'Cải bó xôi hữu cơ, lá non.', price: 25000, unit: 'bunch', stock: 40 },
-    { name: 'Rau xà lách Iceberg', desc: 'Xà lách giòn, trồng sạch.', price: 18000, unit: 'kg', stock: 35 },
-    { name: 'Cải thìa', desc: 'Cải thìa baby, nấu canh ngọt.', price: 15000, unit: 'bunch', stock: 50 },
-    { name: 'Rau má', desc: 'Rau má tươi, xay sinh tố.', price: 12000, unit: 'bunch', stock: 30 },
+    { name: 'Rau cải bó xôi', desc: 'Cải bó xôi hữu cơ, lá non.', price: 1.00, unit: 'bunch', stock: 40 },
+    { name: 'Rau xà lách Iceberg', desc: 'Xà lách giòn, trồng sạch.', price: 0.70, unit: 'kg', stock: 35 },
+    { name: 'Cải thìa', desc: 'Cải thìa baby, nấu canh ngọt.', price: 0.60, unit: 'bunch', stock: 50 },
+    { name: 'Rau má', desc: 'Rau má tươi, xay sinh tố.', price: 0.50, unit: 'bunch', stock: 30 },
   ],
   12: [
-    { name: 'Chôm chôm', desc: 'Chôm chôm nhãn Bến Tre, ngọt lịm.', price: 35000, unit: 'kg', stock: 60 },
-    { name: 'Mận An Phước', desc: 'Mận hồng đào, giòn ngọt.', price: 40000, unit: 'kg', stock: 25 },
-    { name: 'Nhãn lồng', desc: 'Nhãn lồng Hưng Yên cơm dày.', price: 55000, unit: 'kg', stock: 30 },
-    { name: 'Măng cụt', desc: 'Măng cụt Lái Thiêu tím đậm.', price: 65000, unit: 'kg', stock: 20 },
-    { name: 'Vú sữa', desc: 'Vú sữa Lò Rèn Vĩnh Kim.', price: 45000, unit: 'kg', stock: 15 },
+    { name: 'Chôm chôm', desc: 'Chôm chôm nhãn Bến Tre, ngọt lịm.', price: 1.40, unit: 'kg', stock: 60 },
+    { name: 'Mận An Phước', desc: 'Mận hồng đào, giòn ngọt.', price: 1.60, unit: 'kg', stock: 25 },
+    { name: 'Nhãn lồng', desc: 'Nhãn lồng Hưng Yên cơm dày.', price: 2.20, unit: 'kg', stock: 30 },
+    { name: 'Măng cụt', desc: 'Măng cụt Lái Thiêu tím đậm.', price: 2.60, unit: 'kg', stock: 20 },
+    { name: 'Vú sữa', desc: 'Vú sữa Lò Rèn Vĩnh Kim.', price: 1.80, unit: 'kg', stock: 15 },
   ],
   13: [
-    { name: 'Tôm sú', desc: 'Tôm sú biển tươi sống, size 20 con/kg.', price: 280000, unit: 'kg', stock: 20 },
-    { name: 'Cá thu', desc: 'Cá thu một nắng Phan Thiết.', price: 180000, unit: 'kg', stock: 15 },
-    { name: 'Mực ống', desc: 'Mực ống tươi, đánh bắt đêm.', price: 220000, unit: 'kg', stock: 10 },
-    { name: 'Nghêu', desc: 'Nghêu lụa Bến Tre, sạch cát.', price: 45000, unit: 'kg', stock: 40 },
+    { name: 'Tôm sú', desc: 'Tôm sú biển tươi sống, size 20 con/kg.', price: 11.20, unit: 'kg', stock: 20 },
+    { name: 'Cá thu', desc: 'Cá thu một nắng Phan Thiết.', price: 7.20, unit: 'kg', stock: 15 },
+    { name: 'Mực ống', desc: 'Mực ống tươi, đánh bắt đêm.', price: 8.80, unit: 'kg', stock: 10 },
+    { name: 'Nghêu', desc: 'Nghêu lụa Bến Tre, sạch cát.', price: 1.80, unit: 'kg', stock: 40 },
   ],
   14: [
-    { name: 'Gà ta nguyên con', desc: 'Gà ta thả vườn 1.5–2 kg.', price: 160000, unit: 'kg', stock: 15 },
-    { name: 'Vịt cỏ', desc: 'Vịt cỏ nuôi đồng, thịt chắc.', price: 120000, unit: 'kg', stock: 10 },
-    { name: 'Ức gà', desc: 'Ức gà lọc xương, đóng gói sạch.', price: 95000, unit: 'kg', stock: 25 },
-    { name: 'Trứng gà ta', desc: 'Trứng gà ta thả vườn Bình Dương.', price: 50000, unit: 'tray of 30', stock: 30 },
+    { name: 'Gà ta nguyên con', desc: 'Gà ta thả vườn 1.5–2 kg.', price: 6.40, unit: 'kg', stock: 15 },
+    { name: 'Vịt cỏ', desc: 'Vịt cỏ nuôi đồng, thịt chắc.', price: 4.80, unit: 'kg', stock: 10 },
+    { name: 'Ức gà', desc: 'Ức gà lọc xương, đóng gói sạch.', price: 3.80, unit: 'kg', stock: 25 },
+    { name: 'Trứng gà ta', desc: 'Trứng gà ta thả vườn Bình Dương.', price: 2.00, unit: 'tray of 30', stock: 30 },
   ],
   15: [
-    { name: 'Đậu phộng rang', desc: 'Đậu phộng rang tỏi ớt, giòn rụm.', price: 60000, unit: 'kg', stock: 30 },
-    { name: 'Hạt điều rang muối', desc: 'Hạt điều Bình Phước A+, rang muối.', price: 220000, unit: 'kg', stock: 15 },
-    { name: 'Cà phê rang xay', desc: 'Cà phê Robusta Đắk Lắk, rang mộc.', price: 150000, unit: 'kg', stock: 20 },
-    { name: 'Gạo ST25', desc: 'Gạo ST25 Sóc Trăng, thơm dẻo.', price: 35000, unit: 'kg', stock: 50 },
-    { name: 'Đậu đen', desc: 'Đậu đen xanh lòng, nấu chè.', price: 40000, unit: 'kg', stock: 25 },
+    { name: 'Đậu phộng rang', desc: 'Đậu phộng rang tỏi ớt, giòn rụm.', price: 2.40, unit: 'kg', stock: 30 },
+    { name: 'Hạt điều rang muối', desc: 'Hạt điều Bình Phước A+, rang muối.', price: 8.80, unit: 'kg', stock: 15 },
+    { name: 'Cà phê rang xay', desc: 'Cà phê Robusta Đắk Lắk, rang mộc.', price: 6.00, unit: 'kg', stock: 20 },
+    { name: 'Gạo ST25', desc: 'Gạo ST25 Sóc Trăng, thơm dẻo.', price: 1.40, unit: 'kg', stock: 50 },
+    { name: 'Đậu đen', desc: 'Đậu đen xanh lòng, nấu chè.', price: 1.60, unit: 'kg', stock: 25 },
   ],
   16: [
-    { name: 'Bánh flan caramel', desc: 'Bánh flan mềm mịn, caramel đắng nhẹ.', price: 15000, unit: 'jar', stock: 40 },
-    { name: 'Chè khúc bạch', desc: 'Chè khúc bạch vải thiều.', price: 20000, unit: 'jar', stock: 30 },
-    { name: 'Bánh tiramisu hộp', desc: 'Tiramisu cà phê, hộp 2 người.', price: 85000, unit: 'jar', stock: 12 },
-    { name: 'Cookies socola', desc: 'Cookies socola chip, bơ thật.', price: 65000, unit: 'jar', stock: 20 },
+    { name: 'Bánh flan caramel', desc: 'Bánh flan mềm mịn, caramel đắng nhẹ.', price: 0.60, unit: 'jar', stock: 40 },
+    { name: 'Chè khúc bạch', desc: 'Chè khúc bạch vải thiều.', price: 0.80, unit: 'jar', stock: 30 },
+    { name: 'Bánh tiramisu hộp', desc: 'Tiramisu cà phê, hộp 2 người.', price: 3.40, unit: 'jar', stock: 12 },
+    { name: 'Cookies socola', desc: 'Cookies socola chip, bơ thật.', price: 2.60, unit: 'jar', stock: 20 },
   ],
   17: [
-    { name: 'Nấm linh chi đỏ', desc: 'Nấm linh chi đỏ Lâm Đồng sấy khô.', price: 350000, unit: 'kg', stock: 8 },
-    { name: 'Nấm hương khô', desc: 'Nấm hương rừng Lâm Đồng.', price: 280000, unit: 'kg', stock: 10 },
-    { name: 'Nấm đùi gà', desc: 'Nấm đùi gà tươi, thịt chắc.', price: 55000, unit: 'kg', stock: 25 },
+    { name: 'Nấm linh chi đỏ', desc: 'Nấm linh chi đỏ Lâm Đồng sấy khô.', price: 14.00, unit: 'kg', stock: 8 },
+    { name: 'Nấm hương khô', desc: 'Nấm hương rừng Lâm Đồng.', price: 11.20, unit: 'kg', stock: 10 },
+    { name: 'Nấm đùi gà', desc: 'Nấm đùi gà tươi, thịt chắc.', price: 2.20, unit: 'kg', stock: 25 },
   ],
   18: [
-    { name: 'Súp lơ trắng', desc: 'Súp lơ trắng Đà Lạt, bông to.', price: 30000, unit: 'kg', stock: 30 },
-    { name: 'Atiso', desc: 'Atiso tươi Đà Lạt, nấu canh.', price: 45000, unit: 'kg', stock: 20 },
-    { name: 'Bắp cải tím', desc: 'Bắp cải tím Đà Lạt, làm salad.', price: 25000, unit: 'kg', stock: 25 },
-    { name: 'Cà rốt baby', desc: 'Cà rốt baby Đà Lạt, ăn sống.', price: 35000, unit: 'kg', stock: 40 },
-    { name: 'Đậu Hà Lan', desc: 'Đậu Hà Lan tươi, bóc vỏ.', price: 50000, unit: 'kg', stock: 15 },
+    { name: 'Súp lơ trắng', desc: 'Súp lơ trắng Đà Lạt, bông to.', price: 1.20, unit: 'kg', stock: 30 },
+    { name: 'Atiso', desc: 'Atiso tươi Đà Lạt, nấu canh.', price: 1.80, unit: 'kg', stock: 20 },
+    { name: 'Bắp cải tím', desc: 'Bắp cải tím Đà Lạt, làm salad.', price: 1.00, unit: 'kg', stock: 25 },
+    { name: 'Cà rốt baby', desc: 'Cà rốt baby Đà Lạt, ăn sống.', price: 1.40, unit: 'kg', stock: 40 },
+    { name: 'Đậu Hà Lan', desc: 'Đậu Hà Lan tươi, bóc vỏ.', price: 2.00, unit: 'kg', stock: 15 },
   ],
   19: [
-    { name: 'Sữa dê tươi', desc: 'Sữa dê tươi thanh trùng Long An.', price: 65000, unit: 'litre', stock: 20 },
-    { name: 'Sữa chua dê', desc: 'Sữa chua dê nhà làm, hũ 120ml.', price: 18000, unit: 'jar', stock: 50 },
-    { name: 'Phô mai dê', desc: 'Phô mai dê soft, hộp 200g.', price: 120000, unit: 'jar', stock: 10 },
+    { name: 'Sữa dê tươi', desc: 'Sữa dê tươi thanh trùng Long An.', price: 2.60, unit: 'litre', stock: 20 },
+    { name: 'Sữa chua dê', desc: 'Sữa chua dê nhà làm, hũ 120ml.', price: 0.70, unit: 'jar', stock: 50 },
+    { name: 'Phô mai dê', desc: 'Phô mai dê soft, hộp 200g.', price: 4.80, unit: 'jar', stock: 10 },
   ],
   20: [
-    { name: 'Khô cá lóc', desc: 'Khô cá lóc Châu Đốc, phơi nắng.', price: 200000, unit: 'kg', stock: 15 },
-    { name: 'Khô cá sặc', desc: 'Khô cá sặc bướm An Giang.', price: 180000, unit: 'kg', stock: 12 },
-    { name: 'Mắm cá linh', desc: 'Mắm cá linh truyền thống.', price: 80000, unit: 'litre', stock: 20 },
-    { name: 'Tôm khô', desc: 'Tôm khô loại 1 Cà Mau.', price: 350000, unit: 'kg', stock: 8 },
+    { name: 'Khô cá lóc', desc: 'Khô cá lóc Châu Đốc, phơi nắng.', price: 8.00, unit: 'kg', stock: 15 },
+    { name: 'Khô cá sặc', desc: 'Khô cá sặc bướm An Giang.', price: 7.20, unit: 'kg', stock: 12 },
+    { name: 'Mắm cá linh', desc: 'Mắm cá linh truyền thống.', price: 3.20, unit: 'litre', stock: 20 },
+    { name: 'Tôm khô', desc: 'Tôm khô loại 1 Cà Mau.', price: 14.00, unit: 'kg', stock: 8 },
   ],
 };
 
@@ -229,6 +245,7 @@ let sql = `-- ==================================================================
 -- ==========================================================================================
 -- Generated by scripts/generate-seed.js. Run after db/seed.sql.
 -- 100+ customers, 20 farmers, 500+ orders, hundreds of reviews, chat, feedback.
+-- Prices are in USD, like db/seed.sql: about 25,000 VND to the dollar, rounded to 5 cents.
 -- Safe to run repeatedly.
 -- ==========================================================================================
 
@@ -238,9 +255,9 @@ SET @pw := '\$2y\$10\$QECyiDw14FWH42GLLZE9l.wmNFH4v8ZHLz.UORUBYw3xGS4iDsTtW';
 -- ===== 1. ADDITIONAL USERS =====
 
 -- 1.1 Second admin
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
+INSERT INTO users (email, password_hash, role, full_name, phone, ${ADDRESS_COLS}, status, created_at) VALUES
   ('admin2@marketlink.vn', @pw, 'admin', '${esc('Phạm Minh Quang')}', '0900000100',
-   '${esc('Quận 3, TP. Hồ Chí Minh')}', 'active', UTC_TIMESTAMP() - INTERVAL 170 DAY)
+   ${addressValues(vietAddress('115', 'Nguyễn Đình Chiểu', ['27154', 'Phường Bàn Cờ']))}, 'active', UTC_TIMESTAMP() - INTERVAL 170 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,
                         phone = new.phone, role = new.role, status = new.status;
 
@@ -265,9 +282,9 @@ for (let i = 2; i <= 110; i++) {
 // Write customers in batches of 20
 for (let batch = 0; batch < customers.length; batch += 20) {
   const chunk = customers.slice(batch, batch + 20);
-  sql += `INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES\n`;
+  sql += `INSERT INTO users (email, password_hash, role, full_name, phone, ${ADDRESS_COLS}, status, created_at) VALUES\n`;
   sql += chunk.map((c, idx) =>
-    `  ('${c.email}', @pw, 'customer', '${esc(c.name)}', '${c.phone}', '${esc(c.addr)}', '${c.status}', UTC_TIMESTAMP() - INTERVAL ${c.daysAgo} DAY)`
+    `  ('${c.email}', @pw, 'customer', '${esc(c.name)}', '${c.phone}', ${addressValues(c.addr)}, '${c.status}', UTC_TIMESTAMP() - INTERVAL ${c.daysAgo} DAY)`
   ).join(',\n');
   sql += `\nAS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,\n`;
   sql += `                        phone = new.phone, status = new.status;\n\n`;
@@ -282,8 +299,8 @@ for (const f of newFarmerStalls) {
   usedPhones.add(phone);
   const daysAgo = rnd(120, 170);
 
-  sql += `INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer${f.n}@marketlink.vn', @pw, 'farmer', '${esc(name)}', '${phone}', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL ${daysAgo} DAY)
+  sql += `INSERT INTO users (email, password_hash, role, full_name, phone, ${ADDRESS_COLS}, status, created_at) VALUES
+  ('farmer${f.n}@marketlink.vn', @pw, 'farmer', '${esc(name)}', '${phone}', ${addressValues(vietAddress(String(rnd(100, 500)), 'Tỉnh lộ 8', ['27553', 'Xã Củ Chi']))}, 'active', UTC_TIMESTAMP() - INTERVAL ${daysAgo} DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;\n\n`;
 
   sql += `INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -319,9 +336,9 @@ WHERE u.email = 'farmer${f.n}@marketlink.vn' AND m.market_name = '${esc(mkt)}';\
 
 // 1.4 Pending farmer
 sql += `-- 1.4 Pending farmer
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
+INSERT INTO users (email, password_hash, role, full_name, phone, ${ADDRESS_COLS}, status, created_at) VALUES
   ('farmer-pending@marketlink.vn', @pw, 'farmer', '${esc('Trịnh Văn Tài')}', '0900000301',
-   '${esc('Hóc Môn, TP. Hồ Chí Minh')}', 'active', UTC_TIMESTAMP() - INTERVAL 3 DAY)
+   ${addressValues(vietAddress('235', 'Tỉnh lộ 8', ['27559', 'Xã Hóc Môn']))}, 'active', UTC_TIMESTAMP() - INTERVAL 3 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status)
@@ -338,10 +355,10 @@ for (const [farmN, prods] of Object.entries(newProducts)) {
   const catSlug = newFarmerStalls.find(f => f.n === Number(farmN)).cat;
   for (const p of prods) {
     sql += `INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, '${esc(p.name)}', '${esc(p.desc)}', ${p.price}, '${p.unit}', ${p.stock}, 'available', FALSE
+SELECT f.id, c.id, '${esc(p.name)}', '${esc(p.desc)}', ${p.price.toFixed(2)}, '${p.unit}', ${p.stock}, 'available', FALSE
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = '${catSlug}'
 WHERE u.email = 'farmer${farmN}@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = '${esc(p.desc)}', price = ${p.price}, stock_quantity = ${p.stock};\n`;
+ON DUPLICATE KEY UPDATE description = '${esc(p.desc)}', price = ${p.price.toFixed(2)}, stock_quantity = ${p.stock};\n`;
   }
   sql += '\n';
 }
@@ -632,6 +649,32 @@ FROM (
          'all', TRUE, UTC_TIMESTAMP() - INTERVAL 2 DAY, UTC_TIMESTAMP() + INTERVAL 3 DAY, UTC_TIMESTAMP() - INTERVAL 2 DAY
 ) x JOIN users admin ON admin.email = 'admin@marketlink.vn'
 WHERE NOT EXISTS (SELECT 1 FROM announcements a WHERE a.title = x.title);
+`;
+
+// Pickup slots for the stalls added above (db/seed.sql only covers the stalls that exist when it runs)
+sql += `
+-- ===== PICKUP SLOTS FOR THE NEW STALLS =====
+-- db/seed.sql generates slots for the stalls that exist when it runs; the stalls added above come later, so
+-- without this block they had operating days but no slot to book and every product read as sold out. Same
+-- statement as db/seed.sql (next 4 weeks, 60-minute windows, 5 orders each); INSERT IGNORE keeps it re-runnable.
+INSERT IGNORE INTO pickup_slots (farmer_market_id, slot_date, start_time, end_time, max_orders)
+SELECT fm.id, x.slot_date,
+       ADDTIME(od.pickup_start_time, SEC_TO_TIME(h.n * 3600)),
+       ADDTIME(od.pickup_start_time, SEC_TO_TIME((h.n + 1) * 3600)),
+       5
+FROM farmer_markets fm
+JOIN farmer_operating_days od ON od.farmer_market_id = fm.id
+JOIN (
+      SELECT DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) + INTERVAL (w.n * 7 + d.n) DAY AS slot_date
+      FROM (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3) w
+      CROSS JOIN (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3
+                  UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6) d
+     ) x ON DAYOFWEEK(x.slot_date) - 1 = od.day_of_week
+CROSS JOIN (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4
+            UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9
+            UNION ALL SELECT 10 UNION ALL SELECT 11) h
+WHERE fm.is_active = TRUE
+  AND ADDTIME(od.pickup_start_time, SEC_TO_TIME((h.n + 1) * 3600)) <= od.pickup_end_time;
 `;
 
 // Write file

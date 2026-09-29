@@ -12,7 +12,9 @@ import jakarta.validation.constraints.Size;
  * category — no official FR yet, see migration V20260926015.
  */
 public record CategoryRequest(
-        @NotBlank(message = "Category name is required.") @Size(max = 80) String name,
+        @NotBlank(message = "Category name is required.")
+                @Size(max = 80, message = "Keep the category name to 80 characters or fewer.")
+                String name,
         @PositiveOrZero int sortOrder,
         @NotNull(message = "Minimum shelf life is required.") @Positive Integer minShelfLifeDays,
         @NotNull(message = "Maximum shelf life is required.") @Positive Integer maxShelfLifeDays) {}
