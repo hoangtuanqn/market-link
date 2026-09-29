@@ -49,32 +49,27 @@
     "profiles": "<b>Không có hồ sơ riêng cho từng thành viên gia đình.</b> Cả nhà có thể dùng chung một tài khoản. Hệ thống không phân biệt từng người trong cùng một tài khoản."
   },
   "team": {
-    "title": "Đội ngũ",
-    "subtitle": "Sáu người, chia theo phần mỗi người phụ trách trong mã nguồn",
-    "namePending": "Tên sẽ được bổ sung",
+    "title": "Đội ngũ kỹ thuật",
+    "subtitle": "Năm kỹ sư, chia theo mảng phụ trách chính trong mã nguồn",
     "lead": {
-      "role": "Trưởng nhóm",
-      "note": "Lược đồ dữ liệu, hợp đồng API và mười hai quyết định mà cả nhóm dựa vào để xây dựng"
+      "role": "Kiến trúc hệ thống & Trưởng nhóm",
+      "note": "Lược đồ dữ liệu, hợp đồng API và các quyết định kiến trúc cốt lõi mà cả nhóm dựa vào"
     },
-    "be1": {
-      "role": "Backend",
-      "note": "Đăng nhập, vai trò và vòng đời đơn hàng, từ lúc đặt đến lúc hoàn tất"
+    "devops": {
+      "role": "DevOps & Hạ tầng",
+      "note": "Quy trình CI/CD, môi trường Docker, triển khai Vercel SPA và độ tin cậy hệ thống"
     },
-    "be2": {
-      "role": "Backend",
-      "note": "Sản phẩm, chợ, hàng theo tuần, báo cáo và dữ liệu mẫu cho bản demo"
+    "be": {
+      "role": "Backend & Tính năng cốt lõi",
+      "note": "Quản lý gian hàng, lịch pickup, vòng đời sản phẩm và cơ chế soft-delete dữ liệu"
     },
-    "fe1": {
-      "role": "Frontend",
-      "note": "Hệ thống thiết kế, các trang công khai, bản đồ và trang tổng quan của khách hàng"
-    },
-    "fe2": {
-      "role": "Frontend",
-      "note": "Trang tổng quan của nhà vườn và quản trị viên, cùng mọi biểu mẫu trong sản phẩm"
+    "fe": {
+      "role": "Frontend & Trải nghiệm người dùng",
+      "note": "Hệ thống thiết kế Hang tag, các trang công khai, cổng góp ý và bảng điều khiển khách hàng"
     },
     "qa": {
-      "role": "Kiểm thử và tài liệu",
-      "note": "Danh sách yêu cầu, dữ liệu kiểm thử và các tài liệu nộp kèm bài dự thi"
+      "role": "Kiểm thử & Tài liệu dự án",
+      "note": "Ma trận yêu cầu, kịch bản kiểm thử E2E, đối soát tuân thủ SRS và hồ sơ nộp bài"
     }
   },
   "stack": {

@@ -50,31 +50,26 @@
   },
   "team": {
     "title": "El equipo",
-    "subtitle": "Seis personas, repartidas según lo que cada una lleva en el repositorio",
-    "namePending": "Nombre por añadir",
+    "subtitle": "Cinco personas, divididas por lo que gestionan en el repositorio",
     "lead": {
-      "role": "Jefe de equipo",
-      "note": "El esquema, el contrato de la API y las doce decisiones sobre las que construye el resto del equipo"
+      "role": "Arquitecto de sistemas y líder de equipo",
+      "note": "El esquema de datos, el contrato de API y las decisiones clave del proyecto"
     },
-    "be1": {
-      "role": "Backend",
-      "note": "El inicio de sesión, los roles y el ciclo de vida del pedido, desde que se hace hasta que se completa"
+    "devops": {
+      "role": "DevOps e infraestructura",
+      "note": "Flujos de CI/CD, entornos Docker, despliegue en Vercel y estabilidad del sistema"
     },
-    "be2": {
-      "role": "Backend",
-      "note": "Productos, mercados, existencias semanales, informes y los datos de ejemplo para la demo"
+    "be": {
+      "role": "Backend y módulos principales",
+      "note": "Puestos de mercado, horarios de recogida, ciclo de inventario y gestión de datos"
     },
-    "fe1": {
-      "role": "Frontend",
-      "note": "El sistema de diseño, las páginas públicas, el mapa y el panel del Customer"
-    },
-    "fe2": {
-      "role": "Frontend",
-      "note": "Los paneles de Farmer y Admin, y todos los formularios del producto"
+    "fe": {
+      "role": "Frontend y UI/UX",
+      "note": "Sistema de diseño, páginas públicas, portal de comentarios y panel de cliente"
     },
     "qa": {
-      "role": "Calidad y documentación",
-      "note": "La lista de requisitos, los datos de prueba y los documentos que acompañan la entrega"
+      "role": "Control de calidad y documentación",
+      "note": "Verificación de requisitos, pruebas E2E, cumplimiento SRS y entregables"
     }
   },
   "stack": {

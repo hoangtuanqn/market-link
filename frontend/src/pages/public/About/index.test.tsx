@@ -62,3 +62,15 @@ describe('About credits name the dollar in every language', () => {
     }
   });
 });
+
+describe('Engineering team showcase (FR-082)', () => {
+  it('renders all 5 real team member names instead of placeholders', () => {
+    about();
+    expect(screen.getByText('Phạm Hoàng Tuấn')).toBeInTheDocument();
+    expect(screen.getByText('Trần Phúc Khang')).toBeInTheDocument();
+    expect(screen.getByText('Mai Trung Hậu')).toBeInTheDocument();
+    expect(screen.getByText('Lâm Hoàng An')).toBeInTheDocument();
+    expect(screen.getByText('Nguyễn Hoàng Dũng')).toBeInTheDocument();
+    expect(screen.queryByText('Name to add')).not.toBeInTheDocument();
+  });
+});
