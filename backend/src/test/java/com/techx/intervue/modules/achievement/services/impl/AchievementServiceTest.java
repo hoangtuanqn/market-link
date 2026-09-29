@@ -67,8 +67,6 @@ class AchievementServiceTest {
 
     @Test
     void saysTheFiguresAreUnavailableWhenOrdersCannotBeRead() {
-        // the orders table does not exist (the order core is not built yet) or the DB failed: do
-        // not expose a 500 on the Account page
         when(repository.statsFor(any()))
                 .thenThrow(
                         new BadSqlGrammarException("stats", "SELECT", new java.sql.SQLException()));

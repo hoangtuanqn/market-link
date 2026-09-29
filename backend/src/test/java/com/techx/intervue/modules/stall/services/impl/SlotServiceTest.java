@@ -39,7 +39,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** FR-032, FR-067 — generating and managing slots. Today (by Clock) is Saturday 26/09/2026. */
 class SlotServiceTest {
 
     private static final long USER_ID = 1L;
@@ -57,7 +56,6 @@ class SlotServiceTest {
     private SlotQueryRepository queryRepository;
     private SlotService service;
 
-    /** A fake pickup_slots table: saveAll writes into it, lookups by date range read from it. */
     private final List<PickupSlot> table = new ArrayList<>();
 
     @BeforeEach
@@ -122,7 +120,6 @@ class SlotServiceTest {
         return fm;
     }
 
-    /** 0 = Sunday … 6 = Saturday, like farmer_operating_days. */
     private void operatingDays(int dayOfWeek, String start, String end) {
         FarmerOperatingDay d = new FarmerOperatingDay();
         d.setFarmerMarketId(FARMER_MARKET_ID);
@@ -149,10 +146,6 @@ class SlotServiceTest {
         return s;
     }
 
-    /**
-     * Sunday 07:00–11:00, 60-minute windows, the range Mon 28/09 → Sun 04/10: exactly 4 slots, all
-     * on Sunday.
-     */
     @Test
     void generateCreatesOneSlotPerWindowPerMatchingWeekday() {
         operatingDays(0, "07:00", "11:00");
@@ -178,7 +171,6 @@ class SlotServiceTest {
                         });
     }
 
-    /** Only Saturday declared → the range Tue 29/09 … Sat 03/10 has no slot outside Saturday. */
     @Test
     void generateSkipsWeekdaysWithNoOperatingDay() {
         operatingDays(6, "07:00", "09:00");
@@ -193,10 +185,6 @@ class SlotServiceTest {
                 .noneMatch(d -> d.equals(LocalDate.of(2026, 9, 29)));
     }
 
-    /**
-     * Clicking "Generate" twice with the same parameters: no duplicate slot, returns the same
-     * number of slots.
-     */
     @Test
     void generateIsIdempotent() {
         operatingDays(0, "07:00", "11:00");
@@ -210,11 +198,6 @@ class SlotServiceTest {
         assertThat(again).hasSize(4);
     }
 
-    /**
-     * FR-067: generating again with a shorter length only skipped windows starting at the same
-     * minute, so 60-minute slots got 30-minute ones laid over them (07:30–08:00 inside
-     * 07:00–08:00). A window that overlaps a slot still offered that day is now skipped.
-     */
     @Test
     void generateAgainWithAnotherLengthNeverOverlapsAnExistingSlot() {
         operatingDays(0, "07:00", "09:00");
@@ -232,10 +215,6 @@ class SlotServiceTest {
                         org.assertj.core.groups.Tuple.tuple("08:00", "09:00"));
     }
 
-    /**
-     * FR-067: a slot left outside a moved time window is no longer offered (it is dropped by the
-     * open-day rule), so it does not stop the new window from getting its slots.
-     */
     @Test
     void generateAfterTheWindowMovedFillsTheNewWindow() {
         operatingDays(0, "07:00", "09:00");
@@ -245,8 +224,6 @@ class SlotServiceTest {
 
         List<SlotResource> again = service.generateSlots(USER_ID, generate(sunday, sunday));
 
-        // 08:00–09:00 starts before 08:30, so it is not offered any more and does not block
-        // 08:30–09:30; both old slots stay in the table, untouched
         assertThat(again)
                 .extracting(SlotResource::startTime)
                 .containsExactly("07:00", "08:00", "08:30", "09:30");
@@ -275,7 +252,6 @@ class SlotServiceTest {
         verify(slotRepository, never()).saveAll(any());
     }
 
-    /** R-06: farmerMarketId is real but belongs to another stall → 403, nothing generated. */
     @Test
     void generateOnAnotherFarmersMarketIs403() {
         when(farmerMarketRepository.findById(FARMER_MARKET_ID))
@@ -289,10 +265,6 @@ class SlotServiceTest {
         verify(slotRepository, never()).saveAll(any());
     }
 
-    /**
-     * Having left the market (fm.is_active = FALSE) means the generated slots are seen by nobody —
-     * reject right away.
-     */
     @Test
     void generateRejectsAMarketTheStallHasLeft() {
         when(farmerMarketRepository.findById(FARMER_MARKET_ID))
@@ -306,20 +278,12 @@ class SlotServiceTest {
         verify(slotRepository, never()).saveAll(any());
     }
 
-    /**
-     * A time window right up against midnight: adding minutes must not wrap to 00:00 and run
-     * forever. A leftover partial window is dropped.
-     */
     @Test
     void windowsNeverWrapPastMidnightAndDropTheOddTail() {
         assertThat(SlotService.windows(LocalTime.of(23, 0), LocalTime.of(23, 59), 60)).isEmpty();
         assertThat(SlotService.windows(LocalTime.of(7, 0), LocalTime.of(11, 30), 60)).hasSize(4);
     }
 
-    /**
-     * D-06: with 3 orders already placed, capacity cannot be lowered to 2 — 409, existing orders
-     * unbroken.
-     */
     @Test
     void updateSlotRejectsMaxOrdersBelowBookedCount() {
         PickupSlot booked = slot(5, 3, true);
@@ -331,7 +295,6 @@ class SlotServiceTest {
         verify(slotRepository, never()).save(any());
     }
 
-    /** R-06: a slot of another stall → 403, even when the id is real. */
     @Test
     void updateSlotOfAnotherFarmerIs403() {
         when(slotRepository.lockById(900L)).thenReturn(Optional.of(slot(5, 0, true)));
@@ -356,11 +319,6 @@ class SlotServiceTest {
         assertThat(out.marketId()).isEqualTo(MARKET_ID);
     }
 
-    /**
-     * A full slot → isFull; a disabled slot never gets out. The SQL statement is a constant so read
-     * it directly, no database needed (the integration test SlotQueryRepositoryTest runs it on real
-     * MySQL).
-     */
     @Test
     void publicSlotsMarksFullSlots() {
         assertThat(SlotResource.of(slot(5, 5, true), MARKET_ID).isFull()).isTrue();
@@ -375,10 +333,6 @@ class SlotServiceTest {
         assertThat(service.publicSlots(FARMER_ID, MARKET_ID, TODAY)).containsExactly(full);
     }
 
-    /**
-     * No date given → from today through the next 14 days, so the cart can build its pickup-day
-     * list.
-     */
     @Test
     void publicSlotsWithoutDateCoverTheNextTwoWeeks() {
         when(farmerProfileRepository.findById(FARMER_ID))
@@ -389,9 +343,6 @@ class SlotServiceTest {
         verify(queryRepository).publicSlots(FARMER_ID, null, TODAY, TODAY.plusDays(13), NOW);
     }
 
-    /**
-     * D-09: a stall not approved / suspended has no slots for customers — 404 like the stall page.
-     */
     @Test
     void publicSlotsOfASuspendedStallIs404() {
         when(farmerProfileRepository.findById(FARMER_ID))

@@ -25,10 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-116 — Admin only. **No endpoint reads an arbitrary conversationId** (spec §8.3): everything an
- * admin sees starts from a report.
- */
 @Validated
 @RestController
 @RequestMapping("/api/v1/admin/message-reports")
@@ -51,18 +47,12 @@ public class AdminMessageReportController extends BaseController {
         return ok(moderation.detail(id), "Report loaded.");
     }
 
-    /**
-     * Not in the API table of spec §6.1, added on purpose: the queue is filtered by status=new, so
-     * if there is no way to move a report to reviewed, every report an admin looked at and decided
-     * NOT to hide would stay `new` forever and the queue becomes useless after a few days.
-     */
     @PatchMapping("/{id}/dismiss")
     public ResponseEntity<ApiResource<MessageReportResource>> dismiss(
             @PathVariable Long id, @AuthenticationPrincipal CustomUserDetails admin) {
         return ok(moderation.dismiss(admin.getId(), id), "Report dismissed.");
     }
 
-    /** An unknown value → 400 through the handler, instead of silently returning the whole list. */
     private static ReportStatus parseStatus(String status) {
         if (status == null || status.isBlank()) {
             return null;

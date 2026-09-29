@@ -1,7 +1,5 @@
-/** Limit on the source image before cropping; the image sent after cropping is only a few tens of KB. */
 const MAX_SOURCE_BYTES = 15 * 1024 * 1024;
 
-/** Why a photo cannot be used; the dialog shows `CustomerAccount:photoErrors.<code>`. */
 export type PhotoErrorCode = 'notPhoto' | 'tooBig' | 'unreadable' | 'noPicture' | 'captureFailed';
 
 export class PhotoError extends Error {
@@ -13,7 +11,6 @@ export class PhotoError extends Error {
   }
 }
 
-/** Decode the image with the browser itself, so HEIC / WebP also work if the browser can read them. */
 export const loadImage = async (blob: Blob): Promise<HTMLImageElement> => {
   if (blob.type && !blob.type.startsWith('image/')) {
     throw new PhotoError('notPhoto');
@@ -37,7 +34,6 @@ export const releaseImage = (img: HTMLImageElement | null) => {
   if (img?.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
 };
 
-/** The camera's current frame, mirrored to match exactly what the user just saw. */
 export const captureFrame = (video: HTMLVideoElement): Promise<Blob> => {
   const canvas = document.createElement('canvas');
   canvas.width = video.videoWidth;

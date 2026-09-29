@@ -22,16 +22,11 @@ import Notification from '@/utils/notification';
 
 const PAGE_SIZE = 3;
 const SORTS = ['near', 'stalls', 'opens'] as const;
-/**
- * Contract §3 caps one page at 50. A city's markets fit in a single call, so the day chips (which need to know every
- * market's days), the area counts and the map all work from one list, and filtering and paging stay in the browser.
- */
 const FETCH_SIZE = 50;
 const NO_MARKETS: MarketType[] = [];
 
 const dayLabel = (dow: number) => dayName(dow, 'long');
 
-/** FR-010 — browse markets by location and day. */
 const MarketsPage = () => {
   const { t } = useTranslation('Markets');
   const { t: tc } = useTranslation();
@@ -42,7 +37,6 @@ const MarketsPage = () => {
   const [page, setPage] = useState(1);
   const listRef = useRef<HTMLDivElement>(null);
   const { state: geo, request: askLocation, clear: forgetLocation } = useGeolocation();
-  /** Null until the visitor shares where they are; nothing here asks on its own. */
   const here = geo.status === 'ready' ? geo.at : null;
 
   const { state: load, retry } = useRequest('markets', () =>
@@ -50,20 +44,16 @@ const MarketsPage = () => {
   );
   const all = load.kind === 'ready' ? load.data : NO_MARKETS;
   const openOn = useCallback((dow: number) => all.filter((m) => m.days.includes(dow)), [all]);
-  // The coming week from today, today first (FR-010). Until the visitor picks a chip, the day is the first one from
-  // today that some market opens on.
   const week = nextSevenDays(now);
   const defaultDay = firstOpenDay((d) => openOn(d).length > 0, now);
   const day = picked ?? defaultDay;
 
   const onDay = useMemo(() => openOn(day), [openOn, day]);
-  // Areas come from the markets themselves, so a new market in a new ward needs no edit here (FR-010).
   const areas = useMemo(
     () => [...new Set(all.map((m) => m.area).filter(Boolean))].sort((a, b) => a.localeCompare(b)),
     [all],
   );
 
-  // Straight-line distance from the visitor to every market, recomputed only when the position or the list changes.
   const distances = useMemo(() => {
     if (!here) return new Map<number, number>();
     return new Map(all.map((m) => [m.id, distanceKm(here, { lat: m.lat, lng: m.lng })]));
@@ -73,13 +63,11 @@ const MarketsPage = () => {
   const matches = useMemo(() => {
     const list = onDay.filter((m) => area === 'all' || m.area === area);
     return [...list].sort((a, b) => {
-      // Settings → Market you shop at most: that market leads whatever the sort
       const pa = String(a.id) === preferredMarket ? 0 : 1;
       const pb = String(b.id) === preferredMarket ? 0 : 1;
       if (pa !== pb) return pa - pb;
       if (sort === 'stalls') return b.stalls - a.stalls;
       if (sort === 'opens') return a.open.localeCompare(b.open);
-      // Unknown distances sink to the bottom rather than pretending to be nearby.
       return (distances.get(a.id) ?? Infinity) - (distances.get(b.id) ?? Infinity);
     });
   }, [onDay, area, sort, preferredMarket, distances]);
@@ -89,7 +77,6 @@ const MarketsPage = () => {
   const from = (currentPage - 1) * PAGE_SIZE;
   const slice = matches.slice(from, from + PAGE_SIZE);
 
-  // The map follows the filters; with nothing to show it falls back to every market rather than an empty city view.
   const mapMarkers = useMemo<MapMarker[]>(() => {
     const shown = matches.length ? matches : all;
     const onPage = new Set(matches.slice(from, from + PAGE_SIZE).map((m) => m.id));
@@ -149,10 +136,6 @@ const MarketsPage = () => {
 
       <Card as="section" aria-label={t('filters.label')} className="flex flex-col gap-4 p-4">
         <div className="flex flex-wrap items-center justify-between gap-4">
-          {/*
-           * A day no market anywhere opens on is shown struck through rather than hidden, so the week always reads the
-           * same and nobody clicks into an empty result.
-           */}
           <DayChips
             legend={t('filters.day')}
             name="market-day"
@@ -194,11 +177,6 @@ const MarketsPage = () => {
           />
         </div>
 
-        {/*
-         * Location is asked for here and nowhere else, and only when this button is pressed. "Nearest first"
-         * is therefore never the default: sorting by a distance we have not measured would be a guess
-         * presented as a fact.
-         */}
         <div className="border-line flex flex-wrap items-center gap-3 border-t pt-3">
           {here ? (
             <>
@@ -247,7 +225,6 @@ const MarketsPage = () => {
         )}
       </p>
 
-      {/* Two columns on desktop: markets list on the left, sticky map on the right. Stacks on smaller screens. */}
       <div className="grid items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
         <div ref={listRef} className="flex flex-col gap-4">
           {load.kind === 'error' ? (
@@ -260,7 +237,6 @@ const MarketsPage = () => {
             <>
               <div className="flex flex-col gap-4">
                 {load.kind === 'loading' ? (
-                  // As many placeholders as the page is about to hold, so nothing shifts when the markets land.
                   <MarketCardSkeleton count={PAGE_SIZE} />
                 ) : (
                   slice.map((m) => <MarketCard key={m.id} market={m} distanceKm={distances.get(m.id)} />)

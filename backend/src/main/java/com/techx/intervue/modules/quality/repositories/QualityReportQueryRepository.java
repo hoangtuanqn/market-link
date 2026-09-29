@@ -14,11 +14,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * FR-122, FR-123: spoilage reports as the stall and the admin read them — joined with the order,
- * the line's promise, the stall and the customer, plus the stall's strikes inside the window.
- * Filters are bound values only (R-04); the order is fixed, newest first.
- */
 @Repository
 @RequiredArgsConstructor
 public class QualityReportQueryRepository {
@@ -42,7 +37,6 @@ public class QualityReportQueryRepository {
 
     static final String STALL_FILTER = "WHERE qr.farmer_id = :farmerId\n";
 
-    /** {@code :status} null = any; {@code :decided} = confirmed or dismissed (Ruling 6). */
     static final String ADMIN_FILTER =
             """
             WHERE (:status IS NULL OR qr.status = :status)
@@ -56,7 +50,6 @@ public class QualityReportQueryRepository {
 
     private final NamedParameterJdbcTemplate jdbc;
 
-    /** The reports about one stall (farmer_profiles.id), newest first. */
     public PageResource<QualityReportResource> forStall(
             long farmerId, Instant since, int offset, int limit) {
         return page(
@@ -67,7 +60,6 @@ public class QualityReportQueryRepository {
                 limit);
     }
 
-    /** The admin queue (spec §4.4.3), newest first. */
     public PageResource<QualityReportResource> forAdmin(
             String status,
             boolean decided,
@@ -136,7 +128,6 @@ public class QualityReportQueryRepository {
                 rs.getInt("active_strikes"));
     }
 
-    /** TIMESTAMP columns are already a UTC instant (C5-15): {@code toInstant()} is enough. */
     private static Instant instant(ResultSet rs, String column) throws SQLException {
         Timestamp ts = rs.getTimestamp(column);
         return ts == null ? null : ts.toInstant();

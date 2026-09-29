@@ -10,11 +10,6 @@ import Notification from '@/utils/notification';
 
 type Status = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; maintenanceMode: boolean };
 
-/**
- * FR-008-adjacent — site-wide maintenance mode (prototype admin/settings.html). Turning it ON locks out every visitor
- * but admins right away (MaintenanceModeFilter), so that direction asks for a confirm dialog; turning it back OFF does
- * not.
- */
 const WebsiteStatusCard = () => {
   const { t } = useTranslation('AdminSettings');
   const [status, setStatus] = useState<Status>({ kind: 'loading' });

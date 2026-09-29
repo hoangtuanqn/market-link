@@ -19,7 +19,6 @@ describe('ThreadList', () => {
     await i18n.changeLanguage('en');
   });
 
-  /** The server stores "Photo"/"Video" in English as a media message's preview; the reader sees their own language. */
   it('shows the photo and video previews in the reader language', async () => {
     await setLanguage('vi');
     render(
@@ -47,7 +46,6 @@ describe('ThreadList', () => {
     expect(screen.getByRole('status')).toBeInTheDocument();
   });
 
-  /** Review Focus #5: a new user who has messaged nobody yet. */
   it('shows an empty state with something to do', () => {
     render(
       <ThreadList threads={[]} activeId={null} onPick={vi.fn()} loading={false} error={false} onRetry={vi.fn()} />,
@@ -114,7 +112,6 @@ describe('ThreadList', () => {
     expect(onPick).toHaveBeenCalledWith(7);
   });
 
-  /** More than 20 threads: there must be a way to reach threads older than the first page. */
   it('shows a way to load more conversations', async () => {
     const onLoadMore = vi.fn();
     render(

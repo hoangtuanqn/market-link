@@ -14,15 +14,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * Reads of near-expiry deals (FR-124, FR-125). JdbcTemplate because they join the stock row with
- * its product and stall; every value goes through parameters (R-04).
- */
 @Repository
 @RequiredArgsConstructor
 public class DealQueryRepository {
 
-    /** The stall's deal days from {@code fromDate} on, for its "On sale" block. */
     public static final String FARMER_DEALS_SQL =
             """
             SELECT d.product_id, p.name, p.unit, d.stock_date, d.quantity_available, d.list_price,
@@ -62,12 +57,6 @@ public class DealQueryRepository {
                                 rs.getInt("days_left")));
     }
 
-    /**
-     * Deal days a customer may see, before the slot check the service adds (spec §4.5.4): on a
-     * deal, something left, inside the window, the product listed and for sale at an approved stall
-     * ({@link ProductQueryRepository#VISIBILITY_FILTER}). {@code marketId} keeps a day only when
-     * the stall is at that market on that weekday and the market is held then.
-     */
     public static final String OPEN_DEALS_SQL =
             """
             SELECT d.product_id, d.stock_date, d.quantity_available, d.unit_price, d.list_price,
@@ -100,7 +89,6 @@ public class DealQueryRepository {
                     ORDER BY d.stock_date, d.discount_percent DESC, p.name, p.id
                     """;
 
-    /** Markets per stall and weekday (0 = Sunday) where the stall is and the market is held. */
     public static final String MARKETS_BY_WEEKDAY_SQL =
             """
             SELECT fm.farmer_id, od.day_of_week, m.market_name
@@ -114,7 +102,6 @@ public class DealQueryRepository {
             ORDER BY fm.farmer_id, od.day_of_week, m.market_name
             """;
 
-    /** One row of {@link #OPEN_DEALS_SQL}. */
     public record DealRow(
             long productId,
             LocalDate stockDate,
@@ -161,7 +148,6 @@ public class DealQueryRepository {
                                 rs.getString("stall_name")));
     }
 
-    /** Stall id → weekday → the market names, sorted by name. */
     public Map<Long, Map<Integer, List<String>>> marketNamesByWeekday(Collection<Long> farmerIds) {
         Map<Long, Map<Integer, List<String>>> out = new HashMap<>();
         if (farmerIds.isEmpty()) {

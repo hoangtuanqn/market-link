@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-120: the shelf-life suggestions of the product form. Farmer; an admin sees the same list. */
 @RestController
 @RequestMapping("/api/v1/shelf-life-guides")
 @PreAuthorize("hasAnyRole('FARMER','ADMIN')")

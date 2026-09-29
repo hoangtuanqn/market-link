@@ -8,10 +8,6 @@ import io.swagger.v3.oas.models.security.SecurityScheme;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-/**
- * Swagger UI: http://localhost:8080/swagger-ui.html. Click "Authorize" and paste the accessToken
- * (no need for the word "Bearer") to call the APIs that require sign-in.
- */
 @Configuration
 public class OpenApiConfig {
 

@@ -23,11 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * /api/v1/farmer/orders (contract §7) — FR-036, 065, 066: orders placed at the Farmer's own stall,
- * and the four status changes the Farmer makes (accept/decline/ready/complete). The list filters by
- * status and pickup date (pickup_date); every value goes through a parameter (R-04).
- */
 @RestController
 @RequestMapping("/api/v1/farmer/orders")
 @PreAuthorize("hasRole('FARMER')")

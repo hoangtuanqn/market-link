@@ -38,15 +38,6 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
-/**
- * HTTP codes per spec section 6.3, for the chat module's controllers. An oversized multipart error
- * is handled by the GLOBAL UploadExceptionHandler (Tomcat rejects it while reading the body, before
- * it knows which controller receives it), so do not add it again here: if two advices catch the
- * same exception and neither declares @Order, the returned error.code is undefined.
- *
- * <p>Adding a new controller to the module means adding it to assignableTypes below, otherwise all
- * of its exceptions become 500 — ConversationExceptionHandlerScopeTest pins that down.
- */
 @Slf4j
 @RestControllerAdvice(
         assignableTypes = {
@@ -90,11 +81,6 @@ public class ConversationExceptionHandler {
                 List.of(FieldErrorResource.builder().message(INVALID_MESSAGE).build()));
     }
 
-    /**
-     * FR-115: POST /attachments sent without a multipart body, or without its `file` part → 400 on
-     * the `file` field instead of a 500. An oversized file never reaches this: it fails while the
-     * body is read, before a controller is picked, and UploadExceptionHandler answers it (413).
-     */
     @ExceptionHandler({MultipartException.class, MissingServletRequestPartException.class})
     ResponseEntity<ApiResource<Void>> missingFile(Exception e) {
         return error(
@@ -122,13 +108,11 @@ public class ConversationExceptionHandler {
         return error(HttpStatus.NOT_FOUND, "NOT_FOUND", e.getMessage(), List.of());
     }
 
-    /** R-06: wrong owner → 403, not 404, so the FE shows the right reason. */
     @ExceptionHandler(ConversationAccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> notAMember(ConversationAccessDeniedException e) {
         return error(HttpStatus.FORBIDDEN, "NOT_A_MEMBER", e.getMessage(), List.of());
     }
 
-    /** R-06, FR-114: pinning an order that does not belong to the two people in the thread. */
     @ExceptionHandler(OrderNotInConversationException.class)
     ResponseEntity<ApiResource<Void>> orderNotInConversation(OrderNotInConversationException e) {
         return error(HttpStatus.FORBIDDEN, "ORDER_NOT_IN_CONVERSATION", e.getMessage(), List.of());
@@ -144,50 +128,37 @@ public class ConversationExceptionHandler {
         return error(HttpStatus.FORBIDDEN, "ACCOUNT_RESTRICTED", e.getMessage(), List.of());
     }
 
-    /** D-09: an old thread can be read, sending more gives 409 with the reason in plain text. */
     @ExceptionHandler(ConversationClosedException.class)
     ResponseEntity<ApiResource<Void>> closed(ConversationClosedException e) {
         return error(HttpStatus.CONFLICT, "CONVERSATION_CLOSED", e.getMessage(), List.of());
     }
 
-    /**
-     * Spec §8.4 — limit exceeded. The reason is written out in words so the FE shows the whole
-     * sentence.
-     */
     @ExceptionHandler(RateLimitedException.class)
     ResponseEntity<ApiResource<Void>> tooManyRequests(RateLimitedException e) {
         return error(HttpStatus.TOO_MANY_REQUESTS, "RATE_LIMITED", e.getMessage(), List.of());
     }
 
-    /** R-06: someone else's image → 403, not 404. */
     @ExceptionHandler(AttachmentNotYoursException.class)
     ResponseEntity<ApiResource<Void>> notYourAttachment(AttachmentNotYoursException e) {
         return error(HttpStatus.FORBIDDEN, "ATTACHMENT_NOT_YOURS", e.getMessage(), List.of());
     }
 
-    /** FR-115 §5: a forged, expired or incomplete video link → 403. */
     @ExceptionHandler(StreamLinkInvalidException.class)
     ResponseEntity<ApiResource<Void>> streamLinkInvalid(StreamLinkInvalidException e) {
         return error(HttpStatus.FORBIDDEN, "STREAM_LINK_INVALID", e.getMessage(), List.of());
     }
 
-    /** An image attaches to exactly one message → 409. */
     @ExceptionHandler(AttachmentAlreadyUsedException.class)
     ResponseEntity<ApiResource<Void>> attachmentUsed(AttachmentAlreadyUsedException e) {
         return error(HttpStatus.CONFLICT, "ATTACHMENT_ALREADY_USED", e.getMessage(), List.of());
     }
 
-    /** Spec §6.3 — 413. */
     @ExceptionHandler(AttachmentTooLargeException.class)
     ResponseEntity<ApiResource<Void>> tooLarge(AttachmentTooLargeException e) {
         return error(
                 HttpStatus.PAYLOAD_TOO_LARGE, "ATTACHMENT_TOO_LARGE", e.getMessage(), List.of());
     }
 
-    /**
-     * Spec §6.3 — 415. The conclusion comes from the magic bytes, not from the Content-Type the
-     * client sent.
-     */
     @ExceptionHandler(UnsupportedImageTypeException.class)
     ResponseEntity<ApiResource<Void>> unsupportedType(UnsupportedImageTypeException e) {
         return error(
@@ -197,7 +168,6 @@ public class ConversationExceptionHandler {
                 List.of());
     }
 
-    /** ImageProbe throws this when the image is too large in pixels — 400 with the field name. */
     @ExceptionHandler(InvalidFieldException.class)
     ResponseEntity<ApiResource<Void>> invalidField(InvalidFieldException e) {
         return error(
@@ -211,33 +181,25 @@ public class ConversationExceptionHandler {
                                 .build()));
     }
 
-    /** Spec §8.3 — 403. The admin's boundary comes from a report, not from the role. */
     @ExceptionHandler(ModerationOutOfScopeException.class)
     ResponseEntity<ApiResource<Void>> outOfScope(ModerationOutOfScopeException e) {
         return error(HttpStatus.FORBIDDEN, "MODERATION_OUT_OF_SCOPE", e.getMessage(), List.of());
     }
 
-    /** Spec §8.5 — 400. Reporting is for accusing others, not for removing your own message. */
     @ExceptionHandler(CannotReportOwnMessageException.class)
     ResponseEntity<ApiResource<Void>> ownMessage(CannotReportOwnMessageException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
     }
 
-    /** uq_report_once — 409. */
     @ExceptionHandler(AlreadyReportedException.class)
     ResponseEntity<ApiResource<Void>> alreadyReported(AlreadyReportedException e) {
         return error(HttpStatus.CONFLICT, "ALREADY_REPORTED", e.getMessage(), List.of());
     }
 
-    /**
-     * Two requests open the same pair at the same moment → UNIQUE blocks one; the client calls
-     * again and gets the thread.
-     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> integrity(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
         if (cause.contains("uq_report_once")) {
-            // Two report requests both get past existsBy...; UNIQUE blocks the second one
             return error(
                     HttpStatus.CONFLICT,
                     "ALREADY_REPORTED",
@@ -245,9 +207,6 @@ public class ConversationExceptionHandler {
                     List.of());
         }
         if (cause.contains("uq_attach_message")) {
-            // Two requests send the same image at the same moment; UNIQUE blocks the second one.
-            // Same meaning as
-            // the check in MessageService, so it returns the same code.
             return error(
                     HttpStatus.CONFLICT,
                     "ATTACHMENT_ALREADY_USED",

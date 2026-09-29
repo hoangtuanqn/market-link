@@ -19,7 +19,6 @@ describe('CodeInput', () => {
     expect(input).toHaveValue('482');
   });
 
-  /** Review Focus #5. */
   it('takes a pasted code with a space or a dash', async () => {
     const onComplete = vi.fn();
     render(<Harness onComplete={onComplete} />);

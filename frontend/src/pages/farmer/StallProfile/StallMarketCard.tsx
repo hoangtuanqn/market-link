@@ -12,15 +12,12 @@ import { STALL_CODE_MAX, type MarketSettings } from './constants';
 
 type StallMarketCardProps = {
   sm: StallMarketDto;
-  /** The market itself, once the market list has loaded. */
   market: MarketType | undefined;
   settings: MarketSettings;
-  /** Only the first market gets the map; the others take coordinates as numbers. */
   withMap: boolean;
   onUpdate: (patch: Partial<MarketSettings>) => void;
 };
 
-/** One market the stall sells at: stall code, days, pickup window, and where the stall stands. */
 const StallMarketCard = ({ sm, market: m, settings: s, withMap, onUpdate }: StallMarketCardProps) => {
   const { t } = useTranslation('FarmerStallProfile');
   const marketDays = m?.days ?? [0, 1, 2, 3, 4, 5, 6];

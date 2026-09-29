@@ -23,20 +23,13 @@ import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * FR-062/FR-063 — a row, once created from the template, used to win over every later price or
- * template change (reproduced 29/09: price $0.50 → $0.80 and Saturday 30 → 50 left 03/10 at $0.50
- * and 27; Saturday removed and 03/10 still took orders).
- */
 class DailyStockTemplateSyncTest {
 
     private static final long PRODUCT_ID = 1L;
 
-    /** Tuesday 29/09/2026, 10:00 in Ho Chi Minh City. */
     private static final Clock CLOCK =
             Clock.fixed(Instant.parse("2026-09-29T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
 
-    /** Saturday (day 6), four days ahead. */
     private static final LocalDate SATURDAY = LocalDate.of(2026, 10, 3);
 
     private static final LocalDate SUNDAY = LocalDate.of(2026, 10, 4);
@@ -77,8 +70,6 @@ class DailyStockTemplateSyncTest {
         return t;
     }
 
-    // ---------- price ----------
-
     @Test
     void aNewPriceReachesTheDaysStillSoldAtTheOldOne() {
         ProductDailyStock saturday = row(SATURDAY, 27, "0.50");
@@ -117,9 +108,6 @@ class DailyStockTemplateSyncTest {
         verify(dailyStock, never()).lockFrom(any(), any());
     }
 
-    // ---------- weekly template ----------
-
-    /** 30 a Saturday, 3 sold, 27 left: raising the quota to 50 leaves 47, the 3 stay sold. */
     @Test
     void aRaisedQuotaKeepsWhatIsAlreadySold() {
         ProductDailyStock saturday = row(SATURDAY, 27, "0.50");
@@ -149,7 +137,6 @@ class DailyStockTemplateSyncTest {
         assertThat(saturday.getQuantityAvailable()).isZero();
     }
 
-    /** Reproduced: Saturday taken out of the template, 03/10 still accepted orders. */
     @Test
     void aDroppedWeekdayStopsSelling() {
         ProductDailyStock saturday = row(SATURDAY, 27, "0.50");
@@ -161,10 +148,6 @@ class DailyStockTemplateSyncTest {
         assertThat(saturday.getQuantityAvailable()).isZero();
     }
 
-    /**
-     * 27 left + 3 sold ≠ the old quota of 40: the Farmer set this day by hand (FR-063), so a new
-     * quota does not overwrite it.
-     */
     @Test
     void aDaySetByHandKeepsItsQuantity() {
         ProductDailyStock saturday = row(SATURDAY, 27, "0.50");

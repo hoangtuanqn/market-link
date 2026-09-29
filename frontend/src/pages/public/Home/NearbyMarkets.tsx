@@ -7,7 +7,6 @@ import type { MarketType } from '@/types/market.types';
 
 type NearbyMarketsProps = {
   markets: MarketType[];
-  /** True while the request is out: as many placeholders as the grid is about to hold (FR-084). */
   loading?: boolean;
 };
 
@@ -21,7 +20,6 @@ const NearbyMarkets = ({ markets, loading = false }: NearbyMarketsProps) => {
       if (m.area) {
         set.add(m.area);
       } else if (m.address) {
-        // Fallback: extract common district name patterns if area is blank
         const match = /(Thủ Đức|District 7|Bình Thạnh|Quận \d+|Thảo Điền)/i.exec(m.address);
         if (match) set.add(match[1]);
       }

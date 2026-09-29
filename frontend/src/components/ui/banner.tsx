@@ -10,7 +10,6 @@ const variants: Record<Variant, string> = {
   danger: 'bg-danger-bg text-danger',
 };
 
-/** Status banner with an icon, a title and a line of text (design system `.ml-banner`). */
 export function Banner({
   variant = 'info',
   title,

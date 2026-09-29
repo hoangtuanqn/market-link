@@ -20,7 +20,6 @@ const FILTERS = ['all', 'placed', 'accepted', 'ready', 'completed', 'declined', 
 type Filter = (typeof FILTERS)[number];
 const STATUS_FILTERS = FILTERS.filter((f): f is Exclude<Filter, 'all'> => f !== 'all');
 
-/** One status per chip (a "ruling", see task-9-brief.md 9.4): `all` sends no `status` at all. */
 const FILTER_STATUS: Record<Filter, OrderStatus | undefined> = {
   all: undefined,
   placed: 'placed',
@@ -34,10 +33,6 @@ const FILTER_STATUS: Record<Filter, OrderStatus | undefined> = {
 const PAGE_SIZE = 20;
 const NO_ROWS: OrderListItemDto[] = [];
 
-/**
- * FR-070 — every order on MarketLink, across every market. An admin reads these: only the stall moves an order through
- * its states (D-04), so there is no action column.
- */
 const AdminOrdersPage = () => {
   const { t } = useTranslation('AdminOrders');
   const [filter, setFilter] = useState<Filter>('all');
@@ -57,7 +52,6 @@ const AdminOrdersPage = () => {
     AdminReportApi.orders({ status: FILTER_STATUS[filter], marketId: market || undefined, page, pageSize: PAGE_SIZE }),
   );
 
-  // The chip counts follow the market picker too, so they match the list under them (FR-075).
   const { state: countsLoad } = useRequest(`admin-order-counts:${market}`, () =>
     Promise.all(
       STATUS_FILTERS.map((f) =>
@@ -99,8 +93,6 @@ const AdminOrdersPage = () => {
         </Link>
       ),
     },
-    // Plain text: the buyer can be a Farmer (D-13), whose account the customer record does not open, and a list row
-    // does not say which. The order page links the buyer to the record that exists (FR-072).
     { key: 'customer', label: t('col.customer'), render: (o) => o.customerName },
     { key: 'stall', label: t('col.stall'), render: (o) => o.stallName },
     { key: 'market', label: t('col.market'), render: (o) => o.marketName },

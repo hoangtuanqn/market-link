@@ -15,10 +15,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockMultipartFile;
 
-/**
- * Same reason as MarketImageUploadServiceTest: the real file type is concluded from the magic
- * bytes.
- */
 class ProductImageUploadServiceTest {
 
     private static final byte[] PNG = {

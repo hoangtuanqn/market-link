@@ -18,14 +18,12 @@ import ShelfLifeGuides from './ShelfLifeGuides';
 type CategoryRow = CategoryType;
 const NO_CATEGORIES: CategoryRow[] = [];
 const PAGE_SIZE = 8;
-/** Matches the server cap on categories.name (CategoryRequest, VARCHAR(80)). */
 const NAME_MAX = 80;
 
 const bySortThenName = (a: CategoryRow, b: CategoryRow) => a.sortOrder - b.sortOrder || a.name.localeCompare(b.name);
 
 type NewCategoryErrors = Partial<Record<'name' | 'min' | 'max', string>>;
 
-/** Pill for is_active. Colour never carries the meaning alone — each state has its own word and glyph. */
 const CategoryStatusPill = ({ active, label }: { active: boolean; label: string }) => (
   <span
     className={Helper.cn(
@@ -38,11 +36,6 @@ const CategoryStatusPill = ({ active, label }: { active: boolean; label: string 
   </span>
 );
 
-/**
- * FR-076 — the one list every stall picks from when it adds a product. Sale units are not here: the SRS gives the admin
- * "product categories" and nothing else as master data, so units ship as a fixed list in `constants/units.ts`. Reads
- * and writes go through `/api/v1/categories` and `/api/v1/admin/categories` (contract §5).
- */
 const AdminCategoriesPage = () => {
   const { t } = useTranslation('AdminCategories');
   const { t: tc } = useTranslation();
@@ -54,7 +47,6 @@ const AdminCategoriesPage = () => {
 
   const [newCategory, setNewCategory] = useState({ name: '', position: '', minShelfLife: '', maxShelfLife: '' });
   const [newCategoryErrors, setNewCategoryErrors] = useState<NewCategoryErrors>({});
-  /** Names typed into the table but not saved yet, by category id. */
   const [drafts, setDrafts] = useState<Record<number, string>>({});
   const [removing, setRemoving] = useState<CategoryRow | null>(null);
   const [moveTo, setMoveTo] = useState('');
@@ -121,7 +113,6 @@ const AdminCategoriesPage = () => {
         minShelfLifeDays: min,
         maxShelfLifeDays: max,
       });
-      // Re-adding a removed name brings that same row back (same id), so swap it in instead of listing it twice.
       replaceCategories((list) =>
         list.some((c) => c.id === created.id)
           ? list.map((c) => (c.id === created.id ? created : c))
@@ -132,7 +123,6 @@ const AdminCategoriesPage = () => {
     } catch (error) {
       const fromServer = Helper.getFieldErrors(error);
       const mapped: NewCategoryErrors = {
-        // A taken name comes back as a 409 without field details; it still belongs under the name field.
         name:
           fromServer.name ?? (Helper.getErrorCode(error) === 'DUPLICATE_CATEGORY' ? t('error.nameTaken') : undefined),
         min: fromServer.minShelfLifeDays,
@@ -151,8 +141,6 @@ const AdminCategoriesPage = () => {
     try {
       const moveToCategoryId = moveTo ? Number(moveTo) : undefined;
       await CatalogApi.deactivateCategory(removing.id, moveToCategoryId);
-      // Reassigning products changes another category's count too — a full reload is simpler and
-      // correct than hand-patching every row's count locally.
       retry();
       Notification.success({ text: t('toast.categoryRemoved', { name: removing.name }) });
       setRemoving(null);
@@ -199,7 +187,6 @@ const AdminCategoriesPage = () => {
           : t('col.shelfLifeRange', { min: c.minShelfLifeDays, max: c.maxShelfLifeDays }),
     },
     { key: 'count', label: t('col.products'), align: 'num' },
-    // Products and stalls per category arrive with reports (C9); until then the column shows a dash.
     { key: 'stalls', label: t('col.stalls'), align: 'num', render: () => '—' },
     {
       key: 'status',
@@ -249,8 +236,6 @@ const AdminCategoriesPage = () => {
       </div>
 
       <div className="grid flex-1 items-start gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
-        {/* min-w-0: a flex item defaults to min-width:auto, so without it this column grows to the table's
-            natural width and the table's own overflow-x-auto never gets a chance to scroll. */}
         <div className="flex h-full min-h-[440px] min-w-0 flex-1 flex-col">
           {load.kind === 'loading' || initialLoading ? (
             <CategoryTableSkeleton />
@@ -308,8 +293,6 @@ const AdminCategoriesPage = () => {
             value={newCategory.position}
             onChange={(e) => setNewCategory({ ...newCategory, position: e.target.value })}
           />
-          {/* The fields carry a min width for flex rows; inside this grid the columns set the width, so let
-              them shrink — two 220px fields do not fit the 380px sidebar and push the page sideways. */}
           <div className="grid grid-cols-2 gap-3 [&>*]:min-w-0">
             <Field
               id="new-category-min-shelf-life"

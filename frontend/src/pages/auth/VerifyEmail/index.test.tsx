@@ -50,20 +50,17 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe('VerifyEmail', () => {
-  /** Review Focus #5. */
   it('redirects to the form when nothing is pending', () => {
     renderAt();
     expect(screen.getByText('the form')).toBeInTheDocument();
   });
 
-  /** Review Focus #5. */
   it('survives a reload: the address comes back from this tab', () => {
     park();
     renderAt();
     expect(screen.getByText('lan@example.com')).toBeInTheDocument();
   });
 
-  /** Final review: the countdown is not read out every second; screen readers hear once that a new code can go. */
   it('announces once that a new code can be sent, not every second of the countdown', () => {
     park(30_000);
     const { unmount } = renderAt();
@@ -99,7 +96,6 @@ describe('VerifyEmail', () => {
 
   it('a wrong code says how many tries are left and clears the boxes', async () => {
     park();
-    // Answer after a moment, like a real request: the boxes are disabled while it is on its way
     vi.mocked(AuthApi.verifySignup).mockImplementation(
       () =>
         new Promise((_, reject) =>
@@ -110,7 +106,6 @@ describe('VerifyEmail', () => {
     const input = screen.getByLabelText('Six-digit code');
 
     await userEvent.type(input, '111111');
-    // jsdom lets a disabled input take focus; a browser does not. Record whether each focus() lands on an enabled box.
     const focusedEnabled: boolean[] = [];
     const focus = vi.spyOn(HTMLElement.prototype, 'focus').mockImplementation(function (this: HTMLElement) {
       focusedEnabled.push(!(this as HTMLInputElement).disabled);
@@ -120,7 +115,6 @@ describe('VerifyEmail', () => {
       expect(await screen.findByText('That code is not right')).toBeInTheDocument();
       expect(screen.getByText(/3 tries left/)).toBeInTheDocument();
       expect(input).toHaveValue('');
-      // The boxes are ready for the next try without another click
       expect(focusedEnabled).toContain(true);
     } finally {
       focus.mockRestore();

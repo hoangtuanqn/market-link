@@ -22,7 +22,6 @@ class ShelfLifePolicyTest {
         assertThat(ShelfLifePolicy.extendedBy(9, null)).isZero();
     }
 
-    /** One day of shelf life means "use it on the day you collect it". */
     @Test
     void theLastGoodDayIncludesTheFirstDay() {
         LocalDate pickup = LocalDate.of(2026, 10, 3);

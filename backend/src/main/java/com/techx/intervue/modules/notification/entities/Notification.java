@@ -15,10 +15,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * A stored notification of one person (FR-042). The text is translated into the recipient's
- * language at creation time.
- */
 @Entity
 @Getter
 @Setter

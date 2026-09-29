@@ -11,9 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-/**
- * @EnableScheduling: runs the @Scheduled jobs (e.g. RefreshTokenCleanupJob).
- */
 @Configuration
 @EnableScheduling
 public class AppConfig implements WebMvcConfigurer {
@@ -31,10 +28,6 @@ public class AppConfig implements WebMvcConfigurer {
                 .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
     }
 
-    /**
-     * Images/videos from Farmer applications are stored locally (FarmerUploadService) — for
-     * test/demo use, already whitelisted as public in SecurityConfig ("/uploads/**").
-     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         String location = "file:" + Path.of(uploadsDir).toAbsolutePath() + "/";

@@ -12,21 +12,13 @@ import { splitLoginResult } from '@/utils/mfa';
 import Notification from '@/utils/notification';
 import Session from '@/utils/session';
 
-/**
- * Step 2 of Google sign-in: Google redirects here with `code` and `state`. Check `state` matches the one from when the
- * button was clicked (anti- CSRF), then send `code` to the backend to exchange for a session. `code` can only be used
- * once.
- */
 const GoogleCallbackPage = () => {
   const { t } = useTranslation('GoogleCallback');
   const { t: tc } = useTranslation();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const [error, setError] = useState<string>();
-  // FR-072: a deactivated account is not a failed sign-in — Google authenticated them fine. Saying
-  // "sign-in did not finish" would send them round the loop again; they need the real reason.
   const [deactivated, setDeactivated] = useState(false);
-  // StrictMode runs effects twice in dev: block sending the same code twice
   const started = useRef(false);
 
   useEffect(() => {
@@ -57,33 +49,27 @@ const GoogleCallbackPage = () => {
       .then((response) => {
         const { pending, session } = splitLoginResult(response.data, true);
         if (pending) {
-          // FR-008: Google sign-in does not skip an admin's step 2
           navigate(ADMIN_VERIFY_PATH, { replace: true, state: pending });
           return;
         }
         const { user } = session;
         Session.save(session);
         Notification.success({ text: response.message || t('toast.signedIn') });
-        // replace: remove ?code=&state= from the browser history. Missing phone/address → complete the profile; no password yet → set a
-        // password
         navigate(Helper.nextStepAfterSocialLogin(user), { replace: true });
       })
       .catch((err) => {
         const message = Helper.getErrorMessage(err, t('errors.failed'));
         if (Helper.getErrorCode(err) === 'ACCOUNT_DISABLED') {
-          // The page states it in full below; a toast on top would only repeat it.
           setDeactivated(true);
           setError(message);
           return;
         }
         fail(message);
       });
-    // t changes when the language changes: started blocks a re-run
   }, [searchParams, navigate, t]);
 
   return (
     <Card className="mx-auto my-4 flex w-full max-w-115 flex-col gap-4 p-4 md:my-8 md:p-8">
-      {/* Do not send the URL containing the code to another page through the Referer header */}
       <meta name="referrer" content="no-referrer" />
       {deactivated && error ? (
         <>

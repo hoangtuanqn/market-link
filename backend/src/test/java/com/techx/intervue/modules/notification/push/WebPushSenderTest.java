@@ -40,11 +40,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
-/**
- * The real send path through the web-push library to a fake push service on the machine, then
- * decrypt per RFC 8291 with the "browser's" key — if the encryption is wrong then a real browser
- * could not read it either.
- */
 @SpringBootTest
 @TestPropertySource(
         properties = {
@@ -178,13 +173,11 @@ class WebPushSenderTest {
         assertThat(subscriptions.findById(s.getId())).isPresent();
     }
 
-    // --- RFC 8291 on the browser side ---
-
     private byte[] decrypt(byte[] body) throws Exception {
         ByteBuffer in = ByteBuffer.wrap(body);
         byte[] salt = new byte[16];
         in.get(salt);
-        in.getInt(); // record size
+        in.getInt();
         byte[] asPublic = new byte[in.get() & 0xff];
         in.get(asPublic);
         byte[] cipherText = new byte[in.remaining()];

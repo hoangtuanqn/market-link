@@ -100,7 +100,6 @@ class ConversationServiceTest {
                         rateLimiter);
         when(users.findById(7L)).thenReturn(Optional.of(customer));
         when(users.findById(3L)).thenReturn(Optional.of(farmer));
-        // the stall id (30) and the user id (3) are deliberately different — Review Focus #1
         when(farmerProfiles.findById(30L))
                 .thenReturn(
                         Optional.of(
@@ -147,7 +146,6 @@ class ConversationServiceTest {
         verify(conversations, never()).save(any());
     }
 
-    /** Review Focus #1: the stall id and the user id are two different number ranges. */
     @Test
     void openUsesTheStallOwnerNotTheProfileId() {
         when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.empty());
@@ -168,7 +166,6 @@ class ConversationServiceTest {
         verify(conversations, never()).save(any());
     }
 
-    /** Review Focus #2: a Farmer clicking "Message this stall" on their own stall. */
     @Test
     void openRefusesMessagingYourOwnStall() {
         assertThatThrownBy(() -> service.open(3L, new OpenConversationRequest(30L)))
@@ -187,10 +184,6 @@ class ConversationServiceTest {
         verify(conversations, never()).save(any());
     }
 
-    /**
-     * Spec 8.1 / D-09: when a stall is suspended the old thread can still be read — opening again
-     * must return that thread.
-     */
     @Test
     void openReturnsAnExistingThreadEvenWhenTheStallIsNoLongerOpen() {
         Conversation existing = Conversation.between(3L, 7L);
@@ -239,7 +232,6 @@ class ConversationServiceTest {
         assertThat(other.farmerId()).isNull();
     }
 
-    /** "Seen" must survive a page reload: it is the OTHER person's read marker, not my own. */
     @Test
     void theThreadCarriesWhenTheOtherPersonLastRead() {
         Conversation c = Conversation.between(3L, 7L);
@@ -254,10 +246,6 @@ class ConversationServiceTest {
                 .isEqualTo(NOW.minusSeconds(60));
     }
 
-    /**
-     * open() already has the stall profile in hand: a freshly opened thread also carries the stall
-     * name.
-     */
     @Test
     void anOpenedThreadNamesTheStall() {
         when(conversations.findByUserAIdAndUserBId(3L, 7L)).thenReturn(Optional.empty());
@@ -340,9 +328,6 @@ class ConversationServiceTest {
         when(conversations.findMine(eq(7L), any())).thenReturn(new PageImpl<>(List.of(c)));
         when(users.findAllById(List.of(3L))).thenReturn(List.of(farmer));
         Instant seen = Instant.parse("2026-09-25T05:48:00Z");
-        // the service passes a Set (others.keySet()); Mockito matches by equals so do not stub with
-        // a
-        // List
         when(presence.snapshot(argThat(ids -> ids.contains(3L))))
                 .thenReturn(Map.of(3L, new PresenceService.PresenceInfo(false, seen)));
 
@@ -363,11 +348,6 @@ class ConversationServiceTest {
         verify(conversations, never()).save(any(Conversation.class));
     }
 
-    /**
-     * open() is idempotent (spec §6.1). The §8.4 limit counts "NEW threads per hour", so reopening
-     * an existing thread must not use up a slot — otherwise the FE calling POST /conversations
-     * every time it opens the chat frame would lock users out of their own conversation.
-     */
     @Test
     void reopeningAnExistingThreadDoesNotSpendARateLimitToken() {
         Conversation existing = Conversation.between(7L, 3L);

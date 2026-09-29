@@ -68,7 +68,6 @@ beforeEach(() => {
 });
 
 describe('ReportedMessages', () => {
-  /** Spec §8.3/§9.4: the admin's boundary must be stated plainly on screen. */
   it('tells the admin what they can and cannot read', async () => {
     render(<ReportedMessages />);
     expect(await screen.findByText(/only messages someone reported/i)).toBeInTheDocument();
@@ -91,7 +90,6 @@ describe('ReportedMessages', () => {
     expect(within(context).getByText('Chuyển khoản trước 500k').closest('li')).toHaveAttribute('aria-current', 'true');
   });
 
-  /** FR-115: the admin can play the video of the reported message, through the same narrow path as photos. */
   it('shows the video of a reported video message', async () => {
     vi.mocked(ModerationApi.report).mockResolvedValue(
       ok({
@@ -117,7 +115,6 @@ describe('ReportedMessages', () => {
     expect(screen.queryByText('Chuyển khoản trước 500k')).not.toBeInTheDocument();
   });
 
-  /** The reporter's own words are part of the report: show them in the queue and in the report. */
   it("shows the reporter's note in the row and in the report", async () => {
     vi.mocked(ModerationApi.reports).mockResolvedValue(
       ok({ items: [{ ...row, note: 'Asked me to pay first' }], page: 1, pageSize: 20, total: 1 }),

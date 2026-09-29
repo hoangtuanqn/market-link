@@ -48,7 +48,6 @@ const msg = (id: number, senderId = 3, conversationId = 42) => ({
 
 const ok = <T>(data: T) => ({ success: true, message: 'OK', data, timestamp: '' }) as never;
 
-/** A promise the test decides itself when to resolve, to simulate a late response. */
 const deferred = <T>() => {
   let resolve!: (value: T) => void;
   const promise = new Promise<T>((r) => {
@@ -59,7 +58,6 @@ const deferred = <T>() => {
 
 const emit = (destination: string, payload: unknown) => act(() => handlers.get(destination)?.(JSON.stringify(payload)));
 
-/** The socket has just reconnected. */
 const reconnect = () =>
   act(() => {
     connectListeners.forEach((listener) => listener());
@@ -87,8 +85,6 @@ describe('useConversation', () => {
     await waitFor(() => expect(ConversationApi.markRead).toHaveBeenCalledWith(42));
   });
 
-  /** Messages loaded fine but only the mark-as-read step failed: the thread must still show, not an error screen. */
-  /** FR-111: nobody pushes "read" to the reader, so the header badge must refresh itself after the read is saved. */
   it('refreshes the unread badge once the thread is marked read', async () => {
     ChatUnreadStore.setUnread(5);
     vi.mocked(ConversationApi.unreadCount).mockResolvedValue(ok({ count: 2 }));
@@ -125,7 +121,6 @@ describe('useConversation', () => {
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
   });
 
-  /** Review Focus #3: an admin hides a message → both sides see it disappear right away. */
   it('removes a message an admin hid', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -135,7 +130,6 @@ describe('useConversation', () => {
     expect(result.current.messages.map((m) => m.id)).toEqual([1, 3]);
   });
 
-  /** Review Focus #7: a backgrounded tab has not "seen" it yet; only bringing the tab forward marks it read. */
   it('waits until the tab is visible before marking read', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -153,14 +147,12 @@ describe('useConversation', () => {
     visibility.mockRestore();
   });
 
-  /** "Seen" survives a reload: it starts from the read marker the thread list already had. */
   it('starts from the read marker the thread list already has', () => {
     const { result } = renderHook(() => useConversation(42, { otherReadAt: '2026-09-26T10:05:00Z' }));
 
     expect(result.current.otherReadAt).toBe('2026-09-26T10:05:00Z');
   });
 
-  /** Review Focus #1 at the hook layer: after sending, the event coming back must not double the bubble either. */
   it('does not show a message twice when the socket echoes what REST already returned', async () => {
     vi.mocked(ConversationApi.send).mockResolvedValue(ok(msg(4, 7)));
     const { result } = renderHook(() => useConversation(42));
@@ -172,7 +164,6 @@ describe('useConversation', () => {
     await waitFor(() => expect(result.current.messages.filter((m) => m.id === 4)).toHaveLength(1));
   });
 
-  /** The server tells the real type from the bytes; the message kind follows it, not the file name. */
   it('sends a video message for an uploaded video and a photo message for a photo', async () => {
     vi.mocked(ConversationApi.uploadMedia)
       .mockResolvedValueOnce(ok({ attachmentId: 55, url: '/api/v1/attachments/55', mime: 'video/quicktime' }))
@@ -204,7 +195,6 @@ describe('useConversation', () => {
     expect(ConversationApi.messages).toHaveBeenLastCalledWith(42, { before: 1, size: 30 });
   });
 
-  /** Clicking "load more" twice in a row: one request is enough. */
   it('does not ask for the same older page twice at once', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -221,7 +211,6 @@ describe('useConversation', () => {
     expect(ConversationApi.messages).toHaveBeenCalledTimes(1);
   });
 
-  /** A failed old page reports on its own, without clearing messages already read and without throwing outward. */
   it('reports a failed older page without losing the thread', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -234,7 +223,6 @@ describe('useConversation', () => {
     expect(result.current.messages).toHaveLength(3);
   });
 
-  /** The last page returns fewer than size → nothing left to load, the "load more" button must turn off. */
   it('knows when there is nothing older left', async () => {
     const { result } = renderHook(() => useConversation(42));
 
@@ -252,10 +240,6 @@ describe('useConversation', () => {
     await waitFor(() => expect(result.current.otherTyping).toBe(true));
   });
 
-  /**
-   * The other person finished typing and sent: the arriving message is enough to know they stopped, no need to wait 6
-   * seconds or a typing:false frame.
-   */
   it('hides the typing dots as soon as their message arrives', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -266,7 +250,6 @@ describe('useConversation', () => {
     expect(result.current.otherTyping).toBe(false);
   });
 
-  /** Spec §7.4: the only inbound path is /app/typing with { conversationId, typing }. */
   it('tells the other person when I start and stop typing', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -278,10 +261,6 @@ describe('useConversation', () => {
     expect(realtime.publish).toHaveBeenNthCalledWith(2, '/app/typing', { conversationId: 42, typing: false });
   });
 
-  /**
-   * Composer calls typing(true) on every keystroke; the server caps it at 120 frames/minute and silently drops the
-   * rest.
-   */
   it('does not send a frame for every keystroke', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -297,7 +276,6 @@ describe('useConversation', () => {
     expect(realtime.publish).toHaveBeenCalledTimes(2);
   });
 
-  /** Leaving mid-typing must turn off the other side's three dots right away, without waiting 6 seconds. */
   it('says I stopped typing when I leave the thread mid-sentence', async () => {
     const { result, rerender } = renderHook(({ id }) => useConversation(id), { initialProps: { id: 42 } });
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -308,7 +286,6 @@ describe('useConversation', () => {
     expect(realtime.publish).toHaveBeenLastCalledWith('/app/typing', { conversationId: 42, typing: false });
   });
 
-  /** FR-112 "seen" after a reload or a deep link: the thread list, and its read marker, can arrive after the thread. */
   it('takes the read marker when the thread list arrives after the thread opened', () => {
     const { result, rerender } = renderHook(({ readAt }) => useConversation(42, { otherReadAt: readAt }), {
       initialProps: { readAt: undefined as string | undefined },
@@ -336,7 +313,6 @@ describe('useConversation', () => {
     expect(result.current.otherReadAt).toBe('2026-09-26T10:09:00Z');
   });
 
-  /** FR-112 "seen": the backend sends "read" to the sender when the other person reads. */
   it('remembers when the other person read the thread', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -358,10 +334,6 @@ describe('useConversation', () => {
     expect(result.current.otherReadAt).toBe('2026-09-26T10:02:00Z');
   });
 
-  /**
-   * The 1440px screen switches thread in place, without remounting the panel: the old thread's messages must not
-   * linger.
-   */
   it('drops the previous thread as soon as another one is picked', async () => {
     const { result, rerender } = renderHook(({ id }) => useConversation(id), { initialProps: { id: 42 } });
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -372,7 +344,6 @@ describe('useConversation', () => {
     expect(result.current.messages).toEqual([]);
   });
 
-  /** Clicking thread A then B quickly, with A's reply arriving after B's: A's message must not land on B's screen. */
   it('ignores a late answer for a thread that is no longer open', async () => {
     const late = deferred<unknown>();
     vi.mocked(ConversationApi.messages).mockReturnValueOnce(late.promise as never);
@@ -396,7 +367,6 @@ describe('useConversation', () => {
     expect(realtime.publish).not.toHaveBeenCalled();
   });
 
-  /** Review Focus #3: STOMP reconnects on its own but does not replay missed messages. */
   it('refetches the open thread when the socket comes back', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -407,10 +377,6 @@ describe('useConversation', () => {
     await waitFor(() => expect(ConversationApi.messages).toHaveBeenCalledWith(42, { size: 30 }));
   });
 
-  /**
-   * Catch-up only MERGES the newest page in, it does not replace the whole list: an old page already scrolled up to is
-   * kept.
-   */
   it('catches up without dropping the older pages already loaded', async () => {
     const { result } = renderHook(() => useConversation(42));
     await waitFor(() => expect(result.current.messages).toHaveLength(3));
@@ -457,7 +423,6 @@ describe('useThreadList', () => {
     expect(result.current.threads[0].lastMessageText).toBe('still fresh?');
   });
 
-  /** Review Focus #3: a preview line can be the exact message that was just hidden. */
   it('refreshes the preview when a message is hidden', async () => {
     const { result } = renderHook(() => useThreadList());
     await waitFor(() => expect(result.current.threads).toHaveLength(1));
@@ -493,10 +458,6 @@ describe('useThreadList', () => {
     expect(result.current.loading).toBe(false);
   });
 
-  /**
-   * A customer's first message: the farmer does not have that thread in their list yet, and the event carries no sender
-   * name.
-   */
   it('reloads the list when a message lands in a thread it does not have yet', async () => {
     const { result } = renderHook(() => useThreadList());
     await waitFor(() => expect(result.current.threads).toHaveLength(1));
@@ -512,11 +473,6 @@ describe('useThreadList', () => {
     await waitFor(() => expect(result.current.threads.map((t) => t.id)).toEqual([77, 42]));
   });
 
-  /**
-   * The backend sends "read" to the OTHER person, not to the one who just read; and a message arriving to an open
-   * thread still carries unreadCount 1 because it is counted before the hook can mark it read. An open thread's badge
-   * must be 0.
-   */
   it('clears the badge of the thread that is open, and keeps it clear', async () => {
     vi.mocked(ConversationApi.list).mockResolvedValue(page(summary(42, 3)));
     const { result, rerender } = renderHook(({ active }) => useThreadList(active), {
@@ -543,10 +499,6 @@ describe('useThreadList', () => {
     expect(result.current.threads[0].other.online).toBe(true);
   });
 
-  /**
-   * Review Focus #3 for the list: the preview and badge must catch up after a network drop, without flashing a
-   * "loading" screen.
-   */
   it('catches up quietly when the socket comes back', async () => {
     const { result } = renderHook(() => useThreadList());
     await waitFor(() => expect(result.current.threads).toHaveLength(1));

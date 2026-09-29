@@ -4,7 +4,6 @@ import useAddDeal from './useAddDeal';
 import type { DealDto } from '@/api-requests/deal.requests';
 import { Cart } from '@/lib/cart';
 
-/** Same fixture shape as the DealCard / ProductDeals / Deals page tests (spec §4.5.4 example). */
 const tomato: DealDto = {
   productId: 7,
   name: 'Cà chua bi',

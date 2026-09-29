@@ -31,7 +31,6 @@ public interface FarmerServiceInterface {
 
     AdminFarmerDetailResource reinstate(Long farmerId, Long actorId);
 
-    /** {@code GET /admin/farmers/{id}/status-history} — 404 when the id is not a farmer profile. */
     PageResource<AdminFarmerStatusHistoryResource> statusHistory(
             long farmerId, int page, int pageSize);
 }

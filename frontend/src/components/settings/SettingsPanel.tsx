@@ -19,17 +19,10 @@ const SAMPLE_DATE = new Date(2026, 11, 31, 19, 0);
 const SAMPLE_PRICE = 1.8;
 
 type SettingsPanelProps = {
-  /** The page's role (pages still pass it; the notification categories now come from the API by role on the server). */
   role: SettingsRole;
-  /** A role's own block (Shopping / Platform defaults), reads and edits the draft's extras. */
   children?: (draft: Settings, set: (patch: Partial<Settings>) => void) => ReactNode;
 };
 
-/**
- * The Settings page for all three roles (prototype `settings.html`). Theme changes and saves right when clicked; the
- * other items stay in the draft until Save is clicked, then apply to the whole app (format.ts, translations). Once
- * signed in it also saves to the server.
- */
 const SettingsPanel = ({ children }: SettingsPanelProps) => {
   const { t } = useTranslation();
   const saved = useSettings();
@@ -40,7 +33,6 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
   const pickTheme = (theme: Theme) => {
     set({ theme });
     SettingsStore.set({ theme });
-    // Also saves what was already saved + the new theme; the drafts of the other items still wait for the Save button
     SettingsApi.save({ ...SettingsStore.get(), theme }).catch(() => undefined);
   };
 
@@ -49,12 +41,10 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
     try {
       const response = await SettingsApi.save(draft);
       Notification.success({ title: t('settings.savedTitle'), text: t('settings.savedText') });
-      // Applied last: the page is rebuilt in the new language / format
       SettingsStore.set(response.data ?? draft);
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, t('settings.saveError')) });
     } finally {
-      // A save that changes neither language nor format does not remount the page, so the button must reset here
       setSaving(false);
     }
   };
@@ -132,7 +122,6 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
             />
           </SettingsRow>
         </ul>
-        {/* Preview based on the draft, using the format currently applied to the rest of the app */}
         <p className="text-small text-ink-muted" aria-live="polite">
           {t('settings.preview', {
             date: withDraft(draft, () => formatDate(SAMPLE_DATE)),
@@ -156,7 +145,6 @@ const SettingsPanel = ({ children }: SettingsPanelProps) => {
   );
 };
 
-/** Run a format function with the draft in place of the applied settings (preview only, changes nothing). */
 const withDraft = (draft: Settings, fn: () => string) => {
   const live = SettingsStore.get();
   SettingsStore.peek(draft);

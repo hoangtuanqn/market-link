@@ -19,10 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/**
- * FR-070/075 on MySQL. The database also holds the demo seed, so platform-wide numbers are checked
- * against direct SQL counts, and per-market numbers on markets this test creates.
- */
 @SpringBootTest
 class AdminReportServiceTest {
 
@@ -136,21 +132,18 @@ class AdminReportServiceTest {
                 .isZero();
     }
 
-    /** FR-072: the admin drills from a customer's profile into their own orders. */
     @Test
     void ordersReportFiltersByCustomer() {
         assertThat(reports.orders(null, null, null, null, customer, 1, 10).total()).isEqualTo(3);
     }
 
-    /** FR-075: completed quantities only — the still-placed order's unit does not count. */
     @Test
     void topProductsSumCompletedQuantities() {
         List<TopProductResource> top = reports.topProducts(null, null, 50);
 
         TopProductResource mine =
                 top.stream().filter(p -> p.productId() == p1).findFirst().orElseThrow();
-        assertThat(mine.quantitySold())
-                .isEqualTo(7); // 4 + 3 completed; the placed order's 1 is not counted
+        assertThat(mine.quantitySold()).isEqualTo(7);
         assertThat(mine.revenue()).isEqualByComparingTo("70000");
     }
 

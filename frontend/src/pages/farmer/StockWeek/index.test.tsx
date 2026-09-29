@@ -36,7 +36,6 @@ beforeEach(() => {
 });
 
 describe('FarmerStockWeekPage', () => {
-  /** FR-063: a weekday's price must be above $0 (the server says 400); $0 used to be saved and sold for free. */
   it('asks for a price above $0 and saves nothing', async () => {
     render(
       <MemoryRouter>

@@ -1,13 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { StarIcon } from '@/components/icons';
 
-/** Star rating with a numeric readout (design system `.ml-rating`). */
 const Rating = ({ value, count }: { value: number; count?: number }) => {
   const { t } = useTranslation();
   const score = value.toFixed(1);
   return (
-    // flex-wrap + min-w-0: inside a stall card in a three-column grid this row is wider than its
-    // column at 768px, and without both it pushes the whole page sideways instead of wrapping.
     <span className="text-small inline-flex min-w-0 flex-wrap items-center gap-2">
       <span aria-hidden="true" className="text-brand inline-flex gap-0.5">
         {[1, 2, 3, 4, 5].map((i) => (

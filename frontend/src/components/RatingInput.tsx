@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { StarIcon } from '@/components/icons';
 import Helper from '@/utils/helper';
 
-/** Keys under `rating.words.` in common.json, index = number of stars. */
 const RATE_WORDS = ['none', 'poor', 'fair', 'good', 'veryGood', 'excellent'] as const;
 
 type RatingInputProps = {
@@ -13,7 +12,6 @@ type RatingInputProps = {
   onChange: (value: number) => void;
 };
 
-/** Five-star rating input with a word readout (design system `.ml-rate`). */
 const RatingInput = ({ legend, name, value, onChange }: RatingInputProps) => {
   const { t } = useTranslation();
   const [hover, setHover] = useState(0);

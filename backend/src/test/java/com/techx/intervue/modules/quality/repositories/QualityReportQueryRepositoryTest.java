@@ -15,7 +15,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-/** FR-122, FR-123: the reports as the stall and the admin read them, against real MySQL. */
 @SpringBootTest
 @Transactional
 class QualityReportQueryRepositoryTest {
@@ -85,7 +84,6 @@ class QualityReportQueryRepositoryTest {
         assertThat(row.problem()).isEqualTo("mold");
     }
 
-    /** Spec §4.4.3: the card shows the stall's strikes inside the 90-day window only. */
     @Test
     void eachRowCountsTheStallsStrikesInsideTheWindow() {
         long report = reportAt(stallA, "Rau muống", "confirmed", true, 10);
@@ -97,7 +95,6 @@ class QualityReportQueryRepositoryTest {
                 .contains(1);
     }
 
-    /** Ruling 6: "Needs a decision", "All open" and "Decided". */
     @Test
     void theAdminQueueFiltersNeedsADecisionAllOpenAndDecided() {
         long needs = reportAt(stallA, "Rau muống", "open", true, 3);

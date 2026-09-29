@@ -20,10 +20,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * The "Closed days" panel on the Market form (FE) — no official FR in REQUIREMENTS.md yet, see
- * migration V20260926014. Admin only (role comes from the token, R-06).
- */
 @RestController
 @RequestMapping("/api/v1/admin/markets/{marketId}/closures")
 @PreAuthorize("hasRole('ADMIN')")

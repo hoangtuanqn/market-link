@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { canReportSpoilage, reportDeadline, spoiledOnChoices, todayInVietnam } from './spoilage';
 
-/** The same numbers as SpoilagePolicyTest on the server (spec §9). */
 describe('spoilage rules', () => {
   it('closes the window two days after the good-until date', () => {
     expect(reportDeadline('2026-10-05')).toBe('2026-10-07');
@@ -9,7 +8,6 @@ describe('spoilage rules', () => {
   });
 
   const line = { itemId: 501, bestBefore: '2026-10-05', qualityReport: null };
-  // A pickup well before every "today" used below, so it never masks the other scenarios under test.
   const pickupDate = '2026-10-01';
 
   it('offers the button on a completed order until the last day of the window', () => {
@@ -33,10 +31,8 @@ describe('spoilage rules', () => {
     ).toBe(false);
   });
 
-  /** M-1: a farmer can mark an order complete before its own pickup day. The day select would then be empty. */
   it('hides the button when the order was completed before its own pickup day', () => {
     expect(canReportSpoilage('completed', line, '2026-10-04', '2026-10-06')).toBe(false);
-    // The pickup day itself is fine: it is included in the "spoiled on" choices.
     expect(canReportSpoilage('completed', line, '2026-10-04', '2026-10-04')).toBe(true);
   });
 
@@ -51,7 +47,6 @@ describe('spoilage rules', () => {
     expect(spoiledOnChoices('2026-12-31', '2027-01-01')).toEqual(['2026-12-31', '2027-01-01']);
   });
 
-  /** Review Focus #5: 20:00 UTC is already the next day in Ho Chi Minh City. */
   it('reads today on the Vietnam calendar, whatever the browser time zone', () => {
     expect(todayInVietnam(new Date('2026-10-07T20:00:00Z'))).toBe('2026-10-08');
     expect(todayInVietnam(new Date('2026-10-07T16:59:00Z'))).toBe('2026-10-07');

@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/** FR-121: the public product page reads the stored shelf-life block, group name included. */
 @SpringBootTest
 class ProductShelfLifeQueryTest {
 

@@ -42,10 +42,8 @@ describe('ShelfLifeGuides', () => {
   it("lists the category's groups", async () => {
     render(<ShelfLifeGuides categories={categories} />);
     expect(await screen.findByText('Leafy greens')).toBeInTheDocument();
-    // Scoped to the table: the add form's "How it is kept" select also has a 'Fridge 0–5 °C' option.
     const table = within(screen.getByRole('table'));
     expect(table.getByText('Fridge 0–5 °C')).toBeInTheDocument();
-    // The examples are the second line of the group cell, not a column of their own
     expect(table.getByText('rau muống, lettuce').closest('td')).toBe(table.getByText('Leafy greens').closest('td'));
     expect(table.queryByRole('columnheader', { name: 'Status' })).not.toBeInTheDocument();
   });
@@ -55,7 +53,6 @@ describe('ShelfLifeGuides', () => {
     vi.mocked(ShelfLifeApi.adminList).mockResolvedValue([leafy, leafyRoom]);
     render(<ShelfLifeGuides categories={categories} />);
 
-    // Both rows share the group name, so wait on one of the two distinct labels rather than the ambiguous group text.
     expect(await screen.findByLabelText('Days for Leafy greens (Fridge 0–5 °C)')).toBeInTheDocument();
     expect(screen.getByLabelText('Days for Leafy greens (Room temperature)')).toBeInTheDocument();
   });
@@ -116,7 +113,6 @@ describe('ShelfLifeGuides', () => {
     await userEvent.click(within(row).getByRole('button', { name: 'Turn off' }));
 
     expect(ShelfLifeApi.adminDeactivate).toHaveBeenCalledWith(12);
-    // The "Off" badge after the group name, and the row's action flips
     expect(await within(row).findByText('Off')).toBeInTheDocument();
     expect(within(row).getByRole('button', { name: 'Turn on' })).toBeInTheDocument();
     expect(row).toHaveClass('text-ink-muted');

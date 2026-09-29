@@ -7,13 +7,11 @@ import type { Tier } from '@/types/achievement.types';
 
 type MenuMobileProps = {
   items: NavItem[];
-  /** The signed-in person, shown at the top of the drawer. */
   account?: { name: string; email?: string; avatarUrl?: string; tier?: Tier };
   onClose: () => void;
   onSignOut?: () => void;
 };
 
-/** Slide-in drawer for screens below 768px. */
 const MenuMobile = ({ items, account, onClose, onSignOut }: MenuMobileProps) => {
   const { t } = useTranslation();
   return (

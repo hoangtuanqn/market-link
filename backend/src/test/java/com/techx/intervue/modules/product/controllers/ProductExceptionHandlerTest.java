@@ -8,7 +8,6 @@ import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.ResponseEntity;
 
-/** Spec §4.2: the extension lock is a 409 the product form can show on its shelf-life field. */
 class ProductExceptionHandlerTest {
 
     private final ProductExceptionHandler handler = new ProductExceptionHandler();

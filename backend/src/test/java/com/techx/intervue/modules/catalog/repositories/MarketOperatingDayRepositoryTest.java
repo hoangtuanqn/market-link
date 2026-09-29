@@ -13,12 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Runs on real MySQL. Overwriting the market days with a set that repeats the old days: Hibernate
- * orders INSERT before DELETE on flush, so without forcing a flush after the delete UNIQUE
- * (market_id, day_of_week) blows up — exactly the 400 that PUT /farmer/markets/{id}/days hits when
- * saving the same days that already exist.
- */
 @SpringBootTest
 @Transactional
 class MarketOperatingDayRepositoryTest {

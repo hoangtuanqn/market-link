@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class IntentClassifierTest {
 
-    // 24/09/2026 is a Thursday → day_of_week = 4
     private static final LocalDate THURSDAY = LocalDate.of(2026, 9, 24);
 
     private final IntentClassifier classifier = new IntentClassifier();
@@ -23,8 +22,7 @@ class IntentClassifierTest {
     @ParameterizedTest
     @CsvSource(
             delimiter = '|',
-            quoteCharacter =
-                    '"', // the default is ' — it would swallow the SQL injection case below
+            quoteCharacter = '"',
             value = {
                 "Xin chào | GREETING",
                 "hello | GREETING",
@@ -48,7 +46,6 @@ class IntentClassifierTest {
         assertThat(classify(message).intent()).isEqualTo(expected);
     }
 
-    /** Words that contain a trigger without meaning it (test run 28/09, G08 and G09). */
     @ParameterizedTest
     @CsvSource(
             delimiter = '|',
@@ -63,7 +60,6 @@ class IntentClassifierTest {
         assertThat(classify(message).intent()).isEqualTo(expected);
     }
 
-    /** The keyword engine answers in the language of the question, like the Claude assistant. */
     @ParameterizedTest
     @CsvSource(
             delimiter = '|',

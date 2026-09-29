@@ -15,7 +15,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** FR-070/075. A null {@code from}/{@code to} means all time; a reversed range is swapped. */
 @Service
 @AllArgsConstructor
 public class AdminReportService implements AdminReportServiceInterface {

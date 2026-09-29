@@ -28,7 +28,6 @@ class StreamLinkSignerTest {
         assertThat(signer.verify(55L, 7L, 'u', EXP, sig, Instant.ofEpochSecond(EXP + 1))).isFalse();
     }
 
-    /** Review Focus #4: a link handed to someone else, or edited, must not open anything more. */
     @Test
     void changingTheUserOrScopeBreaksTheSignature() {
         String sig = signer.sign(55L, 7L, 'u', EXP);

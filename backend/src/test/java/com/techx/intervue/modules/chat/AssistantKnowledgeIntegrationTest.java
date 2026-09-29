@@ -23,13 +23,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
-/**
- * FR-093, FR-094. The Farmer and Admin assistants run fixed SQL that no other screen calls, so a
- * column that does not exist only shows up when somebody asks the assistant, and even then the
- * reply quietly falls back to the keyword engine. Every query here runs against the real schema.
- *
- * <p>Rows carry a unique tag and are removed in {@code @AfterEach} (shared dev database).
- */
 @SpringBootTest
 class AssistantKnowledgeIntegrationTest {
 
@@ -82,8 +75,6 @@ class AssistantKnowledgeIntegrationTest {
                                         + " opening_time, closing_time) VALUES (?, 'Q1', 10.8,"
                                         + " 106.7, '06:00:00', '12:00:00')",
                                 "Cho " + tag));
-        // Still waiting to be accepted and already past its cutoff: part of the order list and of
-        // the "close to cutoff" list whatever the clock says
         orderCode = "IT-" + tag;
         orderId =
                 track(
@@ -130,7 +121,6 @@ class AssistantKnowledgeIntegrationTest {
         assertThat(farmerKnowledge.myOrderItems(farmer, orderId))
                 .extracting(r -> r.productName(), r -> r.quantity())
                 .containsExactly(org.assertj.core.groups.Tuple.tuple("Rau " + tag, 2));
-        // The same order id asked for by another stall reads nothing
         assertThat(farmerKnowledge.myOrderItems(farmer + 1_000_000, orderId)).isEmpty();
     }
 
@@ -159,16 +149,11 @@ class AssistantKnowledgeIntegrationTest {
                 .containsExactly("Khach " + tag);
     }
 
-    // ------------------------------------------------------ cutoffs are Vietnam time (FR-067)
-
-    /** 08:00 on 02/10/2026 in Ho Chi Minh City, which is 01:00 UTC — the database clock. */
     private static final Clock EIGHT_AM_IN_VIETNAM =
             Clock.fixed(Instant.parse("2026-10-02T01:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
 
     @Test
     void theMorningBannerCountsACutoffThatHasPassedInVietnam() {
-        // Closed at 02:00 local time, six hours ago. Compared with the UTC database clock (01:00)
-        // it would still look open.
         order("IB-" + tag, "2026-10-02", "2026-10-02 02:00:00");
 
         assertThat(

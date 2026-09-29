@@ -13,15 +13,12 @@ import useRequest from '@/hooks/useRequest';
 import { dayList, dayName, firstOpenDay, formatClock, formatDayMonth, nextSevenDays } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 
-/** Contract §3 caps a page at 50; every market of the city fits in one call. */
 const FETCH_SIZE = 50;
 const NO_MARKETS: MarketType[] = [];
 const NO_STALLS: StallCardData[] = [];
 
-/** FR-012 FR-013 — every market and its approved stalls on the map, for the day you choose. */
 const MarketMapPage = () => {
   const { t } = useTranslation('MarketMap');
-  // The coming week from today; labels come from format.ts so they follow the language and date order.
   const [week] = useState(() => nextSevenDays());
   const [picked, setPicked] = useState<number | null>(null);
   const [showMarkets, setShowMarkets] = useState(true);
@@ -33,12 +30,9 @@ const MarketMapPage = () => {
   const all = load.kind === 'ready' ? load.data : NO_MARKETS;
 
   const anyOpen = (d: number) => all.some((m) => m.days.includes(d));
-  /** Until a chip is picked: the first day from today that some market opens on. */
   const dow = picked ?? (load.kind === 'ready' ? firstOpenDay(anyOpen, week[0].date) : week[0].dow);
   const openMarkets = useMemo(() => all.filter((m) => m.days.includes(dow)), [all, dow]);
 
-  // A stall is only on the map for a day it actually trades: one request per market open that day (≤ a handful),
-  // keyed by day and market list so a new chip or freshly loaded markets start a new round.
   const openMarketKey = openMarkets.map((m) => m.id).join(',');
   const { state: stallsLoad, retry: retryStalls } = useRequest(`map-stalls:${dow}:${openMarketKey}`, () =>
     Promise.all(
@@ -106,7 +100,6 @@ const MarketMapPage = () => {
             value: String(d.dow),
             label: dayName(d.dow, 'long'),
             date: formatDayMonth(d.date),
-            // A day no market opens on is struck through, as on the markets list.
             disabled: load.kind === 'ready' && !anyOpen(d.dow),
           }))}
           value={String(dow)}

@@ -17,10 +17,6 @@ const MODES: StorageMode[] = ['room', 'chilled'];
 type NewGuide = { groupName: string; examples: string; storageMode: StorageMode; days: string };
 const EMPTY_GUIDE: NewGuide = { groupName: '', examples: '', storageMode: 'room', days: '' };
 
-/**
- * FR-120 — the storage groups of one category: each row is a group kept one way, with the suggested shelf life the
- * product form starts from. Rows are turned off, never deleted, so products keep their saved numbers.
- */
 const ShelfLifeGuides = ({ categories }: { categories: CategoryType[] }) => {
   const { t } = useTranslation('AdminCategories');
   const { t: tc } = useTranslation();
@@ -109,9 +105,6 @@ const ShelfLifeGuides = ({ categories }: { categories: CategoryType[] }) => {
     }
   };
 
-  // Kept narrow enough for the admin content column at 1024 px (FR-080): the examples sit under the group name, a
-  // turned-off row is muted with an "Off" badge instead of a status column, and the days input is the compact one of
-  // the weekly stock grid, named per row for screen readers.
   const columns: TableColumn<ShelfLifeGuideDto>[] = [
     {
       key: 'group',
@@ -190,7 +183,6 @@ const ShelfLifeGuides = ({ categories }: { categories: CategoryType[] }) => {
         />
       </div>
 
-      {/* The add form sits under the table, not beside it: side by side, the table had 288 px at 1024. */}
       <div className="flex flex-col gap-6">
         {state.kind === 'loading' ? (
           <MarketCardSkeleton count={2} />

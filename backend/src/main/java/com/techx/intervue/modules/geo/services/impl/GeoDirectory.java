@@ -17,11 +17,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * Countries, provinces and wards held in memory (about 3,600 rows). They only change with a new
- * migration, so they are read once, on first use, and every address check or list after that is a
- * map lookup instead of a query.
- */
 @Component
 @RequiredArgsConstructor
 public class GeoDirectory {
@@ -54,7 +49,6 @@ public class GeoDirectory {
         return data().provinces;
     }
 
-    /** Wards of one province in Vietnamese alphabetical order; empty for an unknown province. */
     public List<WardResource> wardsOf(String provinceCode) {
         return data().wardsByProvince.getOrDefault(provinceCode, List.of());
     }
@@ -74,7 +68,6 @@ public class GeoDirectory {
     }
 
     private Snapshot load() {
-        // Sorted here, not in SQL: the database collation differs between the Docker stack and CI
         Collator vietnamese = Collator.getInstance(Locale.forLanguageTag("vi"));
         List<CountryResource> countries = repository.countries();
         List<ProvinceResource> provinces =

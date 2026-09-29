@@ -42,7 +42,6 @@ export default function ProductPin({ productId, compact }: Props) {
       to={`/products/${productId}`}
       className={Helper.cn(
         'bg-surface-raised border-line-strong hover:border-ink flex items-center gap-2 rounded-md border no-underline transition-colors',
-        // Helper.cn does not merge conflicting classes: pick one padding, do not set p-2 and then override it with p-1
         compact ? 'text-small p-1' : 'p-2',
       )}
     >

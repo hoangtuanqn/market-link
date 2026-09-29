@@ -35,15 +35,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-/** FR-115, spec §8.2. */
 @Slf4j
 @Service
 public class AttachmentService implements AttachmentServiceInterface {
 
-    /**
-     * A flat directory under CHAT_UPLOAD_DIR; file names are UUIDs so they never collide. Public
-     * because ChatAttachmentCleanupJob (a different package) deletes files in this same directory.
-     */
     public static final String FOLDER = "images";
 
     private final MessageAttachmentRepository attachments;
@@ -83,11 +78,6 @@ public class AttachmentService implements AttachmentServiceInterface {
         this.streamTtlSeconds = streamTtlSeconds;
     }
 
-    /**
-     * FR-115: the upload is copied to a temp file and recognised from its bytes (MediaProbe). JPEG/
-     * PNG are re-encoded (EXIF goes, big photos are scaled to 4096 px); WebP, GIF, AVIF and videos
-     * are copied as uploaded. Nothing larger than a photo is ever held in memory.
-     */
     @Override
     @Transactional
     public AttachmentResource upload(Long meId, MultipartFile file) {
@@ -95,9 +85,6 @@ public class AttachmentService implements AttachmentServiceInterface {
         Path temp = copyToTemp(file);
         try {
             MediaProbe.Probed probed = MediaProbe.probe(temp);
-            // The limit counts files ACCEPTED, not attempts: an iPhone sending HEIC that gets 415
-            // ten times must not lose the right to send photos for a whole hour. The checks above
-            // are all cheap and have not touched the store yet.
             rateLimiter.check(meId, ChatRateLimiterInterface.Action.IMAGE);
             MessageAttachment.MessageAttachmentBuilder record =
                     MessageAttachment.builder().uploaderId(meId);
@@ -106,7 +93,6 @@ public class AttachmentService implements AttachmentServiceInterface {
                         ImageProbe.reencode(Files.readAllBytes(temp), probed.mime());
                 String storageKey = newStorageKey(ImageProbe.JPEG);
                 storage.store(FOLDER, storageKey, stored.bytes());
-                // The stored photo's own size: scaled down, subsampled and turned upright
                 record.storageKey(storageKey)
                         .mime(ImageProbe.JPEG)
                         .sizeBytes(stored.bytes().length)
@@ -142,7 +128,6 @@ public class AttachmentService implements AttachmentServiceInterface {
     public StoredFile readAsAdmin(Long adminId, Long attachmentId) {
         MessageAttachment attachment = requireReadableByAdmin(attachmentId);
         StoredFile file = fileOf(attachment);
-        // Every time an admin opens a private photo it leaves a trace
         log.info(
                 "Admin {} opened photo {} on reported message {}",
                 adminId,
@@ -156,7 +141,6 @@ public class AttachmentService implements AttachmentServiceInterface {
     public StreamUrlResource streamUrl(Long meId, boolean admin, Long attachmentId) {
         if (admin) {
             MessageAttachment attachment = requireReadableByAdmin(attachmentId);
-            // Logged when the link is issued, not on each of the many range requests that follow
             log.info(
                     "Admin {} opened video {} on reported message {}",
                     meId,
@@ -194,7 +178,6 @@ public class AttachmentService implements AttachmentServiceInterface {
                         : requireReadable(userId, attachmentId));
     }
 
-    /** Spec §8.2: who may see a chat file. */
     private MessageAttachment requireReadable(Long meId, Long attachmentId) {
         MessageAttachment attachment =
                 attachments
@@ -202,10 +185,6 @@ public class AttachmentService implements AttachmentServiceInterface {
                         .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
 
         if (attachment.getMessageId() == null) {
-            // Not yet attached to any message: only the person who just uploaded may view it, to
-            // show a preview before sending.
-            // Same code as attaching someone else's image to your own message — same idea, one
-            // code.
             if (!attachment.getUploaderId().equals(meId)) {
                 throw new AttachmentNotYoursException();
             }
@@ -213,8 +192,6 @@ public class AttachmentService implements AttachmentServiceInterface {
             Message message =
                     messages.findById(attachment.getMessageId())
                             .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
-            // When an admin hides a message the image disappears with it, just as the message
-            // disappears from the list
             if (message.isHidden()) {
                 throw new EntityNotFoundException("Photo not found.");
             }
@@ -223,29 +200,20 @@ public class AttachmentService implements AttachmentServiceInterface {
         return attachment;
     }
 
-    /** Spec §8.3: the admin's narrower path, opened by a report and nothing else. */
     private MessageAttachment requireReadableByAdmin(Long attachmentId) {
         MessageAttachment attachment =
                 attachments
                         .findById(attachmentId)
                         .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
         if (attachment.getMessageId() == null) {
-            // An image not attached to any message cannot be reported yet; there is nothing for an
-            // admin to do here
             throw new ModerationOutOfScopeException();
         }
         Message message =
                 messages.findById(attachment.getMessageId())
                         .orElseThrow(() -> new EntityNotFoundException("Photo not found."));
-        // Spec §8.3: an admin's rights come from a report. The images of the ±5 context messages do
-        // NOT open up —
-        // context is for understanding the situation, it is not the reported subject.
         if (!reports.existsByMessageId(message.getId())) {
             throw new ModerationOutOfScopeException();
         }
-        // Unlike ordinary users: a hidden message does NOT block an admin — they must be able to
-        // re-check
-        // their own decision.
         return attachment;
     }
 

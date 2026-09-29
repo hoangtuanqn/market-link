@@ -27,10 +27,6 @@ const card = () => {
 };
 
 describe('ProductCard (FR-080)', () => {
-  /**
-   * On a phone the card is one visual block, so the whole card opens the product — done with a stretched link rather
-   * than by wrapping the card in an <a>, which would swallow the two buttons inside it and nest interactive elements.
-   */
   it('opens the product from one link that covers the card', () => {
     const links = within(card()).getAllByRole('link');
 
@@ -49,7 +45,6 @@ describe('ProductCard (FR-080)', () => {
         expect.stringContaining('Add to cart'),
       ]),
     );
-    // They sit above the stretched link; without a stacking context the link would cover them.
     for (const b of buttons) expect(b.closest('[class*="z-2"]')).not.toBeNull();
   });
 });

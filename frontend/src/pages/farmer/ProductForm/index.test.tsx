@@ -79,7 +79,6 @@ describe('FarmerProductFormPage', () => {
       extensionLockedUntil: '2026-11-15T03:00:00Z',
     });
 
-  /** Prices are in USD (money() is locked to USD), so a Farmer has to be able to type cents. */
   it('keeps the decimal point while the price is typed', async () => {
     renderNew();
     const price = await screen.findByLabelText(/^Price/);
@@ -90,14 +89,12 @@ describe('FarmerProductFormPage', () => {
     expect(screen.getByText(/Shown as \$1\.50/)).toBeInTheDocument();
   });
 
-  /** A phone shows the keypad with a decimal point, not the digits-only one. */
   it('asks for the decimal keypad', async () => {
     renderNew();
 
     expect(await screen.findByLabelText(/^Price/)).toHaveAttribute('inputmode', 'decimal');
   });
 
-  /** QA e2e round 3, bug 4: a minus sign stays in the field and saving shows the error instead of a silent 0. */
   it('keeps a negative price and quantity and refuses to save them', async () => {
     renderNew();
     const price = await screen.findByLabelText(/^Price/);
@@ -164,7 +161,6 @@ describe('FarmerProductFormPage', () => {
     );
   });
 
-  /** FR-062/FR-063: a new product sells from the weekly stock, so the Farmer is sent there to set it. */
   it('sends the Farmer to the weekly stock after adding a product', async () => {
     render(
       <MemoryRouter initialEntries={['/farmer/products/new']}>
@@ -184,7 +180,6 @@ describe('FarmerProductFormPage', () => {
     expect(await screen.findByText('Weekly stock page')).toBeInTheDocument();
   });
 
-  /** A one-day suggestion reads "1 day", not "1 days". */
   it('names a one-day suggestion in the singular', async () => {
     renderNew();
     await userEvent.click(await screen.findByLabelText(/Room temperature · suggested 1 day/));
@@ -264,10 +259,6 @@ describe('FarmerProductFormPage', () => {
     );
   });
 
-  /**
-   * Spec §8: once the saved group is turned off, the Farmer picks the next one. Nothing is picked for them, and the
-   * saved promise never carries over to a group they did not choose.
-   */
   it('asks for another group when the saved one is gone', async () => {
     vi.mocked(ProductApi.getMine).mockResolvedValue({
       id: 5,
@@ -297,7 +288,6 @@ describe('FarmerProductFormPage', () => {
     expect(screen.getByRole('button', { name: 'Save product' })).toBeDisabled();
     expect(screen.getByText('Pick a storage group above to save.')).toBeInTheDocument();
 
-    // The group the name matches can be picked too: the select starts empty
     await userEvent.selectOptions(screen.getByLabelText(/^Storage group/), 'Leafy greens');
 
     expect(screen.getByRole('status', { name: /shelf life/i })).toHaveTextContent('1 day');
@@ -318,7 +308,6 @@ describe('FarmerProductFormPage', () => {
     );
   });
 
-  /** The group is still offered, but not the way of keeping the product was saved with: that row is gone too. */
   it('asks for a group again when only the saved way of keeping is turned off', async () => {
     vi.mocked(ShelfLifeApi.forCategory).mockResolvedValue([
       {
@@ -359,7 +348,6 @@ describe('FarmerProductFormPage', () => {
     expect(screen.getByRole('button', { name: 'Save product' })).toBeEnabled();
   });
 
-  /** Spec §9: going over the cap shows the error, and nothing is sent. */
   it('refuses to save a product whose saved days are now above the cap', async () => {
     vi.mocked(ProductApi.update).mockClear();
     vi.mocked(ProductApi.getMine).mockResolvedValue({
@@ -370,7 +358,6 @@ describe('FarmerProductFormPage', () => {
       price: 0.5,
       stock: 10,
       status: 'available',
-      // Saved at 7 days against 4; the group now suggests 3, so the cap is 6
       shelfLife: {
         guideId: 12,
         groupName: 'Leafy greens',
@@ -388,7 +375,6 @@ describe('FarmerProductFormPage', () => {
     expect(ProductApi.update).not.toHaveBeenCalled();
   });
 
-  /** Without the storage groups the server would refuse the save on a field this screen cannot show. */
   it('keeps Save off, and says why, when the storage groups do not load', async () => {
     vi.mocked(ShelfLifeApi.forCategory).mockRejectedValue(new Error('network'));
     renderNew();
@@ -397,7 +383,6 @@ describe('FarmerProductFormPage', () => {
     expect(screen.getByRole('button', { name: /Add product/ })).toBeDisabled();
   });
 
-  /** A promise ticked for one number of days does not cover another. */
   it('asks for the promise again when the days change after it was ticked', async () => {
     renderNew();
     await userEvent.click(await screen.findByLabelText(/Fridge 0–5 °C · suggested 3 days/));
@@ -413,11 +398,6 @@ describe('FarmerProductFormPage', () => {
     expect(screen.getByText('Tick the promise above to save.')).toBeInTheDocument();
   });
 
-  /**
-   * Controller ruling: a product saved before this feature (guideId null) gets matched to a group by name once its
-   * category has one, and its saved days are checked against that group's suggestion — the Farmer may have to tick the
-   * promise or change the days before saving, because the server requires a group and recomputes everything.
-   */
   it('gives a pre-feature product a matched group and re-checks its saved days against it', async () => {
     vi.mocked(ProductApi.getMine).mockResolvedValue({
       id: 5,
@@ -457,11 +437,6 @@ describe('FarmerProductFormPage', () => {
     );
   });
 
-  /**
-   * Controller ruling: nudging an already-extended, already-acknowledged product's days touches the form, so the saved
-   * product's blanket promise no longer covers it — the Farmer must tick it again, until the days are back at (or
-   * below) the suggestion.
-   */
   it("asks for the promise again once an extended product's days are pulled down, and drops it at the suggestion", async () => {
     vi.mocked(ProductApi.getMine).mockResolvedValue({
       id: 5,
@@ -499,7 +474,6 @@ describe('FarmerProductFormPage', () => {
     expect(screen.getByRole('button', { name: 'Save product' })).toBeEnabled();
   });
 
-  /** Spec §4.2: while locked, the + button stops at the suggestion, with the reason next to it. */
   it('stops at the suggestion while the stall is locked, and says until when', async () => {
     locked();
     renderNew();
@@ -509,7 +483,6 @@ describe('FarmerProductFormPage', () => {
     expect(screen.getByRole('button', { name: 'One day more' })).toBeDisabled();
   });
 
-  /** Review Focus #2: an old extended product of a locked stall has to come back to the suggestion first. */
   it('asks a locked stall to lower an extended product before saving', async () => {
     locked();
     vi.mocked(ProductApi.getMine).mockResolvedValue({

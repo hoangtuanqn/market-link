@@ -27,15 +27,9 @@ import useRequest from '@/hooks/useRequest';
 import { pickupLabel, money } from '@/lib/format';
 import HomeSkeleton from './HomeSkeleton';
 
-/** Docs/prototype/admin/overview.html — the six most recent orders across the whole platform. */
 const LATEST = 6;
 const NO_ORDERS: OrderListItemDto[] = [];
 
-/**
- * FR-070 — the dashboard an admin lands on. Platform totals, revenue by market, what still needs attention, and the
- * newest orders across every market. No daily series exists on the server, so there is no time chart here (see Reports
- * for the same numbers over a chosen date range).
- */
 const AdminHomePage = () => {
   const { t } = useTranslation('AdminHome');
   const maintenanceMode = usePlatformStatus();

@@ -67,11 +67,6 @@ public class UserService extends BaseService implements UserServiceInterface {
     private final AddressServiceInterface addressService;
     private final EmailVerificationServiceInterface emailVerification;
 
-    /**
-     * FR-006: the access token goes into the Redis blacklist until it expires (JwtAuthFilter blocks
-     * by jti), the refresh token in the cookie is revoked in the DB so a new access token can no
-     * longer be obtained.
-     */
     @Override
     @Transactional
     public void logout(Long userId, String accessToken, String refreshToken) {
@@ -83,10 +78,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         }
     }
 
-    /**
-     * FR-001 + FR-009: check the form, then hold it in Redis until the code mailed to that address
-     * is entered. No account exists before that.
-     */
     @Override
     public SignupStartedResource registerCustomer(
             CustomerRegisterRequest request, String clientIp) {
@@ -99,7 +90,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         ResolvedAddress address =
                 addressService.resolve(request.addressParts(), AddressPolicy.ACCOUNT);
         if (StringUtils.hasText(request.website())) {
-            // Honeypot: people never see this field, so only a bot fills it in
             log.info("Sign-up honeypot filled in, request dropped");
             return emailVerification.decoy(email);
         }
@@ -116,10 +106,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         return emailVerification.start(pending, request.signupToken(), clientIp);
     }
 
-    /**
-     * FR-009: the right code turns the parked form into an account and signs it in, like the old
-     * register did. If saving fails the code is given back so the person can try again.
-     */
     @Override
     @Transactional
     public AuthResult completeSignup(String email, String code, String signupToken) {
@@ -128,13 +114,9 @@ public class UserService extends BaseService implements UserServiceInterface {
         try {
             throwIfTaken(pending.email(), pending.phone());
         } catch (DuplicateAccountException e) {
-            // Someone else finished first with this email or phone: this sign-up can never succeed
             emailVerification.discard(pending.email());
             throw e;
         }
-        // Registered before the save, so a failed insert (e.g. a phone taken a moment ago) also
-        // gives
-        // the code back
         TransactionHelper.afterCompletion(
                 () -> emailVerification.discard(pending.email()),
                 () -> emailVerification.restore(verified));
@@ -152,7 +134,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         return issueTokens(user);
     }
 
-    /** Check both before failing, so the form marks every taken field in one go (QA BUG-005). */
     private void throwIfTaken(String email, String phone) {
         Map<String, String> taken = new LinkedHashMap<>();
         if (userRepository.existsByEmail(email)) {
@@ -166,10 +147,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         }
     }
 
-    /**
-     * FR-003: a wrong email or a wrong password returns the same message, so it does not reveal
-     * which emails are registered.
-     */
     @Override
     @Transactional
     public AuthResult authenticate(LoginRequest request) {
@@ -177,7 +154,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         User user =
                 userRepository
                         .findByEmail(email)
-                        // An account created from Google has no password
                         .filter(
                                 u ->
                                         u.getPasswordHash() != null
@@ -188,18 +164,12 @@ public class UserService extends BaseService implements UserServiceInterface {
                                         new BadCredentialsException(
                                                 "Email or password is incorrect."));
         DeactivationMessage.assertActive(user);
-        // Check before issuing a token: do not hand out a refresh cookie to an account with the
-        // wrong role
         if (request.requiredRole() != null && user.getRole() != request.requiredRole()) {
             throw new RoleMismatchException();
         }
         return issueTokensOrChallenge(user, !Boolean.FALSE.equals(request.rememberMe()));
     }
 
-    /**
-     * FR-008: step 2 after entering a correct TOTP code / recovery code. Re-check the account state
-     * because the admin may have been locked during the 5 minutes waiting for the code.
-     */
     @Override
     @Transactional
     public AuthResult completeMfaLogin(String mfaToken, String code, String recoveryCode) {
@@ -212,12 +182,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         return issueTokens(user, pending.rememberMe());
     }
 
-    /**
-     * FR-003: exchange the refresh token (cookie) for a new access token, the refresh token is
-     * rotated. Do not wrap in @Transactional here: rotateToken has its own transaction, wrapping it
-     * again would make the exception roll back the token revocation done when reuse of a token is
-     * detected.
-     */
     @Override
     public AuthResult refresh(String rawRefreshToken) {
         RefreshResult rotated = refreshTokenService.rotateToken(rawRefreshToken);
@@ -230,11 +194,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         return buildAuthResult(user, rotated.newRefreshToken(), rotated.rememberMe());
     }
 
-    /**
-     * Google sign-in after the backend has verified with the provider itself. Look up by (provider,
-     * provider_user_id); the first time attach to the user with the same email (only when the email
-     * is verified) or create a new customer with no password / phone number.
-     */
     @Override
     @Transactional
     public AuthResult loginWithSocial(SocialProfile profile) {
@@ -252,7 +211,6 @@ public class UserService extends BaseService implements UserServiceInterface {
                                                                         "Account not found.")))
                         .orElseGet(() -> linkOrCreateUser(profile));
         DeactivationMessage.assertActive(user);
-        // FR-008: Google sign-in must not skip step 2
         return issueTokensOrChallenge(user, true);
     }
 
@@ -285,15 +243,7 @@ public class UserService extends BaseService implements UserServiceInterface {
         return user;
     }
 
-    /**
-     * Attach Google to an existing account with the same email. Signing up by email does not verify
-     * the email, so the existing password may have been set beforehand by someone else (account
-     * pre-hijacking). The provider verified the owner of the email → delete that password, revoke
-     * every refresh token and session; the real owner sets a password again at the set-password
-     * step (hasPassword = false).
-     */
     private User claimByVerifiedEmail(User user, SocialProfile profile) {
-        // This email is already attached to another account with the same provider
         if (socialAccountRepository.existsByUserIdAndProvider(user.getId(), profile.provider())) {
             throw new DuplicateAccountException(
                     "email",
@@ -303,8 +253,6 @@ public class UserService extends BaseService implements UserServiceInterface {
             user.setPasswordHash(null);
             userRepository.save(user);
             refreshTokenService.revokeAllTokens(user.getId());
-            // Run immediately (do not wait for commit): the real owner's new session is written in
-            // issueTokens afterwards
             userSessionCache.revokeAll(user.getId());
         }
         return user;
@@ -318,7 +266,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         return name.length() > 100 ? name.substring(0, 100) : name;
     }
 
-    /** users.image is VARCHAR(255); a longer image URL is skipped. */
     private static String fitsColumn(String url) {
         return url != null && url.length() <= 255 ? url : null;
     }
@@ -328,13 +275,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         return toResource(findActiveUser(userId));
     }
 
-    /**
-     * Only your own account can be edited (userId comes from the access token, not accepted from
-     * the request). The email is unchanged. A phone number that duplicates another account → 409;
-     * if two requests race past the check, the DB's UNIQUE blocks (AuthExceptionHandler returns
-     * 409). The address is required except for an admin, whose address no screen shows: leaving it
-     * out keeps the one on file.
-     */
     @Override
     @Transactional
     public UserResource updateProfile(Long userId, UpdateProfileRequest request) {
@@ -366,12 +306,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         return user;
     }
 
-    /**
-     * FR-008: an admin with 2FA on → only return the pending token; an admin who has never set up
-     * 2FA → issue session with mfaSetupRequired = true; otherwise issue the session as before. The
-     * pending answer carries only the email (the code screen shows it): the profile — phone,
-     * address — waits until the code is right.
-     */
     private AuthResult issueTokensOrChallenge(User user, boolean rememberMe) {
         if (user.getRole() == RoleType.ADMIN) {
             if (mfaService.isEnabled(user.getId())) {
@@ -407,7 +341,6 @@ public class UserService extends BaseService implements UserServiceInterface {
         return new AuthResult(accessToken, rawRefreshToken, toResource(user), rememberMe);
     }
 
-    /** Shared with AvatarService. */
     static UserResource toResource(User user) {
         return UserResource.builder()
                 .id(user.getId())
@@ -423,13 +356,6 @@ public class UserService extends BaseService implements UserServiceInterface {
                 .build();
     }
 
-    /**
-     * Change password: the current password must be right. If wrong, 400 on the currentPassword
-     * field (not 401 because the FE treats 401 as session ended and refreshes by itself). After the
-     * change sign out of every device: revoke every refresh token, after commit revokeAll the Redis
-     * sessions (JwtAuthFilter rejects every access token issued earlier) and send a notification
-     * email.
-     */
     @Override
     @Transactional
     public void changePassword(Long userId, ChangePasswordRequest request) {
@@ -453,8 +379,6 @@ public class UserService extends BaseService implements UserServiceInterface {
 
         refreshTokenService.revokeAllTokens(userId);
         String email = user.getEmail();
-        // If the commit fails the password did not change: do not kick out the session, do not send
-        // the email
         TransactionHelper.afterCommit(
                 () -> {
                     userSessionCache.revokeAll(userId);
@@ -463,29 +387,15 @@ public class UserService extends BaseService implements UserServiceInterface {
                 });
     }
 
-    /**
-     * FR-008: right after two-step verification is turned on. A session opened earlier with only
-     * the password (JwtAuthFilter recomputes the MFA_SETUP_PENDING mark on every request) would
-     * otherwise get full admin access the moment the code is confirmed, so every refresh token is
-     * revoked and every access token issued before now rejected, like a password change. The caller
-     * — who just proved they hold the code — gets a new session so the setup screen can go on to
-     * the dashboard. Admin sign-in never remembers the session, so neither does this one.
-     */
     @Override
     @Transactional
     public AuthResult restartSession(Long userId) {
         User user = findActiveUser(userId);
         refreshTokenService.revokeAllTokens(userId);
-        // writes the revoked-before marker first: the token issued below is not older than it
         userSessionCache.revokeAll(userId);
         return issueTokens(user, false);
     }
 
-    /**
-     * Set a password for the first time for an account created through Google. Only when there is
-     * no password yet — if there is one, use change / forgot password (409). userId comes from the
-     * access token (R-06). The current session is kept.
-     */
     @Override
     @Transactional
     public void setPassword(Long userId, SetPasswordRequest request) {

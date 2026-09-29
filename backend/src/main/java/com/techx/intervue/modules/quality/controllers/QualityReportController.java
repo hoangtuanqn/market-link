@@ -17,10 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-122 — {@code POST /orders/{orderId}/items/{itemId}/quality-report} (spec §6). {@code itemId}
- * is order_items.id, which GET /orders/{id} returns on every line as {@code itemId}.
- */
 @RestController
 @RequestMapping("/api/v1/orders/{orderId}/items/{itemId}/quality-report")
 @PreAuthorize("hasAnyRole('CUSTOMER','FARMER')")

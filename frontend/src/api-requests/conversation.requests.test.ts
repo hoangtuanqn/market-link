@@ -19,7 +19,6 @@ describe('ConversationApi', () => {
     expect(privateApi.get).toHaveBeenCalledWith('/conversations', { params: { page: 1, size: 20 } });
   });
 
-  /** Keyset pagination: `before` is the id of the oldest message currently held, not a page number. */
   it('walks history backwards with a keyset cursor, not a page number', async () => {
     vi.mocked(privateApi.get).mockResolvedValue(ok([]));
 
@@ -71,7 +70,6 @@ describe('ConversationApi', () => {
     expect((body as FormData).get('file')).toBe(file);
   });
 
-  /** A 50 MB video on a phone connection takes minutes: the 10 s default would cut every one of them off. */
   it('uploads without the default timeout, reports progress in percent and can be cancelled', async () => {
     vi.mocked(privateApi.post).mockResolvedValue(ok({ attachmentId: 55, mime: 'image/jpeg' }));
     const onProgress = vi.fn();
@@ -81,7 +79,6 @@ describe('ConversationApi', () => {
 
     const config = vi.mocked(privateApi.post).mock.calls[0][2]!;
     expect(config.timeout).toBe(0);
-    // The instance's default application/json would make axios send the FormData as JSON ("{"file":{}}")
     expect(config.headers).toEqual({ 'Content-Type': undefined });
     expect(config.signal).toBe(signal);
     config.onUploadProgress!({ loaded: 21, total: 50 } as never);
@@ -97,10 +94,6 @@ describe('ConversationApi', () => {
     expect(response.data.url).toBe('/api/v1/attachments/55/stream?t=x');
   });
 
-  /**
-   * The JWT travels in the Authorization header, not a cookie, so a plain `<img src>` returns 401. Images must be
-   * loaded with axios with responseType blob and wrapped as a blob URL.
-   */
   it('fetches a photo as a blob and hands back an object url', async () => {
     const blob = new Blob(['bytes']);
     vi.mocked(privateApi.get).mockResolvedValue({ data: blob });

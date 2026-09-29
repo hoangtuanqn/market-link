@@ -27,14 +27,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-/**
- * FR-041 — "back in stock" means a product went from "could not be ordered" to "can be ordered",
- * nothing else. Since the per-date redesign, "can be ordered" is answered per pickup date
- * (product_daily_stock), not by a single {@code Product.stockQuantity}; {@link
- * RestockNotifier#afterChange} takes both booleans explicitly so callers can compute them either
- * from a full {@link ProductAvailabilityResolver} lookup (a product edit) or cheaply from the one
- * daily-stock row they already hold (an order restoring stock).
- */
 class RestockNotifierTest {
 
     private static final long PRODUCT_ID = 30L;
@@ -92,7 +84,6 @@ class RestockNotifierTest {
         assertThat(event.getValue().kind()).isEqualTo(NotificationKind.RESTOCK);
     }
 
-    /** 5 → 8 is more stock, not "back in stock": it could already be ordered. */
     @Test
     void staysQuietWhenItCouldAlreadyBeOrdered() {
         notifier.afterChange(product, true, true);
@@ -107,10 +98,6 @@ class RestockNotifierTest {
         verify(notifications, never()).dispatch(any(), any());
     }
 
-    /**
-     * "Can be ordered right now" = listed, available, and the nearest orderable date still has
-     * stock — {@link ProductAvailabilityResolver} resolves that nearest date.
-     */
     @Test
     void isOrderableMeansListedAvailableAndTheNearestDateHasStock() {
         when(availability.resolve(Map.of(PRODUCT_ID, new BigDecimal("12000"))))
@@ -155,7 +142,6 @@ class RestockNotifierTest {
         assertThat(notifier.isOrderable(product)).isFalse();
     }
 
-    /** A farmer who favourited their own product does not get their own bell. */
     @Test
     void doesNotNotifyTheFarmerWhoOwnsTheProduct() {
         when(favorites.customerIdsFavouritingProduct(PRODUCT_ID))
@@ -177,7 +163,6 @@ class RestockNotifierTest {
         verify(notifications, never()).dispatch(any(), any());
     }
 
-    /** FR-064: a paused product has stock but cannot be ordered — no alert yet. */
     @Test
     void staysQuietWhileTheFarmerHasPausedTheProduct() {
         notifier.afterChange(product, false, false);
@@ -185,7 +170,6 @@ class RestockNotifierTest {
         verify(notifications, never()).dispatch(any(), any());
     }
 
-    /** D-09: a suspended stall takes no orders, so its stock is no news. */
     @Test
     void staysQuietForASuspendedStall() {
         farmer.setApprovalStatus(ApprovalStatus.SUSPENDED);

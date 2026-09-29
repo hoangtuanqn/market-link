@@ -34,12 +34,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-123 (spec §4.4.3). A strike is only ever recorded here, by an admin's confirmation, never
- * because a customer reported (spec: "no automatic penalty"). Confirming an extended shelf life
- * that spoiled before its promise records the strike, puts the product back to its suggestion and
- * tells the stall; every decision tells the customer and the stall.
- */
 @Service
 @AllArgsConstructor
 public class AdminQualityReportService implements AdminQualityReportServiceInterface {
@@ -47,7 +41,6 @@ public class AdminQualityReportService implements AdminQualityReportServiceInter
     private static final int MAX_PAGE_SIZE = 50;
     private static final Set<String> STATUSES = Set.of("open", "confirmed", "dismissed");
 
-    /** Notification text cannot follow each reader's date setting; the app default is used. */
     private static final DateTimeFormatter DAY = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     private final QualityReportRepository reports;
@@ -89,7 +82,6 @@ public class AdminQualityReportService implements AdminQualityReportServiceInter
         Instant now = clock.instant();
         report.decide(QualityReportStatus.CONFIRMED, adminId, blankToNull(note), now);
         reports.saveAndFlush(report);
-        // Spec §4.4.3: only an extended shelf life that spoiled before its promise is a strike
         if (SpoilagePolicy.escalates(report.isShelfLifeExtended(), report.isBeforePromise())) {
             recordStrike(report, adminId, now);
         }
@@ -112,7 +104,6 @@ public class AdminQualityReportService implements AdminQualityReportServiceInter
         return reload(reportId, now);
     }
 
-    /** Locked: of two admins deciding at once, the second sees it decided (409). */
     private QualityReport openReport(long reportId) {
         QualityReport report =
                 reports.lockById(reportId).orElseThrow(QualityReportNotFoundException::new);
@@ -122,10 +113,6 @@ public class AdminQualityReportService implements AdminQualityReportServiceInter
         return report;
     }
 
-    /**
-     * Spec §4.4.3 steps 1–3: record the strike, put the product back to its suggestion, tell the
-     * stall — and when this strike leaves the stall locked, tell it until when (Ruling 9).
-     */
     private void recordStrike(QualityReport report, long adminId, Instant now) {
         List<Instant> before =
                 violations.activeTimes(report.getFarmerId(), SpoilagePolicy.strikeWindowStart(now));
@@ -172,10 +159,6 @@ public class AdminQualityReportService implements AdminQualityReportServiceInter
                         });
     }
 
-    /**
-     * Back to the suggestion recorded when the stall saved it (Ruling 8: only while it is still
-     * extended). Locked like {@code ProductService.locked}, since Hibernate rewrites every column.
-     */
     private Product resetShelfLife(long productId) {
         Product product =
                 products.lockAllById(List.of(productId)).stream().findFirst().orElse(null);
@@ -190,7 +173,6 @@ public class AdminQualityReportService implements AdminQualityReportServiceInter
         return product;
     }
 
-    /** Spec §4.6: one text for both outcomes (Ruling 10); the link shows the decision. */
     private void tellCustomerAndStall(QualityReport report) {
         Map<String, String> params =
                 Map.of(

@@ -6,7 +6,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import org.junit.jupiter.api.Test;
 
-/** FR-124 (spec §4.5.3): a pickup day on a near-expiry deal, and back. */
 class ProductDailyStockTest {
 
     private static final LocalDate PACKED = LocalDate.of(2026, 9, 29);
@@ -34,7 +33,6 @@ class ProductDailyStockTest {
         assertThat(row.getQuantityAvailable()).isEqualTo(30);
     }
 
-    /** Posting again for the same day never compounds: the normal price stays the reference. */
     @Test
     void postingAgainKeepsTheFirstListPrice() {
         ProductDailyStock row = day("0.60");

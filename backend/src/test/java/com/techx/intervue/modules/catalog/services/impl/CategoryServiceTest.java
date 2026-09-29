@@ -55,7 +55,6 @@ class CategoryServiceTest {
         return c;
     }
 
-    /** Seeded row: its slug is not what slugify("Eggs & dairy") would give. */
     private static Category eggsAndDairy() {
         Category c = new Category();
         c.setId(3L);
@@ -96,7 +95,6 @@ class CategoryServiceTest {
         verify(repository, never()).save(any());
     }
 
-    /** QA E2E v2 CATEGORY-004: adding back a removed name restores that row, not a 409. */
     @Test
     void createRestoresARemovedCategoryWithTheSameName() {
         Category removed = leafyGreens();
@@ -113,7 +111,6 @@ class CategoryServiceTest {
         verify(repository).save(removed);
     }
 
-    /** A seeded slug is not what slugify gives, so the removed row is found by its name. */
     @Test
     void createRestoresARemovedCategoryFoundByNameAndKeepsItsSlug() {
         Category removed = eggsAndDairy();

@@ -30,8 +30,6 @@ describe('OrderTicket links (FR-036)', () => {
       </MemoryRouter>,
     );
 
-    // The detail, edit and review pages all read the route param as a number; the order code is for
-    // display only. A link built from the code lands on "That order is not here any more".
     const links = screen.getAllByRole('link').map((a) => a.getAttribute('href'));
     expect(links).toContain('/orders/42');
     expect(links.some((href) => href?.includes('ML-20260920-0002'))).toBe(false);
@@ -39,7 +37,6 @@ describe('OrderTicket links (FR-036)', () => {
 });
 
 describe('OrderTicket lines (FR-121)', () => {
-  /** Spec §4.3: the ticket the customer sees right after ordering carries the promise under each line. */
   it('shows how long each line stays good, and nothing for a line placed before the promise existed', () => {
     const detail = {
       summary: {

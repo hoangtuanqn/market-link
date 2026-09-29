@@ -14,7 +14,6 @@ type RejectDialogProps = {
   onConfirm: () => void;
 };
 
-/** Rejects a registration; the reason is required because the applicant reads it back before re-applying. */
 const RejectDialog = ({ target, reason, reasonError, onReasonChange, onClose, onConfirm }: RejectDialogProps) => {
   const { t } = useTranslation('AdminFarmers');
   return (

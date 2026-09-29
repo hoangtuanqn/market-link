@@ -3,7 +3,6 @@ import i18n from '@/i18n';
 import type { OrderStatus } from '@/types/order.types';
 
 type StatusMeta = {
-  /** The status word in the interface language, looked up each time it is read (key `orderStatus.<status>`). */
   readonly label: string;
   icon: typeof ClockIcon;
   className: string;

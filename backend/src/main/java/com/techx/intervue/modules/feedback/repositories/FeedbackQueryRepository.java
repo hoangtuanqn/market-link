@@ -12,7 +12,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/** Admin reads of the feedback queue, with the sender joined in when there is one (R-04). */
 @Repository
 @RequiredArgsConstructor
 public class FeedbackQueryRepository {
@@ -27,7 +26,6 @@ public class FeedbackQueryRepository {
 
     private static final String LIST_WHERE = "WHERE (:status IS NULL OR f.status = :status)\n";
 
-    /** {@code GET /admin/feedbacks}: newest first. */
     public static final String LIST_SQL =
             COLUMNS
                     + LIST_WHERE

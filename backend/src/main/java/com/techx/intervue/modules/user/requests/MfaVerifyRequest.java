@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import org.springframework.util.StringUtils;
 
-/** FR-008: step 2 of admin sign-in — send a 6-digit code or one recovery code. */
 public record MfaVerifyRequest(
         @NotBlank(message = "Your sign-in has expired. Sign in again.") @Size(max = 128)
                 String mfaToken,

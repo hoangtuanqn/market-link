@@ -9,7 +9,6 @@ public interface RefreshTokenServiceInterface {
 
     public void revokeToken(String rawToken, Long userId);
 
-    /** Revoke every refresh token of the user (change password → sign out of every device). */
     public void revokeAllTokens(Long userId);
 
     public record RefreshResult(Long userId, String newRefreshToken, boolean rememberMe) {}

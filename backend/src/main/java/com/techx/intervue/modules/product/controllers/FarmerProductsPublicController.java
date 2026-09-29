@@ -13,10 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * GET /api/v1/farmers/{id}/products — this week's stock of a stall (contract §4, FR-011). Lives in
- * the product module (not stall) so the dependency direction product → stall stays one-way.
- */
 @RestController
 @RequestMapping("/api/v1/farmers/{farmerId}/products")
 @AllArgsConstructor

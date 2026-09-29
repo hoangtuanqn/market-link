@@ -5,10 +5,6 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/**
- * new = nobody has looked · reviewed = an admin looked and decided not to hide · actioned = the
- * message was hidden. Matches the ENUM in migration V20260926005.
- */
 public enum ReportStatus {
     NEW,
     REVIEWED,

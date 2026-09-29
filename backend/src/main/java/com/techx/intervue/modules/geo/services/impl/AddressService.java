@@ -12,21 +12,12 @@ import java.util.Locale;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-/**
- * Checks a structured address against the master data and composes the `address` string that every
- * screen, the chatbot and the directions button read (FR-001, FR-073).
- *
- * <p>Vietnam: "12 Lê Lợi, Phường Bến Thành, Thành phố Hồ Chí Minh". Elsewhere: "1-2-3 Jingumae,
- * Shibuya, Tokyo, Japan". Parts that do not belong to the chosen country are dropped rather than
- * stored, so switching country on the form never leaves a stale ward behind.
- */
 @Service
 @AllArgsConstructor
 public class AddressService implements AddressServiceInterface {
 
     static final String VIETNAM = "VN";
 
-    /** users.address and markets.address are VARCHAR(255). */
     private static final int MAX_FORMATTED = 255;
 
     private static final String FIELD = "addressParts";
@@ -70,8 +61,6 @@ public class AddressService implements AddressServiceInterface {
         WardRow ward =
                 directory
                         .ward(wardCode)
-                        // A ward of another province is as wrong as an unknown one; the composite
-                        // FK would also refuse it, but as a 500 instead of a message
                         .filter(w -> w.provinceCode().equals(province.code()))
                         .orElseThrow(() -> invalid("wardCode", "Choose a ward or commune."));
         String street = clean(parts.streetName());
@@ -112,7 +101,6 @@ public class AddressService implements AddressServiceInterface {
         }
     }
 
-    /** Skips missing parts, so a market without a house number reads "Lê Lợi, …". */
     private static String join(String... parts) {
         StringBuilder out = new StringBuilder();
         for (String part : parts) {

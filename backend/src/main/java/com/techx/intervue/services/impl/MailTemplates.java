@@ -11,10 +11,6 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.HtmlUtils;
 
-/**
- * Mail bodies live in resources/mail/<name>.html and <name>.txt with {{key}} placeholders. Every
- * value is HTML-escaped in the HTML part; a placeholder without a value is a bug, so it throws.
- */
 @Component
 public class MailTemplates {
 

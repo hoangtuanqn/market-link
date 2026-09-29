@@ -75,11 +75,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-030…032, 033, 036, 065 — the cart splits by stall (D-01), stock is deducted right at order
- * time per pickup date (D-02, product_daily_stock), a slot has a capacity (D-06), the cutoff is per
- * Farmer (D-05), an admin cannot buy (D-13), and reading/changing orders for both sides.
- */
 @Service
 @AllArgsConstructor
 public class OrderService implements OrderServiceInterface {
@@ -109,12 +104,6 @@ public class OrderService implements OrderServiceInterface {
     private final NotificationServiceInterface notifications;
     private final RestockNotifier restock;
 
-    /**
-     * Read-only, no locking, changes nothing: groups the cart by farmer_id and writes each group's
-     * issues into {@code problems} instead of throwing. A product id that does not exist is a
-     * malformed request → 400 (C5-12). A stall listed in {@code request.pickupDates()} is priced
-     * for that day (FR-125), the others for their nearest orderable day.
-     */
     @Override
     @Transactional(readOnly = true)
     public List<OrderGroupPreviewResource> preview(Long userIdOrNull, PreviewRequest request) {
@@ -131,7 +120,6 @@ public class OrderService implements OrderServiceInterface {
             }
         }
 
-        // Group order follows the order stalls appear in the cart
         Map<Long, List<Product>> byFarmer = new LinkedHashMap<>();
         for (Long productId : wanted.keySet()) {
             Product p = products.get(productId);
@@ -141,9 +129,6 @@ public class OrderService implements OrderServiceInterface {
                 farmerRepository.findAllById(byFarmer.keySet()).stream()
                         .collect(Collectors.toMap(FarmerProfile::getId, Function.identity()));
         Map<Long, List<MarketOption>> markets = checkoutQueries.marketsOf(byFarmer.keySet());
-        // FR-125: a stall the customer has picked a day for is priced for that day; the others
-        // for their nearest orderable day, as before. Grouped by farmer, not by date, because
-        // onDate needs to know whose slots to check — a date alone is not enough.
         Map<Long, LocalDate> pickupDates = request.pickupDateByFarmer();
         Map<Long, BigDecimal> undated = new HashMap<>();
         Map<Long, Map<Long, BigDecimal>> datedByFarmer = new HashMap<>();
@@ -202,8 +187,6 @@ public class OrderService implements OrderServiceInterface {
             BigDecimal lineTotal = unitPrice.multiply(BigDecimal.valueOf(qty));
             subtotal = subtotal.add(lineTotal);
             ProductAvailabilityResolver.Deal deal = a == null ? null : a.deal();
-            // The promise placing the order will copy (FR-121, FR-124): the deal batch's own last
-            // good day, else the pickup day plus the shelf life
             LocalDate bestBefore =
                     a == null
                             ? null
@@ -225,8 +208,6 @@ public class OrderService implements OrderServiceInterface {
                             bestBefore == null ? null : bestBefore.toString(),
                             p.getStorageMode().value()));
         }
-        // C5-11: the pickup market is only pre-filled when the stall sells at exactly one market;
-        // otherwise the cart lets the customer choose
         MarketOption only = markets.size() == 1 ? markets.getFirst() : null;
         return new OrderGroupPreviewResource(
                 farmerId,
@@ -240,10 +221,6 @@ public class OrderService implements OrderServiceInterface {
                 markets);
     }
 
-    /**
-     * The issue with one cart line, or null. {@code available} is the nearest orderable date's
-     * quantity — advisory only, the real gate is {@link #placeGroup} at order time.
-     */
     private static String problemOf(Product p, int quantity, int available) {
         if (!listed(p) || p.getStatus() == ProductStatus.UNAVAILABLE) {
             return UNAVAILABLE;
@@ -254,9 +231,6 @@ public class OrderService implements OrderServiceInterface {
         return available < quantity ? OUT_OF_STOCK : null;
     }
 
-    /**
-     * Still on the shelf: not yet soft-deleted by the Farmer, not yet hidden by an admin (FR-074).
-     */
     private static boolean listed(Product p) {
         return !p.isDeleted() && !p.isHidden();
     }
@@ -265,15 +239,6 @@ public class OrderService implements OrderServiceInterface {
         return listed(p) && p.getStatus() == ProductStatus.AVAILABLE;
     }
 
-    /**
-     * D-01 + D-02 + D-06. The whole place-order call runs in one transaction: either every order in
-     * the cart is created and stock / slots are deducted, or nothing happens at all.
-     *
-     * <p>C5-2 — the shared locking order for every write path: every slot of the whole call first
-     * (ascending id), then every daily-stock row of the whole call in ascending (productId, date)
-     * order (see {@link #lockDailyStock}). No slot / daily-stock row is read before it is locked —
-     * an unlocked read could be a stale snapshot.
-     */
     @Override
     @Transactional
     public List<PlacedOrderResource> place(long customerUserId, PlaceOrderRequest request) {
@@ -313,17 +278,6 @@ public class OrderService implements OrderServiceInterface {
                 .collect(Collectors.toMap(Product::getId, Function.identity()));
     }
 
-    /**
-     * D-02 applied per pickup date: creates whatever daily-stock row is still missing (never
-     * overwriting one that already exists), then locks it by its natural key in the same call that
-     * reads it — the C5-2 anti-deadlock rule for products/slots was "ascending id order"; a fresh
-     * row has no id yet before it is created, so the equivalent here is a fixed, deterministic
-     * order over (productId, date) pairs, applied by every transaction the same way. Deliberately
-     * does not do an unlocked find first to collect ids and lock in one batched call afterward:
-     * Hibernate's first-level cache would then hand back the entity already loaded by that earlier
-     * unlocked read instead of the value the lock just read, defeating the lock (reproduced live:
-     * two concurrent orders for the last unit both succeeded before this fix).
-     */
     private Map<String, ProductDailyStock> lockDailyStock(List<OrderGroupInput> groups) {
         record Need(Long productId, LocalDate date) {}
         Set<Need> needed =
@@ -354,12 +308,6 @@ public class OrderService implements OrderServiceInterface {
         return productId + "@" + date;
     }
 
-    /**
-     * Everything is checked before anything is deducted: the slot and stock only change once this
-     * group is certain to become an order. The slot and product rows are already-locked copies,
-     * shared across groups, so two groups sharing a slot / a product see what the earlier group
-     * already took.
-     */
     private PlacedOrderResource placeGroup(
             long customerUserId,
             User customer,
@@ -400,8 +348,6 @@ public class OrderService implements OrderServiceInterface {
             }
         }
 
-        // Every check has passed: reserve the spot and deduct stock (written when the transaction
-        // commits)
         slot.setBookedCount(slot.getBookedCount() + 1);
         BigDecimal total = BigDecimal.ZERO;
         List<OrderItem> items = new ArrayList<>();
@@ -415,8 +361,6 @@ public class OrderService implements OrderServiceInterface {
             OrderItem item =
                     OrderItem.snapshot(p, row.getUnitPrice(), qty, subtotal, group.pickupDate());
             if (row.hasDeal()) {
-                // FR-124: a deal day sells an older batch — keep the price it replaced and that
-                // batch's own last good day, earlier than a fresh batch's
                 item.setListPrice(row.getListPrice());
                 item.setBestBefore(row.getBestBefore());
             }
@@ -451,13 +395,6 @@ public class OrderService implements OrderServiceInterface {
                 saved.getTotalAmount());
     }
 
-    /**
-     * C5-5: the slot must exist, be enabled, be on the right pickup day, and belong to the right
-     * stall at the right market in the group — the stall–market link must still be on. Its weekday
-     * must also still be open for both the market and the stall (FR-060, FR-073): slots are
-     * generated ahead, and a weekday dropped since then no longer takes new bookings. Any mismatch
-     * → 409 SLOT_UNAVAILABLE.
-     */
     private PickupSlot bookableSlot(
             OrderGroupInput group, FarmerProfile farmer, Map<Long, PickupSlot> slots) {
         PickupSlot slot = group.slotId() == null ? null : slots.get(group.slotId());
@@ -477,11 +414,6 @@ public class OrderService implements OrderServiceInterface {
         return slot;
     }
 
-    /**
-     * D-13: only customer and farmer can buy; an admin uses their own account. Hiding the button in
-     * the FE is not enough. Returns the {@link User} because {@link #place} needs the customer's
-     * name for the ORDER_PLACED notification (FR-042).
-     */
     private User requireBuyer(long userId) {
         User user =
                 userRepository
@@ -493,7 +425,6 @@ public class OrderService implements OrderServiceInterface {
         return user;
     }
 
-    /** The same product appearing on several lines is summed; the cart's order is kept. */
     private static Map<Long, Integer> quantities(List<CartLine> lines) {
         return lines.stream()
                 .collect(
@@ -504,9 +435,6 @@ public class OrderService implements OrderServiceInterface {
                                 LinkedHashMap::new));
     }
 
-    // ---------- FR-033, 036, 065: reading orders for both sides ----------
-
-    /** {@code GET /orders}: the caller's own purchases (buyer), newest first. */
     @Override
     @Transactional(readOnly = true)
     public PageResource<OrderListItemResource> myOrders(
@@ -517,13 +445,6 @@ public class OrderService implements OrderServiceInterface {
         return orderQueries.myOrders(userId, dbStatus, (safePage - 1) * safeSize, safeSize);
     }
 
-    /**
-     * {@code GET /orders/{id}}: the caller must be the order's customer (customer_id) or the user
-     * of the farmer_profiles row that owns it (D-13: a Farmer also buys) — neither → {@link
-     * OrderNotYoursException} (403), even when the order exists (Review focus #3, R-06). {@code
-     * canCancel}/{@code canModify} are only true for the buyer; a Farmer viewing their own order
-     * always sees false.
-     */
     @Override
     @Transactional(readOnly = true)
     public OrderDetailResource detail(long userId, long orderId) {
@@ -533,8 +454,6 @@ public class OrderService implements OrderServiceInterface {
                         .orElseThrow(() -> new OrderNotFoundException(orderId));
         boolean isBuyer = row.customerId() == userId;
         boolean isOwningFarmer = row.farmerUserId() == userId;
-        // D-04: an admin is read-only oversight — may read any order (with the customer block),
-        // never act on it.
         boolean isAdmin =
                 userRepository
                         .findById(userId)
@@ -570,7 +489,6 @@ public class OrderService implements OrderServiceInterface {
                 orderQueries.reviewed(orderId));
     }
 
-    /** {@code GET /farmer/orders}: orders placed at the Farmer's own stall, by pickup time. */
     @Override
     @Transactional(readOnly = true)
     public PageResource<OrderListItemResource> farmerOrders(
@@ -585,8 +503,6 @@ public class OrderService implements OrderServiceInterface {
         return orderQueries.farmerOrders(
                 profile.getId(), dbStatus, date, (safePage - 1) * safeSize, safeSize);
     }
-
-    // ---------- FR-065, 066, 038: the Farmer changes the status ----------
 
     @Override
     @Transactional
@@ -624,14 +540,6 @@ public class OrderService implements OrderServiceInterface {
         return detail(userId, orderId);
     }
 
-    // ---------- FR-034, 035: the customer cancels / edits their own order before cutoff ----------
-
-    /**
-     * C5-18: wrong status (not {@code placed}/{@code accepted}) → {@link
-     * InvalidOrderTransitionException} (409 INVALID_TRANSITION); right status but past {@code
-     * cutoffAt} → {@link CutoffPassedException} (409 CUTOFF_PASSED) — two separate reasons, not
-     * merged into one exception the way {@link OrderLifecycle#canCustomerCancel} returns a boolean.
-     */
     @Override
     @Transactional
     public OrderDetailResource cancel(long userId, long orderId) {
@@ -642,12 +550,6 @@ public class OrderService implements OrderServiceInterface {
         return detail(userId, orderId);
     }
 
-    /**
-     * FR-072: an admin permanently deactivated this customer — every order of theirs still {@code
-     * placed}/{@code accepted} is cancelled through the same {@link #transition} door as every
-     * other cancellation (D-02 stock restore, FR-038 history), so nothing here duplicates that
-     * logic.
-     */
     @Override
     @Transactional
     public void cancelAllForDeactivatedCustomer(long customerId, Long adminActorId) {
@@ -665,18 +567,6 @@ public class OrderService implements OrderServiceInterface {
         }
     }
 
-    /**
-     * D-07 — only lower quantities or drop items, never add a new product: compute each product's
-     * difference, then add/subtract exactly that difference from the daily-stock row for this
-     * order's own pickup date (D-02 redesign — never {@code Product.stockQuantity}). Cancelling and
-     * re-placing would release the stock for someone else to grab in between, and would also change
-     * the {@code order_code} — not what a customer who just edited wants to see.
-     *
-     * <p>C5-2/C5-18 — lock order: order ({@link #loadOwnedByCustomer}) → slot (if any, even though
-     * this path does not change {@code booked_count}) → the daily-stock rows of the products
-     * currently in the order, one per product, ascending productId (every row shares this order's
-     * one pickup date, so productId alone is the deterministic order).
-     */
     @Override
     @Transactional
     public OrderDetailResource modifyItems(long userId, long orderId, ModifyOrderRequest request) {
@@ -718,18 +608,12 @@ public class OrderService implements OrderServiceInterface {
             int delta = after - before;
 
             if (delta > 0 && row == null) {
-                // Placed before per-date stock existed: the extra units still come from this
-                // date, created from the weekly template exactly as place() does
                 row = materializeAndLock(productId, order.getPickupDate()).orElse(null);
             }
             if (delta > 0 && (row == null || !canRaiseBy(p, row, delta))) {
                 throw new OutOfStockException(productId, p == null ? null : p.getName());
             }
-            // No row and not raising: nothing was taken from this date, nothing to give back
             if (delta != 0 && row != null) {
-                // FR-041: lowering a quantity gives stock back. Whether the product as a whole
-                // could be ordered, not just this date — the row is already locked, so the
-                // resolver reads it fresh.
                 boolean wasOrderable = p != null && restock.isOrderable(p);
                 row.setQuantityAvailable(row.getQuantityAvailable() - delta);
                 if (p != null) {
@@ -747,15 +631,9 @@ public class OrderService implements OrderServiceInterface {
                 total = total.add(item.getSubtotal());
             }
         }
-        // C5: every "delete then read again in the same transaction" must flush() after the
-        // delete — the order_items just deleted/changed must be out of the persistence context
-        // before transition() below (the cancel branch) reads order_items again to restore stock,
-        // or stock would be restored twice for a product just dropped from the order above.
         orderItemRepository.flush();
 
         if (remainingItems == 0) {
-            // M-1: dropping every item is what cancels the order — NOT "total == 0", a 0₫ price is
-            // valid (a free item still leaves something in the order). Never leave an empty order.
             transition(order, OrderStatus.CANCELLED, userId, "All items removed.");
             notifyFarmer(order, NotificationKind.ORDER_CANCELLED, Map.of());
             return detail(userId, orderId);
@@ -765,37 +643,22 @@ public class OrderService implements OrderServiceInterface {
         if (order.getStatus() == OrderStatus.ACCEPTED) {
             transition(order, OrderStatus.PLACED, userId, "Customer changed the order.");
         } else {
-            // Status unchanged (still placed): do not go through transition() — no history,
-            // nothing moved. Manual flush() because detail() reads back with raw JDBC (C5-15/17).
             orderRepository.save(order);
             orderRepository.flush();
         }
-        // D-07: the Farmer must look at the order again — an accepted one is back to placed
         notifyFarmer(order, NotificationKind.ORDER_CHANGED, Map.of());
         return detail(userId, orderId);
     }
 
-    /** The same create-if-missing-then-lock step {@link #lockDailyStock} runs for every line. */
     private Optional<ProductDailyStock> materializeAndLock(Long productId, LocalDate date) {
         dailyStockRepository.materialize(productId, date, date.getDayOfWeek().getValue() % 7);
         return dailyStockRepository.lockByProductIdAndStockDate(productId, date);
     }
 
-    /**
-     * I-3/FR-064: raising a quantity uses exactly the same "sellable" rule as {@link #place}
-     * ({@link #sellable} — also excludes a {@code sold_out} the Farmer set while stock remains, not
-     * only {@code unavailable}) plus enough stock left in this order's own pickup-date row.
-     * Lowering/dropping does not go through here — it is always allowed whatever the status.
-     */
     private static boolean canRaiseBy(Product p, ProductDailyStock row, int delta) {
         return p != null && sellable(p) && row.getQuantityAvailable() >= delta;
     }
 
-    /**
-     * C5-8: locks the order row (PESSIMISTIC_WRITE) before reading any field. Only the buyer
-     * ({@code customer_id}) may cancel / edit their own order — not even the Farmer serving that
-     * order may come through this door (403). Missing order → 404.
-     */
     private Order loadOwnedByCustomer(long userId, long orderId) {
         Order order =
                 orderRepository
@@ -807,11 +670,6 @@ public class OrderService implements OrderServiceInterface {
         return order;
     }
 
-    /**
-     * Keeps the two 409 reasons of C5-18 apart: wrong status first ({@code intendedTo} only makes
-     * the message clearer — cancelling and editing are both only allowed from {@code placed}/{@code
-     * accepted}), then past the cutoff.
-     */
     private void assertCustomerCanStillAct(Order order, OrderStatus intendedTo) {
         if (order.getStatus() != OrderStatus.PLACED && order.getStatus() != OrderStatus.ACCEPTED) {
             throw new InvalidOrderTransitionException(order.getStatus(), intendedTo);
@@ -821,13 +679,6 @@ public class OrderService implements OrderServiceInterface {
         }
     }
 
-    /**
-     * C5-8: locks the order row first — every status change path goes through here before doing
-     * anything else. Wrong owner (including an account without {@code farmer_profiles}) → {@link
-     * OrderNotYoursException} (403, R-06); missing order → {@link OrderNotFoundException} (404).
-     * D-09: do NOT check {@code approval_status} here — a suspended Farmer must still be able to
-     * finish orders accepted before (Review focus #5).
-     */
     private Order lockOwnedOrder(long farmerUserId, long orderId) {
         Order order =
                 orderRepository
@@ -843,29 +694,6 @@ public class OrderService implements OrderServiceInterface {
         return order;
     }
 
-    /**
-     * The single door for every status change. That way FR-038 (writing history) and D-02
-     * (restoring stock) cannot be forgotten on some branch: forget to call this and the status does
-     * not change either.
-     *
-     * <p>C5-2 — this path's lock order: the order is already locked (by {@link #lockOwnedOrder} /
-     * {@link #loadOwnedByCustomer}) → lock the slot (if any) → lock the daily-stock rows of the
-     * order's own pickup date, ascending productId.
-     *
-     * <p>The final {@code flush()}: {@link #detail} reads through {@code OrderQueryRepository} with
-     * raw JDBC, separate from the JPA persistence context — without a flush the changes made here
-     * (status, farmer_note, daily stock, booked_count) are not guaranteed to show up when the
-     * public methods above call {@link #detail} again to build the response in the same
-     * transaction.
-     *
-     * <p>C5-17: NO {@code @Transactional} here. This method is only ever self-invoked
-     * (this.transition(...)) from inside the class — the call does not go through the Spring proxy,
-     * so {@code @Transactional} on a private/self-invoked method creates no transaction boundary at
-     * all (Spring silently ignores it); the annotation would only promise a fake atomicity. This
-     * method MUST only be called inside the transaction of the public @Transactional method calling
-     * it (accept/decline/markReady/complete, cancel/modifyItems) — it never opens a transaction
-     * itself.
-     */
     private Order transition(Order order, OrderStatus to, Long actorUserId, String note) {
         OrderStatus from = order.getStatus();
         OrderLifecycle.assertTransition(from, to);
@@ -887,21 +715,6 @@ public class OrderService implements OrderServiceInterface {
         return order;
     }
 
-    /**
-     * D-02 restored per pickup date: locks each item's {@code product_daily_stock} row by natural
-     * key, ascending productId (every row here shares the order's one pickup date, so productId
-     * alone gives C5-2's deterministic order), adds the ordered quantity back, and tells FR-041
-     * when the product crossed "no date can be ordered" → "some date can" ({@link
-     * RestockNotifier#isOrderable}). Units freed on a sold-out date while another date still had
-     * stock are no restock (reproduced: a cancelled order that bought out 04/10 alerted while 03/10
-     * had 27 left). An unlocked {@code Product} read is enough here: this path never mutates the
-     * product row, only the daily-stock row.
-     *
-     * <p>No row for that date means the order was placed before per-date stock existed (the seed's
-     * orders, or a database migrated from the shared pool): nothing was taken from that date, so
-     * nothing is given back — creating the row here would hand out the template quantity plus this
-     * order's units.
-     */
     private void restoreDailyStock(LocalDate pickupDate, List<OrderItem> items) {
         Map<Long, Integer> qty =
                 items.stream()
@@ -926,15 +739,6 @@ public class OrderService implements OrderServiceInterface {
         }
     }
 
-    // ---------- FR-042/D-11: order milestone notifications ----------
-
-    /**
-     * The Farmer gets the work once the customer has placed the order — {@code farmer} is already
-     * in scope in {@link #placeGroup} (filtered to APPROVED above), no need to query again. The
-     * recipient is {@code farmer_profiles.user_id}, not {@code farmer_profiles.id} (C5-19). The
-     * link carries the order's numeric id (I-1) — the FE route {@code farmer/orders/:code} keeps
-     * its old parameter name; whoever wires the page will read it as the id.
-     */
     private void notifyOrderPlaced(Order order, FarmerProfile farmer, User customer) {
         notifications.dispatch(
                 List.of(farmer.getUserId()),
@@ -944,11 +748,6 @@ public class OrderService implements OrderServiceInterface {
                         Map.of("order", order.getOrderCode(), "customer", customer.getFullName())));
     }
 
-    /**
-     * The customer is told when the Farmer changes the status of their order (accept/decline/ready)
-     * — the link carries the order's numeric id (I-1), the FE route {@code orders/:code} keeps its
-     * old parameter name.
-     */
     private void notifyBuyer(Order order, NotificationKind kind, Map<String, String> extra) {
         Map<String, String> params = new HashMap<>(extra);
         params.put("order", order.getOrderCode());
@@ -960,10 +759,6 @@ public class OrderService implements OrderServiceInterface {
                 NotificationEvent.of(kind, "/orders/" + order.getId(), params));
     }
 
-    /**
-     * The Farmer is told when the customer cancels their own order — the link carries the order's
-     * numeric id (I-1), the FE route {@code farmer/orders/:code} keeps its old parameter name.
-     */
     private void notifyFarmer(Order order, NotificationKind kind, Map<String, String> extra) {
         farmerRepository
                 .findById(order.getFarmerId())
@@ -978,10 +773,6 @@ public class OrderService implements OrderServiceInterface {
                         });
     }
 
-    /**
-     * Whitelisted through {@link OrderStatus#valueOf} — an unknown value is a malformed request →
-     * 400, never concatenated into SQL (R-04).
-     */
     private static String parseStatusOrNull(String raw) {
         if (raw == null || raw.isBlank()) {
             return null;
@@ -993,12 +784,6 @@ public class OrderService implements OrderServiceInterface {
         }
     }
 
-    /**
-     * FR-037 — read-only: nothing is locked or reserved; the suggested cart goes through preview
-     * and place like any other cart. Only the buyer may reorder (403), a missing order is 404. The
-     * old order carries no pickup date guarantee any more (D-02 redesign is per-date) — quantities
-     * are capped at the nearest orderable date's availability, the same rule browse/search uses.
-     */
     @Override
     @Transactional(readOnly = true)
     public List<CartLine> reorder(long userId, long orderId) {
@@ -1009,7 +794,6 @@ public class OrderService implements OrderServiceInterface {
         if (order.getCustomerId() != userId) {
             throw new OrderNotYoursException();
         }
-        // D-09: a stall that is not approved takes no orders, so nothing is suggested again
         boolean stallOpen =
                 farmerRepository
                         .findById(order.getFarmerId())
@@ -1032,8 +816,6 @@ public class OrderService implements OrderServiceInterface {
         for (OrderItem line : lines) {
             Product p = byId.get(line.getProductId());
             ProductAvailabilityResolver.Availability a = p == null ? null : resolved.get(p.getId());
-            // Same "can be bought" rule as place: deleted, hidden, paused, sold out or no
-            // orderable date drop out
             if (p == null || !sellable(p) || a == null || a.quantity() <= 0) {
                 continue;
             }
@@ -1042,12 +824,6 @@ public class OrderService implements OrderServiceInterface {
         return cart;
     }
 
-    /**
-     * FR-039 / D-03 — the system completes a ready order once the pickup window is 24 hours behind
-     * it. The order row is locked and re-read (C5-8), so an order a farmer moved meanwhile is left
-     * alone. No actor on the history row and no notification (completing notifies nobody). Never
-     * restores stock (COMPLETED is not in {@link OrderLifecycle#restoresStock}).
-     */
     @Override
     @Transactional
     public boolean autoComplete(long orderId) {

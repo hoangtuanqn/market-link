@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.BadCredentialsException;
 
-/** FR-003: POST /auth/login counts wrong passwords and refuses once the limit is reached. */
 class AuthControllerLoginRateLimitTest {
 
     private static final String EMAIL = "an@example.com";

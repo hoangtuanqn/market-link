@@ -1,4 +1,3 @@
-/** Envelope every backend endpoint returns (backend: resources/ApiResource.java). */
 export type FieldErrorType = {
   field: string;
   message: string;
@@ -18,7 +17,6 @@ export type ApiResponse<T> = {
   timestamp: string;
 };
 
-/** Shape of a paginated `data` (backend: resources/PageResource.java). */
 export type PageType<T> = {
   items: T[];
   page: number;

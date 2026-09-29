@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-063 — lịch tồn kho tuần của chính Farmer (contract §5). Mọi thứ tra theo user của token
- * (R-06).
- */
 @RestController
 @RequestMapping("/api/v1/farmer/stock-templates")
 @PreAuthorize("hasRole('FARMER')")

@@ -16,13 +16,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
-/**
- * FR-091, retrieval half of the assistant's RAG: the user guide in {@code
- * resources/user-guide/*.md} is split into one section per {@code ## heading}, and a question is
- * ranked against the sections with BM25 over diacritic-free words. Lexical ranking is enough for a
- * few dozen hand-written sections and needs no embedding service or vector store; Claude rewrites
- * the user's question into search words (in Vietnamese, the guide's language) before calling it.
- */
 @Slf4j
 @Component
 public class UserGuideIndex {
@@ -32,7 +25,6 @@ public class UserGuideIndex {
     private static final double K1 = 1.2;
     private static final double B = 0.75;
 
-    /** Words too common to tell sections apart, after diacritics are stripped. */
     private static final Set<String> STOPWORDS =
             Set.of(
                     "la", "cua", "va", "cac", "nhung", "co", "khong", "duoc", "de", "thi", "nao",
@@ -60,7 +52,6 @@ public class UserGuideIndex {
         log.info("User guide index ready: {} sections", sections.size());
     }
 
-    /** The best-matching sections, most relevant first; empty when no word of the query matches. */
     public List<Section> search(String query, int limit) {
         List<String> terms = tokenize(query);
         if (terms.isEmpty()) {
@@ -100,7 +91,6 @@ public class UserGuideIndex {
     }
 
     private static Indexed index(Section section) {
-        // The heading says what the section is about, so its words count twice
         List<String> words = new ArrayList<>(tokenize(section.text()));
         List<String> heading = tokenize(section.document() + " " + section.title());
         words.addAll(heading);
@@ -110,11 +100,6 @@ public class UserGuideIndex {
         return new Indexed(section, tf, words.size());
     }
 
-    /**
-     * Single words plus adjacent word pairs. Vietnamese words are mostly two syllables ("ban hang",
-     * "dang ky", "mat khau"), so the pairs are what tell "đăng ký bán hàng" apart from "đăng ký"
-     * alone.
-     */
     static List<String> tokenize(String text) {
         List<String> words =
                 Arrays.stream(TextNormalizer.normalize(text).split(" "))
@@ -127,7 +112,6 @@ public class UserGuideIndex {
         return terms;
     }
 
-    /** Splits one markdown file: "# Document", then one section per "## Title" with its body. */
     static List<Section> split(String markdown) {
         List<Section> out = new ArrayList<>();
         String document = "";
@@ -151,8 +135,6 @@ public class UserGuideIndex {
     private static void addSection(
             List<Section> out, String document, String title, StringBuilder body) {
         String text = body.toString().strip();
-        // The lead paragraph under "# Document" (before the first "##") stays out: it only
-        // introduces the file, the sections carry the answers
         if (title != null && !text.isEmpty()) {
             out.add(new Section(document, title, text));
         }

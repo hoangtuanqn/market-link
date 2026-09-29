@@ -8,17 +8,10 @@ type QualityReportFactsProps = {
   shelfLifeExtended: boolean;
   extendedByDays: number;
   photoUrl?: string | null;
-  /** Alt text for the customer's photo; each page phrases it in its own copy. */
   photoAlt: string;
-  /** The pickup / good-until / spoiled-on line, already translated by the page in its own namespace. */
   dates: ReactNode;
 };
 
-/**
- * FR-122 / FR-123 (spec §4.4) — the read-only facts of one quality report that the farmer's and the admin's report
- * cards both show: the "Extended +N days" chip, the dates line, the problem/note line and the customer's photo.
- * Role-specific parts (the reply box, the decision controls) stay in each page.
- */
 export default function QualityReportFacts({
   problem,
   note,

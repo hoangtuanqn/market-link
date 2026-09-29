@@ -13,11 +13,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
-/**
- * Classifies intent with keyword rules on the diacritic-free sentence. No LLM call, no SQL
- * generation. The order of the intents in DOMAIN_TRIGGERS is the priority order (see
- * docs/chatbot-design.md).
- */
 @Component
 public class IntentClassifier {
 
@@ -47,7 +42,6 @@ public class IntentClassifier {
                         "close"));
         DOMAIN_TRIGGERS.put(
                 ChatIntent.FARMER_AVAILABILITY,
-                // do not use "sap": without diacritics "sạp" / "sáp" ("bơ sáp") / "sắp" collide
                 List.of("farmer", "farmers", "nong dan", "stall", "gian hang", "co mat"));
         DOMAIN_TRIGGERS.put(
                 ChatIntent.PRODUCT_DETAIL,
@@ -69,7 +63,6 @@ public class IntentClassifier {
     private static final List<String> HELP_TRIGGERS =
             List.of("giup", "help", "lam duoc gi", "huong dan");
 
-    /** Day-phrases, checked in declaration order. */
     private static final Map<String, Integer> DAY_PHRASES = new LinkedHashMap<>();
 
     static {
@@ -149,30 +142,17 @@ public class IntentClassifier {
                     "it",
                     "kg");
 
-    /**
-     * Phrases that contain a trigger word without being about it: "gia đình" (family) holds "gia"
-     * (price). They are taken out before the triggers are matched.
-     */
     private static final List<String> NOT_A_PRICE =
             List.of("gia dinh", "tham gia", "quoc gia", "chuyen gia", "gia nhap");
 
-    /**
-     * "open" and "close" are about a market only when the question is not about an account or an
-     * order: "how do I close my account" is not asking for opening hours.
-     */
     private static final List<String> OPEN_CLOSE = List.of("open", "close");
 
     private static final List<String> NOT_ABOUT_A_MARKET =
             List.of("account", "accounts", "order", "orders", "password");
 
-    /** Letters only Vietnamese uses: ă đ ơ ư and the precomposed U+1EA0…U+1EF9 block (ạ ả ấ …). */
     private static final Pattern VIETNAMESE_LETTER =
             Pattern.compile("[ăđơưĂĐƠƯ\\x{1EA0}-\\x{1EF9}]");
 
-    /**
-     * Words common enough in a question to tell Vietnamese typed without diacritics ("ca chua gia
-     * bao nhieu") from English.
-     */
     private static final List<String> VIETNAMESE_WORDS =
             List.of(
                     "gia",
@@ -248,10 +228,6 @@ public class IntentClassifier {
                 intent, normalized, keyword, dayOfWeek, isVietnamese(message, padded));
     }
 
-    /**
-     * A Vietnamese-only letter anywhere, or a common Vietnamese word once the diacritics are gone.
-     * French or Spanish accents (é, ñ) are not enough, so those questions get the English answer.
-     */
     static boolean isVietnamese(String message, String padded) {
         if (message == null) {
             return false;
@@ -275,7 +251,6 @@ public class IntentClassifier {
         return null;
     }
 
-    /** java.time: Mon = 1 … Sun = 7 → schema: Sun = 0 … Sat = 6. */
     private static int toSchemaDay(LocalDate date) {
         return date.getDayOfWeek().getValue() % 7;
     }
@@ -297,7 +272,6 @@ public class IntentClassifier {
     private static String removePhrases(String padded, List<String> phrases) {
         String text = padded;
         for (String phrase : phrases) {
-            // repeated because adjacent phrases share the space between them
             while (text.contains(" " + phrase + " ")) {
                 text = text.replace(" " + phrase + " ", " ");
             }

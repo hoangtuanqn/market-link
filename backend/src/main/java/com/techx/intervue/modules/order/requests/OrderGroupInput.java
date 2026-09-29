@@ -7,7 +7,6 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
-/** One order in the place-order call: one stall, one market, one slot (D-01). */
 public record OrderGroupInput(
         @NotNull Long farmerId,
         @NotNull Long marketId,

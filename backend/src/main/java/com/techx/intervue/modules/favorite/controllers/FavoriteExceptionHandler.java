@@ -14,7 +14,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/** 400 / 403 / 404 for the favorite module, in the same envelope as the other modules. */
 @RestControllerAdvice(assignableTypes = FavoriteController.class)
 public class FavoriteExceptionHandler {
 
@@ -34,7 +33,6 @@ public class FavoriteExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
     }
 
-    /** Unknown targetType, or an id that does not match it. */
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ApiResource<Void>> invalidArgument(IllegalArgumentException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());
@@ -50,9 +48,6 @@ public class FavoriteExceptionHandler {
         return error(HttpStatus.FORBIDDEN, "FORBIDDEN", e.getMessage(), List.of());
     }
 
-    /**
-     * @PreAuthorize wrong role, or an admin account (D-13) → 403.
-     */
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> forbidden(AccessDeniedException e) {
         return error(

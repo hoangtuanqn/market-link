@@ -29,12 +29,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * The avatar lives in users.image in the same place as the Google photo, in the form
- * "/uploads/avatars/uuid.jpg". The server does not store the file the user sent as is: it reads out
- * the pixels and re-encodes them as JPEG, so the EXIF (which may contain GPS coordinates) and
- * anything hidden in the file are dropped.
- */
 @Service
 @RequiredArgsConstructor
 public class AvatarService implements AvatarServiceInterface {
@@ -43,9 +37,6 @@ public class AvatarService implements AvatarServiceInterface {
     static final String URL_PREFIX = "/uploads/" + FOLDER + "/";
     static final int MAX_BYTES = 2 * 1024 * 1024;
 
-    /**
-     * Block "decompression bomb" images: read the size from the header before decoding the pixels.
-     */
     static final int MAX_SOURCE_SIDE = 4096;
 
     static final int SIZE = 512;
@@ -67,7 +58,6 @@ public class AvatarService implements AvatarServiceInterface {
         String previous = user.getImage();
         user.setImage(URL_PREFIX + fileName);
         User saved = userRepository.saveAndFlush(user);
-        // The old image is only deleted after commit; on rollback delete the new image just written
         TransactionHelper.afterCompletion(
                 () -> deleteIfUploaded(previous), () -> storage.delete(FOLDER, fileName));
         return UserService.toResource(saved);
@@ -84,7 +74,6 @@ public class AvatarService implements AvatarServiceInterface {
         return UserService.toResource(saved);
     }
 
-    /** An external link (a Google photo) is not our own file so it is not deleted. */
     private void deleteIfUploaded(String url) {
         if (url != null && url.startsWith(URL_PREFIX)) {
             storage.delete(FOLDER, url.substring(URL_PREFIX.length()));
@@ -104,7 +93,6 @@ public class AvatarService implements AvatarServiceInterface {
         } catch (IOException e) {
             throw new InvalidFieldException("file", "The photo could not be read. Try again.");
         }
-        // Trust the file content, not the Content-Type or extension sent by the browser
         if (!isJpeg(bytes) && !isPng(bytes)) {
             throw new InvalidFieldException("file", NOT_AN_IMAGE);
         }
@@ -131,10 +119,6 @@ public class AvatarService implements AvatarServiceInterface {
         return true;
     }
 
-    /**
-     * Crop a square from the middle (the FE already crops, this is a backstop), scale down to at
-     * most 512px.
-     */
     static byte[] toSquareJpeg(byte[] bytes) {
         BufferedImage source = decode(bytes);
         int side = Math.min(source.getWidth(), source.getHeight());
@@ -142,7 +126,6 @@ public class AvatarService implements AvatarServiceInterface {
         int y = (source.getHeight() - side) / 2;
         int size = Math.min(side, SIZE);
 
-        // JPEG has no alpha channel: the transparent part of a PNG becomes a white background
         BufferedImage square = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = square.createGraphics();
         try {

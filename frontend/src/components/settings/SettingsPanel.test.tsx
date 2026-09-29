@@ -18,7 +18,6 @@ describe('SettingsPanel', () => {
     vi.clearAllMocks();
   });
 
-  /** FR-084: a save that changes neither language nor format does not remount the page, so the button must reset. */
   it('re-enables the save button after a successful save', async () => {
     const current = SettingsStore.get();
     vi.mocked(SettingsApi.save).mockResolvedValue({ data: current } as Awaited<ReturnType<typeof SettingsApi.save>>);

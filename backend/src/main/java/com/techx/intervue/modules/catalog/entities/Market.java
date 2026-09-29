@@ -14,10 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * FR-073 periodic markets; FR-010/FR-012 customers browse them and view them on the map. Table
- * `markets` (V20260926008).
- */
 @Entity
 @Getter
 @Setter
@@ -32,11 +28,9 @@ public class Market {
     @Column(name = "market_name", nullable = false, length = 150)
     private String marketName;
 
-    /** Composed from addressParts by AddressService. */
     @Column(nullable = false, length = 255)
     private String address;
 
-    /** Always in Vietnam (V20260927002); null only on a market saved before it. */
     @Embedded private AddressColumns addressParts;
 
     @Column(nullable = false, precision = 10, scale = 8)
@@ -45,7 +39,6 @@ public class Market {
     @Column(nullable = false, precision = 11, scale = 8)
     private BigDecimal longitude;
 
-    /** D-12: always 'osm'. Keep the column per the schema suggested by the brief. */
     @Column(name = "map_provider", nullable = false, length = 30)
     private String mapProvider = "osm";
 
@@ -58,7 +51,6 @@ public class Market {
     @Column(name = "image_url", length = 255)
     private String imageUrl;
 
-    /** Soft delete: orders.market_id is a non-nullable FK, so the row cannot be deleted. */
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 }

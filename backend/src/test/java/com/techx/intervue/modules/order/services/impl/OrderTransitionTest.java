@@ -63,14 +63,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InOrder;
 
-/**
- * Task 5.5 (FR-065, 066, 038) — {@code transition(...)} is the single door for the Farmer's order
- * status changes: every change writes history (FR-038), a wrong order of steps is always 409, not
- * 400 (D-04), and a dead order (declined/cancelled) restores the daily-stock row for the order's
- * own pickup date + frees the slot spot exactly once (D-02, per-date redesign — never {@code
- * Product.stockQuantity}). The repository is a plain mock; the real lock (PESSIMISTIC_WRITE) is
- * proven by a manual check (curl + mysql) after seeding, not here.
- */
 class OrderTransitionTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -151,14 +143,10 @@ class OrderTransitionTest {
                         });
         when(farmerRepository.findByUserId(FARMER_USER_ID))
                 .thenReturn(Optional.of(approvedFarmer()));
-        // The four public methods build the response by calling detail() again; mock enough not to
-        // throw.
         when(orderQueries.findDetail(ORDER_ID)).thenReturn(Optional.of(aDetailRow()));
         when(orderQueries.items(ORDER_ID)).thenReturn(List.of());
         when(orderQueries.history(ORDER_ID)).thenReturn(List.of());
     }
-
-    // ---------- data ----------
 
     private static FarmerProfile approvedFarmer() {
         return FarmerProfile.builder()
@@ -263,8 +251,6 @@ class OrderTransitionTest {
                 .collect(Collectors.toSet());
     }
 
-    // ---------- the brief's 9 tests ----------
-
     @Test
     void acceptMovesPlacedToAccepted() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -317,11 +303,6 @@ class OrderTransitionTest {
         verify(dailyStockRepository).lockByProductIdAndStockDate(PRODUCT_B, PICKUP);
     }
 
-    /**
-     * The rule lives on {@link DeclineOrderRequest} ({@code @NotBlank}), enforced in the controller
-     * through {@code @Valid} — OrderService#decline itself does not check for an empty reason.
-     * Tests the layer where the rule lives, not through the service (stated as the report asked).
-     */
     @Test
     void declineRequiresAReason() {
         assertThat(invalidFields(new DeclineOrderRequest(""))).contains("reason");
@@ -412,11 +393,6 @@ class OrderTransitionTest {
         assertThat(rowA.getQuantityAvailable()).isEqualTo(7);
     }
 
-    /**
-     * Review focus #5 / D-09 — "Running orders still run to the end so the customer does not lose
-     * what they ordered." Suspension hides products and blocks new orders; it must NOT lock orders
-     * in progress.
-     */
     @Test
     void aSuspendedFarmerCanStillFinishOrdersPlacedBeforeTheSuspension() {
         FarmerProfile farmer = approvedFarmer();
@@ -429,9 +405,6 @@ class OrderTransitionTest {
                 .doesNotThrowAnyException();
     }
 
-    // ---------- extra rules beyond the brief's table ----------
-
-    /** An order id that does not exist → 404, not 403 (unlike a wrong owner). */
     @Test
     void unknownOrderIs404() {
         when(orderRepository.lockById(ORDER_ID)).thenReturn(Optional.empty());
@@ -440,7 +413,6 @@ class OrderTransitionTest {
                 .isInstanceOf(OrderNotFoundException.class);
     }
 
-    /** A FARMER-role account without farmer_profiles → fail-closed 403, no NPE. */
     @Test
     void aUserWithNoFarmerProfileCannotAccept() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -451,10 +423,6 @@ class OrderTransitionTest {
                 .isInstanceOf(OrderNotYoursException.class);
     }
 
-    /**
-     * C5-2: the order is locked first, then the slot, then the daily-stock rows — not the original
-     * draft's reverse order.
-     */
     @Test
     void locksTheOrderThenTheSlotThenTheDailyStockRows() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -473,11 +441,6 @@ class OrderTransitionTest {
         locks.verify(dailyStockRepository).lockByProductIdAndStockDate(eq(PRODUCT_A), eq(PICKUP));
     }
 
-    /**
-     * Controller ruling — a soft-deleted product ({@code is_deleted}) still has a real
-     * product_daily_stock row, so it still gets its stock back when an order dies: the old
-     * order_items pointing to it stay valid even though the Farmer took it off the shelf.
-     */
     @Test
     void declineRestoresStockOfASoftDeletedProduct() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -498,12 +461,6 @@ class OrderTransitionTest {
         assertThat(slot.getBookedCount()).isEqualTo(2);
     }
 
-    /**
-     * An order placed before per-date stock existed (the seed's orders, or any database migrated
-     * from the shared-pool model) has no product_daily_stock row for its pickup date: nothing was
-     * taken from that date, so there is nothing to give back. The decline must still go through
-     * instead of failing with a 500, and the rows that do exist still get their stock back.
-     */
     @Test
     void declineOfAnOrderPlacedBeforePerDateStockSkipsTheMissingRow() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -530,9 +487,6 @@ class OrderTransitionTest {
         verify(dailyStockRepository, never()).materialize(any(), any(), anyInt());
     }
 
-    // ---------- FR-039 auto-complete (the job calls this once per due order) ----------
-
-    /** D-03: the system completes a ready order — history row with no actor and the fixed note. */
     @Test
     void autoCompleteMovesAReadyOrderToCompletedWithoutAnActor() {
         Order order = orderWithStatus(OrderStatus.READY);
@@ -546,9 +500,6 @@ class OrderTransitionTest {
         assertThat(history.get(0).getNote()).isEqualTo("Auto-completed after pickup.");
     }
 
-    /**
-     * The row is re-read under the lock: an order that stopped being ready meanwhile is left alone.
-     */
     @Test
     void autoCompleteSkipsAnOrderThatIsNoLongerReady() {
         Order order = orderWithStatus(OrderStatus.COMPLETED);
@@ -560,10 +511,6 @@ class OrderTransitionTest {
         assertThat(history).isEmpty();
     }
 
-    /**
-     * FR-041 (reproduced 29/09): cancelling an order that bought out 04/10 alerted favouriters
-     * while 03/10 still had 27 — the product never stopped being orderable, so no alert.
-     */
     @Test
     void freeingASoldOutDateIsNoRestockWhileAnotherDateHadStock() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -580,11 +527,6 @@ class OrderTransitionTest {
         verify(restock).afterChange(a, true, true);
     }
 
-    /**
-     * FR-041: stock given back by a decline reaches the restock alert, per product, with whether
-     * the product as a whole could be ordered before and after (RestockNotifier#isOrderable) — not
-     * whether this one date's row was empty.
-     */
     @Test
     void decliningAnOrderAlertsCustomersWhoFavouritedTheProduct() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -597,7 +539,6 @@ class OrderTransitionTest {
         stubDailyStockLock(dailyStock(PRODUCT_A, 5));
         stubDailyStockLock(dailyStock(PRODUCT_B, 0));
         when(slotRepository.lockById(SLOT_ID)).thenReturn(Optional.of(slotWith(3)));
-        // a could already be ordered — no alert; b had no orderable date — this decline gives one
         when(restock.isOrderable(a)).thenReturn(true, true);
         when(restock.isOrderable(b)).thenReturn(false, true);
 

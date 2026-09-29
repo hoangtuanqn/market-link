@@ -6,7 +6,6 @@ import com.techx.intervue.modules.stall.resources.SlotResource;
 import java.time.LocalDate;
 import java.util.List;
 
-/** FR-032, FR-067 — pickup slots (contract §6). */
 public interface SlotServiceInterface {
 
     List<SlotResource> generateSlots(long userId, GenerateSlotsRequest request);
@@ -15,6 +14,5 @@ public interface SlotServiceInterface {
 
     List<SlotResource> publicSlots(long farmerId, Long marketId, LocalDate date);
 
-    /** Farmer — your own slots for that market and date, including inactive and full slots. */
     List<SlotResource> farmerSlots(long userId, long farmerMarketId, LocalDate date);
 }

@@ -12,7 +12,6 @@ const ok = (data: unknown) => ({ data: { success: true, message: 'OK', data, tim
 describe('ProductApi', () => {
   beforeEach(() => vi.clearAllMocks());
 
-  /** The instance's 10 s timeout would cut off a large photo on a phone connection. */
   it('uploads a product photo without the default timeout', async () => {
     vi.mocked(privateApi.post).mockResolvedValue(ok({ url: '/u/p.jpg' }));
 

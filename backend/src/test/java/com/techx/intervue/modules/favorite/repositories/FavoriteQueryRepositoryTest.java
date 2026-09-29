@@ -20,10 +20,6 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Runs on the real MySQL: the list is one SQL query whose type filter and "available" flag must be
- * right on the real engine, and the unique key is what stops a double click from storing two rows.
- */
 @SpringBootTest
 @Transactional
 class FavoriteQueryRepositoryTest {
@@ -114,7 +110,6 @@ class FavoriteQueryRepositoryTest {
                 .contains("Fav greens " + tag, "Fav market " + tag, "Fav stall " + tag);
     }
 
-    /** A sold-out product and a suspended stall stay in the list, marked unavailable. */
     @Test
     void listMarksUnavailableTargets() {
         long soldOut = product("Fav sold out " + tag, 0, "sold_out");
@@ -145,7 +140,6 @@ class FavoriteQueryRepositoryTest {
                         });
     }
 
-    /** db/schema.sql's key has NULL columns and would allow duplicates; target_id closes that. */
     @Test
     void theUniqueKeyRefusesTheSameFavoriteTwice() {
         favorite(FavoriteTargetType.MARKET, marketId);
@@ -154,7 +148,6 @@ class FavoriteQueryRepositoryTest {
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
-    /** FR-041: the accounts that favourited a product, and only for that product. */
     @Test
     void theAccountsThatFavouritedAProductAreFound() {
         long product = product("Fav watched " + tag, 0, "sold_out");

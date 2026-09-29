@@ -42,11 +42,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.security.access.AccessDeniedException;
 
-/**
- * FR-050…053, D-10 (only a completed order can be reviewed), D-13 (admin never reviews), Review
- * Focus #3 (a changed {id} on the URL is 403, never 404). Repositories are plain mocks; the real
- * SQL is proven by {@link ReviewRatingCacheTest} on MySQL.
- */
 class ReviewServiceTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -105,8 +100,6 @@ class ReviewServiceTest {
                             return r;
                         });
     }
-
-    // ---------- create ----------
 
     @Test
     void createRequiresTheOrderToBeCompleted() {
@@ -189,10 +182,6 @@ class ReviewServiceTest {
         verify(reviews, never()).save(any());
     }
 
-    /**
-     * D-13: a Farmer may buy at their own stall, but reviewing it — or its products — would let
-     * them rate themselves (reproduced 29/09 on dev: 5 stars on "Vườn Út Hiền" from its owner).
-     */
     @Test
     void aFarmerCannotReviewTheirOwnStallOrItsProducts() {
         when(users.findById(FARMER_USER_ID))
@@ -211,16 +200,12 @@ class ReviewServiceTest {
         verify(reviews, never()).save(any());
     }
 
-    // ---------- read ----------
-
     @Test
     void forProductHidesModeratedReviews() {
         assertThat(ReviewQueryRepository.FOR_PRODUCT_SQL).contains("r.status = 'visible'");
         assertThat(ReviewQueryRepository.FOR_FARMER_SQL).contains("r.status = 'visible'");
         assertThat(ReviewQueryRepository.SUMMARY_SQL).contains("status = 'visible'");
     }
-
-    // ---------- respond ----------
 
     @Test
     void respondRejectsAReviewOfAnotherStall() {
@@ -238,8 +223,6 @@ class ReviewServiceTest {
                 .isInstanceOf(AlreadyRespondedException.class);
         verify(responses, never()).save(any());
     }
-
-    // ---------- fixtures ----------
 
     private static User user(long id, RoleType role) {
         User u = new User();

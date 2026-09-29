@@ -1,7 +1,5 @@
 package com.techx.intervue.modules.conversation.resources;
 
-/** FR-115. url is the path to a permission-checked endpoint, not a static link. */
-/** FR-115: `mime` tells the client whether to send an image or a video message. */
 public record AttachmentResource(
         Long attachmentId, String url, String mime, Integer width, Integer height) {
 

@@ -27,18 +27,9 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-/**
- * Review focus #1 and #2. Two customers race for the last batch and the last slot. Exactly one
- * wins; the other gets 409. No negative stock, no booked_count over max_orders.
- *
- * <p>Runs on real MySQL (no @Transactional: each thread must really commit for the lock to mean
- * anything). The dev DB is shared with the demo seed, so every test row is given a distinctive name
- * and deleted in {@code @AfterEach} (C5-7).
- */
 @SpringBootTest
 class PlaceOrderConcurrencyTest {
 
-    /** A pickup day 3 days from today: further out than any default cutoff (12 hours). */
     private static final LocalDate PICKUP =
             LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).plusDays(3);
 
@@ -90,7 +81,6 @@ class PlaceOrderConcurrencyTest {
         assertThat(stockOf(productId)).isZero();
     }
 
-    /** Two different pickup dates of the same product don't share a reserve. */
     @Test
     void orderingOneDateDoesNotTouchAnotherDateOfTheSameProduct() {
         long productId = givenProductWithStock(5);
@@ -147,12 +137,6 @@ class PlaceOrderConcurrencyTest {
         assertThat(bookedCountOf(slotId)).isEqualTo(1);
     }
 
-    /**
-     * Not a race, but also only checkable on real MySQL: DATETIME stores Vietnam time. MySQL runs
-     * on UTC and the JDBC URL has serverTimezone=UTC, so a LocalDateTime sent as a Timestamp is
-     * shifted back 7 hours (found by manual testing). Read the raw column with DATE_FORMAT so JDBC
-     * does not shift the time zone.
-     */
     @Test
     void cutoffIsStoredInVietnamLocalTime() {
         long productId = givenProductWithStock(5);
@@ -160,8 +144,6 @@ class PlaceOrderConcurrencyTest {
 
         service.place(someCustomer(), requestFor(productId, 1, slotId));
 
-        // a 07:00 slot, the default 12-hour cutoff → 19:00 the day before, exactly what the Farmer
-        // and customer see
         assertThat(
                         jdbc.queryForObject(
                                 "SELECT DATE_FORMAT(cutoff_at, '%Y-%m-%d %H:%i') FROM orders"
@@ -169,8 +151,6 @@ class PlaceOrderConcurrencyTest {
                                 String.class, farmerId))
                 .isEqualTo(PICKUP.minusDays(1) + " 19:00");
     }
-
-    // ---------- minimal data, inserted with JdbcTemplate ----------
 
     @BeforeEach
     void setUp() {
@@ -198,7 +178,6 @@ class PlaceOrderConcurrencyTest {
                         "INSERT INTO farmer_markets (farmer_id, market_id) VALUES (?, ?)",
                         farmerId,
                         marketId);
-        // The market is held and the stall attends on the pickup weekday (FR-032, FR-060)
         int pickupDow = PICKUP.getDayOfWeek().getValue() % 7;
         insert(
                 "INSERT INTO market_operating_days (market_id, day_of_week) VALUES (?, ?)",
@@ -213,9 +192,6 @@ class PlaceOrderConcurrencyTest {
         customers.add(insertUser("customer"));
     }
 
-    /**
-     * C5-7: deleted in child → parent order — order_items and order_status_history follow orders.
-     */
     @AfterEach
     void tearDown() {
         if (farmerId != null) {
@@ -278,7 +254,6 @@ class PlaceOrderConcurrencyTest {
         return id;
     }
 
-    /** Two different customers race for the same thing in turn. */
     private long someCustomer() {
         return customers.get(turn.getAndIncrement() % customers.size());
     }

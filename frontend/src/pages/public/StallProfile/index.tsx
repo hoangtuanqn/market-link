@@ -30,23 +30,19 @@ import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 
 const REVIEWS_PER_PAGE = 6;
-/** Contract §3 caps a page at 50; every market of the city fits in one call. */
 const FETCH_SIZE = 50;
-/** Contract §8 caps a review page at 50 too; the whole stall's public reviews fit in one call. */
 const REVIEWS_FETCH_SIZE = 50;
 const NO_MARKETS: MarketType[] = [];
 const NO_PRODUCTS: ProductType[] = [];
 const NO_REVIEWS: ReviewDto[] = [];
 const NO_FAVORITES: FavoriteDto[] = [];
 
-/** The window a stall keeps at one market: earliest start to latest end across its days there. */
 const windowOf = (m: StallMarketDto) => {
   const starts = m.operatingDays.map((d) => d.pickupStartTime).sort();
   const ends = m.operatingDays.map((d) => d.pickupEndTime).sort();
   return pickupWindow(starts[0], ends[ends.length - 1]);
 };
 
-/** FR-011 — a stall's profile: this week's stock, reviews, and where to collect. */
 const StallProfilePage = () => {
   const { t } = useTranslation('StallProfile');
   const { t: tc } = useTranslation();
@@ -55,26 +51,22 @@ const StallProfilePage = () => {
 
   const farmerId = Number(id);
   const validId = Number.isInteger(farmerId) && farmerId > 0;
-  // Stalls waiting for approval or suspended have no public page: the server answers 404 (D-09).
   const { state: load, retry } = useRequest(`stall:${id}`, () =>
     validId ? StallApi.get(farmerId) : Promise.reject(new Error('missing')),
   );
   const missing = load.kind === 'error' && (!validId || Helper.getErrorCode(load.error) === 'NOT_FOUND');
   const stall = load.kind === 'ready' ? load.data : undefined;
 
-  // FR-040 — whether this stall is already a favourite of the signed-in customer.
   const { state: favLoad } = useRequest(`fav-farmer:${farmerId}`, () =>
     isLoggedIn ? FavoriteApi.list('farmer') : Promise.resolve(NO_FAVORITES),
   );
   const favoriteId = favLoad.kind === 'ready' ? (favLoad.data.find((f) => f.targetId === farmerId)?.id ?? null) : null;
 
-  // Market coordinates and addresses, for the pins and the "where and when" table.
   const { state: marketsLoad } = useRequest('markets', () =>
     CatalogApi.listMarkets({ pageSize: FETCH_SIZE }).then((result) => result.items),
   );
   const allMarkets = marketsLoad.kind === 'ready' ? marketsLoad.data : NO_MARKETS;
   const marketById = (marketId: number) => allMarkets.find((m) => m.id === marketId);
-  // Visible reviews of the stall (FR-052: GET /farmers/{id}/reviews carries only stall reviews); paged below.
   const { state: reviewsLoad, retry: retryReviews } = useRequest(`stall-reviews:${id}`, () =>
     validId
       ? ReviewApi.forFarmer(farmerId, { pageSize: REVIEWS_FETCH_SIZE }).then((r) => r.items)
@@ -86,17 +78,14 @@ const StallProfilePage = () => {
     : [];
 
   const [tab, setTab] = useState<'stock' | 'reviews' | 'about'>('stock');
-  // Defaults to the stall's first selling day, not a fixed Saturday; null until the stall has arrived.
   const [pickedDay, setPickedDay] = useState<number | null>(null);
   const day = pickedDay ?? availableDays[0] ?? 6;
   const [reviewPage, setReviewPage] = useState(1);
-  // This week's stock (FR-011) for the picked selling day; products are visible only while the stall is approved (D-09).
   const stockDay = availableDays.includes(day) ? day : undefined;
   const { state: productsLoad } = useRequest(`stall-products:${id}:${stockDay ?? ''}`, () =>
     validId ? ProductApi.byFarmer(farmerId, stockDay) : Promise.resolve(NO_PRODUCTS),
   );
 
-  // The stall at each market it trades at, plus the markets themselves (FR-011, FR-012). Plain per-render work.
   const mapMarkers: MapMarker[] = [];
   if (stall) {
     stall.markets.forEach((sm) => {

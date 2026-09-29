@@ -5,7 +5,6 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** FR-120: how a product is kept until it is used — room temperature or the fridge (0–5 °C). */
 public enum StorageMode {
     ROOM,
     CHILLED;
@@ -15,7 +14,6 @@ public enum StorageMode {
         return name().toLowerCase(Locale.ROOT);
     }
 
-    /** "room" / "chilled" in any case → the mode; anything else → IllegalArgumentException. */
     public static StorageMode parse(String raw) {
         if (raw != null) {
             for (StorageMode mode : values()) {

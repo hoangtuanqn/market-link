@@ -28,10 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-062, FR-064 — the Farmer's own products (contract §5). Everything is looked up by the token's
- * user (R-06).
- */
 @RestController
 @RequestMapping("/api/v1/farmer/products")
 @PreAuthorize("hasRole('FARMER')")

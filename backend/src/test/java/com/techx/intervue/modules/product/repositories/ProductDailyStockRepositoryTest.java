@@ -22,10 +22,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-/**
- * {@code materialize} is native SQL (INSERT ... SELECT ... ON DUPLICATE KEY) — syntax errors only
- * show up at runtime, so this test runs against real MySQL instead of mocking the repository.
- */
 @SpringBootTest
 class ProductDailyStockRepositoryTest {
 
@@ -135,7 +131,7 @@ class ProductDailyStockRepositoryTest {
                 productId);
         repository.materialize(productId, MONDAY, 1);
         var existing = repository.findByProductIdAndStockDate(productId, MONDAY).orElseThrow();
-        existing.setQuantityAvailable(3); // simulate 37 already sold
+        existing.setQuantityAvailable(3);
         repository.save(existing);
 
         repository.materialize(productId, MONDAY, 1);
@@ -148,7 +144,6 @@ class ProductDailyStockRepositoryTest {
                 .isEqualTo(3);
     }
 
-    /** V20260928015: a deal day round-trips with its four columns. */
     @Test
     void aDealDayIsStoredWithItsFourColumns() {
         repository.saveAndFlush(dealDay(20));
@@ -162,7 +157,6 @@ class ProductDailyStockRepositoryTest {
         assertThat(saved.getBestBefore()).isEqualTo(MONDAY.plusDays(2));
     }
 
-    /** ck_pds_deal_all_or_none: a deal is never half set, even by a bug. */
     @Test
     void theDatabaseRefusesAHalfSetDeal() {
         ProductDailyStock row = plainDay();
@@ -172,17 +166,12 @@ class ProductDailyStockRepositoryTest {
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
-    /** ck_pds_deal_percent: 5–70 only. */
     @Test
     void theDatabaseRefusesADiscountAbove70() {
         assertThatThrownBy(() -> repository.saveAndFlush(dealDay(80)))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
-    /**
-     * FR-062/FR-063: the rows a price or template change makes follow — from the given day on,
-     * nearest first (C5-2 lock order), never an earlier day.
-     */
     @Test
     void lockFromReturnsTheDaysFromThatDateOnNearestFirst() {
         for (LocalDate date : List.of(MONDAY.plusDays(7), MONDAY, MONDAY.minusDays(1))) {

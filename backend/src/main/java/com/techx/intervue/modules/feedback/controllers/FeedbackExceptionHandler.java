@@ -15,7 +15,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/** 400/403/404/429 for the feedback module — same envelope as the other module handlers. */
 @RestControllerAdvice(assignableTypes = {FeedbackController.class, AdminFeedbackController.class})
 public class FeedbackExceptionHandler {
 
@@ -40,7 +39,6 @@ public class FeedbackExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
-    /** Unknown {@code type}, or a message outside 10–2000 characters — pinned to its field. */
     @ExceptionHandler(InvalidFieldException.class)
     ResponseEntity<ApiResource<Void>> invalidField(InvalidFieldException e) {
         return error(
@@ -54,7 +52,6 @@ public class FeedbackExceptionHandler {
                                 .build()));
     }
 
-    /** Unknown {@code status} on the admin side. */
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ApiResource<Void>> invalidArgument(IllegalArgumentException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", e.getMessage(), List.of());

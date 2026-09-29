@@ -54,7 +54,6 @@ describe('StallProfilePage (FR-011)', () => {
     vi.spyOn(ReviewApi, 'forFarmer').mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 50 });
   });
 
-  /** The day chips used to change nothing: the stock request must follow the picked selling day. */
   it('loads the stock of the picked selling day', async () => {
     renderStall();
 
@@ -64,7 +63,6 @@ describe('StallProfilePage (FR-011)', () => {
     await waitFor(() => expect(ProductApi.byFarmer).toHaveBeenCalledWith(1, 6));
   });
 
-  /** No fake success: nothing on the page claims to send a report it never sends. */
   it('offers no stall report that sends nothing', async () => {
     renderStall();
 

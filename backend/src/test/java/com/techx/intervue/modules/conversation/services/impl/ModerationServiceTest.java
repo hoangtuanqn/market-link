@@ -132,9 +132,6 @@ class ModerationServiceTest {
                 .satisfies(item -> assertThat(item.preview()).isEqualTo("Photo"));
     }
 
-    /**
-     * The queue is where the decision to open is made, not a place for bulk reading (spec §8.3).
-     */
     @Test
     void aVeryLongMessageIsCutInTheQueue() {
         when(messages.findById(101L)).thenReturn(Optional.of(textMessage("a".repeat(500))));
@@ -168,11 +165,10 @@ class ModerationServiceTest {
 
         ArgumentCaptor<Pageable> pageable = ArgumentCaptor.forClass(Pageable.class);
         verify(reports).findByStatusOrderByCreatedAtDesc(any(), pageable.capture());
-        assertThat(pageable.getValue().getPageNumber()).isEqualTo(2); // 1-based → 0-based
+        assertThat(pageable.getValue().getPageNumber()).isEqualTo(2);
         assertThat(page.page()).isEqualTo(3);
     }
 
-    /** FR-072 only deactivates an account and does not delete it, so this is a defensive branch. */
     @Test
     void aMissingUserRowDoesNotBlowUpTheQueue() {
         when(users.findById(7L)).thenReturn(Optional.empty());
@@ -255,9 +251,6 @@ class ModerationServiceTest {
         assertThat(ModerationService.CONTEXT_RADIUS).isEqualTo(5);
     }
 
-    /**
-     * The context is returned in old → new order, even though the "before" query returns new → old.
-     */
     @Test
     void theContextReadsOldestFirst() {
         when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
@@ -298,15 +291,10 @@ class ModerationServiceTest {
                         m -> {
                             assertThat(m.hasPhoto()).isTrue();
                             assertThat(m.body()).isNull();
-                            // not yet reported → readAsAdmin will refuse, so its id is not exposed
                             assertThat(m.attachmentId()).isNull();
                         });
     }
 
-    /**
-     * The image of the EXACT reported message: the admin needs the id to open it through GET
-     * /attachments/{id} (readAsAdmin).
-     */
     @Test
     void detailGivesTheAdminTheReportedPhoto() {
         when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
@@ -384,10 +372,6 @@ class ModerationServiceTest {
                 .satisfies(item -> assertThat(item.preview()).isEqualTo("Video"));
     }
 
-    /**
-     * An admin sees a hidden message (unlike an ordinary user), with a flag so the UI shows it
-     * differently.
-     */
     @Test
     void detailMarksAHiddenNeighbourAsHidden() {
         when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
@@ -404,7 +388,6 @@ class ModerationServiceTest {
                 .satisfies(m -> assertThat(m.hidden()).isTrue());
     }
 
-    /** Any context message that has its own report also carries the reported flag. */
     @Test
     void aNeighbourThatIsAlsoReportedCarriesTheFlagToo() {
         when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));
@@ -427,11 +410,6 @@ class ModerationServiceTest {
         assertThatThrownBy(() -> service.detail(9L)).isInstanceOf(EntityNotFoundException.class);
     }
 
-    /**
-     * Review Focus #1. What needs pinning is the **absence** of a capability, so the test inspects
-     * the API surface itself: no method of the service takes a conversationId, and no path of the
-     * admin controller mentions conversation. Adding such an endpoint would break spec §8.3.
-     */
     @Test
     void adminCannotReachAThreadThatHasNoReport() {
         assertThat(ModerationServiceInterface.class.getDeclaredMethods())
@@ -487,7 +465,6 @@ class ModerationServiceTest {
         verify(messages).save(message);
     }
 
-    /** Review Focus #4: two admins work the same queue. */
     @Test
     void hidingAnAlreadyHiddenMessageKeepsTheFirstAdminOnRecord() {
         Message message = textMessageWithId(101L, "Send me a deposit first");
@@ -504,7 +481,6 @@ class ModerationServiceTest {
         verify(messages, never()).save(any(Message.class));
     }
 
-    /** Spec §8.3: with no report the admin has nothing to do here. */
     @Test
     void anAdminCannotHideAMessageNobodyReported() {
         when(messages.findById(101L)).thenReturn(Optional.of(textMessageWithId(101L, "fine")));
@@ -536,10 +512,6 @@ class ModerationServiceTest {
         verify(messages, never()).save(any(Message.class));
     }
 
-    /**
-     * Two admins press at the same time: the one who handled it first is the one who stays in the
-     * trace.
-     */
     @Test
     void dismissingAnAlreadyHandledReportChangesNothing() {
         MessageReport done = report(ReportStatus.ACTIONED);
@@ -572,7 +544,6 @@ class ModerationServiceTest {
         verify(events).messageHidden(thread, 101L);
     }
 
-    /** The thread list must stop showing the hidden text when it was the last message. */
     @Test
     void hidingTheLastMessageShowsThePreviousOneInTheThreadList() {
         Message message = textMessageWithId(101L, "Send me a deposit first");
@@ -657,10 +628,6 @@ class ModerationServiceTest {
         verify(events, never()).messageHidden(any(), any());
     }
 
-    /**
-     * dismiss only changes the report's status; the message is unchanged so there is nothing to
-     * publish.
-     */
     @Test
     void dismissingAReportPublishesNothing() {
         when(reports.findById(9L)).thenReturn(Optional.of(report(ReportStatus.NEW)));

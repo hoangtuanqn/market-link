@@ -15,11 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Runs on real MySQL. Correct both before and after the orders migration exists: today the table
- * does not exist so available = false, later a new user has no orders yet — both cases are Bronze,
- * 0 orders, and no error is thrown outward.
- */
 @SpringBootTest
 @Transactional
 class AchievementServiceIntegrationTest {

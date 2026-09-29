@@ -25,7 +25,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.mock.web.MockMultipartFile;
 
-/** FR-122 (spec §4.4.1, §8): the photo of a spoilage report. */
 class QualityReportPhotoServiceTest {
 
     private static final String NAME = "7-3f2a1b4c-5d6e-4f70-8a9b-0c1d2e3f4a5b.jpg";
@@ -46,9 +45,6 @@ class QualityReportPhotoServiceTest {
         return out.toByteArray();
     }
 
-    /**
-     * Review Focus #4: re-encoded as a JPEG, so nothing but the pixels (no EXIF, no GPS) is kept.
-     */
     @Test
     void aPngIsStoredAsAJpegUnderTheUploadersName() throws IOException {
         String url =
@@ -108,7 +104,6 @@ class QualityReportPhotoServiceTest {
         assertThat(service.isOwnedBy("/uploads/quality-report-photos/" + NAME, 7L)).isTrue();
     }
 
-    /** Review Focus #4: another customer's photo, another site, a path trick, nothing. */
     @Test
     void aPhotoOfSomeoneElseIsNotTheirs() {
         when(storage.find(any(), any())).thenReturn(Optional.of(Path.of("/x")));

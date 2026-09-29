@@ -14,11 +14,6 @@ const dismissedId = () => {
   }
 };
 
-/**
- * FR-077 — the banner strip on the header, reads the announcement currently in effect for the person viewing. Closing
- * it is remembered by id: a new announcement will show again. Signing in / out / changing role reads it again, because
- * the banner is filtered by role.
- */
 const LiveAnnouncementBanner = () => {
   const [live, setLive] = useState<Announcement | null>(null);
   const { user } = useSession();

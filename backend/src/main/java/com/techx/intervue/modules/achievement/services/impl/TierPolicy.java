@@ -8,10 +8,6 @@ import com.techx.intervue.modules.achievement.resources.OrderStats;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * Ranking rule: the tier is the highest level at which the buyer meets all three thresholds. No
- * "keeping a tier" — cancelling a lot drops the rate, and the tier drops with it.
- */
 @Component
 @RequiredArgsConstructor
 public class TierPolicy {
@@ -29,10 +25,6 @@ public class TierPolicy {
         return result;
     }
 
-    /**
-     * The tier right above the current one and what is still missing; null when already at the
-     * highest tier.
-     */
     public NextTierResource next(OrderStats stats) {
         int current = tierOf(stats).ordinal();
         if (current == Tier.values().length - 1) {

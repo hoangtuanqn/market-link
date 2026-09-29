@@ -27,12 +27,10 @@ describe('shelf-life helpers', () => {
     expect(matchGuideGroup('Organic carrot', vegetables)?.groupName).toBe('Roots and bulbs');
   });
 
-  /** "ớt" folds to "ot"; matching whole words keeps it out of "cà rốt" ("ca rot"). */
   it('matches whole words only, so a short example never hides inside another word', () => {
     expect(matchGuideGroup('Cà rốt Đà Lạt', vegetables)?.groupName).toBe('Roots and bulbs');
   });
 
-  /** M-5: the name hint asks for English names, and English names of produce are usually plural. */
   it('matches the English plural of an example', () => {
     const fruits = [group('Soft fruit', 'chuối, banana, mango'), group('Thick-skinned fruit', 'cam, orange, pomelo')];
     expect(matchGuideGroup('Carrots', vegetables)?.groupName).toBe('Roots and bulbs');

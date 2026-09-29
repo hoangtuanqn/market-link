@@ -14,7 +14,6 @@ import type { ProductType } from '@/types/product.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-/** Monday first, matches how FarmerOperatingDays already lists the week in this app. */
 const DAYS = [1, 2, 3, 4, 5, 6, 0];
 const NO_PRODUCTS: ProductType[] = [];
 
@@ -36,7 +35,6 @@ function seedCells(templates: StockTemplateDto[]): Record<string, Cell> {
   return cells;
 }
 
-/** The table hasn't loaded yet — same column count as the real table so nothing jumps once data lands (FR-084). */
 const TemplateGridSkeleton = () => {
   const { t } = useTranslation('FarmerStockWeek');
   return (
@@ -62,11 +60,6 @@ const TemplateGridSkeleton = () => {
   );
 };
 
-/**
- * A locally-edited grid, seeded once from the loaded data via a lazy initializer instead of effect + setState — the
- * same `react-hooks/set-state-in-effect` trap hit on the Markets page. The parent only renders this component once both
- * `products` and `initialTemplates` are ready, so the initial state is always the latest data.
- */
 const TemplateGrid = ({
   products,
   initialTemplates,
@@ -80,7 +73,6 @@ const TemplateGrid = ({
   const { t: tc } = useTranslation();
   const [cells, setCells] = useState<Record<string, Cell>>(() => seedCells(initialTemplates));
   const [saving, setSaving] = useState(false);
-  // FR-063: the cell whose price the server would refuse ($0 or less), and the message said for it
   const [badPrice, setBadPrice] = useState<{ key: string; message: string } | null>(null);
 
   const setCell = (productId: number, day: number, patch: Partial<Cell>) => {
@@ -97,7 +89,6 @@ const TemplateGrid = ({
         const quantity = Number(cell.quantity);
         if (!Number.isFinite(quantity) || quantity <= 0) continue;
         const price = cell.price.trim() === '' ? null : Number(cell.price);
-        // The server only takes a weekday price above $0 (StockTemplateRequest); blank keeps the current price
         if (price !== null && (!Number.isFinite(price) || price <= 0)) {
           setBadPrice({
             key: cellKey(p.id, day),
@@ -199,10 +190,6 @@ const TemplateGrid = ({
   );
 };
 
-/**
- * FR-063 — the weekly stock template a Farmer's products refill from. Availability for a pickup date is now computed
- * automatically from this template (see the backend design doc); there is no "Apply" action here anymore.
- */
 const FarmerStockWeekPage = () => {
   const { t } = useTranslation('FarmerStockWeek');
   const products = useRequest('farmer-products-for-templates', () => ProductApi.mine());

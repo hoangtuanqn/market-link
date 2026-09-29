@@ -9,7 +9,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-/** Who receives an admin-posted announcement (FR-077). Admin is not in any audience. */
 public enum Audience {
     ALL(RoleType.CUSTOMER, RoleType.FARMER),
     CUSTOMERS(RoleType.CUSTOMER),
@@ -21,17 +20,12 @@ public enum Audience {
         this.roles = List.of(roles);
     }
 
-    /**
-     * The audiences a person sees on the banner. A guest (null role) and an admin only see ALL:
-     * they belong to no audience so they do not receive the announcement either.
-     */
     public static List<Audience> visibleTo(RoleType role) {
         return Arrays.stream(values())
                 .filter(a -> a == ALL || (role != null && a.roles.contains(role)))
                 .toList();
     }
 
-    /** Value of the users.role column (lowercase) for the fan-out statement. */
     public List<String> roleCodes() {
         return roles.stream().map(r -> r.name().toLowerCase(Locale.ROOT)).toList();
     }

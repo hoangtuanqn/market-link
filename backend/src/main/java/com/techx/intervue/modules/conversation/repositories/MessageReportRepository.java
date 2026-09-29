@@ -11,13 +11,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MessageReportRepository extends JpaRepository<MessageReport, Long> {
 
-    /**
-     * One person reports one message exactly once — check first to return 409 instead of letting
-     * UNIQUE throw a 500.
-     */
     boolean existsByMessageIdAndReportedBy(Long messageId, Long reportedBy);
 
-    /** Spec §8.3: the question that decides whether an admin may read a message. */
     boolean existsByMessageId(Long messageId);
 
     Page<MessageReport> findByStatusOrderByCreatedAtDesc(ReportStatus status, Pageable pageable);

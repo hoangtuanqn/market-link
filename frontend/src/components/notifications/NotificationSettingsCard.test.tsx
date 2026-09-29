@@ -8,7 +8,6 @@ vi.mock('@/api-requests/notification.requests', () => ({
 }));
 
 describe('NotificationSettingsCard', () => {
-  /** FR-042: the server sends a customer / farmer the order and favorite categories too; none may show a raw key. */
   it('names every category the server returns for a customer or farmer', async () => {
     const categories = ['messages', 'announcements', 'account', 'orders', 'favorites'].map((category) => ({
       category,

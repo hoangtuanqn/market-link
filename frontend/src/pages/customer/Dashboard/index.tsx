@@ -18,14 +18,8 @@ import type { OrderType } from '@/types/order.types';
 import { settledProducts } from './favoriteProducts';
 
 const UPCOMING_STATUSES = new Set(['placed', 'accepted', 'ready']);
-/** How many favourite products to preview in "New from favorites". */
 const FAV_PRODUCTS_SHOWN = 3;
 
-/**
- * FR-010 FR-036 FR-060 — customer dashboard; content is not specified in the SRS beyond "securely access their
- * dashboard". Each block fetches its own data and carries its own loading/empty/error state (FR-084) — one slow or
- * failed request never blocks the rest of the page.
- */
 const CustomerDashboardPage = () => {
   const { t } = useTranslation('CustomerDashboard');
   const { t: tc } = useTranslation();

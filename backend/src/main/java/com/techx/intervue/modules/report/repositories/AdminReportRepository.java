@@ -15,10 +15,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * FR-070/075 platform-wide aggregates. Revenue is {@code completed} orders only, everywhere, so the
- * dashboard total equals the sum of the per-market and per-stall reports.
- */
 @Repository
 @RequiredArgsConstructor
 public class AdminReportRepository {
@@ -34,7 +30,6 @@ public class AdminReportRepository {
                    (SELECT COUNT(*) FROM products WHERE is_hidden = TRUE AND is_deleted = FALSE) AS hidden_listings
             """;
 
-    /** Every market, including ones with no completed order yet (revenue 0). */
     public static final String REVENUE_BY_MARKET_SQL =
             """
             SELECT m.id AS market_id, m.market_name,
@@ -72,9 +67,6 @@ public class AdminReportRepository {
             """
                     + OrderRows.RANGE_FILTER;
 
-    /**
-     * {@code GET /admin/reports/orders}: platform-wide, newest first (admin is read-only, D-04).
-     */
     public static final String ORDERS_SQL =
             OrderRows.LIST_COLUMNS
                     + OrderRows.LIST_FROM
@@ -84,7 +76,6 @@ public class AdminReportRepository {
     private static final String ORDERS_COUNT_SQL =
             "SELECT COUNT(*) " + OrderRows.LIST_FROM + ORDERS_WHERE;
 
-    /** {@code GET /admin/reports/top-products} (FR-075): every stall, completed orders only. */
     public static final String TOP_PRODUCTS_SQL =
             """
             SELECT oi.product_id, oi.product_name AS name, f.stall_name, oi.unit,

@@ -5,12 +5,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-/**
- * The per-IP limits (sign-up codes, forgot password, sign-in) key on this address. A client can
- * send any forwarding header it likes, so reading one here let the limits be walked around by
- * changing it on every request. Only {@code getRemoteAddr()} counts: behind a trusted proxy Tomcat
- * rewrites it from X-Forwarded-For itself ({@code server.forward-headers-strategy: native}).
- */
 class IpHelperTest {
 
     private static MockHttpServletRequest from(String remoteAddr) {

@@ -42,12 +42,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-050…053. {@link #create} checks, in this order: the order exists (404) → it belongs to the
- * caller (403, Review Focus #3) → it is {@code completed} (403, D-10) → the target was part of it
- * (400) → it has not been reviewed yet (409). After every write the rating cache of the target is
- * recomputed from the visible reviews with one statement (never accumulated).
- */
 @Service
 @AllArgsConstructor
 public class ReviewService implements ReviewServiceInterface {
@@ -81,8 +75,6 @@ public class ReviewService implements ReviewServiceInterface {
         if (order.getStatus() != OrderStatus.COMPLETED) {
             throw new OrderNotCompletedException();
         }
-        // D-13 conflict of interest: a Farmer who bought at their own stall must not rate it or
-        // its products (FR-052 ratings)
         boolean ownStall =
                 farmerRepository
                         .findById(order.getFarmerId())
@@ -149,11 +141,6 @@ public class ReviewService implements ReviewServiceInterface {
         return queries.summary(ReviewTarget.PRODUCT, productId);
     }
 
-    /**
-     * R-06: the review must be about the caller's own stall — directly (stall review) or through
-     * the product's {@code farmer_id} (product review). Another stall's review is 403 even though
-     * it exists.
-     */
     @Override
     @Transactional
     public ReviewResponseResource respond(long farmerUserId, long reviewId, String responseText) {
@@ -201,10 +188,6 @@ public class ReviewService implements ReviewServiceInterface {
                 safeSize(pageSize));
     }
 
-    /**
-     * R-06: {@code farmerId} always comes from the caller's own stall profile, never from the
-     * request — a Farmer only ever sees their own inbox.
-     */
     @Override
     @Transactional(readOnly = true)
     public PageResource<ReviewResource> forStallOwner(long farmerUserId, int page, int pageSize) {
@@ -215,9 +198,6 @@ public class ReviewService implements ReviewServiceInterface {
         return queries.forStallOwner(stall.getId(), safePage(page), safeSize(pageSize));
     }
 
-    // ---------- helpers ----------
-
-    /** Whitelisted: unknown text is a 400, never concatenated into SQL (R-04). */
     private static String parseStatusOrNull(String status) {
         if (status == null || status.isBlank()) {
             return null;
@@ -229,7 +209,6 @@ public class ReviewService implements ReviewServiceInterface {
         return s;
     }
 
-    /** D-13: admin accounts never review; the FE hiding the form is not enough. */
     private User requireReviewer(long userId) {
         User user =
                 userRepository
@@ -241,7 +220,6 @@ public class ReviewService implements ReviewServiceInterface {
         return user;
     }
 
-    /** Server-side twin of the request's {@code @Min/@Max} (validation on both sides). */
     private static int requireRating(Integer rating) {
         if (rating == null || rating < 1 || rating > 5) {
             throw new IllegalArgumentException("rating must be between 1 and 5.");

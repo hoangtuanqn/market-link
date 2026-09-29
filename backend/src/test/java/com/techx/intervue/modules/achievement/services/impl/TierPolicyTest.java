@@ -36,17 +36,13 @@ class TierPolicyTest {
 
     @Test
     void missingAnyOneThresholdKeepsTheLowerTier() {
-        // enough orders, not enough money
         assertThat(policy.tierOf(stats(20, 0, 1_999_999))).isEqualTo(Tier.SILVER);
-        // enough money, not enough orders
         assertThat(policy.tierOf(stats(4, 0, 9_000_000))).isEqualTo(Tier.BRONZE);
     }
 
     @Test
     void cancellingTooOftenLowersTheTier() {
-        // 40 completed, 10 cancelled → 80%: enough for Gold (75%) but short of Diamond (85%)
         assertThat(policy.tierOf(stats(40, 10, 8_000_000))).isEqualTo(Tier.GOLD);
-        // 15 completed, 11 cancelled → 57%: below even the Silver level
         assertThat(policy.tierOf(stats(15, 11, 3_000_000))).isEqualTo(Tier.BRONZE);
     }
 
@@ -68,7 +64,6 @@ class TierPolicyTest {
     void nextTierSaysWhatIsStillMissing() {
         NextTierResource next = policy.next(stats(12, 5, 1_750_000));
 
-        // 12 + 5 → 70%: currently Silver, next is Gold
         assertThat(next.tier()).isEqualTo(Tier.GOLD);
         assertThat(next.ordersNeeded()).isEqualTo(3);
         assertThat(next.spendNeeded()).isEqualTo(250_000);

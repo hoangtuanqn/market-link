@@ -36,7 +36,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.ObjectProvider;
 
-@SuppressWarnings("unchecked") // varargs of Map in the response helper
+@SuppressWarnings("unchecked")
 class ClaudeAssistantTest {
 
     private static final ChatResultItem CARD =
@@ -57,7 +57,6 @@ class ClaudeAssistantTest {
         when(provider.getIfAvailable()).thenReturn(client);
 
         tools = mock(AssistantTools.class);
-        // Sunday, 27/09/2026 Vietnam time
         Clock clock =
                 Clock.fixed(Instant.parse("2026-09-27T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
         assistant =
@@ -94,14 +93,12 @@ class ClaudeAssistantTest {
         assertThat(reply.intent()).isEqualTo(ChatIntent.FIND_PRODUCT);
         assertThat(reply.loggedIntent()).isEqualTo("AI:search_products");
         assertThat(reply.results()).containsExactly(CARD);
-        // The context reaches the tool unchanged: this is what scopes a farmer tool to its stall.
         verify(tools)
                 .run(
                         new AssistantContext(AssistantAudience.CUSTOMER, 7L, null),
                         AssistantTools.SEARCH_PRODUCTS,
                         Map.of("keyword", "cà chua"));
 
-        // The second request carries the assistant's tool_use turn and the matching tool_result
         List<MessageCreateParams> sent = sentParams(2);
         List<MessageParam> second = sent.get(1).messages();
         assertThat(second).hasSize(3);
@@ -130,16 +127,11 @@ class ClaudeAssistantTest {
                         null);
 
         assertThat(reply.reply()).isEqualTo("Đây là câu trả lời.");
-        // maxToolRounds = 2 tool rounds, then one forced text round
         List<MessageCreateParams> sent = sentParams(3);
         assertThat(sent.get(0).toolChoice()).isEmpty();
         assertThat(sent.get(2).toolChoice().orElseThrow().isNone()).isTrue();
     }
 
-    /**
-     * With a button on offer, Claude often writes its answer beside the propose_* call and then
-     * ends the turn with nothing, so the person read the refusal line above a working button.
-     */
     @Test
     void anAnswerWrittenBesideTheLastToolCallIsKeptWhenTheFinalTurnIsEmpty() {
         when(tools.run(any(), any(), anyMap()))
@@ -242,9 +234,7 @@ class ClaudeAssistantTest {
                 sentParams(1).getFirst().system().orElseThrow().asTextBlockParams().get(1).text();
         assertThat(system)
                 .contains("SUNDAY 27/09/2026 (Chủ nhật, day_of_week 0)")
-                // "this Saturday" is looked up in the list, not computed by the model
                 .contains("SATURDAY 03/10/2026 (Thứ Bảy, day_of_week 6)")
-                // Next to "day_of_week 5" the model called Friday "Thứ Năm", which is Thursday
                 .contains("FRIDAY 02/10/2026 (Thứ Sáu, day_of_week 5)");
     }
 
@@ -261,9 +251,7 @@ class ClaudeAssistantTest {
         String system =
                 sentParams(1).getFirst().system().orElseThrow().asTextBlockParams().get(1).text();
         assertThat(system)
-                // 03:00 UTC is 10:00 in Ho Chi Minh City: enough to tell if a cutoff has passed
                 .contains("the time is 10:00")
-                // The 28/09 test run called a cutoff four days away "tomorrow evening"
                 .contains("Tomorrow is MONDAY 28/09/2026 (Thứ Hai, day_of_week 1)");
     }
 
@@ -280,8 +268,6 @@ class ClaudeAssistantTest {
                 .extracting(MessageParam::role)
                 .containsExactly(MessageParam.Role.USER, MessageParam.Role.ASSISTANT);
     }
-
-    // ---------------------------------------------------------------- helpers
 
     private List<MessageCreateParams> sentParams(int calls) {
         ArgumentCaptor<MessageCreateParams> captor =
@@ -301,7 +287,6 @@ class ClaudeAssistantTest {
         return message("end_turn", Map.of("type", "text", "text", value));
     }
 
-    /** A response shaped exactly like the Messages API JSON, parsed by the SDK's own mapper. */
     private static Message message(String stopReason, Map<String, Object>... content) {
         Map<String, Object> body =
                 Map.of(
@@ -324,9 +309,6 @@ class ClaudeAssistantTest {
         return ChatMessage.builder().role(role).message(text).build();
     }
 
-    // ------------------------------------------------- FR-093/094: what is on screen
-
-    /** Every system block of one request, joined, so a test can assert what Claude was told. */
     private static List<com.anthropic.models.messages.TextBlockParam> systemBlocks(
             MessageCreateParams params) {
         return params.system().orElseThrow().asTextBlockParams();
@@ -350,9 +332,7 @@ class ClaudeAssistantTest {
 
         String system = systemText(sentParams(1).get(0));
         assertThat(system).contains("farmer/orders/:code").contains("looking at the order ML-1");
-        // And it tells Claude to look the row up rather than answer from this line.
         assertThat(system).contains("never");
-        // The stable prefix keeps its own block, so the per-request part cannot spoil the cache.
         assertThat(systemBlocks(sentParams(1).get(0))).hasSize(2);
     }
 

@@ -10,10 +10,6 @@ import Logo from './Logo';
 type FooterKey = keyof (typeof common)['footer'];
 type FooterLink = { label: FooterKey; to: string; show?: 'farmer' | 'notFarmer' };
 
-/**
- * Keys under `footer.` in common.json; the text is looked up when rendering. Only a Farmer has pre-orders to handle;
- * everyone else is offered the way to become one.
- */
 const COLUMNS: { title: FooterKey; links: FooterLink[] }[] = [
   {
     title: 'shop',
@@ -80,7 +76,6 @@ const Footer = () => {
         <div className="border-board-muted text-board-muted col-span-full flex flex-wrap items-center justify-between gap-3 border-t pt-4 text-[13px]">
           <span>© 2026 MarketLink · TechWiz 7</span>
           <LanguageSwitcher />
-          {/* Every tile provider requires this credit, so it follows whichever one is configured. */}
           <span>{MAP_CREDIT ? t('footer.mapDataFrom', { credit: MAP_CREDIT }) : t('footer.mapData')}</span>
         </div>
       </div>

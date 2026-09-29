@@ -14,11 +14,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * FR-115. The image is uploaded first and attached to a message later — the client needs the size
- * to reserve space in the chat frame before the image finishes loading. GET lives in
- * AttachmentDownloadController (a different return type).
- */
 @RestController
 @RequestMapping("/api/v1/attachments")
 @AllArgsConstructor

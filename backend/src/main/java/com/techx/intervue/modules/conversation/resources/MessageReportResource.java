@@ -6,7 +6,6 @@ import com.techx.intervue.modules.conversation.enums.ReportReason;
 import com.techx.intervue.modules.conversation.enums.ReportStatus;
 import java.time.Instant;
 
-/** Returned to the reporter themself. Carries no admin information (reviewedBy / reviewedAt). */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record MessageReportResource(
         Long id,

@@ -105,7 +105,6 @@ const EngineeringTeam = () => {
 
   return (
     <section className="about-section" id="team">
-      {/* Section Header */}
       <div className="about-section-header">
         <div className="about-section-title-wrap">
           <span className="about-eyebrow">🚀 TECHWIZ 7 · {t('team.title', 'THE BUILDERS BEHIND MARKETLINK')}</span>
@@ -122,11 +121,9 @@ const EngineeringTeam = () => {
         </div>
       </div>
 
-      {/* Grid of 5 Developer Cards */}
       <div className="about-team-grid">
         {team.map((dev, idx) => (
           <div key={idx} className="about-dev-card">
-            {/* Cover Header */}
             <div className={`about-dev-cover ${dev.coverClass}`}>
               <span className="about-dev-role-badge">{dev.roleBadge}</span>
               <div className="about-dev-status">
@@ -134,7 +131,6 @@ const EngineeringTeam = () => {
               </div>
             </div>
 
-            {/* Profile Overview Row */}
             <div className="about-dev-profile-wrap">
               <img className="about-dev-avatar" src={dev.avatar} alt={dev.name} loading="lazy" />
               <div className="about-dev-socials">
@@ -203,7 +199,6 @@ const EngineeringTeam = () => {
               </div>
             </div>
 
-            {/* Card Body */}
             <div className="about-dev-body">
               <div className="about-dev-name-wrap">
                 <h3 className="about-dev-name">{dev.name}</h3>

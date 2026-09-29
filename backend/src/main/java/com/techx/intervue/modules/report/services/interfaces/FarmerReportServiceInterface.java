@@ -7,7 +7,6 @@ import com.techx.intervue.resources.PageResource;
 import java.time.LocalDate;
 import java.util.List;
 
-/** FR-068/069 — the stall's own numbers; {@code userId} is the signed-in Farmer. */
 public interface FarmerReportServiceInterface {
 
     FarmerDashboardResource dashboard(long userId);

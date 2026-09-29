@@ -29,7 +29,6 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
     setCurrentIndex(idx);
   };
 
-  // Keyboard navigation
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowLeft') {
       goToPrev();
@@ -38,7 +37,6 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
     }
   };
 
-  // Touch swipe handling
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.targetTouches[0].clientX;
   };
@@ -81,7 +79,6 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
         className,
       )}
     >
-      {/* Main image container */}
       <div className="relative h-64 w-full sm:h-80 md:h-[420px]">
         {images.map((src, idx) => (
           <div
@@ -100,13 +97,11 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
               className="size-full object-cover"
               loading={idx === 0 ? 'eager' : 'lazy'}
             />
-            {/* Subtle bottom gradient to ensure dots & badges contrast clearly */}
             <div className="from-ink/60 via-ink/20 pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t to-transparent" />
           </div>
         ))}
       </div>
 
-      {/* Prev & Next navigation buttons */}
       {total > 1 && (
         <>
           <button
@@ -134,12 +129,10 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
         </>
       )}
 
-      {/* Counter Badge */}
       <div className="border-line-strong bg-surface-raised/90 text-ink text-small absolute top-3 right-3 z-20 rounded-full border px-3 py-1 font-bold shadow-sm backdrop-blur-sm">
         {currentIndex + 1} / {total}
       </div>
 
-      {/* Dot Indicators */}
       {total > 1 && (
         <div className="absolute bottom-3 left-1/2 z-20 flex -translate-x-1/2 items-center gap-2">
           {images.map((_, idx) => (
@@ -148,8 +141,6 @@ const MarketCarousel = ({ images, marketName, className }: MarketCarouselProps) 
               type="button"
               onClick={() => goToIndex(idx)}
               aria-label={t('gallery.goTo', { n: idx + 1 })}
-              // The visible dot stays 10px; py-4 + background-clip gives it a 44px box to tap
-              // (Apple HIG, WCAG 2.5.5) without changing how it looks.
               className={Helper.cn(
                 'box-content h-2.5 rounded-full bg-clip-content py-4 transition-all duration-300',
                 idx === currentIndex ? 'bg-brand w-7 shadow-sm' : 'bg-surface-raised/75 hover:bg-surface-raised w-2.5',

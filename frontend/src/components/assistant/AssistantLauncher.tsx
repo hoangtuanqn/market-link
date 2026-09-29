@@ -9,13 +9,6 @@ import { useAssistant } from './assistantContext';
 
 const FULL_PAGE = '/assistant';
 
-/**
- * FR-090, FR-093, FR-094 — the floating assistant button, in all three panels. Shown to any signed-in account the
- * server will let Claude answer: Customer, Farmer and Admin. Hidden on the assistant's own page.
- *
- * Open/closed lives in AssistantProvider rather than here, so a screen can open the panel with a question already typed
- * (the "ask about this" buttons).
- */
 const AssistantLauncher = () => {
   const { t } = useTranslation('common');
   const { user } = useSession();

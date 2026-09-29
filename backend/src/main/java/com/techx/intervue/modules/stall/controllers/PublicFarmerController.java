@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * GET /api/v1/farmers, /api/v1/farmers/{id}, /api/v1/farmers/{id}/slots — Public (khai trong
- * SecurityConfig). FR-011, FR-032.
- */
 @RestController
 @RequestMapping("/api/v1/farmers")
 @AllArgsConstructor
@@ -46,10 +42,6 @@ public class PublicFarmerController extends BaseController {
         return ok(stallService.publicDetail(id), "");
     }
 
-    /**
-     * Slots of a stall still accepting orders; with no `date` given, from today through the next 14
-     * days.
-     */
     @GetMapping("/{id}/slots")
     public ResponseEntity<ApiResource<List<SlotResource>>> slots(
             @PathVariable long id,

@@ -12,16 +12,10 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * FR-068/069 aggregates for one stall. Revenue and best sellers count {@code completed} orders only
- * — placed/accepted/ready are not sold yet, declined/cancelled never were. Every statement takes
- * {@code farmerId} from the caller's own profile (R-06), never from the request.
- */
 @Repository
 @RequiredArgsConstructor
 public class FarmerReportRepository {
 
-    /** Products at or under this many units count as low stock. */
     public static final int LOW_STOCK = 5;
 
     public static final String DASHBOARD_SQL =
@@ -37,10 +31,6 @@ public class FarmerReportRepository {
             WHERE o.farmer_id = :farmerId
             """;
 
-    /**
-     * Low stock is per pickup date since FR-063 (products.stock_quantity is only the Farmer's
-     * reference number now), so FarmerReportService counts it; this only counts the products.
-     */
     public static final String STOCK_SQL =
             """
             SELECT COUNT(*) AS product_count
@@ -71,7 +61,6 @@ public class FarmerReportRepository {
             """
                     + OrderRows.RANGE_FILTER;
 
-    /** {@code GET /farmer/reports/sales}: completed orders, latest pickup first. */
     public static final String SALES_SQL =
             OrderRows.LIST_COLUMNS
                     + OrderRows.LIST_FROM
@@ -85,7 +74,6 @@ public class FarmerReportRepository {
     private final NamedParameterJdbcTemplate jdbc;
     private final OrderRows rows;
 
-    /** {@code lowStockCount} is left at 0: FarmerReportService fills it in from per-date stock. */
     public FarmerDashboardResource dashboard(long farmerId, LocalDate monthStart) {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()

@@ -56,12 +56,6 @@ import java.util.stream.Stream;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * FR-090/091: the tools Claude may call. Every tool is read-only and runs one of the prepared,
- * parameterised queries in {@link ChatKnowledgeRepository} — Claude only picks the tool and fills
- * its arguments, it never writes SQL (R-04). Names typed by the user (market, stall) are resolved
- * against the list of active rows, never passed into a query as free text.
- */
 @Component
 @RequiredArgsConstructor
 public class AssistantTools {
@@ -102,14 +96,6 @@ public class AssistantTools {
     private final OrderServiceInterface orders;
     private final Clock clock;
 
-    /**
-     * What one tool call produced.
-     *
-     * @param content JSON handed back to Claude as the tool_result
-     * @param error true when the arguments were unusable (Claude may retry or ask the user)
-     * @param intent the FR-092 intent this call stands for
-     * @param cards result cards the UI renders as links
-     */
     public record ToolOutcome(
             String content,
             boolean error,
@@ -122,8 +108,6 @@ public class AssistantTools {
             this(content, error, intent, cards, List.of());
         }
     }
-
-    // ---------------------------------------------------------------- definitions
 
     private static final String DAY_HINT =
             "Day of week, 0 = Sunday, 1 = Monday … 6 = Saturday. Omit for any day.";
@@ -219,7 +203,6 @@ public class AssistantTools {
     private static final String DATE_HINT =
             "A date as yyyy-MM-dd, taken from the day list in the system prompt, never computed.";
 
-    /** FR-093. Every one of these reads only the signed-in farmer's own rows. */
     private static final List<Tool> FARMER_ONLY =
             List.of(
                     tool(
@@ -315,7 +298,6 @@ public class AssistantTools {
                             Map.of(),
                             List.of()));
 
-    /** FR-094. An admin sees the whole platform, so the boundary is the role, not a row filter. */
     private static final List<Tool> ADMIN_ONLY =
             List.of(
                     tool(
@@ -400,11 +382,6 @@ public class AssistantTools {
                                             "Highest star rating to include. Default 2.")),
                             List.of()));
 
-    /**
-     * Which tools each audience is shown. Filtering happens here, on the server: the model never
-     * sees a tool outside its audience, rather than seeing it and being refused. Farmer and Admin
-     * keep the catalogue and guide tools because those questions come up in every role.
-     */
     private static final Map<AssistantAudience, List<Tool>> BY_AUDIENCE =
             new EnumMap<>(AssistantAudience.class);
 
@@ -437,7 +414,6 @@ public class AssistantTools {
     private static Tool tool(
             String name, String description, Map<String, JsonValue> props, List<String> required) {
         Tool.InputSchema.Properties.Builder properties = Tool.InputSchema.Properties.builder();
-        // Sorted so the tool list serialises the same way every time (prompt-cache friendly)
         props.entrySet().stream()
                 .sorted(Map.Entry.comparingByKey())
                 .forEach(e -> properties.putAdditionalProperty(e.getKey(), e.getValue()));
@@ -461,14 +437,9 @@ public class AssistantTools {
                 Map.of("type", "integer", "minimum", 0, "maximum", 6, "description", DAY_HINT));
     }
 
-    // ---------------------------------------------------------------- execution
-
-    /** Runs one tool call. Bad arguments come back as an error outcome, never as an exception. */
     public ToolOutcome run(AssistantContext context, String name, Map<String, Object> input) {
         AssistantAudience audience = context == null ? null : context.audience();
         if (!allows(audience, name)) {
-            // Defence in depth: the model was never given this tool, so asking for it means the
-            // conversation went somewhere it should not.
             return new ToolOutcome(
                     "{\"error\":\"This tool is not available.\"}",
                     true,
@@ -503,7 +474,6 @@ public class AssistantTools {
         }
     }
 
-    /** The FR-092 intent a tool call stands for. */
     static ChatIntent intentOf(String name, Map<String, Object> input) {
         return switch (name) {
             case SEARCH_PRODUCTS ->
@@ -536,8 +506,6 @@ public class AssistantTools {
         List<ProductRow> rows =
                 knowledge.searchProducts(
                         keyword, market == null ? null : market.marketId(), includeSoldOut);
-        // Per-date stock (FR-063): the price and stock of the nearest pickup date that still has
-        // stock, the same numbers the product pages show
         Map<Long, Availability> resolved =
                 availability.resolve(
                         rows.stream()
@@ -683,8 +651,6 @@ public class AssistantTools {
         return ok(ChatIntent.HELP, out, List.of());
     }
 
-    // ---------------------------------------------------------------- arguments
-
     private static String requiredText(Map<String, Object> input, String key) {
         Object value = input.get(key);
         if (!(value instanceof String text) || text.isBlank()) {
@@ -743,13 +709,6 @@ public class AssistantTools {
         return match;
     }
 
-    // ---------------------------------------------------------------- output
-
-    /**
-     * {days: 3, hours: 22}. Worked out here rather than by the model, which called a cutoff four
-     * days ahead "tomorrow evening", then "6 days away". Numbers, not words, so the reply can put
-     * them in its own language.
-     */
     private static Map<String, Long> timeUntil(LocalDateTime now, LocalDateTime then) {
         Duration left = Duration.between(now, then);
         Map<String, Long> out = new LinkedHashMap<>();
@@ -766,7 +725,6 @@ public class AssistantTools {
         return out;
     }
 
-    /** "Friday": the model got the weekday of a date wrong when left to work it out. */
     private static String dayName(LocalDate date) {
         return DAY_NAMES[date.getDayOfWeek().getValue() % 7];
     }
@@ -792,20 +750,11 @@ public class AssistantTools {
         }
     }
 
-    // ---------------------------------------------------------------- FR-093 farmer tools
-
     private static final int LOW_STOCK_THRESHOLD = 5;
     private static final int DEFAULT_CUTOFF_HOURS = 24;
 
-    /**
-     * The stall id never comes from {@code input}: it is resolved from the signed-in account. A
-     * farmer tool called without one is a bug, not a request to read somebody else's stall.
-     */
     private static long requireFarmer(AssistantContext context) {
         if (context == null || context.farmerId() == null) {
-            // An account with ROLE_FARMER but no approved stall row. Claude should say so rather
-            // than the turn dying, so this is an IllegalArgumentException that run() turns into a
-            // tool error.
             throw new IllegalArgumentException(
                     "This account has no stall yet, so there are no orders, products or reviews to"
                             + " read.");
@@ -813,11 +762,6 @@ public class AssistantTools {
         return context.farmerId();
     }
 
-    /**
-     * Every Farmer result starts with the stall it was read from. Without it, a Farmer who claimed
-     * another stall got their own numbers reported under that stall's name (test run 28/09): the
-     * model had nothing to contradict the claim with.
-     */
     private Map<String, Object> ownStall(long farmerId) {
         Map<String, Object> out = new LinkedHashMap<>();
         out.put("your_stall", farmerKnowledge.stallName(farmerId).orElse(null));
@@ -828,8 +772,6 @@ public class AssistantTools {
         long farmerId = requireFarmer(context);
         String code = text(input, "order_code");
         if (code != null) {
-            // One order by its code, whatever other filters came with it: the model tends to read
-            // the date inside a code as a pickup date
             List<OrderRow> one = farmerKnowledge.myOrderByCode(farmerId, code).stream().toList();
             Map<Long, List<OrderItemRow>> lines = new LinkedHashMap<>();
             one.forEach(
@@ -859,9 +801,6 @@ public class AssistantTools {
         return orders(farmerId, rows, intent, Map.of());
     }
 
-    /**
-     * @param lines what is in each order, by order id, when the question was about one order
-     */
     private ToolOutcome orders(
             long farmerId,
             List<OrderRow> rows,
@@ -1036,8 +975,6 @@ public class AssistantTools {
         }
     }
 
-    // ---------------------------------------------------------------- FR-094 admin tools
-
     private static final int DEFAULT_MAX_RATING = 2;
 
     private ToolOutcome platformStats(Map<String, Object> input) {
@@ -1079,7 +1016,6 @@ public class AssistantTools {
         List<ChatResultItem> cards = new ArrayList<>();
         for (PendingFarmerRow r : rows) {
             Map<String, Object> row = new LinkedHashMap<>();
-            // The id propose_farmer_decision asks for; without it the model has to guess one
             row.put("farmer_id", r.farmerId());
             row.put("stall", r.stallName());
             row.put("contact", r.contactPerson());
@@ -1145,12 +1081,6 @@ public class AssistantTools {
         return ok(ChatIntent.HELP, out, List.of());
     }
 
-    // ------------------------------------------------------- FR-093/094 proposals (never writes)
-
-    /**
-     * What each action needs the row to look like right now. The real endpoint checks this again;
-     * this copy only exists so the assistant does not offer a button that is going to fail.
-     */
     private static final Map<String, String> ORDER_ACTION_REQUIRES =
             Map.of(
                     "accept", "placed",
@@ -1172,8 +1102,6 @@ public class AssistantTools {
         }
         OrderRow order = farmerKnowledge.myOrderByCode(farmerId, orderCode).orElse(null);
         if (order == null) {
-            // Either the code does not exist or it belongs to another stall. The assistant is told
-            // the same thing either way, so it cannot be used to probe for other stalls' codes.
             return error(ChatIntent.PICKUP_WINDOW, "No order " + orderCode + " on this stall.");
         }
         if (!required.equals(order.status())) {
@@ -1265,16 +1193,6 @@ public class AssistantTools {
         return value == null ? null : value.toLowerCase(java.util.Locale.ROOT);
     }
 
-    // ---------------------------------------------------------------- FR-030/032 cart
-
-    /**
-     * The cart is client state — there is no cart table — so it arrives with the request and is fed
-     * to the same preview the cart screen calls. Two things follow. The lines come from {@code
-     * context}, never from the model's arguments, for the same reason a farmer tool takes no stall
-     * id. And nothing here is reimplemented: the splitting, the cutoff hours and the per-line
-     * problems are the ones the person is already looking at, so the assistant cannot disagree with
-     * their own screen.
-     */
     private ToolOutcome cartPreview(AssistantContext context) {
         List<PageContext.CartLine> lines = context == null ? List.of() : context.cart();
         if (lines == null || lines.isEmpty()) {
@@ -1289,7 +1207,6 @@ public class AssistantTools {
                                 lines.stream()
                                         .map(l -> new CartLine(l.productId(), l.quantity()))
                                         .toList(),
-                                // FR-125: the assistant's context carries no per-stall pickup day
                                 null));
 
         List<Map<String, Object>> out = new ArrayList<>();
@@ -1334,19 +1251,9 @@ public class AssistantTools {
         return ok(ChatIntent.PRODUCT_DETAIL, result, List.of());
     }
 
-    // ---------------------------------------------------------------- FR-094 feedback inbox
-
     private static final int FEEDBACK_DEFAULT = 20;
     private static final int FEEDBACK_MAX = 50;
 
-    /**
-     * The one tool whose whole point is free text somebody typed. The bodies go back under a field
-     * named so the model can see what they are, next to a line saying they are quoted content. That
-     * is a hint, not a guarantee, which is why it is not the only defence: every tool here is
-     * read-only, the tool list is filtered by role before the model sees it, and nothing writes
-     * without a person pressing a button. A message that tries to give orders can produce a wrong
-     * answer; it cannot produce an action.
-     */
     private ToolOutcome feedbackInbox(Map<String, Object> input) {
         int limit =
                 input.get("limit") instanceof Number n && n.intValue() >= 1

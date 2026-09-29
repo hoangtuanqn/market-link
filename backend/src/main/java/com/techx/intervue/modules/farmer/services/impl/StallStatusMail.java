@@ -11,11 +11,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-/**
- * FR-071: the "your stall was suspended / is open again" letters, in the Farmer's own language and
- * in the same branded shell as the FR-009 and FR-072 mail. MailTemplates HTML-escapes every value,
- * so the admin's free-text reason can never inject markup.
- */
 @Component
 public class StallStatusMail {
 
@@ -40,7 +35,6 @@ public class StallStatusMail {
 
     public record Content(String subject, String html, String text) {}
 
-    /** {@code until} null = it stays until an admin lifts it. */
     public Content suspended(
             String fullName, String stallName, String reason, Instant until, String language) {
         Locale locale = localeOf(language);

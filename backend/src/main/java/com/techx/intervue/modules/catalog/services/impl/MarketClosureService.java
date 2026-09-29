@@ -21,7 +21,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** The "Closed days" panel on the Market form (FE) — no official FR yet, see migration V…014. */
 @Service
 @AllArgsConstructor
 public class MarketClosureService implements MarketClosureServiceInterface {
@@ -33,7 +32,6 @@ public class MarketClosureService implements MarketClosureServiceInterface {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
 
-    /** Asia/Ho_Chi_Minh (ChatConfig), so "today" is the market's own date. */
     private final Clock clock;
 
     @Override
@@ -48,7 +46,6 @@ public class MarketClosureService implements MarketClosureServiceInterface {
     @Transactional
     public MarketClosureResource create(long marketId, MarketClosureRequest request, Long adminId) {
         requireMarket(marketId);
-        // QA E2E v2 MARKET-ADMIN-007: a closure is announced ahead, never back-dated
         if (request.closedOn().isBefore(LocalDate.now(clock))) {
             throw new InvalidFieldException("closedOn", "A closed day cannot be in the past.");
         }

@@ -21,7 +21,6 @@ type EvidenceStepProps = {
   onRemoveVideo: () => void;
 };
 
-/** Step 2: up to three photos (the first is required) and an optional video of the stall or the farm. */
 const EvidenceStep = ({
   photos,
   video,
@@ -50,7 +49,6 @@ const EvidenceStep = ({
         <div id="photos" className="flex flex-col gap-2">
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {photos.map((p, i) => (
-              // The label under each slot was dropped; images still need a name for screen readers so they are numbered.
               <div key={p.key}>
                 {p.url ? (
                   <div className="relative">

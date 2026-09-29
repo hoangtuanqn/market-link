@@ -4,7 +4,6 @@ import LegalPage, { type LegalSection } from '@/components/LegalPage';
 import { LEGAL_UPDATED } from '@/constants/legal';
 import { formatDate } from '@/lib/format';
 
-/** Privacy policy: what the product stores, why, and who can see it. Linked from registration. */
 const PrivacyPage = () => {
   const { t } = useTranslation('Privacy');
   return (

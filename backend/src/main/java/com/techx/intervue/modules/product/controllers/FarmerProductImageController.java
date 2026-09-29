@@ -14,11 +14,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * Upload a product image before saving the main form (POST/PUT /farmer/products takes this URL back
- * in {@code imageUrl}) — same shape as AdminMarketImageController. Farmer only (role comes from the
- * token, R-06); no product check because a new product has no id yet.
- */
 @RestController
 @RequestMapping("/api/v1/farmer/products/images")
 @PreAuthorize("hasRole('FARMER')")

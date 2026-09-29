@@ -7,7 +7,6 @@ const PILLARS = [
   { key: 'pay', icon: '🤝' },
 ] as const;
 
-/** 4 core value propositions of MarketLink: Farm fresh, Direct from growers, Pre-order guarantee, Pay at stall. */
 const ValuePillars = () => {
   const { t } = useTranslation('Home');
 

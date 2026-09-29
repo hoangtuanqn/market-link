@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** The single platform_status row (id = 1), seeded by its migration. */
 @Service
 @RequiredArgsConstructor
 public class PlatformStatusService implements PlatformStatusServiceInterface {

@@ -11,11 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * FR-040, FR-014 — one favourite stall, product or market of a customer. Exactly one of farmerId /
- * productId / marketId is set (the one matching targetType), and targetId repeats it so the unique
- * key (customer_id, target_type, target_id) works (V20260926018).
- */
 @Entity
 @Getter
 @Setter

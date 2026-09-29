@@ -14,7 +14,6 @@ import { useCart } from '@/lib/cart';
 type MainLayoutProps = {
   unreadCount?: number;
 };
-/** The page for completing a required profile (a Google account with no phone number / address yet). */
 const COMPLETE_PROFILE_PATH = '/auth/complete-profile';
 
 const MainLayout = ({ unreadCount }: MainLayoutProps) => {
@@ -26,11 +25,8 @@ const MainLayout = ({ unreadCount }: MainLayoutProps) => {
   const unread = useUnreadNotifications();
   const cartLines = useCart();
   const cartCount = cartLines.reduce((n, l) => n + l.qty, 0);
-  // Everyone who signs in has at least a Bronze ring, even when the figures have not finished loading or failed to load
   const tier = achievements.status === 'ready' ? achievements.data.tier : 'bronze';
 
-  // A Customer (Google account) missing a phone number / address → cannot enter any other page until complete (can only
-  // sign out). An Admin does not need these two fields.
   const mustCompleteProfile = user?.role === USER_ROLE.CUSTOMER && (!user.phone || !user.address);
   if (mustCompleteProfile && pathname !== COMPLETE_PROFILE_PATH) {
     return <Navigate to={COMPLETE_PROFILE_PATH} replace />;
@@ -58,7 +54,6 @@ const MainLayout = ({ unreadCount }: MainLayoutProps) => {
         </main>
         <Footer />
         <AssistantLauncher />
-        {/* Signed-in Customers only; a Farmer gets their tour in the stall panel */}
         <OnboardingTour role="customer" />
       </div>
     </AssistantProvider>

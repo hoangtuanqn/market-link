@@ -20,16 +20,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * Reads orders for both sides (FR-033, 036, 065): the customer's list, the Farmer's list, one
- * order's detail, its item lines and its status history. Joins {@code farmer_profiles} (stall name)
- * and {@code markets} (market name) — the order module does not repeat those two modules' display
- * logic.
- *
- * <p>{@code status} is always a value that went through {@link OrderStatus#valueOf} in the service
- * (whitelist), and there is no {@code sort} here — each list has a fixed, business-defined order.
- * Nowhere is user input concatenated into SQL (R-04).
- */
 @Repository
 @RequiredArgsConstructor
 public class OrderQueryRepository {
@@ -55,7 +45,6 @@ public class OrderQueryRepository {
               AND (:status IS NULL OR o.status = :status)
             """;
 
-    /** {@code GET /orders} — the customer's own purchases (buyer), newest first. */
     public static final String READY_PAST_PICKUP_SQL =
             """
             SELECT o.id
@@ -87,7 +76,6 @@ public class OrderQueryRepository {
               AND (:date IS NULL OR o.pickup_date = :date)
             """;
 
-    /** {@code GET /farmer/orders} — orders placed at the stall, by pickup time. */
     public static final String FARMER_ORDERS_SQL =
             LIST_COLUMNS
                     + FARMER_ORDERS_FROM
@@ -95,11 +83,6 @@ public class OrderQueryRepository {
 
     private static final String FARMER_ORDERS_COUNT_SQL = "SELECT COUNT(*) " + FARMER_ORDERS_FROM;
 
-    /**
-     * One order, with the customer's contact (only used when the caller is the Farmer, C5) and
-     * {@code farmer_user_id} so the service decides who may see it (R-06, Review focus #3) — this
-     * query does not filter by the caller.
-     */
     public static final String DETAIL_SQL =
             """
             SELECT o.id, o.order_code, o.status, o.customer_id, cu.full_name AS customer_full_name,
@@ -118,7 +101,6 @@ public class OrderQueryRepository {
             WHERE o.id = :id
             """;
 
-    /** Task 8.3 (FR-050): does the order already carry a review — any target, any status. */
     public static final String REVIEWED_SQL =
             "SELECT EXISTS(SELECT 1 FROM reviews r WHERE r.order_id = :orderId)";
 
@@ -211,7 +193,6 @@ public class OrderQueryRepository {
                 });
     }
 
-    /** FR-122: the line's spoilage report, null until the customer reports it (LEFT JOIN). */
     private static ItemQualityReportResource qualityReportOf(ResultSet rs) throws SQLException {
         long id = rs.getLong("report_id");
         if (rs.wasNull()) {
@@ -273,38 +254,17 @@ public class OrderQueryRepository {
                 rs.getString("farmer_note"));
     }
 
-    /**
-     * {@code cutoff_at} is a DATETIME (Vietnam local time, no time zone) — read with {@code
-     * getObject(..., LocalDateTime.class)} so the driver does not convert it by {@code
-     * serverTimezone}, for exactly the reason {@code Order.cutoffAt} needs
-     * {@code @JdbcTypeCode(SqlTypes.LOCAL_DATE_TIME)} (C5-15).
-     */
     private String formatCutoff(LocalDateTime cutoffAt) {
         return cutoffAt.atZone(clock.getZone()).toInstant().toString();
     }
 
-    /**
-     * TIMESTAMP columns ({@code created_at}, {@code changed_at}) are already a real UTC instant —
-     * {@code toInstant()} is enough, never add/subtract a time zone again (C5-15).
-     */
     private static String readInstant(ResultSet rs, String column) throws SQLException {
         return rs.getTimestamp(column).toInstant().toString();
     }
 
-    /**
-     * The full detail row of one order, used both to build the {@link OrderListItemResource} (via
-     * {@code summary}) and to let the service decide who may see it — no SQL here filters by the
-     * caller.
-     */
-    /**
-     * FR-039 / D-03: ready orders whose pickup ended before {@code threshold} (now − 24 h, Vietnam
-     * local time — pickup_date and pickup_end are local, like cutoff_at). Oldest id first, one
-     * batch at a time.
-     */
     public List<Long> readyPastPickup(LocalDateTime threshold, int limit) {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
-                        // bound as text so the driver's time zone setting cannot shift it
                         .addValue("threshold", threshold.format(LOCAL_DATE_TIME))
                         .addValue("limit", limit);
         return jdbc.queryForList(READY_PAST_PICKUP_SQL, params, Long.class);

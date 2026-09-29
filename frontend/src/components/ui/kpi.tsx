@@ -18,7 +18,6 @@ type KpiProps = {
   highlight?: boolean;
 };
 
-/** Stat tile with a period-over-period delta and an optional trend line (design system `.ml-stat`). */
 export function Kpi({ label, value, note, delta, spark, href, linkLabel, highlight }: KpiProps) {
   const { t } = useTranslation();
   const vs = delta?.vs ?? t('kpi.vsBefore');

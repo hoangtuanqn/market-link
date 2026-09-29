@@ -20,10 +20,6 @@ public class UserSessionCache {
     private final AuthConfig authConfig;
     private static final String KEY_PREFIX = "user:session:";
 
-    /**
-     * Marker (epoch seconds): an access token whose iat is before this marker is rejected even
-     * though the session was recorded again.
-     */
     private static final String REVOKED_BEFORE_PREFIX = "user:revoked-before:";
 
     public record SessionData(String email, Set<RoleType> roles) {}
@@ -53,31 +49,18 @@ public class UserSessionCache {
         redis.delete(KEY_PREFIX + userId);
     }
 
-    /**
-     * Change the role of a live session (Admin approves a Farmer). JwtAuthFilter builds authorities
-     * from this cache and not from the token's claim, so writing only users.role would make the new
-     * role wait until the next refresh. The remaining TTL is kept: this is a permission change, not
-     * a session extension.
-     */
     public void updateRoles(Long userId, Set<RoleType> roles) {
         SessionData current = get(userId);
         if (current == null) {
-            return; // not signed in anywhere — the next sign-in already reads the new role from the
-            // DB
+            return;
         }
         Long ttlSeconds = redis.getExpire(KEY_PREFIX + userId);
         if (ttlSeconds == null || ttlSeconds <= 0) {
-            return; // the session just expired between two commands, do not rebuild it
+            return;
         }
         set(userId, current.email(), roles, Duration.ofSeconds(ttlSeconds));
     }
 
-    /**
-     * Sign out of every device (password change / reset...). Deleting the session alone is not
-     * enough: when the user signs in again the session is written again and the old (leaked) access
-     * token becomes valid again. So also write a time marker, kept for exactly the access token
-     * lifetime (after that every old token has expired).
-     */
     public void revokeAll(Long userId) {
         evict(userId);
         redis.opsForValue()
@@ -87,9 +70,6 @@ public class UserSessionCache {
                         Duration.ofMillis(authConfig.getExpirationTime()));
     }
 
-    /**
-     * Tokens issued before the latest revokeAll (issuedAt comes from JwtService.extractIssuedAt).
-     */
     public boolean isRevoked(Long userId, Instant issuedAt) {
         String raw = redis.opsForValue().get(REVOKED_BEFORE_PREFIX + userId);
         return raw != null && issuedAt.toEpochMilli() < Long.parseLong(raw);

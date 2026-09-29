@@ -17,7 +17,6 @@ type StallDetailsStepProps = {
   onDescriptionChange: (value: string) => void;
 };
 
-/** Step 1: the stall and who runs it; email, phone and address are read from the account. */
 const StallDetailsStep = ({
   user,
   stallName,

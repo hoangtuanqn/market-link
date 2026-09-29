@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/** FR-121: order lines come back with their best-before day and how they are kept. */
 @SpringBootTest
 class OrderItemShelfLifeQueryTest {
 
@@ -61,7 +60,6 @@ class OrderItemShelfLifeQueryTest {
         assertThat(items.get(1).storageMode()).isNull();
     }
 
-    /** FR-122: each line carries its id (the report endpoint's {itemId}) and its report. */
     @Test
     void carriesTheLineIdAndItsSpoilageReport() {
         long customer = fx.user("customer", "Buyer " + fx.tag, "x");

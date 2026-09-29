@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-081 — the admin queue: {@code GET /admin/feedbacks}, {@code PATCH .../{id}/status}. */
 @RestController
 @RequestMapping("/api/v1/admin/feedbacks")
 @PreAuthorize("hasRole('ADMIN')")

@@ -15,7 +15,6 @@ type StallDetailsTabProps = {
   onSave: () => void;
 };
 
-/** The stall tab: name, contact person, the account's contact details, the introduction and the order cutoff. */
 const StallDetailsTab = ({ form, errors, saving, user, onChange, onSave }: StallDetailsTabProps) => {
   const { t } = useTranslation('FarmerStallProfile');
   return (

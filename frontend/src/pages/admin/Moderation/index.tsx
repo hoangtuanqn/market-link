@@ -22,30 +22,22 @@ import { ReviewCardSkeleton, ProductModerationTableSkeleton } from './Moderation
 import QualityReports from './QualityReports';
 import ReportedMessages from './ReportedMessages';
 
-/** Chips filter the visible-reviews queue; the hidden queue is its own tab, always `status: hidden`. */
 const REVIEW_FILTERS = ['newest', 'lowRated'] as const;
 type ReviewFilter = (typeof REVIEW_FILTERS)[number] | 'hidden';
 
 type Tab = 'reviews' | 'products' | 'hidden' | 'messages' | 'quality';
 const TABS: Tab[] = ['reviews', 'products', 'hidden', 'messages', 'quality'];
 
-/** Reasons an admin picks when hiding a listing. Keys resolve under `reason.` in the locale file. */
 const REASONS = ['advertising', 'abusive', 'offTopic', 'claim', 'other'] as const;
 
 type HideTarget = { kind: 'review' | 'listing'; name: string; id: number } | null;
 const NO_PRODUCTS: ProductType[] = [];
 
-/** Both queues page on the server, so older listings and reviews stay reachable (FR-074). */
 const PAGE_SIZE = 20;
 
-/**
- * FR-074 — hide product listings or reviews that break the guidelines. Hidden items stay in the database; the review
- * hide endpoint carries no reason (unlike listings, which record one for the owner).
- */
 const AdminModerationPage = () => {
   const { t } = useTranslation('AdminModeration');
   const { t: tc } = useTranslation();
-  // The tab lives in the address, so the QUALITY_ESCALATED notification (/admin/moderation?tab=quality) opens it
   const [searchParams, setSearchParams] = useSearchParams();
   const asked = searchParams.get('tab') as Tab | null;
   const tab: Tab = asked && TABS.includes(asked) ? asked : 'reviews';
@@ -56,13 +48,11 @@ const AdminModerationPage = () => {
   };
   const [hidingBusy, setHidingBusy] = useState(false);
   const [unhidingId, setUnhidingId] = useState<number | null>(null);
-  // What customers currently see (contract §5, newest first), searched and paged on the server; hiding refetches.
   const [search, setSearch] = useState('');
   const [productPage, setProductPage] = useState(1);
   const { state: listedLoad, retry: retryListed } = useRequest(`moderation-products:${search}:${productPage}`, () =>
     ProductApi.list({ q: search || undefined, sort: 'newest', page: productPage, pageSize: PAGE_SIZE }),
   );
-  // Listings an admin has hidden; the 'hidden' tab lists them so each can be unhidden (FR-074).
   const {
     state: hiddenListingsLoad,
     retry: retryHiddenListings,
@@ -83,7 +73,6 @@ const AdminModerationPage = () => {
     return () => clearTimeout(timer);
   }, [tab, reviewFilter]);
 
-  // The 'hidden' tab is its own filter value, independent of the chips above (FR-074 moderation queue).
   const effectiveFilter: ReviewFilter = tab === 'hidden' ? 'hidden' : reviewFilter;
   const {
     state: reviewsLoad,
@@ -102,7 +91,6 @@ const AdminModerationPage = () => {
   );
   const reviewItems = reviewsLoad.kind === 'ready' ? reviewsLoad.data.items : [];
   const reviewTotal = reviewsLoad.kind === 'ready' ? reviewsLoad.data.total : 0;
-  /** A review left this queue (hidden or unhidden): drop it, or refetch when that emptied a page that has more. */
   const dropReview = (id: number) => {
     if (reviewItems.length > 1) {
       mutateReviews((current) => ({
@@ -123,7 +111,6 @@ const AdminModerationPage = () => {
     try {
       if (hiding.kind === 'listing') {
         await ProductApi.adminHide(hiding.id, reason || t(`reason.${REASONS[0]}`));
-        // Refetch so the page fills back up from the next one; step back when it was the last row of the last page.
         if (listed.length === 1 && productPage > 1) setProductPage(productPage - 1);
         else retryListed();
         retryHiddenListings();
@@ -377,7 +364,6 @@ const AdminModerationPage = () => {
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
-                // Clearing the box (or its clear button) shows every listing again without another Search press.
                 if (!e.target.value) {
                   setSearch('');
                   setProductPage(1);

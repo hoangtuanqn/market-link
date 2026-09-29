@@ -13,7 +13,6 @@ type Props = {
   loading: boolean;
   error: boolean;
   onRetry: () => void;
-  /** The sentence under "No conversations yet", by role: a Farmer cannot open a conversation themself. */
   emptyText?: string;
   hasMore?: boolean;
   loadingMore?: boolean;

@@ -19,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-/** FR-122 (spec §9 "cửa sổ báo hư"): the window and the one-report rule on real MySQL. */
 @SpringBootTest
 @Transactional
 class CustomerQualityReportWindowTest {
@@ -59,7 +58,6 @@ class CustomerQualityReportWindowTest {
         return new CreateQualityReportRequest(day, QualityProblem.MOLD, null, null);
     }
 
-    /** Review Focus #5: good until 2 days ago is the last day; 3 days ago is closed. */
     @Test
     void theLastDayOfTheWindowIsAcceptedAndTheNextIsNot() {
         long lastDay = line("Rau muống", TODAY.minusDays(2));
@@ -92,7 +90,6 @@ class CustomerQualityReportWindowTest {
                 .isEqualTo(1);
     }
 
-    /** Spec §9 "Quyền": a customer cannot report someone else's order. */
     @Test
     void anotherCustomerCannotReportTheOrder() {
         long item = line("Mồng tơi", TODAY);

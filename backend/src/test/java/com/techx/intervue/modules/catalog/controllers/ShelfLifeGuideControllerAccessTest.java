@@ -14,17 +14,11 @@ import org.springframework.security.web.access.expression.WebExpressionAuthoriza
 import org.springframework.security.web.access.intercept.RequestAuthorizationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/**
- * FR-120: who may read the storage groups the product form offers. Like FarmerControllerAccessTest,
- * the repo has no MockMvc/spring-security-test, so this pins the rule itself: the class-level
- * {@code @PreAuthorize}, evaluated for each role, and that no endpoint replaces it.
- */
 class ShelfLifeGuideControllerAccessTest {
 
     private static final String RULE =
             ShelfLifeGuideController.class.getAnnotation(PreAuthorize.class).value();
 
-    /** The rule uses only the role checks the web and the method expression roots share. */
     private static boolean allowed(String... authorities) {
         var auth =
                 new UsernamePasswordAuthenticationToken(
@@ -47,7 +41,6 @@ class ShelfLifeGuideControllerAccessTest {
         assertThat(allowed("ROLE_ADMIN")).isTrue();
     }
 
-    /** A customer never sees another stall's shelf-life numbers (spec §4.1). */
     @Test
     void aCustomerIsRefused() {
         assertThat(allowed("ROLE_CUSTOMER")).isFalse();

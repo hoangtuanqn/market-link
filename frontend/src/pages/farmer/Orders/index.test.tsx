@@ -46,10 +46,6 @@ beforeEach(() => {
 });
 
 describe('FarmerOrdersPage', () => {
-  /**
-   * FR-065, D-04: a 409 means the order moved on elsewhere (the customer cancelled or changed it). The list is read
-   * again, so the Farmer no longer sees the stale row with its old buttons.
-   */
   it('reads the list again after an action answers 409', async () => {
     vi.mocked(OrderApi.accept).mockRejectedValue(conflict());
     render(

@@ -18,10 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-074 — listing moderation (contract §10). Hiding/unhiding does not touch the Farmer's stock or
- * status.
- */
 @RestController
 @RequestMapping("/api/v1/admin/products")
 @PreAuthorize("hasRole('ADMIN')")
@@ -30,7 +26,6 @@ public class AdminProductController extends BaseController {
 
     private final ProductServiceInterface products;
 
-    /** FR-074: hidden listings, newest change first, for the moderation queue. */
     @GetMapping("/hidden")
     public ResponseEntity<ApiResource<PageResource<FarmerProductResource>>> hidden(
             @RequestParam(defaultValue = "1") int page,

@@ -7,7 +7,6 @@ import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** FR-072: the only place that writes user_status_history — mirrors OrderStatusHistoryWriter. */
 @Component
 @RequiredArgsConstructor
 public class UserStatusHistoryWriter {

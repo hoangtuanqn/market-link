@@ -33,17 +33,10 @@ import { initials } from '@/lib/avatar';
 import type common from '@/locales/en/common.json';
 import DashboardShell, { type ShellNavGroup } from './DashboardShell';
 
-/** `heading` and `label` are keys under `farmerNav.` in common.json, looked up when rendering. */
 type FarmerNavKey = keyof (typeof common)['farmerNav'];
 type NavItem = { to: string; label: FarmerNavKey; icon: ComponentType<IconProps>; count?: number };
 type NavGroup = { heading: FarmerNavKey; items: NavItem[] };
 
-/**
- * D-09: while a stall is suspended it "chỉ thấy đơn cũ" (only sees old orders) — the server backs this with
- * StallSuspensionMessage.assertUsable on the product, stock and dashboard reads (FR-071 Task 3), so these are exactly
- * the screens that would now fail with STALL_SUSPENDED. Reviews and sales history stay: neither is guarded server-side,
- * since responding to a past review or reading completed-order history is not "selling".
- */
 const LOCKED_WHILE_SUSPENDED = new Set([
   '/farmer',
   '/farmer/products',
@@ -97,7 +90,6 @@ const NAV: NavGroup[] = [
   },
 ];
 
-/** Farmer dashboard — board-green sidebar + quiet work-area header (DashboardShell). */
 const FarmerLayout = () => {
   const { t } = useTranslation();
   const unread = useUnreadNotifications();
@@ -107,10 +99,7 @@ const FarmerLayout = () => {
   const { state: profileLoad } = useRequest('farmer-layout-profile', () => StallApi.myProfile());
   const profile = profileLoad.kind === 'ready' ? profileLoad.data : null;
   const stallName = profile?.stallName ?? user?.fullName ?? '';
-  // FR-113: the real unread count, replacing the hardcoded 1
   const chatUnread = useChatUnread();
-  // The "incoming orders" badge; re-fetched on every navigation inside the panel (FarmerLayout is the persistent
-  // Outlet parent, so accept/decline on /farmer/orders would otherwise leave a stale count until a full reload).
   const { state: placedLoad } = useRequest(`farmer-placed-count:${pathname}`, () =>
     OrderApi.farmerList({ status: 'placed', pageSize: 1 }),
   );
@@ -163,7 +152,6 @@ const FarmerLayout = () => {
         headerActions={<NotificationBell to="/farmer/notifications" />}
         className="bg-surface-quiet"
       />
-      {/* FR-093: without this the Farmer tools exist on the server and nothing in this panel can reach them. */}
       <AssistantLauncher />
     </AssistantProvider>
   );

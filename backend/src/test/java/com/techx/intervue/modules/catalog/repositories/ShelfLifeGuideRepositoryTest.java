@@ -16,7 +16,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/** FR-120: the shelf-life guide table and its finders, against real MySQL. */
 @SpringBootTest
 class ShelfLifeGuideRepositoryTest {
 
@@ -43,7 +42,6 @@ class ShelfLifeGuideRepositoryTest {
         jdbc.update("DELETE FROM categories WHERE id = ?", categoryId);
     }
 
-    /** MySQL sorts an ENUM by declaration order, so room comes before chilled. */
     @Test
     void listsTheActiveGuidesOfOneCategoryByGroupThenMode() {
         save("Roots and bulbs", StorageMode.CHILLED, 21, true);
@@ -71,7 +69,6 @@ class ShelfLifeGuideRepositoryTest {
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
-    /** The name lookup behind "reuse the existing spelling" relies on the column's collation. */
     @Test
     void findsAGroupByNameIgnoringCaseAndAccents() {
         save("Rau thơm", StorageMode.CHILLED, 3, true);

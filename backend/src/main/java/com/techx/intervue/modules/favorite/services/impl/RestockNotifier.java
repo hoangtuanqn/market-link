@@ -15,19 +15,6 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * FR-041 — tells the accounts that favourited a product when it can be ordered again. Every write
- * that can make a product orderable captures whether it was orderable before the change and calls
- * {@link #afterChange} after it, inside its own transaction: the farmer's edit and status toggle,
- * the admin's un-hide, a weekly template gaining a day, a farmer's per-date override, and a
- * declined / cancelled order or a lowered order quantity restoring a daily-stock row.
- *
- * <p>Orderability is per pickup date since the per-date-stock redesign (D-02): {@link #isOrderable}
- * answers "can this be put in a cart on its nearest orderable date right now" via {@link
- * ProductAvailabilityResolver}. A caller that already holds the exact {@code product_daily_stock}
- * row it just changed should compute both booleans itself instead — cheaper, and scoped to the one
- * date that actually changed.
- */
 @Component
 @RequiredArgsConstructor
 public class RestockNotifier {
@@ -37,7 +24,6 @@ public class RestockNotifier {
     private final NotificationServiceInterface notifications;
     private final ProductAvailabilityResolver availability;
 
-    /** Listed, available, and the nearest orderable date still has stock left. */
     public boolean isOrderable(Product product) {
         if (product.isDeleted()
                 || product.isHidden()
@@ -51,10 +37,6 @@ public class RestockNotifier {
         return a != null && a.quantity() > 0;
     }
 
-    /**
-     * Alerts only on "could not be ordered → can be ordered", and only at an approved stall. The
-     * farmer who owns the product is never notified.
-     */
     public void afterChange(Product product, boolean wasOrderable, boolean isOrderableNow) {
         if (wasOrderable || !isOrderableNow) {
             return;

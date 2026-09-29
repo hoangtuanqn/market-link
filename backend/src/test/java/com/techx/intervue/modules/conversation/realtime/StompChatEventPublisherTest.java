@@ -61,9 +61,6 @@ class StompChatEventPublisherTest {
                 .build();
     }
 
-    /**
-     * FR-042: the notification module listens to this event to trigger the popup for the recipient.
-     */
     @Test
     void aNewMessageIsAnnouncedToTheRestOfTheAppForTheRecipient() {
         publisher.messageCreated(thread, msg(7L));
@@ -71,10 +68,6 @@ class StompChatEventPublisherTest {
         verify(appEvents).publishEvent(new ChatMessageCreatedEvent(42L, 3L, msg(7L)));
     }
 
-    /**
-     * The message is committed: a failure in the notification module must not turn the send-message
-     * request into a 500.
-     */
     @Test
     void aFailingNotificationListenerDoesNotBreakTheSend() {
         doThrow(new IllegalStateException("db down"))
@@ -100,10 +93,6 @@ class StompChatEventPublisherTest {
                         eq("7"), eq("/topic/conversations"), any(ConversationEvent.class));
     }
 
-    /**
-     * The sender opens the thread on another machine (phone): that machine must see the bubble too,
-     * the FE dedupes by id.
-     */
     @Test
     void theSenderAlsoGetsTheMessageForTheirOtherDevices() {
         publisher.messageCreated(thread, msg(7L));
@@ -120,7 +109,6 @@ class StompChatEventPublisherTest {
         assertThat(ev.getValue().type()).isEqualTo("read");
         assertThat(ev.getValue().readerId()).isEqualTo(3L);
         assertThat(ev.getValue().readAt()).isEqualTo(NOW);
-        // "read" is not a badge update: unreadCount must be absent, not 0
         assertThat(ev.getValue().unreadCount()).isNull();
         verify(template, never()).convertAndSendToUser(eq("3"), any(), any());
     }
@@ -151,14 +139,9 @@ class StompChatEventPublisherTest {
         assertThat(event.getValue().type()).isEqualTo(ConversationEvent.HIDDEN);
         assertThat(event.getValue().conversationId()).isEqualTo(42L);
         assertThat(event.getValue().messageId()).isEqualTo(101L);
-        // The "hidden" event carries no unreadCount: the client must not take it as a reason to
-        // change the badge
         assertThat(event.getValue().unreadCount()).isNull();
     }
 
-    /**
-     * If the broker is down hiding a message must still succeed; only the realtime part is lost.
-     */
     @Test
     void aBrokerOutageDoesNotBreakHiding() {
         doThrow(new MessagingException("broker down"))

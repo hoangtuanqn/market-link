@@ -36,10 +36,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * D-04: an admin is read-only oversight and may read any order (with the customer block), but may
- * never act on it — {@code GET /orders/{id}} is the only order endpoint an admin can reach.
- */
 class OrderAdminReadTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");

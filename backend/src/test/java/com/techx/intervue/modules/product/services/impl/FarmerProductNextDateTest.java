@@ -17,17 +17,10 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-031, FR-063, D-02 on real MySQL: the Farmer's product list shows, for the nearest date a
- * customer can still order, what is left and how many units active orders hold for that date.
- * {@code products.stock_quantity} stays the Farmer's own reference number. Rolled back after each
- * test.
- */
 @SpringBootTest
 @Transactional
 class FarmerProductNextDateTest {
 
-    /** The only date with pickup slots, so it is the nearest orderable one. */
     private static final LocalDate PICKUP =
             LocalDate.now(ZoneId.of("Asia/Ho_Chi_Minh")).plusDays(3);
 
@@ -101,8 +94,6 @@ class FarmerProductNextDateTest {
                     productId,
                     day);
         }
-        // 20 at the start of the day, 6 held by active orders, 9 more by orders no longer active
-        // whose stock was never given back in this fixture: 5 left
         insert(
                 "INSERT INTO product_daily_stock (product_id, stock_date, quantity_available,"
                         + " unit_price) VALUES (?, ?, 5, 2)",

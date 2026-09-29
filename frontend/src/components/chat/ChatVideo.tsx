@@ -16,20 +16,11 @@ type State =
 
 const API_ORIGIN = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
 
-/** The signed link is relative to the API origin; the video tag needs it absolute. */
 async function freshLink(attachmentId: number): Promise<Link> {
   const { data } = await ConversationApi.streamUrl(attachmentId);
   return { src: `${API_ORIGIN}${data.url}`, expiresAt: Date.parse(data.expiresAt) };
 }
 
-/**
- * A video in the chat (FR-115, spec 2026-09-28-chat-media-design §6). A `<video src>` cannot send the Authorization
- * header, so pressing play asks for a short-lived signed link and only then mounts the player — nothing is downloaded
- * while the thread scrolls by, and the server answers Range requests so the reader can seek.
- *
- * Videos are stored as uploaded, never converted, so some files (HEVC from an iPhone, for one) will not decode in every
- * browser: that case offers a download instead of a broken player.
- */
 export default function ChatVideo({ attachmentId, label }: Props) {
   const { t } = useTranslation('common');
   const [state, setState] = useState<State>({ phase: 'idle' });
@@ -46,10 +37,6 @@ export default function ChatVideo({ attachmentId, label }: Props) {
     }
   };
 
-  /**
-   * A link that ran out mid-video is renewed once and picks up where it stopped. Any other error means this browser
-   * cannot decode the file.
-   */
   const onError = async () => {
     if (state.phase !== 'playing') return;
     if (Date.now() >= state.expiresAt && !renewed.current) {
@@ -65,7 +52,6 @@ export default function ChatVideo({ attachmentId, label }: Props) {
     setState({ phase: 'unplayable', src: state.src, expiresAt: state.expiresAt });
   };
 
-  /** The download goes through the same signed link, so an expired one is swapped for a fresh one first. */
   const download = async (event: MouseEvent<HTMLAnchorElement>) => {
     if (state.phase !== 'unplayable' || Date.now() < state.expiresAt) return;
     event.preventDefault();
@@ -102,7 +88,6 @@ export default function ChatVideo({ attachmentId, label }: Props) {
   }
 
   return (
-    // 16:9 is reserved before anything loads, so the thread does not jump when the player appears
     <span className="bg-surface-sunken relative block aspect-video w-[280px] max-w-full overflow-hidden rounded-md">
       {state.phase === 'playing' ? (
         <video

@@ -3,7 +3,6 @@ package com.techx.intervue.converters;
 import jakarta.persistence.AttributeConverter;
 import java.util.Locale;
 
-/** Maps a Java enum (CUSTOMER) to a lowercase ENUM value in MySQL ('customer'). */
 public abstract class LowercaseEnumConverter<E extends Enum<E>>
         implements AttributeConverter<E, String> {
 

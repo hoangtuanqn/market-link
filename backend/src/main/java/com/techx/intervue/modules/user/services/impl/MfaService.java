@@ -33,17 +33,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-/**
- * FR-008: TOTP two-step verification for admins.
- *
- * <ul>
- *   <li>The password step does not issue a session: it only stores a pending token (SHA-256 hashed)
- *       in Redis for 5 minutes.
- *   <li>Blocks code reuse: only accepts a 30-second step greater than {@code last_used_step}, plus
- *       a SETNX lock in Redis so two parallel requests with the same code cannot both pass.
- *   <li>Too many wrong attempts within {@code lock-seconds} → locked, even for a correct code.
- * </ul>
- */
 @Service
 public class MfaService implements MfaServiceInterface {
 
@@ -51,11 +40,10 @@ public class MfaService implements MfaServiceInterface {
     private static final String FAIL_PREFIX = "mfa:fail:";
     private static final String USED_PREFIX = "mfa:used:";
 
-    private static final int SECRET_BYTES = 20; // 160 bits, the RFC 4226 recommendation
+    private static final int SECRET_BYTES = 20;
     private static final int TOKEN_BYTES = 32;
     private static final int RECOVERY_CODE_COUNT = 10;
     private static final int RECOVERY_CODE_LENGTH = 12;
-    // drop 0/o, 1/l/i so reading and copying is not confused
     private static final char[] RECOVERY_ALPHABET = "abcdefghjkmnpqrstuvwxyz23456789".toCharArray();
     private static final SecureRandom RANDOM = new SecureRandom();
 
@@ -75,8 +63,6 @@ public class MfaService implements MfaServiceInterface {
             @Qualifier("mfaSecretCipher") SecretCipher cipher,
             TokenHashUtil tokenHashUtil,
             MfaConfig config) {
-        // TOTP is computed by epoch so use UTC; no Clock bean is registered because chatClock
-        // already exists
         this(
                 mfaRepository,
                 recoveryCodeRepository,
@@ -87,7 +73,6 @@ public class MfaService implements MfaServiceInterface {
                 Clock.systemUTC());
     }
 
-    /** Tests pass a fixed clock to check the 30-second step. */
     MfaService(
             AdminMfaRepository mfaRepository,
             AdminMfaRecoveryCodeRepository recoveryCodeRepository,
@@ -151,8 +136,6 @@ public class MfaService implements MfaServiceInterface {
         if (!ok) {
             throw registerFailure(userId);
         }
-        // the pending token is single-use; getAndDelete so two requests with the same token cannot
-        // both pass
         if (redis.opsForValue().getAndDelete(pendingKey(mfaToken)) == null) {
             throw new MfaTokenInvalidException();
         }
@@ -249,7 +232,6 @@ public class MfaService implements MfaServiceInterface {
                 .orElseThrow(() -> new MfaStateException("Two-step verification is not on."));
     }
 
-    /** A correct and unused code → record the step that was used. */
     private boolean consumeTotp(AdminMfa row, String code) {
         OptionalLong step =
                 Totp.match(cipher.decrypt(row.getSecretEncrypted()), code, clock.instant());
@@ -263,9 +245,6 @@ public class MfaService implements MfaServiceInterface {
         Boolean first =
                 redis.opsForValue()
                         .setIfAbsent(
-                                // bind the code too: turning off then on again with a new key in
-                                // the same step gives a different
-                                // code, not treated as reuse
                                 USED_PREFIX + row.getUserId() + ":" + matched + ":" + code,
                                 "1",
                                 Duration.ofSeconds(Totp.PERIOD_SECONDS * 3L));
@@ -321,10 +300,6 @@ public class MfaService implements MfaServiceInterface {
         }
     }
 
-    /**
-     * Increase the wrong-attempt count; the first time set the TTL = the lock time (INCR + EXPIRE
-     * like PasswordResetService).
-     */
     private RuntimeException registerFailure(Long userId) {
         String key = FAIL_PREFIX + userId;
         Long count = redis.opsForValue().increment(key);
@@ -333,7 +308,6 @@ public class MfaService implements MfaServiceInterface {
             redis.expire(key, Duration.ofSeconds(config.getLockSeconds()));
         }
         if (attempts >= config.getMaxAttempts()) {
-            // the lock is counted from the last wrong attempt
             redis.expire(key, Duration.ofSeconds(config.getLockSeconds()));
             return new MfaLockedException(config.getLockSeconds());
         }

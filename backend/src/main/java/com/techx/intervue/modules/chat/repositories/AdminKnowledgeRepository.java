@@ -17,11 +17,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * FR-094: the fixed SQL the Admin assistant may run. Read-only, every user value a parameter
- * (R-04). An admin legitimately sees the whole platform, so there is no owner filter here — the
- * boundary is the role itself, checked before the tool list is even built.
- */
 @Repository
 @RequiredArgsConstructor
 public class AdminKnowledgeRepository {
@@ -83,7 +78,6 @@ public class AdminKnowledgeRepository {
             LIMIT :limit
             """;
 
-    /** FR-074 queue: visible reviews a moderator would want to look at first. */
     private static final String FLAGGED_REVIEWS =
             """
             SELECT r.id AS review_id, r.rating, r.comment, f.stall_name,

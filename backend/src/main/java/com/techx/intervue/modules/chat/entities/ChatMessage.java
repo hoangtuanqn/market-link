@@ -35,7 +35,6 @@ public class ChatMessage {
     @Column(name = "session_key", nullable = false)
     private String sessionKey;
 
-    /** {@link #ROLE_USER} or {@link #ROLE_BOT}, matching the ENUM in the migration. */
     @Column(nullable = false)
     private String role;
 

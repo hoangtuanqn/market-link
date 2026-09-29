@@ -31,10 +31,8 @@ import org.junit.jupiter.api.Test;
 
 class ShelfLifeGuideServiceTest {
 
-    /** The signed-in Farmer, who owns stall 10. */
     private static final long FARMER_USER = 1L;
 
-    /** An admin, who has no stall. */
     private static final long ADMIN_USER = 2L;
 
     private ShelfLifeGuideRepository guides;
@@ -89,7 +87,6 @@ class ShelfLifeGuideServiceTest {
         assertThat(groups.getFirst().examples()).isEqualTo("rau muống, lettuce");
     }
 
-    /** Fewer than three products and the median stays hidden, so one stall is never exposed. */
     @Test
     void showsWhatOtherStallsSetOnlyFromThreeProducts() {
         when(guides.findByCategoryIdAndActiveTrueOrderByGroupNameAscStorageModeAsc(1L))
@@ -117,7 +114,6 @@ class ShelfLifeGuideServiceTest {
         assertThat(service.listForCategory(1L, ADMIN_USER)).isEmpty();
     }
 
-    /** Spec §4.1: the asking stall is found from the signed-in user and left out of the numbers. */
     @Test
     void leavesTheSignedInFarmersOwnStallOutOfTheNumbers() {
         when(guides.findByCategoryIdAndActiveTrueOrderByGroupNameAscStorageModeAsc(1L))
@@ -167,10 +163,6 @@ class ShelfLifeGuideServiceTest {
         assertThat(created.isActive()).isTrue();
     }
 
-    /**
-     * The product form groups rows by their exact name, so a second way of keeping typed as "leafy
-     * Greens" joins the existing "Leafy greens" instead of starting a second group.
-     */
     @Test
     void createsWithTheSpellingOfAGroupTheCategoryAlreadyHas() {
         when(categories.existsById(1L)).thenReturn(true);
@@ -208,11 +200,6 @@ class ShelfLifeGuideServiceTest {
         assertThat(saved.isActive()).isTrue();
     }
 
-    /**
-     * A group never moves: its products would point at another category's group, or keep a way of
-     * keeping the group no longer has. The admin screen always sends the stored values, so only a
-     * direct API call meets this.
-     */
     @Test
     void refusesToMoveAGroupToAnotherCategoryOrWayOfKeeping() {
         ShelfLifeGuide existing = guide(5L, "Leafy greens", StorageMode.CHILLED, 3);

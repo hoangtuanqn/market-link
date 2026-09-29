@@ -9,7 +9,6 @@ import { LoadError } from '@/components/ui/data-state';
 import useRequest from '@/hooks/useRequest';
 import { dayName, formatDayMonth, formatTime } from '@/lib/format';
 
-/** FR-031 FR-032 — confirmation after placing pre-orders; stock is already held (D-02). */
 const CustomerOrderPlacedPage = () => {
   const { t, i18n } = useTranslation('CustomerOrderPlaced');
   const { t: tc } = useTranslation();
@@ -18,8 +17,6 @@ const CustomerOrderPlacedPage = () => {
   const { state } = useRequest(`placed:${placed.map((o) => o.orderId).join(',')}`, () =>
     Promise.all(placed.map((o) => OrderApi.get(o.orderId))),
   );
-  // Fallback only: a freshly placed order always has a first status-history row. Captured once (not Date.now() at
-  // render time) so the render stays pure (react-hooks/purity).
   const [openedAt] = useState(() => new Date());
 
   if (!placed.length) return <Navigate to="/orders" replace />;

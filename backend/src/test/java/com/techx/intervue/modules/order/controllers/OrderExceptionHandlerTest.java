@@ -18,7 +18,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 
-/** R-06 / contract: a state conflict is 409, never 400; wrong owner / wrong role is 403. */
 class OrderExceptionHandlerTest {
 
     private final OrderExceptionHandler handler = new OrderExceptionHandler();
@@ -55,13 +54,11 @@ class OrderExceptionHandlerTest {
         assertError(handler.forbidden(new AccessDeniedException("admin")), 403, "FORBIDDEN");
     }
 
-    /** Unlike a wrong owner (403): an id that does not exist at all is 404, not 403. */
     @Test
     void aMissingOrderIs404() {
         assertError(handler.notFound(new OrderNotFoundException(999L)), 404, "NOT_FOUND");
     }
 
-    /** Last backstop: a UNIQUE order_code violation or a stock / capacity CHECK is still 409. */
     @Test
     void databaseConstraintViolationsAre409() {
         assertError(

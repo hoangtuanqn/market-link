@@ -38,7 +38,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-042 — notifications of the signed-in user (every role). Every route requires sign-in. */
 @Validated
 @RestController
 @RequestMapping("/api/v1/notifications")
@@ -97,7 +96,6 @@ public class NotificationController extends BaseController {
         return ok(null, "Test notification sent.");
     }
 
-    /** The most privileged role on the token: an approved Farmer also holds CUSTOMER. */
     private static RoleType roleOf(CustomUserDetails me) {
         Set<String> authorities =
                 me.getAuthorities().stream()
@@ -112,10 +110,6 @@ public class NotificationController extends BaseController {
         return RoleType.CUSTOMER;
     }
 
-    /**
-     * N3: the public VAPID key for pushManager.subscribe; null when the server has not enabled Web
-     * Push.
-     */
     @GetMapping("/push/public-key")
     public ResponseEntity<ApiResource<Map<String, String>>> pushPublicKey() {
         Map<String, String> body = new HashMap<>();
@@ -123,7 +117,6 @@ public class NotificationController extends BaseController {
         return ok(body, "OK");
     }
 
-    /** N3: this browser receives Web Push for the signed-in account. */
     @PostMapping("/push-subscriptions")
     public ResponseEntity<ApiResource<Void>> subscribePush(
             @Valid @RequestBody PushSubscriptionRequest request,
@@ -133,7 +126,6 @@ public class NotificationController extends BaseController {
         return ok(null, "Push notifications are on for this browser.");
     }
 
-    /** N3: called on sign-out or when browser notifications are turned off. */
     @DeleteMapping("/push-subscriptions")
     public ResponseEntity<ApiResource<Void>> unsubscribePush(
             @Valid @RequestBody PushUnsubscribeRequest request,

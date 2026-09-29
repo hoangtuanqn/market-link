@@ -28,7 +28,6 @@ describe('classify', () => {
     }
   });
 
-  /** Some browsers (and every Windows machine) hand over a HEIC or MOV with no mime at all. */
   it('falls back to the extension when the browser gives no type', () => {
     expect(classify(file('IMG_0001.HEIC', ''))).toBe('heic');
     expect(classify(file('IMG_0001.heif', ''))).toBe('heic');
@@ -71,14 +70,9 @@ describe('acceptFor', () => {
     'Mozilla/5.0 (iPhone; CPU iPhone OS 18_0 like Mac OS X) AppleWebKit/605.1.15 Version/18.0 Mobile/15E148';
   const MAC = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 14_0) AppleWebKit/605.1.15 Version/18.0 Safari/605.1.15';
 
-  /**
-   * Final review #4: iOS converts a HEIC photo to JPEG itself unless the picker says it takes HEIC — and converting in
-   * JavaScript on the phone fails for 24/48 MP photos (iOS caps a canvas at about 16.7 MP).
-   */
   it('leaves HEIC out on an iPhone or iPad so iOS hands over a JPEG', () => {
     for (const device of [
       { userAgent: IPHONE, maxTouchPoints: 5 },
-      // iPadOS asks for the desktop site and says "Macintosh"; only the touch screen gives it away
       { userAgent: MAC, maxTouchPoints: 5 },
     ]) {
       const accept = acceptFor(device).split(',');
@@ -96,7 +90,6 @@ describe('acceptFor', () => {
 });
 
 describe('prepareMedia', () => {
-  // A block body: a function returned from beforeEach would be run as the test's teardown
   beforeEach(() => {
     heic2any.mockReset();
   });

@@ -39,19 +39,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 
-/**
- * R-06 on the riskiest surface of Plan 3A. AttachmentService's unit test mocks ConversationLookup,
- * so it proves the service CALLS the permission check — it does not prove that an HTTP request from
- * someone outside the thread receives exactly 403.
- *
- * <p>That gap actually bit us: AttachmentDownloadController was once missing from assignableTypes
- * of ConversationExceptionHandler, everyone outside the thread received 500 instead of 403, and no
- * automated test saw it — only a manual curl did. This test goes through the real server, the real
- * filter chain and a real JWT, exactly the way the examiner will try.
- *
- * <p>No @Transactional: the request runs on another server thread, which must see committed data.
- * Cleaned up by hand in tearDown.
- */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AttachmentDownloadControllerTest {
 
@@ -114,7 +101,7 @@ class AttachmentDownloadControllerTest {
         sessions.evict(outsider.getId());
         attachments.deleteById(attachment.getId());
         chatStorage.delete(AttachmentService.FOLDER, storageKey);
-        conversations.deleteById(thread.getId()); // messages cascade at the DB
+        conversations.deleteById(thread.getId());
         users.deleteById(sender.getId());
         users.deleteById(recipient.getId());
         users.deleteById(outsider.getId());
@@ -136,7 +123,6 @@ class AttachmentDownloadControllerTest {
         assertThat(downloadBytes(url(), recipient).statusCode()).isEqualTo(200);
     }
 
-    /** R-06 — exactly what the examiner will try by changing the id in the URL. */
     @Test
     void someoneOutsideTheThreadGetsForbiddenWithAReason() throws Exception {
         HttpResponse<String> response = download(url(), outsider);
@@ -164,10 +150,6 @@ class AttachmentDownloadControllerTest {
         assertThat(response.body()).contains("NOT_FOUND");
     }
 
-    /**
-     * When an admin hides a message the image disappears with it, just as the message disappears
-     * from the list.
-     */
     @Test
     void aPhotoOnAHiddenMessageIsNotFound() throws Exception {
         imageMessage.setHiddenAt(Instant.now());
@@ -177,10 +159,6 @@ class AttachmentDownloadControllerTest {
         assertThat(download(url(), recipient).statusCode()).isEqualTo(404);
     }
 
-    /**
-     * FR-115 §5 through the real filter chain: a video element sends no Authorization header, so
-     * the signed link alone must be enough — and a link edited to name someone else must not be.
-     */
     @Test
     void aSignedStreamLinkPlaysWithoutATokenAndSeeks() throws Exception {
         HttpResponse<String> issued = download(url() + "/stream-url", recipient);
@@ -247,11 +225,6 @@ class AttachmentDownloadControllerTest {
                 .send(requestAs(path, as), HttpResponse.BodyHandlers.ofByteArray());
     }
 
-    /**
-     * JwtAuthFilter does not only check the signature: it also demands a live session in
-     * UserSessionCache, exactly as in a real sign-in. Without loading the session every request
-     * returns 401 and the test would be "green for the wrong reason".
-     */
     private User newUser(RoleType role) {
         String tag = UUID.randomUUID().toString().substring(0, 8);
         User saved =
@@ -268,8 +241,6 @@ class AttachmentDownloadControllerTest {
                                 .role(role)
                                 .build());
         if (role == RoleType.ADMIN) {
-            // FR-008: a session still owing the 2FA setup is refused every non-auth route, so the
-            // admin in these tests is one that finished it
             adminMfa.save(
                     AdminMfa.builder()
                             .userId(saved.getId())
@@ -281,11 +252,6 @@ class AttachmentDownloadControllerTest {
         return saved;
     }
 
-    /**
-     * The LEAD's 26/09 decision over real HTTP: an admin gets 403 until someone reports the
-     * message, and then can view the image. Otherwise reporting a pornographic or scam image is
-     * useless — the admin sees an empty box and has to decide blind.
-     */
     @Test
     void anAdminGetsThePhotoOnlyOnceTheMessageIsReported() throws Exception {
         User admin = newUser(RoleType.ADMIN);
@@ -310,7 +276,6 @@ class AttachmentDownloadControllerTest {
         }
     }
 
-    /** Review Focus #2 over HTTP: the image of a context message stays closed to the admin. */
     @Test
     void anAdminStillCannotOpenThePhotoOfANeighbouringMessage() throws Exception {
         User admin = newUser(RoleType.ADMIN);
@@ -343,9 +308,7 @@ class AttachmentDownloadControllerTest {
                                 .reason(ReportReason.ABUSE)
                                 .build());
         try {
-            // The reported message: can be opened
             assertThat(downloadBytes(url(), admin).statusCode()).isEqualTo(200);
-            // A neighbouring message in the same thread, not reported by anyone: closed
             assertThat(
                             download("/api/v1/attachments/" + neighbourPhoto.getId(), admin)
                                     .statusCode())

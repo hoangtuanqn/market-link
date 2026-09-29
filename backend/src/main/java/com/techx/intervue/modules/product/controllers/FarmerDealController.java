@@ -23,10 +23,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-124 — near-expiry deals on the Farmer's own products (spec §4.5.3). Everything is looked up by
- * the token's user (R-06).
- */
 @RestController
 @RequestMapping("/api/v1/farmer")
 @PreAuthorize("hasRole('FARMER')")
@@ -35,14 +31,12 @@ public class FarmerDealController extends BaseController {
 
     private final FarmerDealServiceInterface deals;
 
-    /** The stall's deal days from today on, for the "On sale" block. */
     @GetMapping("/deals")
     public ResponseEntity<ApiResource<List<FarmerDealResource>>> mine(
             @AuthenticationPrincipal CustomUserDetails user) {
         return ok(deals.mine(user.getId()), "");
     }
 
-    /** The days of the next 14 a customer can still order this product for, with their numbers. */
     @GetMapping("/products/{id}/daily-stock")
     public ResponseEntity<ApiResource<List<DailyStockResource>>> upcomingDays(
             @AuthenticationPrincipal CustomUserDetails user, @PathVariable long id) {

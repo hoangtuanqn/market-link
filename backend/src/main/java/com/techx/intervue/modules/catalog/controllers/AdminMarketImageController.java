@@ -14,10 +14,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * Upload a market image before saving the main form (POST/PUT /admin/markets takes this URL back in
- * `images`) — same shape as FarmerUploadController. Admin only (role comes from the token, R-06).
- */
 @RestController
 @RequestMapping("/api/v1/admin/markets/images")
 @PreAuthorize("hasRole('ADMIN')")

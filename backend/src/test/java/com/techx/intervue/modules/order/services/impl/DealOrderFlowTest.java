@@ -28,12 +28,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-124 on real MySQL (spec §8, §9): posting a deal, then previewing the cart and placing orders
- * for that day through the real locking path. The product keeps 7 days and sells at $2.00; a batch
- * packed today is past half of its shelf life on PICKUP (4 of 7 days left). Rolled back after each
- * test.
- */
 @SpringBootTest
 @Transactional
 class DealOrderFlowTest {
@@ -64,7 +58,6 @@ class DealOrderFlowTest {
         product = fx.product(stall, fx.category(), "Tomato", 2);
         jdbc.update("UPDATE products SET shelf_life_days = 7 WHERE id = ?", product);
         fx.everyDayTemplate(stall, product, 20);
-        // A free 07:00 slot on every day from today+2 to today+13
         fx.sellsEveryDay(stall, market);
         slot =
                 jdbc.queryForObject(
@@ -93,10 +86,6 @@ class DealOrderFlowTest {
         assertThat(quantityOn(PICKUP)).isEqualTo(3);
     }
 
-    /**
-     * One price, one row (spec §4.5.5): the cart previewed for the deal day shows exactly what
-     * placing the order for that day then charges and copies onto its line.
-     */
     @Test
     void thePreviewForTheDealDayShowsWhatThePlacedLineCopies() {
         deals.post(farmerUser, product, PICKUP, new DealRequest(5, TODAY, 40));
@@ -118,13 +107,10 @@ class DealOrderFlowTest {
         assertThat(previewed.unitPrice()).isEqualByComparingTo(placed.unitPrice());
         assertThat(previewed.listPrice()).isEqualByComparingTo(placed.listPrice());
         assertThat(previewed.bestBefore()).isEqualTo(placed.bestBefore());
-        // order_items keeps no percent: the placed list price at the previewed percent must give
-        // back the placed price
         assertThat(DealPolicy.dealPrice(placed.listPrice(), previewed.discountPercent()))
                 .isEqualByComparingTo(placed.unitPrice());
     }
 
-    /** Spec §8: an order placed before the deal keeps its price; the next one pays the deal. */
     @Test
     void anOrderPlacedBeforeTheDealKeepsItsPrice() {
         orders.place(customer, order(1));
@@ -143,13 +129,11 @@ class DealOrderFlowTest {
         assertThat((BigDecimal) lines.get(1).get("list_price")).isEqualByComparingTo("2.00");
     }
 
-    /** Spec §8: editing the product's shelf life after posting leaves the batch's best-before. */
     @Test
     void editingTheShelfLifeLaterKeepsTheBatchBestBefore() {
         deals.post(farmerUser, product, PICKUP, new DealRequest(5, TODAY, 40));
         entityManager.flush();
         jdbc.update("UPDATE products SET shelf_life_days = 3 WHERE id = ?", product);
-        // Read the product again, as a later request would
         entityManager.clear();
 
         orders.place(customer, order(1));
@@ -184,9 +168,6 @@ class DealOrderFlowTest {
         assertThat(row.get("best_before")).isNull();
     }
 
-    /**
-     * Tomorrow has no slot in this fixture (slots start at today+2), so nobody can order for it.
-     */
     @Test
     void aDayWithoutASlotCannotGoOnADeal() {
         assertThatThrownBy(

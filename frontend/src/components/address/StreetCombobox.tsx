@@ -6,7 +6,6 @@ import Helper from '@/utils/helper';
 type StreetComboboxProps = {
   id: string;
   label: string;
-  /** Suggestions come from this province's street list; without one the field is plain text. */
   provinceCode?: string;
   value: string;
   onChange: (value: string) => void;
@@ -17,19 +16,12 @@ type StreetComboboxProps = {
   containerClassName?: string;
 };
 
-/** Wait for a pause in typing before asking the server. */
 const DEBOUNCE_MS = 200;
 
-/** Lower case without diacritics, so "le loi" and "Lê Lợi" count as the same street. */
 const fold = (s: string) => s.toLowerCase().replace(/đ/g, 'd').normalize('NFD').replace(/\p{M}/gu, '').trim();
 
 type Option = { value: string; label: string };
 
-/**
- * The street of an address (FR-001): suggestions from the province's street list, but any text is accepted because no
- * list has every street. ARIA 1.2 combobox with a list popup: ↑/↓ move, Enter picks, Esc closes; the text typed stays
- * when the field is left. A failed suggestion request only means no suggestions — it never blocks the form.
- */
 export default function StreetCombobox({
   id,
   label,
@@ -46,7 +38,6 @@ export default function StreetCombobox({
   const listId = useId();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
-  /** What the user typed last, which is what suggestions are fetched for; a picked suggestion clears it. */
   const [query, setQuery] = useState('');
   const [suggestions, setSuggestions] = useState<{ for: string; names: string[] }>({ for: '', names: [] });
   const latest = useRef(0);
@@ -58,7 +49,6 @@ export default function StreetCombobox({
     const timer = setTimeout(() => {
       GeoApi.streets(provinceCode, text)
         .then((names) => {
-          // An older, slower answer must not replace the one for what is typed now
           if (ticket === latest.current) setSuggestions({ for: text, names });
         })
         .catch(() => {
@@ -94,7 +84,6 @@ export default function StreetCombobox({
       const step = e.key === 'ArrowDown' ? 1 : -1;
       setActive((i) => (i + step + options.length) % options.length);
     } else if (e.key === 'Enter' && expanded && active >= 0) {
-      // Picking a suggestion must not submit the form around it
       e.preventDefault();
       pick(options[active]);
     } else if (e.key === 'Escape' && expanded) {
@@ -138,7 +127,6 @@ export default function StreetCombobox({
           }}
           onKeyDown={onKeyDown}
           onBlur={() => {
-            // "le loi" typed without diacritics saves as the street it matched, "Lê Lợi", not as typed
             const match = names.find((n) => fold(n) === fold(typed));
             if (match && match !== value) onChange(match);
             setOpen(false);
@@ -162,7 +150,6 @@ export default function StreetCombobox({
                 id={optionId(i)}
                 role="option"
                 aria-selected={i === active}
-                // mousedown, not click: a click would blur the input first and close the list under the pointer
                 onMouseDown={(e) => {
                   e.preventDefault();
                   pick(option);

@@ -185,7 +185,6 @@ class NotificationTextRendererTest {
         }
     }
 
-    /** FR-122, FR-123: all 10 languages carry both texts of the five new kinds. */
     @Test
     void everyLanguageHasTheSpoilageTexts() {
         for (String lang : List.of("en", "vi", "zh", "ja", "ko", "fr", "es", "de", "th", "id")) {
@@ -206,7 +205,6 @@ class NotificationTextRendererTest {
         }
     }
 
-    /** Spec §4.4.1: the admins read the stall, the product and how much longer it was set. */
     @Test
     void theEscalationNamesTheStallTheProductAndTheExtraDays() {
         RenderedText t =

@@ -26,7 +26,6 @@ type Filter = (typeof FILTERS)[number];
 const PAGE_SIZE = 10;
 const NO_ROWS: AdminCustomerDto[] = [];
 
-/** Pill for the account state. Colour never carries the meaning alone — each state has its own word and glyph. */
 export const CustomerStatusPill = ({ active }: { active: boolean }) => {
   const { t } = useTranslation('AdminCustomers');
   return (
@@ -45,11 +44,6 @@ export const CustomerStatusPill = ({ active }: { active: boolean }) => {
 type ConfirmKind = 'deactivate' | 'reactivate';
 type ConfirmAction = { kind: ConfirmKind; item: AdminCustomerDto } | null;
 
-/**
- * FR-072 — deactivate an account for a policy violation; it can no longer sign in or order, and every session is
- * revoked right away. Permanent or temporary (auto-reactivates); a permanent ban also cancels open orders. Reactivate
- * when it is resolved. Past orders otherwise stay with the stalls.
- */
 const AdminCustomersPage = () => {
   const { t } = useTranslation('AdminCustomers');
   const { t: tc } = useTranslation();

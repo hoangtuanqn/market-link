@@ -18,11 +18,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * A chat message → popup for the recipient, not stored (spec §3). A Farmer shows by stall name as
- * in chat. A photo or a video has no text: let the renderer translate "… sent a photo" / "… sent a
- * video" into the recipient's language.
- */
 @Component
 @RequiredArgsConstructor
 public class ChatNotificationListener {
@@ -35,11 +30,6 @@ public class ChatNotificationListener {
     private final UserRepository users;
     private final FarmerProfileRepository farmers;
 
-    /**
-     * Runs in the afterCommit of the chat transaction: the old transaction's synchronization is
-     * still running, so an afterCommit registered now would never be called. REQUIRES_NEW gives
-     * dispatch its own transaction so its after-commit push actually runs.
-     */
     @EventListener
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void on(ChatMessageCreatedEvent e) {

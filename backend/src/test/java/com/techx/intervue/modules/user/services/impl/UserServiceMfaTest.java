@@ -35,7 +35,6 @@ import org.mockito.InOrder;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/** FR-008: an admin with 2FA on gets no session from the password step. */
 class UserServiceMfaTest {
 
     private final UserRepository userRepository = mock(UserRepository.class);
@@ -89,7 +88,6 @@ class UserServiceMfaTest {
         verify(refreshTokenService, never()).issueRefreshToken(anyLong(), anyBoolean());
     }
 
-    /** FR-008: before the code is checked the answer must not hand out the admin's profile. */
     @Test
     void pendingAnswerCarriesOnlyTheEmail() {
         User admin = user(1L, RoleType.ADMIN);
@@ -176,11 +174,6 @@ class UserServiceMfaTest {
                 .isInstanceOf(DisabledException.class);
     }
 
-    /**
-     * FR-008: a session opened with only the password before 2FA was turned on must not become a
-     * full admin session afterwards — every earlier session is signed out, like a password change,
-     * and only the caller gets a new one (not remembered, like the admin sign-in).
-     */
     @Test
     void turningTwoStepOnSignsOutEveryEarlierSession() {
         user(1L, RoleType.ADMIN);
@@ -189,7 +182,6 @@ class UserServiceMfaTest {
 
         InOrder order = inOrder(refreshTokenService, userSessionCache, jwtService);
         order.verify(refreshTokenService).revokeAllTokens(1L);
-        // the revoked-before marker must be written before the new token is signed
         order.verify(userSessionCache).revokeAll(1L);
         order.verify(jwtService).generateToken(1L);
         order.verify(userSessionCache).set(eq(1L), any(), any(), any());

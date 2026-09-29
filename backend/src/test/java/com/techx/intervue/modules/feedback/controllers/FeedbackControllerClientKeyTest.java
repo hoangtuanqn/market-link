@@ -7,12 +7,6 @@ import static org.mockito.Mockito.when;
 import jakarta.servlet.http.HttpServletRequest;
 import org.junit.jupiter.api.Test;
 
-/**
- * FR-081 rate limit key. A client can send any {@code X-Forwarded-For} it likes, so the controller
- * must not read the header itself: it takes {@code getRemoteAddr()}, and behind a real proxy Tomcat
- * rewrites that address from the header only when the request comes from a trusted internal proxy
- * ({@code server.forward-headers-strategy: native}).
- */
 class FeedbackControllerClientKeyTest {
 
     @Test

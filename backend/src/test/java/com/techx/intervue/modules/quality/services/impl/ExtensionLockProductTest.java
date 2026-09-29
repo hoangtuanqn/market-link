@@ -17,7 +17,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-/** FR-123 (spec §4.2, §4.4.4, §9): the lock as the product form meets it, on real MySQL. */
 @SpringBootTest
 @Transactional
 class ExtensionLockProductTest {
@@ -62,7 +61,6 @@ class ExtensionLockProductTest {
         }
     }
 
-    /** The name the fixture gave the product ("Rau muống <tag>"), so the update keeps it. */
     private ProductRequest withDays(int days) {
         return new ProductRequest(
                 category,

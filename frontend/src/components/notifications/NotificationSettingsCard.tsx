@@ -15,11 +15,6 @@ type Load = { status: 'loading' } | { status: 'error' } | { status: 'ready'; dat
 
 const SAVE_DELAY_MS = 400;
 
-/**
- * FR-042 — Settings → Notifications for all three roles: each category × two channels, sound, quiet hours, send test.
- * Saved right away (after 400 ms) through /notifications/preferences, not waiting for a shared Save button because the
- * server uses these choices when sending.
- */
 const NotificationSettingsCard = () => {
   const { t } = useTranslation();
   const [state, setState] = useState<Load>({ status: 'loading' });
@@ -121,8 +116,6 @@ const NotificationSettingsCard = () => {
 
       {state.status === 'ready' && (
         <>
-          {/* The three columns cannot shrink below their content, so on a phone the table would push
-              the page sideways. Scroll it inside the card instead. */}
           <div className="w-full overflow-x-auto">
             <table className="w-full border-collapse text-left">
               <thead>
@@ -191,8 +184,6 @@ const NotificationSettingsCard = () => {
               {t('notify.settings.quiet')}
             </Checkbox>
             <p className="text-ink-muted -mt-2 pl-7 text-[13px]">{t('notify.settings.quietNote')}</p>
-            {/* The time fields carry a min width for flex rows; here the grid sets the width, so let them
-                shrink — two 220px fields do not fit a 375px screen and push the page sideways. */}
             <div className="grid grid-cols-2 gap-3 pl-7 sm:max-w-80 [&>*]:min-w-0">
               <Field
                 id="notify-quiet-from"

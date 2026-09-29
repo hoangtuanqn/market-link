@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useLocation } from 'react-router';
 
-/** Restores scroll position to top on route change for BrowserRouter */
 export default function ScrollToTop() {
   const { pathname } = useLocation();
 

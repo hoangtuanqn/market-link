@@ -19,7 +19,6 @@ public class AuthConfig {
     @Value("${jwt.refresh-token-ttl-days:14}")
     private Integer refreshTokenTTLDays;
 
-    /** Secure flag of the refresh_token cookie; false only when the site is served over HTTP. */
     @Value("${app.cookie.secure:true}")
     private boolean cookieSecure;
 }

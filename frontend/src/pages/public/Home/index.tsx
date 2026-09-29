@@ -16,16 +16,13 @@ import HowItWorks from './HowItWorks';
 import NearbyMarkets from './NearbyMarkets';
 import ValuePillars from './ValuePillars';
 
-/** Contract §3 caps a page at 50; every market of the city fits in one call. */
 const FETCH_SIZE = 50;
-/** "Fresh this week": the newest listings, three per row on desktop. */
 const FRESH_COUNT = 6;
 const NO_MARKETS: MarketType[] = [];
 const NO_PRODUCTS: ProductType[] = [];
 const NO_CATEGORIES: CategoryType[] = [];
 const NO_STALLS: StallDetailDto[] = [];
 
-/** FR-010 FR-020 FR-077 — markets, categories, freshest produce, and grower stalls. */
 const HomePage = () => {
   const { t } = useTranslation('Home');
 
@@ -36,8 +33,6 @@ const HomePage = () => {
     ProductApi.list({ pageSize: FRESH_COUNT, sort: 'newest' }).then((result) => result.items),
   );
   const { state: categoriesLoad } = useRequest('categories', () => CatalogApi.listCategories());
-  // The list has no bio or markets, so each featured stall's own profile is read too (three small calls). A stall
-  // that went away in between (suspended → 404) is just left out.
   const { state: stallsLoad, retry: retryStalls } = useRequest('featured-stalls', () =>
     StallApi.list({ pageSize: 3 })
       .then((result) => Promise.all(result.items.map((s) => StallApi.get(s.farmerId).catch(() => null))))

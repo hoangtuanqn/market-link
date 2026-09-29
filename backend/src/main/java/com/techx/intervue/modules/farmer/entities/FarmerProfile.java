@@ -39,30 +39,22 @@ public class FarmerProfile {
     @Column(name = "contact_person", nullable = false, length = 100)
     private String contactPerson;
 
-    /** "About the stall" — optional, shown on the future stall page as the farmer's own words. */
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
-    /** Several paths separated by ';' — see FarmerService#joinList/#splitList. */
     @Column(name = "photo_paths", columnDefinition = "TEXT")
     private String photoPaths;
 
     @Column(name = "video_path", length = 255)
     private String videoPath;
 
-    /** Stall avatar image (FR-060, V20260926009). */
     @Column(name = "logo_url", length = 255)
     private String logoUrl;
 
-    /**
-     * D-05: an order is locked for edit/cancel this many hours before pickup time. The Farmer sets
-     * it in the profile, 1…72.
-     */
     @Column(name = "order_cutoff_hours", nullable = false)
     @Builder.Default
     private int orderCutoffHours = 12;
 
-    /** Cached rating score — recomputed whenever there is a review (cluster C8). */
     @Column(name = "rating_avg", nullable = false, precision = 3, scale = 2)
     @Builder.Default
     private BigDecimal ratingAvg = BigDecimal.ZERO;
@@ -76,11 +68,9 @@ public class FarmerProfile {
     @Builder.Default
     private ApprovalStatus approvalStatus = ApprovalStatus.PENDING;
 
-    /** Reason the Admin rejected — only meaningful when approvalStatus = REJECTED. */
     @Column(name = "reject_reason", length = 255)
     private String rejectReason;
 
-    /** Reason the Admin suspended — only meaningful when approvalStatus = SUSPENDED. */
     @Column(name = "suspend_reason", length = 255)
     private String suspendReason;
 
@@ -96,7 +86,6 @@ public class FarmerProfile {
     @Column(name = "suspended_at")
     private Instant suspendedAt;
 
-    /** FR-071: null while suspended = until an admin lifts it; otherwise the cron lifts it. */
     @Column(name = "suspended_until")
     private Instant suspendedUntil;
 

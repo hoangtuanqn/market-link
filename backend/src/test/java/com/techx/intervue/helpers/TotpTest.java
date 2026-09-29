@@ -10,11 +10,9 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class TotpTest {
 
-    // The SHA1 sample key from RFC 6238, appendix B
     private static final byte[] RFC_SECRET =
             "12345678901234567890".getBytes(StandardCharsets.US_ASCII);
 
-    /** RFC 6238 appendix B gives 8-digit codes; the 6-digit code is the last 6 digits. */
     @ParameterizedTest
     @CsvSource({
         "59, 287082",
@@ -65,7 +63,6 @@ class TotpTest {
 
     @Test
     void base32RoundTripsAndMatchesRfc4648() {
-        // RFC 4648 §10
         assertThat(Totp.base32("foobar".getBytes(StandardCharsets.US_ASCII)))
                 .isEqualTo("MZXW6YTBOI");
         assertThat(Totp.base32(RFC_SECRET)).isEqualTo("GEZDGNBVGY3TQOJQGEZDGNBVGY3TQOJQ");

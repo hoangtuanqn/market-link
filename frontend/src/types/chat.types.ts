@@ -1,10 +1,3 @@
-/**
- * Person-to-person chat (FR-110…115). Not to be confused with the FR-090 chatbot at /api/v1/chat.
- *
- * Field names match the backend exactly (modules/conversation/resources/*.java), never guessed: ParticipantResource
- * uses `userId`, not `id`.
- */
-
 export type ChatParticipant = {
   userId: number;
   fullName: string;
@@ -29,13 +22,11 @@ export type ConversationSummary = {
 export type ChatAttachment = {
   attachmentId: number;
   url: string;
-  /** The real type the server read from the file's bytes; a video has no width/height. */
   mime: string;
   width?: number | null;
   height?: number | null;
 };
 
-/** GET /attachments/{id}/stream-url. */
 export type StreamUrl = { url: string; expiresAt: string };
 
 export type ChatMessageItem = {
@@ -50,10 +41,6 @@ export type ChatMessageItem = {
   createdAt: string;
 };
 
-/**
- * /user/topic/conversations. "hidden" belongs to Plan 4B (an admin hiding a message); declared now so the switch branch
- * is not missing it, but 4A does not handle it yet.
- */
 export type ConversationEventFrame = {
   type: 'updated' | 'read' | 'hidden';
   conversationId: number;
@@ -65,14 +52,12 @@ export type ConversationEventFrame = {
   readAt?: string;
 };
 
-/** /user/topic/typing and /user/topic/presence. */
 export type TypingFrame = { conversationId: number; userId: number; typing: boolean };
 export type PresenceFrame = { userId: number; online: boolean; lastSeenAt: string | null };
 
 export type ReportReason = 'spam' | 'abuse' | 'scam' | 'other';
 export type ReportStatus = 'new' | 'reviewed' | 'actioned';
 
-/** The admin's queue (AdminReportListItemResource). */
 export type ReportListItem = {
   reportId: number;
   messageId: number;
@@ -86,7 +71,6 @@ export type ReportListItem = {
   reportedAt: string;
 };
 
-/** One message in the context window (spec §8.3: the reported message + up to 5 messages on each side). */
 export type ModeratedMessage = {
   id: number;
   senderId: number;

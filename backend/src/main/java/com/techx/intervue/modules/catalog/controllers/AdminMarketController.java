@@ -17,10 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-073 — Admin adds/edits/removes markets (contract §3). Admin only (the role comes from the
- * token, R-06).
- */
 @RestController
 @RequestMapping("/api/v1/admin/markets")
 @PreAuthorize("hasRole('ADMIN')")

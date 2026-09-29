@@ -65,7 +65,6 @@ class AuthExceptionHandlerTest {
                 .isEqualTo("OAUTH_NOT_CONFIGURED");
     }
 
-    /** QA E2E v2 BUG-005: one detail per taken field, so the form marks both inputs. */
     @Test
     void duplicateAccountListsEveryTakenField() {
         Map<String, String> taken = new LinkedHashMap<>();
@@ -114,7 +113,6 @@ class AuthExceptionHandlerTest {
         assertThat(response.getHeaders().getFirst(HttpHeaders.RETRY_AFTER)).isEqualTo("42");
     }
 
-    /** FR-003: too many wrong passwords → 429 with Retry-After and a readable wait. */
     @Test
     void tooManyWrongPasswordsSaysWhenToTryAgain() {
         ResponseEntity<ApiResource<Void>> response =

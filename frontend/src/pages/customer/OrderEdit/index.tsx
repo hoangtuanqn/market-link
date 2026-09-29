@@ -14,11 +14,9 @@ import type { OrderLineType } from '@/types/order.types';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-/** 403 (someone else's order) and 404 read the same to the customer: the order is not theirs to edit. */
 const isGone = (error: unknown) =>
   isAxiosError(error) && (error.response?.status === 403 || error.response?.status === 404);
 
-/** FR-035 — edit an order before its cutoff; saving returns it to Placed for the stall to approve again (D-07). */
 const CustomerOrderEditPage = () => {
   const { t } = useTranslation('CustomerOrderEdit');
   const { t: tc } = useTranslation();
@@ -31,9 +29,6 @@ const CustomerOrderEditPage = () => {
   );
   const data = state.kind === 'ready' ? state.data : null;
 
-  // FR-035, D-07: a line may go up by what the stall still has for this order's pickup day (the server answers 409
-  // OUT_OF_STOCK beyond). The cart preview priced for that day says how much that is. Until it answers, or when it
-  // cannot (that day no longer takes orders), a line can only go down.
   const { state: leftLoad } = useRequest(`order-edit-left:${data ? data.summary.orderId : 'none'}`, () =>
     data
       ? OrderApi.preview(
@@ -50,8 +45,6 @@ const CustomerOrderEditPage = () => {
     return line && line.status === 'available' ? Math.max(0, line.stockQuantity) : 0;
   };
 
-  // "Mirror-until-edited": every line starts at its order quantity; only lines the customer touched get an entry
-  // here. Never written from inside an effect — it is the source of truth for what the customer changed.
   const [edits, setEdits] = useState<Record<number, number>>({});
   const [saving, setSaving] = useState(false);
 
@@ -80,10 +73,6 @@ const CustomerOrderEditPage = () => {
   const order = toOrder(data);
   const href = `/orders/${order.id}`;
 
-  /**
-   * FR-035 — the form itself is the guard, not just the button that leads here: after the cutoff, or once the stall has
-   * moved the order past `accepted`, typing this URL must not produce a "Send changes" button.
-   */
   if (!data.canModify) {
     return (
       <div className="mx-auto flex max-w-160 flex-col items-center gap-3 py-16 text-center">
@@ -96,7 +85,6 @@ const CustomerOrderEditPage = () => {
 
   const stallName = order.stallName ?? '';
   const qtyOf = (line: OrderLineType) => edits[line.productId] ?? line.qty;
-  // A line edited down to 0 is a removal, not a quantity — it drops out of the list and out of the save payload.
   const visibleItems = order.items
     .filter((line) => qtyOf(line) > 0)
     .map((line) => ({
@@ -104,8 +92,6 @@ const CustomerOrderEditPage = () => {
       name: line.name ?? '',
       unit: line.unit ?? '',
       price: line.price ?? 0,
-      // The order already holds line.qty; what is still left for its pickup day can be added on top. FR-035 never
-      // adds a new product, only raises or lowers an existing line.
       max: line.qty + leftOf(line.productId),
       qty: qtyOf(line),
     }));
@@ -121,7 +107,6 @@ const CustomerOrderEditPage = () => {
       Notification.success({ title: t('toast.title'), text: t('toast.text', { stall: stallName }) });
       navigate(href);
     } catch (error) {
-      // Keep the edits on failure (e.g. 409 OUT_OF_STOCK) so the customer does not have to redo them.
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
     } finally {
       setSaving(false);

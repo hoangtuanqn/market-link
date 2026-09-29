@@ -10,11 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-/**
- * Rows for the report tests on the real (shared, seeded) dev database. Every row carries a unique
- * tag; {@link #cleanUp()} deletes them in reverse insertion order, and the FK cascades take the
- * order items, status history and reviews with the orders.
- */
 public final class ReportFixture {
 
     private final JdbcTemplate jdbc;
@@ -104,7 +99,6 @@ public final class ReportFixture {
                         status));
     }
 
-    /** The same weekly stock template on all seven days, so any "nearest date" is today. */
     public void everyDayTemplate(long farmerId, long productId, int quantity) {
         for (int day = 0; day <= 6; day++) {
             track(
@@ -119,12 +113,6 @@ public final class ReportFixture {
         }
     }
 
-    /**
-     * The stall sells at the market every day and has a 07:00 slot on each date from the day after
-     * tomorrow until the end of the 14-day lookahead, so every product with a template has an
-     * orderable date whatever the time of day the test runs (FR-031: a date needs a slot still
-     * before its cutoff). The slots and operating days go with the farmer_markets row.
-     */
     public void sellsEveryDay(long farmerId, long marketId) {
         long farmerMarket =
                 track(
@@ -156,10 +144,6 @@ public final class ReportFixture {
         }
     }
 
-    /**
-     * The stall sells at {@code marketId} and has one free slot on {@code date} (07:00, far from
-     * its cutoff when the date is in the future), so that date counts as orderable.
-     */
     public void openSlot(long farmerId, long marketId, java.time.LocalDate date) {
         long link =
                 track(
@@ -169,7 +153,6 @@ public final class ReportFixture {
                                 farmerId,
                                 marketId));
         int dayOfWeek = date.getDayOfWeek().getValue() % 7;
-        // The slot only counts on a weekday the market and the stall still open (FR-060, FR-073)
         jdbc.update(
                 "INSERT IGNORE INTO market_operating_days (market_id, day_of_week) VALUES (?, ?)",
                 marketId,

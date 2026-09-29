@@ -16,9 +16,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     boolean existsByPhone(String phone);
 
-    /** The phone number already belongs to another account (ignoring the user being edited). */
     boolean existsByPhoneAndIdNot(String phone, Long id);
 
-    /** FR-072: every customer whose temporary ban has expired, for CustomerBanExpiryJob. */
     List<User> findByStatusAndDeactivatedUntilLessThanEqual(UserStatus status, Instant now);
 }

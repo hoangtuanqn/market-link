@@ -12,11 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * Public uploaded files (SecurityConfig: /uploads/** permitAll). File names are UUIDs and every
- * image change gets a new name, so browsers can cache for a long time without ever seeing the old
- * image.
- */
 @RestController
 @AllArgsConstructor
 public class UploadController {

@@ -30,10 +30,6 @@ public class MarketService implements MarketServiceInterface {
 
     private static final int MAX_PAGE_SIZE = 50;
 
-    /**
-     * Also the threshold of @Size on MarketRequest.images; repeated here for the length error
-     * message.
-     */
     private static final int MAX_IMAGES = 8;
 
     private static final int MAX_IMAGE_URL_LENGTH = 255;
@@ -44,13 +40,8 @@ public class MarketService implements MarketServiceInterface {
     private final MarketImageRepository imageRepository;
     private final MarketQueryRepository queryRepository;
 
-    /**
-     * The only place where the catalog module reaches into the stall module; there is no reverse
-     * direction.
-     */
     private final StallServiceInterface stallService;
 
-    /** Checks the market's address and composes `address` (FR-073: must be in Vietnam). */
     private final AddressServiceInterface addressService;
 
     @Override
@@ -79,9 +70,6 @@ public class MarketService implements MarketServiceInterface {
     public MarketResource create(MarketRequest request) {
         List<Integer> days = validDays(request.operatingDays());
         List<String> images = validImages(request.images());
-        // A removed market with this name comes back instead of blocking the name for good: the
-        // admin cannot see removed markets, so they could never add it again (QA E2E v2
-        // MARKET-ADMIN-002). An active market with the name still hits uq_market_name → 409.
         Market market =
                 repository
                         .findByMarketName(request.marketName().trim())
@@ -90,7 +78,6 @@ public class MarketService implements MarketServiceInterface {
         boolean restoring = market.getId() != null;
         ResolvedAddress address = apply(market, request, images);
         market.setActive(true);
-        // Flushed so the stall count below, read with plain SQL, already sees the market as active
         Market saved = restoring ? repository.saveAndFlush(market) : repository.save(market);
         dayRepository.replaceDays(saved.getId(), days);
         imageRepository.replaceImages(saved.getId(), images);
@@ -118,7 +105,6 @@ public class MarketService implements MarketServiceInterface {
         return toResource(saved, address, days, images, farmerCount);
     }
 
-    /** Soft delete — old orders still point to this market. */
     @Override
     @Transactional
     public void deactivate(long id) {
@@ -139,12 +125,6 @@ public class MarketService implements MarketServiceInterface {
         return clean;
     }
 
-    /**
-     * @Size(max=8) on MarketRequest blocks the count; it cannot block each element's length, so it
-     * is checked by hand here — the same lesson as the column-overflow bug in the Farmer
-     * application ("categories", a fake 401 because DataIntegrityViolationException was not caught
-     * early).
-     */
     private static List<String> validImages(List<String> images) {
         List<String> clean =
                 images == null
@@ -153,8 +133,6 @@ public class MarketService implements MarketServiceInterface {
                                 .filter(s -> s != null && !s.isBlank())
                                 .map(String::trim)
                                 .toList();
-        // @NotEmpty on MarketRequest blocks null/an empty array; it cannot block an array of
-        // all-blank strings.
         if (clean.isEmpty()) {
             throw new InvalidFieldException("images", "Add at least one photo.");
         }
@@ -171,7 +149,6 @@ public class MarketService implements MarketServiceInterface {
         return clean;
     }
 
-    /** Copies the request onto the market; returns the checked address for the response. */
     private ResolvedAddress apply(Market market, MarketRequest request, List<String> images) {
         LocalTime opening = LocalTime.parse(request.openingTime(), HHMM);
         LocalTime closing = LocalTime.parse(request.closingTime(), HHMM);
@@ -188,10 +165,7 @@ public class MarketService implements MarketServiceInterface {
         market.setLongitude(request.longitude());
         market.setOpeningTime(opening);
         market.setClosingTime(closing);
-        // markets.image_url (db/schema.sql) is the cover image: always the first image of
-        // market_images.
         market.setImageUrl(images.isEmpty() ? null : images.get(0));
-        // D-12: not read from the request — the client cannot choose the map provider.
         market.setMapProvider("osm");
         return address;
     }

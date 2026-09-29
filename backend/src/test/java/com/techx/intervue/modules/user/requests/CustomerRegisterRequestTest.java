@@ -14,10 +14,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-/**
- * QA E2E v2 BUG-004 (RETEST-001): the sign-up form refused "qa@localdomain" but the API accepted
- * it. Client and server must apply the same email rule.
- */
 class CustomerRegisterRequestTest {
 
     private static ValidatorFactory factory;

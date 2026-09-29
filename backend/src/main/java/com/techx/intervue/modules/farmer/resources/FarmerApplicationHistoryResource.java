@@ -5,7 +5,6 @@ import java.time.Instant;
 import java.util.List;
 import lombok.Builder;
 
-/** A past application: its content at submission, the outcome, and the reason if rejected. */
 @Builder
 public record FarmerApplicationHistoryResource(
         Long id,

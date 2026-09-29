@@ -29,7 +29,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/** FR-004: sign-in with requiredRole (admin page). */
 class UserServiceLoginTest {
 
     private static final String EMAIL = "an@example.com";
@@ -66,7 +65,6 @@ class UserServiceLoginTest {
                         mock(BlacklistServiceInterface.class),
                         authConfig,
                         jobQueue,
-                        // FR-008: nobody has 2FA on → sign in as before
                         mock(MfaServiceInterface.class),
                         mock(AddressServiceInterface.class),
                         mock(EmailVerificationServiceInterface.class));

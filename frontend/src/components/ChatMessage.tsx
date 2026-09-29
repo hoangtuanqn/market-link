@@ -13,7 +13,6 @@ type ChatMessageProps = {
   onSuggestion?: (s: string) => void;
 };
 
-/** One chat bubble, left for the stall/assistant, right for the customer (design system `.ml-chat`/`.ml-msg`). */
 const ChatMessage = ({ from, who, time, intent, children, suggestions, onSuggestion }: ChatMessageProps) => {
   const { t } = useTranslation();
   const bot = from !== 'user';

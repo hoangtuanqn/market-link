@@ -21,16 +21,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 
-/**
- * FR-050/051 rating caches on {@code products} and {@code farmer_profiles}. The cache is recomputed
- * from the visible reviews with one AVG/COUNT statement, never accumulated — accumulation goes
- * wrong the first time an admin hides a review (FR-074). Runs on MySQL: the rounding and the {@code
- * status = 'visible'} filter live in SQL, so a mock could not prove them.
- *
- * <p>The dev database is shared with the demo seed, so every row this test creates carries a unique
- * tag and is deleted in {@code @AfterEach}. Three completed orders of one customer at one stall,
- * each holding the same product, so up to three reviews per target fit under {@code uq_review}.
- */
 @SpringBootTest
 class ReviewRatingCacheTest {
 
@@ -108,7 +98,6 @@ class ReviewRatingCacheTest {
     @AfterEach
     void tearDown() {
         for (Long orderId : orderIds) {
-            // reviews and their responses go with the order (ON DELETE CASCADE)
             jdbc.update("DELETE FROM orders WHERE id = ?", orderId);
         }
         jdbc.update("DELETE FROM products WHERE id = ?", productId);

@@ -25,17 +25,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-007: forgot password with a token stored in Redis (TTL 15 minutes). Redis only keeps
- * sha256(token), the raw token only lives in the email.
- *
- * <pre>
- * ratelimit:pwreset:{email}   number of requests in a 1-hour window
- * ratelimit:pwreset-ip:{ip}   number of requests from one IP in a 1-hour window
- * pwreset:token:{hash}        → user_id
- * pwreset:user:{user_id}      → hash (to delete the old token on a new request)
- * </pre>
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -61,16 +50,9 @@ public class PasswordResetService implements PasswordResetServiceInterface {
     private final PasswordResetConfig config;
     private final SecureRandom secureRandom = new SecureRandom();
 
-    /**
-     * Step A. No DB lookup here: every email (existing or not) takes the same path, the user lookup
-     * + token creation + email sending is done by the worker so the response time reveals nothing.
-     */
     @Override
     public void requestReset(String email, String clientIp) {
         String normalized = normalize(email);
-        // By IP first: an IP sending many different emails uses each email only once so it slips
-        // under the
-        // per-email limit, yet still fills up Redis / the mail queue
         if (isRateLimited(RATE_LIMIT_IP_PREFIX + clientIp, config.getMaxRequestsPerIp())
                 || isRateLimited(RATE_LIMIT_PREFIX + normalized, config.getMaxRequests())) {
             log.info("Password reset rate limit exceeded, request dropped");
@@ -79,10 +61,6 @@ public class PasswordResetService implements PasswordResetServiceInterface {
         jobQueue.enqueue(JOB_SEND_LINK, Map.of("email", normalized));
     }
 
-    /**
-     * INCR, set EXPIRE the first time. If the key lost its TTL (a crash between the two commands)
-     * set it again.
-     */
     private boolean isRateLimited(String key, long maxRequests) {
         Long count = redis.opsForValue().increment(key);
         Duration window = Duration.ofSeconds(config.getWindowSeconds());
@@ -94,7 +72,6 @@ public class PasswordResetService implements PasswordResetServiceInterface {
         return count != null && count > maxRequests;
     }
 
-    /** Step B. Only an active account gets a token. */
     @Override
     public Optional<IssuedResetToken> issueToken(String email) {
         Optional<User> found =
@@ -115,7 +92,6 @@ public class PasswordResetService implements PasswordResetServiceInterface {
         return Optional.of(new IssuedResetToken(user.getEmail(), user.getFullName(), rawToken));
     }
 
-    /** GET only (not GETDEL): the link still works for resetPassword after the form appears. */
     @Override
     public String verifyToken(String rawToken) {
         String userId = redis.opsForValue().get(TOKEN_PREFIX + tokenHashUtil.hash(rawToken));
@@ -127,14 +103,9 @@ public class PasswordResetService implements PasswordResetServiceInterface {
                 .orElseThrow(InvalidResetTokenException::new);
     }
 
-    /**
-     * Steps C + D. GETDEL so the token can only be used exactly once, even when two requests are
-     * sent at the same time.
-     */
     @Override
     @Transactional
     public void resetPassword(ResetPasswordRequest request) {
-        // Check before GETDEL so mistyping "confirm password" does not lose the token
         if (!request.newPassword().equals(request.confirmPassword())) {
             throw new InvalidFieldException("confirmPassword", "Passwords do not match.");
         }
@@ -153,22 +124,12 @@ public class PasswordResetService implements PasswordResetServiceInterface {
         user.setPasswordHash(passwordEncoder.encode(request.newPassword()));
         userRepository.save(user);
 
-        // Step D: revoke every session. Refresh tokens are revoked in the DB (same transaction);
-        // the Redis part and the
-        // mail
-        // only run after commit. If the commit fails, give the token back so the user can retry
-        // with this same
-        // link.
         refreshTokenRepository.revokeAllRefreshTokenByUser(user.getId());
         Long id = user.getId();
         String email = user.getEmail();
         TransactionHelper.afterCompletion(
                 () -> {
-                    // Also delete any other pending token (if the user pressed "resend" after
-                    // already receiving this
-                    // link)
                     deletePendingToken(id);
-                    // JwtAuthFilter rejects every access token issued before this moment
                     userSessionCache.revokeAll(id);
                     jobQueue.enqueue(JOB_NOTIFY_CHANGED, Map.of("email", email));
                 },

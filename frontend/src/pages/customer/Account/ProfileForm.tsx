@@ -28,10 +28,6 @@ const savedFrom = (user: UserType): Saved => ({
 
 const isUnauthorized = (error: unknown) => error instanceof AxiosError && error.response?.status === 401;
 
-/**
- * "Your details": get the profile with GET /auth/me, save with PUT /auth/me. The email is read-only (used to sign in).
- * It shares a frame with the avatar so it does not wrap itself in a Card.
- */
 const ProfileForm = () => {
   const { t } = useTranslation('CustomerAccount');
   const [status, setStatus] = useState<Status>('loading');
@@ -40,7 +36,6 @@ const ProfileForm = () => {
   const [form, setForm] = useState<Details>(EMPTY);
   const [address, setAddress] = useState<AddressParts>(emptyAddress);
   const [saved, setSaved] = useState<Saved>(EMPTY);
-  /** The plain-text address of an account saved before addresses had parts (FR-001). */
   const [legacyAddress, setLegacyAddress] = useState<string>();
   const [errors, setErrors] = useState<ProfileErrors>({});
   const [addressErrors, setAddressErrors] = useState<AddressErrors>({});
@@ -52,7 +47,6 @@ const ProfileForm = () => {
       const { data: user } = await AuthApi.getMe();
       const values = savedFrom(user);
       setEmail(user.email);
-      // A session from before avatarUrl existed (or the image changed in another tab) → take the latest from the server
       Session.updateUser({ avatarUrl: user.avatarUrl });
       setForm({ fullName: values.fullName, phone: values.phone });
       setAddress(values.addressParts ?? emptyAddress());
@@ -77,7 +71,6 @@ const ProfileForm = () => {
   const onChange = (key: keyof Details) => (e: ChangeEvent<HTMLInputElement>) =>
     setForm((prev) => ({ ...prev, [key]: e.target.value }));
 
-  // An old account has no parts yet: choosing them is a change even if nothing else is
   const isDirty =
     form.fullName.trim() !== saved.fullName ||
     form.phone.trim() !== saved.phone ||
@@ -104,11 +97,9 @@ const ProfileForm = () => {
       setAddress(values.addressParts ?? emptyAddress());
       setLegacyAddress(undefined);
       setSaved(values);
-      // The header ("Hi, …") reads from the session so it updates right away
       Session.updateUser(user);
       Notification.success({ text: response.message || t('profile.saved') });
     } catch (error) {
-      // 400 VALIDATION_ERROR / 409 DUPLICATE_ACCOUNT (the phone number is already used by someone) → error under the input
       const fieldErrors = Helper.getFieldErrors(error);
       setErrors(fieldErrors);
       setAddressErrors(addressErrorsFrom(fieldErrors));

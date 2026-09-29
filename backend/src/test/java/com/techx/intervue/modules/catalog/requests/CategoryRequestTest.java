@@ -8,9 +8,6 @@ import jakarta.validation.Validator;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
 
-/**
- * QA E2E round 3, bug 5: an over-long name must read as a sentence, not the validator's default.
- */
 class CategoryRequestTest {
 
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();

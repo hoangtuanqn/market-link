@@ -5,7 +5,6 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** FR-074: an admin hides a review; hidden reviews leave the public lists and the rating caches. */
 public enum ReviewStatus {
     VISIBLE,
     HIDDEN;

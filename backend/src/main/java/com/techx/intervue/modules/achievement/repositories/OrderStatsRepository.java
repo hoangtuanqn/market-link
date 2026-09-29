@@ -9,12 +9,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * Counts orders by outcome for one or more buyers, reading the orders table exactly as in
- * db/schema.sql. That table has no migration yet (FR-030…038): until then the SQL throws
- * DataAccessException and AchievementService returns available = false. A buyer with no orders is
- * absent from the result.
- */
 @Repository
 @RequiredArgsConstructor
 public class OrderStatsRepository {
@@ -38,7 +32,6 @@ public class OrderStatsRepository {
                 STATS_BY_CUSTOMER,
                 new MapSqlParameterSource("customerIds", customerIds),
                 rs -> {
-                    // [completed, cancelled, declined, inProgress, totalSpent]
                     long[] c = counts.computeIfAbsent(rs.getLong("customer_id"), id -> new long[5]);
                     long orders = rs.getLong("orders");
                     switch (rs.getString("status")) {

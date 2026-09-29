@@ -1,7 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import Helper from '@/utils/helper';
 
-// Swatches preview the two themes' surface and brand ink, so they stay fixed whatever theme is on
 const THEMES = [
   { id: 'light', a: '#dcc59d', b: '#2f4a2a' },
   { id: 'dark', a: '#181410', b: '#8dbb7b' },
@@ -10,10 +9,6 @@ const THEMES = [
 
 export type ThemeChoice = (typeof THEMES)[number]['id'];
 
-/**
- * Three-way theme swatch picker, laid out after `.pt-themes` in docs/prototype/prototype.css, which is prototype
- * scaffolding rather than the design system. The choice applies at once (src/lib/settings.ts).
- */
 const ThemePicker = ({ value, onChange }: { value: ThemeChoice; onChange: (v: ThemeChoice) => void }) => {
   const { t: tr } = useTranslation();
   return (

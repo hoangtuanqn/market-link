@@ -45,7 +45,6 @@ import useUnreadNotifications from '@/hooks/useUnreadNotifications';
 import type { TFunction } from 'i18next';
 import DashboardShell, { type ShellNavGroup } from './DashboardShell';
 
-/** Sidebar groups from docs/prototype/prototype.js (SIDE.admin). Every item now has a screen behind it. */
 const buildNav = (t: TFunction, pendingFarmers: number, unreadNotifications: number): ShellNavGroup[] => [
   {
     heading: t('adminNav.analytics'),
@@ -83,7 +82,6 @@ const buildNav = (t: TFunction, pendingFarmers: number, unreadNotifications: num
       },
       { to: ADMIN_SETTINGS_PATH, label: t('adminNav.settings'), icon: SlidersIcon },
       { to: ADMIN_ACCOUNT_PATH, label: t('adminNav.account'), icon: UsersIcon },
-      // FR-008: turn two-step verification on / off
       { to: ADMIN_SECURITY_PATH, label: t('admin.security'), icon: LockIcon },
     ],
   },
@@ -97,11 +95,6 @@ const initials = (name: string) =>
     .map((w) => w.charAt(0).toUpperCase())
     .join('') || 'AD';
 
-/**
- * FR-004 — the admin area frame, separate from the Customer/Farmer layout. If not signed in, go back to the admin
- * sign-in page. If signed in with another role, redirect to 403 Forbidden. This is only UX: the real permission is
- * checked by the backend at each admin API (FR-005).
- */
 const AdminLayout = () => {
   const { t } = useTranslation();
   const { user, isLoggedIn } = useSession();
@@ -112,7 +105,6 @@ const AdminLayout = () => {
   const [setupRequired, setSetupRequired] = useState(false);
   const unreadNotifications = useUnreadNotifications();
 
-  // The "awaiting approval" badge on the Farmers item; reloaded on page change to match after an approve / reject.
   useEffect(() => {
     if (!isAdmin) return;
     AdminFarmerApi.list({ status: 'pending', page: 1, pageSize: 1 })
@@ -120,7 +112,6 @@ const AdminLayout = () => {
       .catch(() => {});
   }, [isAdmin, pathname]);
 
-  // Mandatory 2FA setup check: if not yet configured, redirect to the dedicated setup page
   useEffect(() => {
     if (!isAdmin) return;
     MfaApi.status()
@@ -164,7 +155,6 @@ const AdminLayout = () => {
         headerActions={<NotificationBell to={ADMIN_NOTIFICATIONS_PATH} />}
         className="bg-surface-quiet"
       />
-      {/* FR-094 */}
       <AssistantLauncher />
     </AssistantProvider>
   );

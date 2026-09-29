@@ -4,10 +4,6 @@ import { stockDay } from '@/components/stockDay';
 import { Cart } from '@/lib/cart';
 import Notification from '@/utils/notification';
 
-/**
- * FR-125 (spec §4.5.4/§4.5.5) — adds one near-expiry deal to the cart for its pickup day and shows the "added" toast.
- * Shared by DealCard and ProductDeals so a deal is added identically everywhere it can be added.
- */
 const useAddDeal = () => {
   const { t } = useTranslation();
 

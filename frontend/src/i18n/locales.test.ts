@@ -1,14 +1,9 @@
 import { describe, expect, it } from 'vitest';
 
-/**
- * Every locale file in the project, as `{ '<lang>/<Namespace>': contents }`. Eager so the test sees the real files
- * rather than a promise per file.
- */
 const FILES = import.meta.glob('../locales/*/*.json', { eager: true }) as Record<string, { default: object }>;
 
 const LANGS = ['de', 'en', 'es', 'fr', 'id', 'ja', 'ko', 'th', 'vi', 'zh'] as const;
 
-/** Plural categories a language actually asks i18next for. Vietnamese and Japanese only ever want `other`. */
 const PLURALS = Object.fromEntries(
   LANGS.map((l) => [l, new Set(new Intl.PluralRules(l).resolvedOptions().pluralCategories)]),
 ) as Record<string, Set<string>>;
@@ -18,7 +13,6 @@ const parse = (path: string) => {
   return { lang, ns: file };
 };
 
-/** Dotted path → `'leaf'` or `'object'`, so a key that is a string in one language and an object in another shows up. */
 const shapes = (o: object, prefix = ''): Record<string, 'leaf' | 'object'> => {
   const out: Record<string, 'leaf' | 'object'> = {};
   for (const [k, v] of Object.entries(o)) {
@@ -33,16 +27,11 @@ const shapes = (o: object, prefix = ''): Record<string, 'leaf' | 'object'> => {
   return out;
 };
 
-/**
- * A key like `orders_one` belongs only to languages whose plural rules have a `one` category; Vietnamese leaving it out
- * is correct, not a gap.
- */
 const wanted = (lang: string) => (key: string) => {
   const suffix = /_(zero|one|two|few|many|other)$/.exec(key)?.[1];
   return suffix === undefined || PLURALS[lang].has(suffix);
 };
 
-/** Leaf key without its plural suffix → the `{{variable}}` names its strings use (merged over the plural forms). */
 const variablesByKey = (o: object, prefix = '', out: Record<string, Set<string>> = {}) => {
   for (const [k, v] of Object.entries(o)) {
     const path = `${prefix}${k}`;
@@ -76,7 +65,6 @@ describe('Locale files stay in step across all ten languages', () => {
       const en = Object.keys(shapes(langs.get('en')!));
       for (const lang of LANGS) {
         if (lang === 'en') continue;
-        // A missing key falls back to English, so a reader of that language is shown a language they did not pick.
         const expected = en.filter(wanted(lang)).sort();
         const actual = Object.keys(shapes(langs.get(lang)!))
           .filter(wanted(lang))
@@ -94,8 +82,6 @@ describe('Locale files stay in step across all ten languages', () => {
         const mine = shapes(langs.get(lang)!);
         for (const [key, kind] of Object.entries(en)) {
           if (!wanted(lang)(key) || mine[key] === undefined) continue;
-          // t('x') on an object prints "key 'x' returned an object instead of string." — in English, to a
-          // reader who chose another language.
           expect(mine[key], `${ns}.${key} (${lang})`).toBe(kind);
         }
       }
@@ -110,7 +96,6 @@ describe('Locale files stay in step across all ten languages', () => {
         for (const [key, vars] of Object.entries(variablesByKey(langs.get(lang)!))) {
           const expected = en[key];
           if (expected === undefined) continue;
-          // `count` is always passed to a plural key, so a language may leave it out of the sentence ("one order")
           const strip = (set: Set<string>) => [...set].filter((v) => v !== 'count').sort();
           expect(strip(vars), `${ns}.${key} (${lang})`).toEqual(strip(expected));
         }

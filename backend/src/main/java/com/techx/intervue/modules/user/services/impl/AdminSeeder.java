@@ -11,15 +11,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-/**
- * FR-102: there is no public admin sign-up API (roadmap step 2), so the first admin account must be
- * created by the seed. Only runs in the dev and local profiles — prod never has a default-password
- * account.
- *
- * <p>Skipped if the email already exists, so changing the admin password in the DB and restarting
- * does not get overwritten. The values come from {@code app.seed.admin.*}, changeable through the
- * SEED_ADMIN_* environment variables.
- */
 @Slf4j
 @Component
 @Profile({"dev", "local"})
@@ -53,9 +44,6 @@ public class AdminSeeder implements CommandLineRunner {
             log.info("Admin seed skipped: {} already exists.", email);
             return;
         }
-        // users.phone is UNIQUE — colliding with another account's number makes the backend die at
-        // startup,
-        // far more costly than skipping a dev convenience.
         if (userRepository.existsByPhone(phone)) {
             log.warn("Admin seed skipped: phone {} belongs to another account.", phone);
             return;

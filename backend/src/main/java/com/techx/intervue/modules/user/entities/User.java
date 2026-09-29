@@ -50,10 +50,8 @@ public class User {
 
     private String image;
 
-    /** Composed from addressParts by AddressService; kept for every reader of the plain text. */
     private String address;
 
-    /** Null on accounts saved before addresses had parts (FR-001, V20260927002). */
     @Embedded private AddressColumns addressParts;
 
     @Convert(converter = UserStatus.DbConverter.class)

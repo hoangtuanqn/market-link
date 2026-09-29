@@ -9,7 +9,6 @@ type TabsProps = {
   onChange: (id: string) => void;
 };
 
-/** Underline tab strip (design system `.ml-tabs`). */
 const Tabs = ({ label, tabs, value, onChange }: TabsProps) => (
   <div role="tablist" aria-label={label} className="border-line-strong flex gap-1 overflow-x-auto border-b-[1.5px]">
     {tabs.map((t) => {

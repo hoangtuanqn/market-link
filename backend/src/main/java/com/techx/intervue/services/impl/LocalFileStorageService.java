@@ -14,12 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
-/** Stores files on disk under app.storage.dir (Docker: the uploads-data volume at /app/uploads). */
 @Slf4j
 @Service
-// The default bean for avatars and Farmer application files. ChatModuleConfig builds a second
-// bean of the same type with a different root, for chat images (spec §8.2) — @Primary so the old
-// injection points are not ambiguous.
 @Primary
 public class LocalFileStorageService implements FileStorageServiceInterface {
 
@@ -37,8 +33,6 @@ public class LocalFileStorageService implements FileStorageServiceInterface {
         Path target = resolve(folder, fileName);
         try {
             Files.createDirectories(target.getParent());
-            // Write to a temp file then rename: someone downloading an image never receives half a
-            // file
             Path temp = Files.createTempFile(target.getParent(), ".upload-", ".tmp");
             try {
                 Files.write(temp, content);
@@ -60,7 +54,6 @@ public class LocalFileStorageService implements FileStorageServiceInterface {
         Path target = resolve(folder, fileName);
         try {
             Files.createDirectories(target.getParent());
-            // Same temp-then-rename as store: a viewer never receives half a file
             Path temp = Files.createTempFile(target.getParent(), ".upload-", ".tmp");
             try {
                 Files.copy(source, temp, StandardCopyOption.REPLACE_EXISTING);
@@ -91,7 +84,6 @@ public class LocalFileStorageService implements FileStorageServiceInterface {
         try {
             Files.deleteIfExists(resolve(folder, fileName));
         } catch (IOException e) {
-            // An orphan file only costs space, it does not break the user's request
             log.warn("Could not delete {}/{}: {}", folder, fileName, e.getMessage());
         }
     }

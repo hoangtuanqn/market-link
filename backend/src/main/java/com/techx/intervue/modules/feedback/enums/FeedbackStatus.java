@@ -5,7 +5,6 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** Admin queue state; every submission starts as {@code new}. */
 public enum FeedbackStatus {
     NEW,
     REVIEWED,
@@ -16,7 +15,6 @@ public enum FeedbackStatus {
         return name().toLowerCase(Locale.ROOT);
     }
 
-    /** Lower-case JSON value → enum; unknown text throws (the caller decides the field name). */
     public static FeedbackStatus parse(String value) {
         if (value == null) {
             throw new IllegalArgumentException("status must be 'new', 'reviewed' or 'resolved'.");

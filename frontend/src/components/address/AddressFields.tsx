@@ -8,30 +8,20 @@ import { VIETNAM, type AddressErrors, type AddressParts, type CountryOption } fr
 import StreetCombobox from './StreetCombobox';
 
 type AddressFieldsProps = {
-  /** Prefix for the ids of the inputs, so two address blocks can share a page. */
   idPrefix: string;
   value: AddressParts;
   onChange: (next: AddressParts) => void;
   errors?: AddressErrors;
   disabled?: boolean;
-  /** Markets: the country is fixed to Vietnam, customers pick up there. */
   lockCountry?: boolean;
-  /** Accounts need a house number; a market may be just "Lê Lợi". */
   lineRequired?: boolean;
-  /** The plain-text address of an account saved before addresses had parts. */
   legacyAddress?: string;
 };
 
 const NO_OPTIONS: never[] = [];
 
-/** Only Vietnam is on a locked form, so the country list is not worth a request there. */
 const VIETNAM_ONLY: CountryOption[] = [{ code: VIETNAM, name: 'Vietnam' }];
 
-/**
- * Address block shared by every form (FR-001, FR-073): Country → Province → Ward → Street → house number in Vietnam
- * (two levels since 01/07/2025), Country → State → City → address abroad. Changing the country clears everything after
- * it; changing the province clears the ward and the street, which belong to it.
- */
 export default function AddressFields({
   idPrefix,
   value,
@@ -59,7 +49,6 @@ export default function AddressFields({
   const language = i18n.resolvedLanguage ?? 'en';
   const countryOptions = useMemo(() => {
     const list = countries.state.kind === 'ready' ? countries.state.data : VIETNAM_ONLY;
-    // The browser names every country in the reader's language from its code; the English name is the fallback
     let names: Intl.DisplayNames | null = null;
     try {
       names = new Intl.DisplayNames([language], { type: 'region' });
@@ -77,7 +66,6 @@ export default function AddressFields({
   const listOptions = (state: typeof provinces.state, placeholder: string): { value: string; label: string }[] =>
     state.kind === 'ready'
       ? // The short name ("Bến Thành", not "Phường Bến Thành"): a native select jumps to the letter typed, and every
-        // full name would start with "Phường" / "Xã" / "Tỉnh". The full name is what the composed address shows.
         [{ value: '', label: placeholder }, ...state.data.map((o) => ({ value: o.code, label: o.name }))]
       : [{ value: '', label: state.kind === 'loading' ? t('address.loading') : t('address.loadFailed') }];
 

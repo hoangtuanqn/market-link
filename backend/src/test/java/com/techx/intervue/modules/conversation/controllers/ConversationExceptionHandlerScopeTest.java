@@ -7,12 +7,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/**
- * Pins a bug that really happened: if `assignableTypes` misses one controller then every exception
- * of the module flies straight out to Tomcat and the user gets 500 instead of the
- * 403/404/413/415/429 that spec §6.3 promises. The service's unit test cannot see that because it
- * does not go through MVC.
- */
 class ConversationExceptionHandlerScopeTest {
 
     @Test

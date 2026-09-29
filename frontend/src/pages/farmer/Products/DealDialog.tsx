@@ -24,19 +24,12 @@ import Notification from '@/utils/notification';
 type DealDialogProps = {
   product: ProductType;
   onClose: () => void;
-  /** The day's stock row as saved, so the page can update what it shows for that day. */
   onPosted: (row: DailyStockDto) => void;
 };
 
-/** Shown until there is a suggestion (no packing date yet) and the Farmer has not picked a discount. */
 const FALLBACK_DISCOUNT = 20;
 const NO_DAYS: DailyStockDto[] = [];
 
-/**
- * FR-124 — puts one pickup day of a product on a near-expiry deal (spec §4.5.3). The rules are checked as the Farmer
- * types (lib/deals.ts, the same table as the server's DealPolicy), and the server checks them again. Each field starts
- * from the chosen day's own numbers, its current deal included, until the Farmer changes it.
- */
 const DealDialog = ({ product, onClose, onPosted }: DealDialogProps) => {
   const { t } = useTranslation('FarmerProducts');
   const { t: tc } = useTranslation();
@@ -60,7 +53,6 @@ const DealDialog = ({ product, onClose, onPosted }: DealDialogProps) => {
   const quantity = Number(qty);
   const dayLabel = day ? (stockDay(day.stockDate) ?? day.stockDate) : '';
 
-  // Why "Post deal" is off, shown next to it
   const why = !packed
     ? t('dealDialog.why.packedOn')
     : check?.problem

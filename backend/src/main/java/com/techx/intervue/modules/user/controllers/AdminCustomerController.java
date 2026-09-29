@@ -21,9 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-072 — {@code GET /admin/customers}, {@code PATCH /admin/customers/{id}/status} (contract §10).
- */
 @RestController
 @RequestMapping("/api/v1/admin/customers")
 @PreAuthorize("hasRole('ADMIN')")

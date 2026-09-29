@@ -31,11 +31,6 @@ const ORDER_STATUSES: OrderStatus[] = ['placed', 'accepted', 'ready', 'completed
 
 type ConfirmKind = 'deactivate' | 'reactivate';
 
-/**
- * FR-072 — one customer: their orders across every stall, the reviews they wrote, and the account itself. Orders are
- * read-only (D-04); deactivating or reactivating the account is the only action here, and every past deactivate/
- * reactivate (reason, duration, who did it) is listed in the "Account history" section below.
- */
 const AdminCustomerDetailPage = () => {
   const { t } = useTranslation('AdminCustomerDetail');
   const { t: tc } = useTranslation();

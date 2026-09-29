@@ -9,10 +9,8 @@ import useRequest from '@/hooks/useRequest';
 
 const SLOTS = ['earliest', '06-07', '07-08', '08-09'] as const;
 
-/** Customer settings: the shared panel plus Shopping (market you shop at most is used on Markets). */
 const CustomerSettingsPage = () => {
   const { t } = useTranslation('CustomerSettings');
-  // Contract §3 caps a page at 50; every market of the city fits in one call, same as the other pages that list them.
   const { state: marketsLoad } = useRequest('markets', () => CatalogApi.listMarkets({ pageSize: 50 }));
   const markets = marketsLoad.kind === 'ready' ? marketsLoad.data.items : [];
   return (

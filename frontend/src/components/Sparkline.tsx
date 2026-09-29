@@ -1,7 +1,6 @@
 const W = 84;
 const H = 26;
 
-/** Tiny trend line for a KPI tile (design system `.pt-kpi-spark` / prototype `PT.sparkline`). */
 const Sparkline = ({ values }: { values: number[] }) => {
   const max = Math.max(...values);
   const min = Math.min(...values);

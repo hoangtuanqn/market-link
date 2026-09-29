@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-074 — review moderation (contract §8). Hiding recomputes the target's rating cache. */
 @RestController
 @RequestMapping("/api/v1/admin/reviews")
 @PreAuthorize("hasRole('ADMIN')")
@@ -24,7 +23,6 @@ public class AdminReviewController extends BaseController {
 
     private final ReviewServiceInterface reviews;
 
-    /** The moderation queue — every status by default, filterable by status/rating/customer. */
     @GetMapping
     public ResponseEntity<ApiResource<PageResource<AdminReviewResource>>> list(
             @RequestParam(required = false) String status,

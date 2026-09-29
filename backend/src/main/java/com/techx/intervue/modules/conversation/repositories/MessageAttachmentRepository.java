@@ -10,9 +10,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MessageAttachmentRepository extends JpaRepository<MessageAttachment, Long> {
 
-    /** Attach images to a page's message list, no N+1. ids must not be empty. */
     List<MessageAttachment> findByMessageIdIn(Collection<Long> messageIds);
 
-    /** An image uploaded and then abandoned — ChatAttachmentCleanupJob cleans it (spec §8.2). */
     List<MessageAttachment> findByMessageIdIsNullAndCreatedAtBefore(Instant cutoff);
 }

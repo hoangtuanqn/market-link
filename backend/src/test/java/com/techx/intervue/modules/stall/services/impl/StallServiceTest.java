@@ -89,11 +89,6 @@ class StallServiceTest {
         return new StallProfileRequest("Vườn Út Hiền", "Lê Thị Út Hiền", null, null, cutoffHours);
     }
 
-    /**
-     * FR-011: the booth code and the pin come from one farmer_markets row. MIN of each column on
-     * its own gave stall 4 the code A-20 with the latitude of B-15 (checked on MySQL 8.4 with the
-     * demo seed, where the new statement returns each stall's own row).
-     */
     @Test
     void searchTakesTheCodeAndThePinFromOneMarketRow() {
         assertThat(StallQueryRepository.SEARCH_STALLS)
@@ -103,10 +98,6 @@ class StallServiceTest {
                 .contains("WHERE p.id = MIN(fm.id)) AS stall_code");
     }
 
-    /**
-     * D-09: only approved stalls show to customers. The SQL statement is a constant so read it
-     * directly, needing no database.
-     */
     @Test
     void searchReturnsOnlyApprovedStalls() {
         assertThat(StallQueryRepository.SEARCH_STALLS).contains("f.approval_status = 'approved'");
@@ -118,7 +109,6 @@ class StallServiceTest {
         verify(queryRepository).search(null, null, null, 0, 12);
     }
 
-    /** D-09: customers no longer see a suspended stall — 404, not 403 (no reason revealed). */
     @Test
     void publicDetailHidesSuspendedStall() {
         when(farmerProfileRepository.findById(FARMER_ID))
@@ -152,10 +142,6 @@ class StallServiceTest {
         verify(farmerProfileRepository, never()).save(any());
     }
 
-    /**
-     * R-06: the profile is looked up by the userId taken from the token; there is no path to pass
-     * another person's farmerId in.
-     */
     @Test
     void updateProfileOnAnotherUsersStallIsImpossible() {
         when(farmerProfileRepository.findByUserId(USER_ID)).thenReturn(Optional.empty());
@@ -376,7 +362,6 @@ class StallServiceTest {
         when(farmerProfileRepository.findByUserId(USER_ID))
                 .thenReturn(Optional.of(stall(ApprovalStatus.APPROVED)));
         when(farmerMarketRepository.findById(FARMER_MARKET_ID)).thenReturn(Optional.of(ownStall()));
-        // Market only held on Saturday (6) and Sunday (0)
         when(queryRepository.findMarketSchedule(MARKET_ID))
                 .thenReturn(
                         Optional.of(
@@ -414,7 +399,6 @@ class StallServiceTest {
                                         new BigDecimal("10.80"),
                                         new BigDecimal("106.70"))));
 
-        // Starts before market opens (06:00 < 07:00)
         OperatingDaysRequest tooEarly =
                 new OperatingDaysRequest(
                         List.of(new OperatingDaysRequest.Day(6, "06:00", "11:00")));
@@ -422,7 +406,6 @@ class StallServiceTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("within market operating hours");
 
-        // Ends after market closes (13:00 > 12:00)
         OperatingDaysRequest tooLate =
                 new OperatingDaysRequest(
                         List.of(new OperatingDaysRequest.Day(6, "08:00", "13:00")));
@@ -450,7 +433,6 @@ class StallServiceTest {
         verify(operatingDayRepository, never()).replaceDays(anyLong(), any());
     }
 
-    /** Overwrite the whole set: sending [Sat] when [Sun, Sat] exists makes Sunday disappear. */
     @Test
     void setDaysReplacesTheWholeSet() {
         when(farmerProfileRepository.findByUserId(USER_ID))

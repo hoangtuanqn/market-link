@@ -19,13 +19,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-063 — lets a Farmer hand-adjust one pickup date without touching the recurring weekly
- * template. Only ever adjusts a date the template would already cover (materializes it first, same
- * as every other read/write path); it does not invent an orderable date out of nothing. Putting
- * stock back on a sold-out date can make the product orderable again, so FR-041 restock alerts go
- * out the same way a weekly template gaining a day does.
- */
 @Service
 @AllArgsConstructor
 public class FarmerDailyStockService implements FarmerDailyStockServiceInterface {
@@ -50,9 +43,6 @@ public class FarmerDailyStockService implements FarmerDailyStockServiceInterface
 
         int dayOfWeek = date.getDayOfWeek().getValue() % 7;
         dailyStock.materialize(productId, date, dayOfWeek);
-        // Locked read, not a plain find: a concurrent order placing on this same (product, date)
-        // row
-        // must not lost-update this write, or vice versa (same hazard OrderService guards against).
         ProductDailyStock row =
                 dailyStock
                         .lockByProductIdAndStockDate(productId, date)
@@ -65,8 +55,6 @@ public class FarmerDailyStockService implements FarmerDailyStockServiceInterface
         boolean wasOrderable = restock.isOrderable(product);
         row.setQuantityAvailable(request.quantityAvailable());
         if (request.unitPrice() != null) {
-            // An explicit price for the day replaces its near-expiry deal (FR-124): the deal's
-            // percent would no longer match the price customers pay
             row.endDeal();
             row.setUnitPrice(request.unitPrice());
         }

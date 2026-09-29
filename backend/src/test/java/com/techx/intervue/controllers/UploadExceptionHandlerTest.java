@@ -10,9 +10,6 @@ import org.springframework.web.multipart.MaxUploadSizeExceededException;
 
 class UploadExceptionHandlerTest {
 
-    /**
-     * FR-115: the limit shown follows spring.servlet.multipart.max-file-size, not a fixed "40 MB".
-     */
     @Test
     void tooLargeSaysTheConfiguredLimit() {
         UploadExceptionHandler handler = new UploadExceptionHandler(DataSize.ofMegabytes(50));

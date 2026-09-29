@@ -15,14 +15,9 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import MarketTableSkeleton from './MarketTableSkeleton';
 
-/** Contract §3 caps a page at 50; every market of the city fits in one call. */
 const FETCH_SIZE = 50;
 const NO_MARKETS: MarketType[] = [];
 
-/**
- * FR-073 — name, address, operating days, hours and map coordinates for each market. Removing a market hides it from
- * customers (`DELETE /admin/markets/{id}` is a soft delete); its history stays.
- */
 const AdminMarketsPage = () => {
   const { t } = useTranslation('AdminMarkets');
   const { t: tc } = useTranslation();

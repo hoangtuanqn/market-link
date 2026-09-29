@@ -9,11 +9,6 @@ import java.util.List;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Component;
 
-/**
- * Spec §2: always push STOMP (bell, list, toast / OS notification while a tab is open). A recipient
- * with no tab left (PresenceService: no STOMP session) and the browser channel on also gets a Web
- * Push, so they are not notified twice.
- */
 @Primary
 @Component
 public class PushAwareDelivery implements NotificationDeliveryInterface {

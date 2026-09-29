@@ -108,7 +108,6 @@ describe('QualityReports (admin, FR-123)', () => {
     expect(await screen.findByText(/Note: Khách để nhiệt độ thường\./)).toBeInTheDocument();
   });
 
-  /** Spec §4.4.3: the card stays in place and, at 3 strikes, offers the suspend flow. */
   it('confirms the violation and offers to suspend a stall that reached 3 strikes', async () => {
     vi.mocked(QualityReportApi.confirm).mockResolvedValue(report({ status: 'confirmed', stallActiveStrikes: 3 }));
     renderQueue();

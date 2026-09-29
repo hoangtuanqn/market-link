@@ -9,33 +9,22 @@ export type ShellNavItem = { to: string; label: string; icon: ComponentType<Icon
 export type ShellNavGroup = { heading: string; items: ShellNavItem[] };
 
 type DashboardShellProps = {
-  /** "Farmer" / "Admin" — the tag next to the logo. Callers pass translated text for every label below. */
   badge: string;
-  /** Accessible names of the sidebar and of the logo link. */
   navLabel: string;
   homeLabel: string;
-  /** Sidebar home; its nav item only matches the exact path. */
   home: string;
   nav: ShellNavGroup[];
-  /** The stall or platform card under the logo. */
   context: { mono: string; name: string; sub: string };
   user: { mono: string; email: string; line: string; name?: string };
-  /** Real sign-out (admin); without it the link just goes to `signOutTo`. */
   onSignOut?: () => void;
   signOutTo?: string;
   accountTo: string;
-  /** Extra header buttons before the avatar (e.g. the Farmer's notifications bell). */
   headerActions?: ReactNode;
   className?: string;
 };
 
 const FOLD_KEY = 'pt-side';
 
-/**
- * Dashboard shell shared by the Farmer and Admin panels (docs/prototype/prototype.js "Dashboard shell"): board-green
- * sidebar with grouped navigation, the stall/platform context at the top, the signed-in person at the bottom, and a
- * quiet work-area header. The prototype flags this as a design-system deviation from the single SiteHeader.
- */
 const DashboardShell = ({
   badge,
   navLabel,
@@ -60,7 +49,6 @@ const DashboardShell = ({
       return false; // private window
     }
   });
-  // The drawer (mobile) is only open on the page where it was opened — changing page closes it, no effect needed.
   const [openedOn, setOpenedOn] = useState<string | null>(null);
   const mobileOpen = openedOn === pathname;
   const setMobileOpen = (open: boolean) => setOpenedOn(open ? pathname : null);
@@ -115,8 +103,6 @@ const DashboardShell = ({
           <Link
             to={home}
             aria-label={homeLabel}
-            // Already on the panel home: a link to the same URL does nothing visible, so close the drawer and go back to
-            // the top instead (QA BUG-008).
             onClick={() => {
               if (pathname !== home) return;
               setMobileOpen(false);

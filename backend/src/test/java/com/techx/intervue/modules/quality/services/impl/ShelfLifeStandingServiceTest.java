@@ -18,7 +18,6 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/** FR-123 (spec §4.4.4): the stall's strikes and the lock, derived from farmer_violations. */
 class ShelfLifeStandingServiceTest {
 
     private static final long FARMER_ID = 10L;
@@ -70,9 +69,6 @@ class ShelfLifeStandingServiceTest {
         assertThatCode(() -> service.requireCanExtend(FARMER_ID)).doesNotThrowAnyException();
     }
 
-    /**
-     * The end of the lock is named by its day in Ho Chi Minh City: 20:00 UTC is already the 1st.
-     */
     @Test
     void aLockedStallIsRefusedWithTheVietnamDayTheLockEnds() {
         when(violations.activeTimes(eq(FARMER_ID), any()))

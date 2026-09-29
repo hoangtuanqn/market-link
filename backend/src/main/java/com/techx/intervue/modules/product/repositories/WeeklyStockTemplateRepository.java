@@ -29,12 +29,9 @@ public interface WeeklyStockTemplateRepository extends JpaRepository<WeeklyStock
                     + "order by t.dayOfWeek, p.name")
     List<StockTemplateResource> findResourcesByFarmerId(@Param("farmerId") Long farmerId);
 
-    /** Ghi đè trọn bộ lịch tuần của một farmer: xoá hết rồi ghi lại (như FarmerOperatingDay). */
     @Transactional
     default void replaceAll(Long farmerId, List<StockTemplateRequest.Item> items) {
         deleteByFarmerId(farmerId);
-        // Hibernate xếp INSERT trước DELETE khi flush; không ép flush ở đây thì ghi lại đúng
-        // những ngày đang có sẽ vi phạm UNIQUE (product_id, day_of_week).
         flush();
         for (StockTemplateRequest.Item item : items) {
             WeeklyStockTemplate row = new WeeklyStockTemplate();

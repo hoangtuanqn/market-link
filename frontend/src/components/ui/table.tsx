@@ -16,7 +16,6 @@ type TableProps<T> = {
   className?: string;
 };
 
-/** Design system `.ml-table` — a bordered data table with numeric and action columns. */
 export function Table<T extends Record<string, unknown>>({
   caption,
   columns,

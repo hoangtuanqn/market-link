@@ -35,10 +35,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
-/**
- * FR-081. The form is public, so the only guard against abuse is the per-IP bucket (5 an hour) —
- * the bucket4j proxy is mocked the same way as in {@code Bucket4jChatRateLimiterTest}.
- */
 class FeedbackServiceTest {
 
     private static final String IP = "203.0.113.7";

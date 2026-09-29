@@ -15,7 +15,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-/** 400/403/404 for {@link AdminCustomerController} — same shape as the other module handlers. */
 @RestControllerAdvice(assignableTypes = AdminCustomerController.class)
 public class AdminCustomerExceptionHandler {
 
@@ -40,7 +39,6 @@ public class AdminCustomerExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());
     }
 
-    /** Status outside active/inactive, or a stall / admin account. */
     @ExceptionHandler(IllegalArgumentException.class)
     ResponseEntity<ApiResource<Void>> invalidArgument(IllegalArgumentException e) {
         return error(
@@ -54,7 +52,6 @@ public class AdminCustomerExceptionHandler {
                                 .build()));
     }
 
-    /** FR-072: blank reason / past `until` from {@code AdminCustomerService.deactivate}. */
     @ExceptionHandler(InvalidFieldException.class)
     ResponseEntity<ApiResource<Void>> invalidField(InvalidFieldException e) {
         return error(
@@ -68,9 +65,6 @@ public class AdminCustomerExceptionHandler {
                                 .build()));
     }
 
-    /**
-     * Last safety net: a reason longer than the column (255 chars) slipping past bean validation.
-     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> dataIntegrity(DataIntegrityViolationException e) {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, List.of());

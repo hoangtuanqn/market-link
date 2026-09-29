@@ -12,13 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * FR-122: the photo a customer attaches to a spoilage report (spec §4.4.1: JPG, PNG or WebP, at
- * most 5 MB). Stored like product photos under /uploads with a name nobody can guess, prefixed by
- * the uploader's id so a report only accepts the reporter's own photo. JPEG and PNG go through
- * {@link ImageProbe#normalize}, which re-encodes them and drops EXIF: a phone photo can carry the
- * customer's GPS position, and this folder is public.
- */
 @Service
 public class QualityReportPhotoService {
 
@@ -40,7 +33,6 @@ public class QualityReportPhotoService {
         this.baseUrl = baseUrl;
     }
 
-    /** Checks the real type from the bytes and returns the URL to send with the report. */
     public String store(long userId, MultipartFile file) {
         if (file == null || file.isEmpty()) {
             throw new InvalidFieldException("file", "Choose a photo to upload.");
@@ -51,17 +43,12 @@ public class QualityReportPhotoService {
         byte[] bytes = readAll(file);
         ImageProbe.Probed probed = ImageProbe.probe(bytes);
         byte[] stored = ImageProbe.normalize(bytes, probed.mime());
-        // WebP is kept as it is (the JDK cannot encode it); JPEG and PNG became a JPEG
         String extension = "image/webp".equals(probed.mime()) ? ".webp" : ".jpg";
         String fileName = userId + "-" + UUID.randomUUID() + extension;
         storage.store(FOLDER, fileName, stored);
         return prefix() + fileName;
     }
 
-    /**
-     * A URL this service gave to this same account whose file is still on disk. Anything else —
-     * another customer's photo, an address on another site — is not accepted in a report.
-     */
     public boolean isOwnedBy(String url, long userId) {
         String prefix = prefix();
         if (url == null || !url.startsWith(prefix)) {

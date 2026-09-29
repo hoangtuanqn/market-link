@@ -39,7 +39,6 @@ class MarketClosureServiceTest {
     private UserRepository userRepository;
     private MarketClosureService service;
 
-    /** 26/09/2026 10:00 in Ho Chi Minh City: the closures below (11/10/2026) are ahead of it. */
     private static final Clock TODAY =
             Clock.fixed(Instant.parse("2026-09-26T03:00:00Z"), ZoneId.of("Asia/Ho_Chi_Minh"));
 
@@ -155,7 +154,6 @@ class MarketClosureServiceTest {
         verify(repository).delete(existing);
     }
 
-    /** QA E2E v2 MARKET-ADMIN-007: a closed day cannot be back-dated. */
     @Test
     void createRejectsADateBeforeTodayInHoChiMinhCity() {
         MarketClosureRequest yesterday =

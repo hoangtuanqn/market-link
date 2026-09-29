@@ -48,10 +48,6 @@ class UserSessionCacheTest {
         assertThat(ttl.getValue()).isEqualTo(Duration.ofMinutes(15));
     }
 
-    /**
-     * An admin approving a Farmer changes users.role, but JwtAuthFilter builds authorities from
-     * this cache — without writing it back the new role only takes effect after the next refresh.
-     */
     @Test
     void updateRolesRewritesTheSessionAndKeepsTheRemainingTtl() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
@@ -74,10 +70,6 @@ class UserSessionCacheTest {
         assertThat(ttl.getValue()).isEqualTo(Duration.ofSeconds(600));
     }
 
-    /**
-     * Not signed in anywhere: no new session is created, the next sign-in already reads the new
-     * role from the DB.
-     */
     @Test
     void updateRolesDoesNothingWhenThereIsNoLiveSession() {
         when(values.get("user:session:5")).thenReturn(null);

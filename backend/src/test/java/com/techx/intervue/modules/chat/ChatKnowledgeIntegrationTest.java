@@ -20,13 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/**
- * FR-090…092. The chatbot was written before the catalogue tables existed; this is the first time
- * its SQL runs against the real schema (Task 11.1). Also the evidence for R-04: no statement
- * concatenates the question into SQL, so a quote in the question is just a character.
- *
- * <p>Rows carry a unique tag and are removed in {@code @AfterEach} (shared dev database).
- */
 @SpringBootTest
 class ChatKnowledgeIntegrationTest {
 
@@ -103,8 +96,6 @@ class ChatKnowledgeIntegrationTest {
                                 farmer,
                                 category,
                                 "Buoi" + tag));
-        // Per-date stock (FR-063): a product with no active weekly template is never orderable
-        // and the chatbot, like the catalogue, leaves it out
         track(
                 "weekly_stock_templates",
                 insert(
@@ -138,7 +129,6 @@ class ChatKnowledgeIntegrationTest {
         ChatReplyResource reply = ask("cho " + marketCore + " may gio mo cua");
 
         assertThat(reply.intent()).isEqualTo(ChatIntent.MARKET_HOURS);
-        // Asked in Vietnamese (without diacritics), answered in Vietnamese: Saturday is "T7"
         assertThat(reply.reply()).contains("06:00–12:00").contains("T7");
         assertThat(reply.results()).extracting("type").contains("market");
     }

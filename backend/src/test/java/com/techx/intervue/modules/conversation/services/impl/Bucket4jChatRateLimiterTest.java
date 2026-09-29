@@ -90,7 +90,6 @@ class Bucket4jChatRateLimiterTest {
                 .isEqualTo(10);
     }
 
-    /** Review Focus #4: if Redis is down chat still works, only the anti-spam layer is lost. */
     @Test
     void letsTheRequestThroughWhenRedisIsDown() {
         when(bucket.tryConsume(1)).thenThrow(new QueryTimeoutException("redis is gone"));
@@ -98,11 +97,6 @@ class Bucket4jChatRateLimiterTest {
         assertThatCode(() -> limiter.check(7L, Action.MESSAGE)).doesNotThrowAnyException();
     }
 
-    /**
-     * If it is not checked at build time, capacity <= 0 would throw IllegalArgumentException from
-     * inside the try block of check(), be swallowed by the fail-open branch, and the rate limit
-     * would be turned off silently with a log wrongly reading "Redis unavailable".
-     */
     @Test
     void aNonPositiveLimitIsRefusedAtStartupInsteadOfSilentlyDisablingTheLimiter() {
         assertThatThrownBy(

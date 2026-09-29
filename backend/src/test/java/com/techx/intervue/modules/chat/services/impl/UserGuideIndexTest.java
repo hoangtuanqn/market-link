@@ -10,7 +10,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 
 class UserGuideIndexTest {
 
-    /** The real guide shipped in resources/user-guide, as the assistant uses it. */
     private final UserGuideIndex guide = new UserGuideIndex();
 
     @Test
@@ -18,10 +17,6 @@ class UserGuideIndexTest {
         assertThat(guide.size()).isGreaterThan(20);
     }
 
-    /**
-     * With or without diacritics, the section answering the question is among the sections the
-     * assistant receives (AssistantTools passes the top 3 to Claude).
-     */
     @ParameterizedTest
     @CsvSource({
         "quên mật khẩu, Quên mật khẩu",

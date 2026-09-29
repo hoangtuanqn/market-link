@@ -1,14 +1,4 @@
-/*
- * MarketLink · Hang tag — design tokens for Tailwind v4.
- * Generated from the MarketLink design system (docs/design-system/tokens.json).
- * Change the design system first, then regenerate this file. Do not hand-edit values here.
- *
- * Raw variables live on :root outside any cascade layer, so they win over Tailwind
- * defaults that share a name (--radius-md, --font-sans…).
- */
-
 :root {
-  /* color */
   --surface: #dcc59d;
   --surface-quiet: #ece0c6;
   --surface-raised: #f1e5cb;
@@ -55,11 +45,9 @@
   --status-declined-ink: #8e271d;
   --status-cancelled-bg: #e7dcc6;
   --status-cancelled-ink: #57462f;
-  /* shadow */
   --shadow-card: 0 2px 0 0 rgba(110, 90, 60, 0.28);
   --shadow-pop: 0 8px 20px rgba(60, 40, 15, 0.18);
   --shadow-dialog: 0 24px 48px rgba(42, 32, 22, 0.28);
-  /* spacing */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
@@ -68,48 +56,32 @@
   --space-6: 32px;
   --space-7: 48px;
   --space-8: 64px;
-  /* radius */
   --radius-sm: 4px;
   --radius-md: 10px;
   --radius-lg: 16px;
   --radius-pill: 999px;
-  /* size */
   --size-control: 44px;
   --size-control-sm: 36px;
   --size-header: 64px;
   --size-container: 1200px;
-  /* zIndex */
   --z-header: 40;
   --z-map-popup: 45;
   --z-dropdown: 50;
   --z-dialog: 100;
   --z-toast: 110;
-  /* breakpoint */
   --bp-mobile: 375px;
   --bp-tablet: 768px;
   --bp-desktop: 1440px;
-  /* fonts: loaded in index.html (Google Fonts, includes the Vietnamese subset) */
   --font-hand: 'Patrick Hand', 'Chivo', system-ui, sans-serif;
   --font-sans: 'Chivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
-/*
- * Wide screens: a 1200px container leaves a lot of paper on a 1920px monitor, so header, footer and
- * content widen together from 1600px up. Outside any cascade layer, like :root above, so it overrides
- * the base value the same way. Anything that must follow it reads var(--size-container) — never 1200px.
- */
 @media (min-width: 1600px) {
   :root {
     --size-container: 1360px;
   }
 }
 
-/*
- * Dark theme (data-theme="dark" on <html>, set by src/lib/settings.ts and the pre-paint script in
- * index.html). Every step was re-derived from the same kraft and green hues rather than flipped, and
- * all 26 text-on-surface, status and border pairs were measured: the lowest is board-muted on board
- * at 5.43:1, everything else clears 4.5:1, borders clear 3:1.
- */
 :root[data-theme='dark'] {
   --surface: #181410;
   --surface-quiet: #1f1a14;
@@ -160,33 +132,23 @@
   --shadow-card: 0 2px 0 0 rgba(0, 0, 0, 0.5);
   --shadow-pop: 0 8px 20px rgba(0, 0, 0, 0.55);
   --shadow-dialog: 0 24px 48px rgba(0, 0, 0, 0.6);
-  /* chart marks: re-stepped for the dark surface, not flipped. brand-light vs a warm neutral
-     measures CVD ΔE 14.6 and normal-vision 16.7 on #272119, where the light pair does not. */
   --chart-now: #8dbb7b;
   --chart-was: #8a7f6d;
   --side-raised: #24381f;
 }
-/* chart marks in the light theme, measured on the card surface #f1e5cb */
 :root {
   --chart-now: #2f4a2a;
   --chart-was: #8a6a3f;
   --side-raised: #22371f;
 }
 
-/*
- * Only MarketLink colors exist as utilities: the default Tailwind palette (zinc, blue, …) is
- * switched off so prototypes cannot drift away from the tokens.
- * Examples: bg-surface, bg-surface-raised, text-ink, text-ink-muted, border-line-strong,
- * bg-brand text-on-brand, bg-accent text-on-accent, bg-board text-on-board, rounded-md, shadow-tag,
- * font-hand, text-display, text-h1, text-body, text-tag-price.
- */
 @theme {
   --color-*: initial;
   --font-*: initial;
   --font-hand: 'Patrick Hand', 'Chivo', system-ui, sans-serif;
   --font-sans: 'Chivo', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: ui-monospace, Menlo, monospace;
-  --breakpoint-2xl: 1440px; /* bp-desktop; md = 768px (bp-tablet) is already the default */
+  --breakpoint-2xl: 1440px;
   --text-display: 56px;
   --text-display--line-height: 62px;
   --text-display--font-weight: 400;
@@ -281,7 +243,6 @@
   --color-status-declined-ink: var(--status-declined-ink);
   --color-status-cancelled-bg: var(--status-cancelled-bg);
   --color-status-cancelled-ink: var(--status-cancelled-ink);
-  /* shadows are renamed so they don't reference themselves */
   --shadow-tag: var(--shadow-card);
   --shadow-float: var(--shadow-pop);
   --shadow-modal: var(--shadow-dialog);

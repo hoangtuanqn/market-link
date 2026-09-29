@@ -20,13 +20,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 
-/** FR-003: wrong passwords on sign-in are counted per email and per IP, and the lock expires. */
 class LoginRateLimiterTest {
 
     private static final String EMAIL = "an@example.com";
     private static final String IP = "203.0.113.9";
 
-    /** A tiny in-memory Redis: value + TTL per key, enough for INCR / GET / EXPIRE / DEL. */
     private final Map<String, Long> counts = new HashMap<>();
 
     private final Map<String, Long> ttls = new HashMap<>();

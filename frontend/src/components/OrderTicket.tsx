@@ -24,14 +24,12 @@ type OrderTicketProps = {
 
 const total = (o: OrderType) => o.total ?? o.items.reduce((s, l) => s + l.qty * (l.price ?? 0), 0);
 
-/** Order receipt: pickup details, items, total and the actions for its current status (design system `.ml-ticket`). */
 const OrderTicket = ({ order, fluid, hideActions, onChanged }: OrderTicketProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const editable = !order.locked && (order.status === 'placed' || order.status === 'accepted');
-  // By id, never by code: the detail, edit and review pages all read the route param as a number.
   const href = `/orders/${order.id}`;
 
   const cancel = async () => {
@@ -114,7 +112,6 @@ const OrderTicket = ({ order, fluid, hideActions, onChanged }: OrderTicketProps)
               <span className="min-w-0">
                 <span className="text-ink-muted mr-1.5 tabular-nums">{line.qty}×</span>
                 {line.name}
-                {/* FR-121 (spec §4.3): the promise under each line, as on both order detail pages */}
                 <BestBeforeLine bestBefore={line.bestBefore} storageMode={line.storageMode} />
               </span>
               <span className="whitespace-nowrap tabular-nums">{money(line.qty * (line.price ?? 0))}</span>

@@ -2,12 +2,6 @@ package com.techx.intervue.modules.chat.services.impl;
 
 import java.util.Map;
 
-/**
- * FR-091: the keyword engine's sentences, in the language of the question. The Claude assistant
- * already replies in the language the user writes in; the keyword engine (guests, and anyone the
- * assistant falls back for) answered a Vietnamese question in English. Market, stall and product
- * names are data and stay as they are.
- */
 enum KeywordCopy {
     EN {
         private static final String[] DAYS = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
@@ -165,7 +159,6 @@ enum KeywordCopy {
     VI {
         private static final String[] DAYS = {"CN", "T2", "T3", "T4", "T5", "T6", "T7"};
 
-        /** The units products are stored with, as the product pages write them in Vietnamese. */
         private static final Map<String, String> UNITS =
                 Map.of(
                         "bunch", "bó",
@@ -338,9 +331,6 @@ enum KeywordCopy {
 
     abstract String askProduct();
 
-    /**
-     * @param where {@link #at(String)} of the market, or empty
-     */
     abstract String noProducts(String keyword, String where);
 
     abstract String found(int count, String keyword, String where);
@@ -349,18 +339,12 @@ enum KeywordCopy {
 
     abstract String left(int quantity, String unit);
 
-    /** " at Chợ Bến Thành", the scope part of a heading. */
     abstract String at(String place);
 
-    /** " on Sat", the scope part of a heading. */
     abstract String on(int dayOfWeek);
 
-    /** " for Vườn Xanh", the scope part of a heading. */
     abstract String forStall(String stall);
 
-    /**
-     * @param dayOfWeek 0 = Sunday … 6 = Saturday, the schema's numbering
-     */
     abstract String day(int dayOfWeek);
 
     abstract String unit(String unit);
@@ -389,6 +373,5 @@ enum KeywordCopy {
 
     abstract String cutoffNote();
 
-    /** The line after a list cut at the first ten entries. */
     abstract String more(int count);
 }

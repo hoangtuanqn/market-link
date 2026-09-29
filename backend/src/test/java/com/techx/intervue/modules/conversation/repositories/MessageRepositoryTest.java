@@ -15,11 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Runs on real MySQL (like IntervueApplicationTests / CI). Pins the bug found in the smoke test:
- * reading and sending in the same second, a new message must not be counted as unread if the column
- * is only accurate to the second.
- */
 @SpringBootTest
 @Transactional
 class MessageRepositoryTest {
@@ -45,8 +40,6 @@ class MessageRepositoryTest {
         User customer = user(RoleType.CUSTOMER);
         User farmer = user(RoleType.FARMER);
         Conversation c = Conversation.between(customer.getId(), farmer.getId());
-        // Both markers round to :00 if the column is only accurate to the second (MySQL rounds, it
-        // does not truncate).
         c.markRead(customer.getId(), Instant.parse("2026-09-25T06:00:00.100Z"));
         c = conversations.saveAndFlush(c);
 

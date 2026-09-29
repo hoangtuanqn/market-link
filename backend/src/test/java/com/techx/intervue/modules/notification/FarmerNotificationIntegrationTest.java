@@ -22,10 +22,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * The real path: FarmerService → NotificationService → the notifications table, text in the
- * applicant's language.
- */
 @SpringBootTest
 @Transactional
 class FarmerNotificationIntegrationTest {

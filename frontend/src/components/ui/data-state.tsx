@@ -10,17 +10,11 @@ type DataStateProps = {
   title: ReactNode;
   text: string;
   action?: ReactNode;
-  /**
-   * Takes all the remaining space and centres, instead of a small block tucked to the left. Use it when this block is
-   * the only thing in the content area — an empty list filling the whole page reads better than a small box.
-   */
   fill?: boolean;
-  /** Explicitly centres the block contents and text. */
   center?: boolean;
   className?: string;
 };
 
-/** A block's empty or error state (design system `.ml-state`, FR-084). */
 export function DataState({ variant = 'empty', title, text, action, fill, center, className }: DataStateProps) {
   const error = variant === 'error';
   const isCentered = fill || center;
@@ -56,20 +50,12 @@ export function DataState({ variant = 'empty', title, text, action, fill, center
 }
 
 type LoadErrorProps = {
-  /** What did not arrive, in the plural: "markets", "products". */
   noun: string;
-  /** One more way out, phrased for the screen: "the market map opens on its own page". */
   alt?: ReactNode;
   onRetry?: () => void;
   className?: string;
 };
 
-/**
- * One shape for "the list did not load", so every screen says it the same way (FR-084). The red block stays short; the
- * longer guidance sits under it in normal ink, because an error block paints everything inside it danger-red and a
- * paragraph of that is tiring.
- */
-/** Puts a ReactNode where a `<alt />` tag sits in a translated sentence (Trans passes it no children). */
 const Slot = ({ node }: { node: ReactNode }) => <>{node}</>;
 
 export function LoadError({ noun, alt, onRetry, className }: LoadErrorProps) {

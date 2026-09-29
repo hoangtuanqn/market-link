@@ -2,7 +2,6 @@ import { useTranslation } from 'react-i18next';
 import { NavLink as RouterNavLink } from 'react-router';
 import type { NavItem } from '@/constants/nav';
 
-/** Desktop nav link: muted on the board, accent underline on the current page. */
 const NavLink = ({ item }: { item: NavItem }) => {
   const { t } = useTranslation();
   return (

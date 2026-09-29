@@ -82,8 +82,6 @@ class AttachmentServiceTest {
                             a.setId(55L);
                             return a;
                         });
-        // The order matches the constructor: attachments, storage, rateLimiter, maxBytes, messages,
-        // lookup, reports, tempDir, signer, clock, stream link TTL
         service =
                 new AttachmentService(
                         attachments,
@@ -112,7 +110,6 @@ class AttachmentServiceTest {
 
         ArgumentCaptor<String> fileName = ArgumentCaptor.forClass(String.class);
         verify(storage).store(anyString(), fileName.capture(), any(byte[].class));
-        // The file name must not come from the user (spec §8.2)
         assertThat(fileName.getValue()).doesNotContain("holiday").endsWith(".jpg");
     }
 
@@ -142,7 +139,6 @@ class AttachmentServiceTest {
         verify(attachments, never()).save(any(MessageAttachment.class));
     }
 
-    /** Review Focus #1 at the service layer: no byte is written to disk. */
     @Test
     void refusesAFileThatIsNotAnImageWhateverItsName() {
         byte[] pdf = "%PDF-1.7 not a photo".getBytes(StandardCharsets.ISO_8859_1);
@@ -169,10 +165,6 @@ class AttachmentServiceTest {
                 .isInstanceOf(UnsupportedImageTypeException.class);
     }
 
-    /**
-     * The limit must block BEFORE writing to disk and before writing to the DB — over the threshold
-     * must not leave any orphan file behind.
-     */
     @Test
     void refusesToStoreAnythingOnceTheHourlyPhotoLimitIsReached() throws Exception {
         Mockito.doThrow(new RateLimitedException("slow down"))
@@ -211,11 +203,6 @@ class AttachmentServiceTest {
         assertThat(file.sizeBytes()).isEqualTo(100);
     }
 
-    /**
-     * Same code as attaching someone else's image to your own message: both are "this image is not
-     * yours". NOT_A_MEMBER is reserved for an image ALREADY attached to a message where the
-     * requester is not in the thread — that is a different idea.
-     */
     @Test
     void nobodyElseCanSeeAnUploadThatIsNotOnAMessageYet() {
         when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, null)));
@@ -249,7 +236,6 @@ class AttachmentServiceTest {
         verify(storage, never()).find(anyString(), anyString());
     }
 
-    /** Review Focus #5. */
     @Test
     void hiddenMessageHidesItsPhotoToo() {
         when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, 101L)));
@@ -277,7 +263,6 @@ class AttachmentServiceTest {
         assertThatThrownBy(() -> service.read(7L, 55L)).isInstanceOf(EntityNotFoundException.class);
     }
 
-    /** Final review #5 at the service: the saved width/height are the upright, stored ones. */
     @Test
     void aSidewaysPhoneJpegIsSavedWithItsUprightSize() throws Exception {
         BufferedImage landscape = new BufferedImage(40, 20, BufferedImage.TYPE_INT_RGB);
@@ -333,8 +318,6 @@ class AttachmentServiceTest {
         assertThat(resource.width()).isEqualTo(20);
         assertThat(resource.height()).isEqualTo(40);
     }
-
-    // ---------- FR-115 §5: signed stream links ----------
 
     @Test
     void aMemberGetsALinkForAVideoInTheirConversation() {
@@ -412,7 +395,6 @@ class AttachmentServiceTest {
                 .isInstanceOf(StreamLinkInvalidException.class);
     }
 
-    /** The link is only a ticket: the rights behind it are checked again on every request. */
     @Test
     void streamHidesAMessageHiddenAfterTheLinkWasIssued() {
         when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, 101L)));
@@ -464,12 +446,6 @@ class AttachmentServiceTest {
                 .build();
     }
 
-    /**
-     * The limit of 10 images/hour must count images ACCEPTED, not attempts. An iPhone user sending
-     * HEIC (the iOS default) would get 415 ten times and then lose the right to send images for a
-     * whole hour, with the message "sending images too fast" while not a single one has gone
-     * through.
-     */
     @Test
     void aRejectedUploadDoesNotSpendAnHourlyToken() {
         byte[] pdf = "%PDF-1.7 not a photo".getBytes(StandardCharsets.ISO_8859_1);
@@ -514,7 +490,6 @@ class AttachmentServiceTest {
         verify(rateLimiter).check(7L, ChatRateLimiterInterface.Action.IMAGE);
     }
 
-    /** LEAD decision 26/09: an admin can view the image of a message that has been reported. */
     @Test
     void anAdminCanSeeThePhotoOfAReportedMessage() {
         MessageAttachment upload = stored(55L, 7L, 101L);
@@ -525,11 +500,9 @@ class AttachmentServiceTest {
                 .thenReturn(Optional.of(fileOnDisk));
 
         assertThat(service.readAsAdmin(55L, 55L).mime()).isEqualTo("image/jpeg");
-        // An admin is not a member; they take a separate, narrower path
         verify(lookup, never()).requireMember(any(), any());
     }
 
-    /** Review Focus #2: ±5 messages are context, not the reported subject. */
     @Test
     void adminSeesThePhotoOfTheReportedMessageButNotOfItsNeighbours() {
         MessageAttachment neighbour = stored(56L, 7L, 102L);
@@ -542,10 +515,6 @@ class AttachmentServiceTest {
         verify(storage, never()).find(anyString(), anyString());
     }
 
-    /**
-     * An admin who has just hidden a message must still be able to view the image again to verify
-     * their own decision.
-     */
     @Test
     void anAdminStillSeesThePhotoAfterHidingTheMessage() {
         MessageAttachment upload = stored(55L, 7L, 101L);
@@ -577,7 +546,6 @@ class AttachmentServiceTest {
                 .isInstanceOf(EntityNotFoundException.class);
     }
 
-    /** An ordinary user does not get the admin branch even if the message has been reported. */
     @Test
     void aReportDoesNotOpenThePhotoToEveryone() {
         when(attachments.findById(55L)).thenReturn(Optional.of(stored(55L, 7L, 101L)));
@@ -590,8 +558,6 @@ class AttachmentServiceTest {
         assertThatThrownBy(() -> service.read(99L, 55L))
                 .isInstanceOf(ConversationAccessDeniedException.class);
     }
-
-    // ---------- FR-115: more formats, videos, 50 MB through a temp file ----------
 
     @Test
     void storesAVideoExactlyAsUploaded() throws Exception {
@@ -687,7 +653,6 @@ class AttachmentServiceTest {
         return out.toByteArray();
     }
 
-    /** ftyp isom + moov + an mdat padded so the whole file is exactly `total` bytes. */
     private static byte[] mp4(int total) {
         byte[] head =
                 concat(

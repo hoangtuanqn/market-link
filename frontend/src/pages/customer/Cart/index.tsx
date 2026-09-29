@@ -23,13 +23,10 @@ import Notification from '@/utils/notification';
 import DealNote from './DealNote';
 import { NO_CHOICE, pickupOf, todayInHcmc, type Choice, type Pickup } from './pickup';
 
-/** One stall's slots at every market it sells at, as the page loaded them. */
 type StallSlots = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; slots: SlotDto[] };
 
-/** `group.problems` values (order.requests.ts `OrderGroupPreviewDto`) — kept as a union so `t()` accepts the key. */
 type ProblemCode = 'out_of_stock' | 'sold_out' | 'unavailable' | 'stall_suspended';
 
-/** `yyyy-MM-dd` → a Date in local time; `new Date('2026-10-03')` is midnight UTC and lands on the previous day at UTC−x. */
 const localDay = (ymd: string) => {
   const [y, m, d] = ymd.split('-').map(Number);
   return new Date(y, m - 1, d);
@@ -38,17 +35,12 @@ const localDay = (ymd: string) => {
 type StallPickupProps = {
   group: OrderGroupPreviewDto;
   slots: StallSlots;
-  /** Worked out by the page from `slots`; null until they are in. */
   pickup: Pickup | null;
   choice: Choice;
   onRetry: () => void;
   onChange: (patch: Partial<Choice>) => void;
 };
 
-/**
- * Pickup market/day/slot for one stall's group (FR-032). The page loads the stall's slots at every market it sells at
- * and works out `pickup`, so the day shown selected is the day the stall is priced for (FR-125).
- */
 const StallPickup = ({ group, slots, pickup, choice, onRetry, onChange }: StallPickupProps) => {
   const { t } = useTranslation('CustomerCart');
   const { t: tc } = useTranslation();
@@ -98,7 +90,6 @@ const StallPickup = ({ group, slots, pickup, choice, onRetry, onChange }: StallP
             legend={t('pickupDayAt', { stall: group.stallName })}
             options={dayOptions}
             value={date ?? ''}
-            // A fully booked day shows its full times but is never priced: the stall stays on its last bookable day
             onChange={(v) =>
               onChange(
                 pickup.bookable.has(v)
@@ -111,7 +102,6 @@ const StallPickup = ({ group, slots, pickup, choice, onRetry, onChange }: StallP
             name={`slot-${group.farmerId}`}
             slots={slotOptions}
             value={choice.slotId}
-            // The day shown selected may be the default one that was never clicked: keep it with the time
             onChange={(v) => onChange({ marketId, date, shown: date, slotId: v })}
             legend={t('pickupTime', {
               day: date ? dayName(localDay(date).getDay(), 'long') : '',
@@ -126,16 +116,11 @@ const StallPickup = ({ group, slots, pickup, choice, onRetry, onChange }: StallP
   );
 };
 
-/**
- * FR-030 FR-031 FR-032 — the cart previews against the server, splits into one order per stall (D-01) and places the
- * real orders. Not logged in never reaches this page: it sits behind RequireAuth (App.tsx).
- */
 const CustomerCartPage = () => {
   const { t } = useTranslation('CustomerCart');
   const { t: tc } = useTranslation();
   const { t: tAssistant } = useTranslation('common');
   const lines = useCart();
-  // FR-030/032: the cart lives in the browser, so the assistant only sees it while this screen is open.
   useAssistantCart(lines.map((l) => ({ productId: l.productId, quantity: l.qty })));
   const navigate = useNavigate();
   const { user } = useSession();
@@ -144,7 +129,6 @@ const CustomerCartPage = () => {
   const setChoice = (farmerId: number, patch: Partial<Choice>) =>
     setChoices((prev) => ({ ...prev, [farmerId]: { ...(prev[farmerId] ?? NO_CHOICE), ...patch } }));
 
-  // FR-125: the day a line was added for from /deals. One before today, the market's day, counts as none.
   const today = todayInHcmc();
   const dealDayOfLine = (l: CartLine) => (l.pickupDate && l.pickupDate >= today ? l.pickupDate : null);
   const stalls = [...new Set(lines.map((l) => l.farmerId))];
@@ -152,8 +136,6 @@ const CustomerCartPage = () => {
     ...new Set(lines.flatMap((l) => (l.farmerId === farmerId ? (dealDayOfLine(l) ?? []) : []))),
   ];
 
-  // FR-032: each stall's slots at every market it sells at, loaded once for the whole cart, so a stall can start on a
-  // market that still has its deal day
   const stallKey = [...stalls].sort((a, b) => a - b).join(',');
   const { state: slotsLoad, retry: retrySlots } = useRequest(`cart-slots:${stallKey}`, () =>
     Promise.all(
@@ -165,7 +147,6 @@ const CustomerCartPage = () => {
       ),
     ).then((all) => new Map(stalls.map((farmerId, i) => [farmerId, all[i]]))),
   );
-  // A stall added or removed loads them again; keep the last ones on screen meanwhile
   const [lastSlots, setLastSlots] = useState<Map<number, StallSlots> | null>(null);
   if (slotsLoad.kind === 'ready' && slotsLoad.data !== lastSlots) setLastSlots(slotsLoad.data);
   const slotsMap = slotsLoad.kind === 'ready' ? slotsLoad.data : lastSlots;
@@ -181,14 +162,10 @@ const CustomerCartPage = () => {
     }),
   );
 
-  // FR-125: each stall is priced for the one day its picker shows, never a day without a free time at its market (the
-  // server would answer that day as out of stock). A stall whose slots are not in is not sent: it gets its nearest
-  // orderable day, as before.
   const pickupDates = stalls.flatMap((farmerId) => {
     const date = pickups.get(farmerId)?.pricedDay;
     return date ? [{ farmerId, date }] : [];
   });
-  // The first preview waits for the slots, so the first screen is already priced for the days it shows
   const slotsIn = slotsMap !== null || slotsLoad.kind === 'error';
   const previewKey = `${lines.map((l) => `${l.productId}:${l.qty}`).join(',')}|${pickupDates
     .map((d) => `${d.farmerId}@${d.date}`)
@@ -203,18 +180,13 @@ const CustomerCartPage = () => {
           )
         : Promise.resolve(null),
   );
-  // A quantity change re-runs the preview. Keep the last answer on screen meanwhile: swapping the whole page for
-  // "loading" made it flash and remounted every stall's pickup picker on each +/- tap.
   const answer = previewLoad.kind === 'ready' ? previewLoad.data : null;
   const [lastPreview, setLastPreview] = useState<OrderGroupPreviewDto[] | null>(null);
   if (answer && answer !== lastPreview) setLastPreview(answer);
   const pending = answer === null && previewLoad.kind !== 'error';
   const refreshing = pending && lastPreview !== null;
   const groups = answer ?? lastPreview ?? [];
-  // Quantities follow the cart right away; the server's figures catch up when the preview answers
   const qtyOf = (productId: number, fallback: number) => lines.find((l) => l.productId === productId)?.qty ?? fallback;
-  // A stall can be ordered once a time is picked on the day it is priced for, and that time still has room: after a
-  // 409 the slots load again, and a time taken meanwhile must not be sent a second time
   const slotStillFree = (farmerId: number, slotId: string) => {
     const s = slotsOf(farmerId);
     return s.kind === 'ready' && s.slots.some((x) => String(x.slotId) === slotId && !x.isFull);
@@ -252,7 +224,6 @@ const CustomerCartPage = () => {
       navigate('/orders/placed', { state: { orders } });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
-      // Stock or a slot changed under us (409): show the fresh preview and the fresh slots, keep the cart
       retry();
       retrySlots();
     } finally {
@@ -280,8 +251,6 @@ const CustomerCartPage = () => {
   }
 
   if (previewLoad.kind === 'error') {
-    // The server could not check the cart (e.g. a product that no longer exists answers 400). Keep the lines in reach
-    // so the customer can remove the bad one instead of being stuck on "try again".
     return (
       <div className="flex flex-col gap-4">
         <LoadError noun={t('noun')} onRetry={retry} />
@@ -355,7 +324,6 @@ const CustomerCartPage = () => {
         <div className="flex flex-col gap-8">
           {groups.map((g, i) => {
             const pickup = pickups.get(g.farmerId) ?? null;
-            // A deal day no market can take any more is said once, above the stall's day picker
             const dealDayOf = (productId: number) => {
               const line = lines.find((l) => l.productId === productId);
               const day = line ? dealDayOfLine(line) : null;
@@ -390,8 +358,6 @@ const CustomerCartPage = () => {
                   onQtyChange={(id, qty) => Cart.setQty(id, qty)}
                   onRemove={(id) => Cart.remove(id)}
                 />
-                {/* Always the same open picker: collapsing it after a pick (or swapping its wrapper) moved the page
-                    under the cursor. Picking now only highlights the choice. */}
                 <Card className="flex flex-col gap-4 p-4">
                   <StallPickup
                     group={g}
@@ -429,7 +395,6 @@ const CustomerCartPage = () => {
               <textarea
                 id="note"
                 value={note}
-                // The server keeps at most 255 characters (400 beyond)
                 maxLength={255}
                 onChange={(e) => setNote(e.target.value)}
                 placeholder={t('note.placeholder')}

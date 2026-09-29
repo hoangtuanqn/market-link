@@ -5,10 +5,6 @@ import { Card } from '@/components/ui/card';
 import { SelectField } from '@/components/ui/input';
 import WebsiteStatusCard from './WebsiteStatusCard';
 
-/**
- * Admin settings (prototype admin/settings.html). Platform defaults are saved on the admin's own account for now:
- * whether a changed default reaches stalls that never set their own is still an open question in the prototype.
- */
 const AdminSettingsPage = () => {
   const { t } = useTranslation('AdminSettings');
   return (

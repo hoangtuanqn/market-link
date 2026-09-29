@@ -16,17 +16,12 @@ export type PhotoSource = { kind: 'camera' } | { kind: 'image'; image: HTMLImage
 type PhotoDialogProps = {
   source: PhotoSource | null;
   onClose: () => void;
-  /** The camera cannot be used: open a file picker instead. */
   onPickFile: () => void;
   onSaved: (user: UserType, message: string) => void;
 };
 
 const START: CropState = { zoom: 1, offset: { x: 0, y: 0 } };
 
-/**
- * One dialog for both steps (the design system's Dialog uses a fixed id so only one can be on the page): camera → crop
- * → save, or an image picked from the machine → crop → save.
- */
 const PhotoDialog = ({ source, onClose, onPickFile, onSaved }: PhotoDialogProps) => {
   const { t } = useTranslation('CustomerAccount');
   const [image, setImage] = useState<HTMLImageElement | null>(null);
@@ -36,7 +31,6 @@ const PhotoDialog = ({ source, onClose, onPickFile, onSaved }: PhotoDialogProps)
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
 
-  // Each time the dialog opens it starts over from the new source
   useEffect(() => {
     /* eslint-disable react-hooks/set-state-in-effect -- sync state with the image source just picked */
     setImage(source?.kind === 'image' ? source.image : null);
@@ -60,7 +54,6 @@ const PhotoDialog = ({ source, onClose, onPickFile, onSaved }: PhotoDialogProps)
     }
   };
 
-  // A photo taken from the camera is created by the dialog so the dialog frees the memory; an image picked from the machine is handled by AvatarCard
   const retake = () => {
     releaseImage(image);
     setImage(null);

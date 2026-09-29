@@ -38,9 +38,6 @@ public class ProductQueryService implements ProductQueryServiceInterface {
         int size = Math.min(MAX_PAGE_SIZE, Math.max(1, criteria.pageSize()));
         BigDecimal min = criteria.minPrice();
         BigDecimal max = criteria.maxPrice();
-        // If the customer drags the two ends of the price bar the wrong way round they still get
-        // results, not a hard-to-understand
-        // empty list
         if (min != null && max != null && min.compareTo(max) > 0) {
             BigDecimal swap = min;
             min = max;
@@ -62,7 +59,6 @@ public class ProductQueryService implements ProductQueryServiceInterface {
                 repository.findVisibleById(id).orElseThrow(() -> new ProductNotFoundException(id));
         List<ProductListItemResource> overlaid = overlayAvailability(List.of(row.item()));
         StallSummaryResource farmer = summarize(stallService.publicDetail(row.item().farmerId()));
-        // FR-052: average + 1★…5★ histogram of the visible reviews (C8).
         return new ProductDetailResource(
                 overlaid.getFirst(),
                 row.description(),
@@ -71,17 +67,6 @@ public class ProductQueryService implements ProductQueryServiceInterface {
                 repository.shelfLife(id).orElse(null));
     }
 
-    /**
-     * Replaces stockQuantity/price read straight from products with the numbers for the nearest
-     * orderable pickup date, and names that date in availableDate. Products with no active weekly
-     * template never get here — {@link ProductQueryRepository#VISIBILITY_FILTER} leaves them out in
-     * the SQL, so the page and its total agree. A row is never dropped here: one whose template was
-     * switched off in between shows as sold out.
-     *
-     * <p>FR-124: when that day is on a near-expiry deal, {@code price} stays the day's regular
-     * price (the deal's list price). The discount belongs to /deals, the product page's deal block
-     * and the cart, which name it; shown here it read as the product's normal price.
-     */
     private List<ProductListItemResource> overlayAvailability(List<ProductListItemResource> items) {
         Map<Long, BigDecimal> basePrices =
                 items.stream()
@@ -113,10 +98,6 @@ public class ProductQueryService implements ProductQueryServiceInterface {
                         null, null, null, farmerId, day, null, null, "newest", page, pageSize));
     }
 
-    /**
-     * A compact stall for the product page: the booth and time window come from the first market,
-     * the days merge every market.
-     */
     private static StallSummaryResource summarize(StallDetailResource s) {
         StallMarketResource first = s.markets().isEmpty() ? null : s.markets().get(0);
         List<Integer> days =

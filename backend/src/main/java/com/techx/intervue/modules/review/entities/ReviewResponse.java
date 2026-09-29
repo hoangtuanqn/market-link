@@ -11,7 +11,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-053: the stall's single answer to a review (table {@code review_responses}, 1-1). */
 @Entity
 @Getter
 @Setter
@@ -26,7 +25,6 @@ public class ReviewResponse {
     @Column(name = "review_id", nullable = false)
     private Long reviewId;
 
-    /** farmer_profiles.id of the stall that answered. */
     @Column(name = "farmer_id", nullable = false)
     private Long farmerId;
 

@@ -28,10 +28,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/**
- * FR-008: an admin turns two-step verification on / off for themself. Step 2 at sign-in lives in
- * AuthController (POST /auth/mfa/verify) because it needs to set the cookie like a normal sign-in.
- */
 @RestController
 @RequestMapping("/api/v1/auth/mfa")
 @PreAuthorize("hasRole('ADMIN')")
@@ -56,10 +52,6 @@ public class MfaController extends BaseController {
                 "Scan the code with your authenticator.");
     }
 
-    /**
-     * Once on, every session opened with only the password is signed out (restartSession); the
-     * caller gets a new access token in the body and a new refresh_token cookie.
-     */
     @PostMapping("/enable")
     public ResponseEntity<ApiResource<MfaEnabledResource>> enable(
             @AuthenticationPrincipal CustomUserDetails user,
@@ -80,7 +72,6 @@ public class MfaController extends BaseController {
                                 "Two-step verification is on."));
     }
 
-    /** The old codes become invalid immediately; the new codes are returned only once. */
     @PostMapping("/recovery-codes")
     public ResponseEntity<ApiResource<MfaRecoveryCodesResource>> regenerateRecoveryCodes(
             @AuthenticationPrincipal CustomUserDetails user,

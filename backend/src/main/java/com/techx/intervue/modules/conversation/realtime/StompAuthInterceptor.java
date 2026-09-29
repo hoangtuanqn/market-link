@@ -23,15 +23,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Component;
 
-/**
- * Spec 7.3 / 7.4. CONNECT: the JWT is in the Authorization header, checked exactly as in
- * JwtAuthFilter (jti blacklist, session in Redis, revoke marker). Principal.getName() = userId so
- * the service sends messages by id. CONNECT and the STOMP alias (1.2) authenticate the same way.
- * SUBSCRIBE: only /user/topic/**. SEND: only /app/**. MESSAGE and the server→client frames
- * (CONNECTED, RECEIPT, ERROR) sent up by the client are forged event injection → rejected. Throwing
- * an exception → Spring returns an ERROR frame and closes the connection; an unauthenticated client
- * never keeps a session.
- */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -39,10 +30,6 @@ public class StompAuthInterceptor implements ChannelInterceptor {
 
     public static final String USER_TOPIC_PREFIX = "/user/topic/";
 
-    /**
-     * Session attributes (shared with the WebSocketSession) so ChatSessionSweeper knows whose
-     * session it is.
-     */
     public static final String ATTR_USER_ID = "chat.userId";
 
     public static final String ATTR_ISSUED_AT = "chat.issuedAt";
@@ -85,11 +72,7 @@ public class StompAuthInterceptor implements ChannelInterceptor {
                     throw new AccessDeniedException("Messages are sent over the REST API.");
                 }
             }
-            // Session-management frames: they need an identity, no destination to check
             case UNSUBSCRIBE, DISCONNECT, ACK, NACK, BEGIN, COMMIT, ABORT -> requireUser(accessor);
-            // MESSAGE / CONNECTED / RECEIPT / ERROR are server→client frames: sent up by a client
-            // they are
-            // forged
             default -> throw new AccessDeniedException("Unexpected frame.");
         }
         return message;
@@ -123,7 +106,6 @@ public class StompAuthInterceptor implements ChannelInterceptor {
         }
     }
 
-    /** Name = userId. Tasks 4–6 use convertAndSendToUser(userId, ...) and Long.parseLong(name). */
     static Principal principalFor(String userId, Set<RoleType> roles) {
         return new UsernamePasswordAuthenticationToken(
                 userId,

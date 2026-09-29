@@ -21,52 +21,16 @@ import javax.imageio.ImageWriter;
 import javax.imageio.stream.ImageInputStream;
 import javax.imageio.stream.ImageOutputStream;
 
-/**
- * Spec §8.2: the image type is concluded from magic bytes, not from Content-Type. JPEG/PNG are
- * decoded and re-encoded as JPEG so EXIF (which may contain GPS coordinates) is dropped — same as
- * AvatarService.
- *
- * <p>WebP: OpenJDK has no ImageIO plugin that can read WebP (checked on JDK 21 and 25), so the size
- * is read straight from the RIFF header and the file is stored intact. Because it is stored as is,
- * the header must be inspected more closely than the other two formats: the RIFF size must match
- * the real file length (blocking attached tails and truncated files) and the chunk sync code /
- * signature must be right (blocking any payload disguised as an image).
- *
- * <p>The remaining consequence: an EXIF/XMP block inside an extended WebP is not stripped. Images
- * only leave through a permission-checked endpoint and only reach the recipient the sender chose,
- * so this is a conscious trade-off, not an oversight.
- */
 public final class ImageProbe {
 
-    /**
-     * Block "decompression bomb" images: conclude from the header, before allocating memory for the
-     * pixels.
-     */
     static final int MAX_SIDE = 4096;
 
-    /**
-     * FR-115: JPEG/PNG larger than MAX_SIDE are scaled down instead of refused; only an absurd
-     * header is refused before decoding.
-     */
     static final int MAX_DECODE_SIDE = 30_000;
 
-    /**
-     * Pixels decoded at most (about 96 MB for a 3-byte JPEG raster): a larger photo is read with
-     * subsampling, so a 48 MP phone photo decodes at 12 MP.
-     */
     static final long DECODE_PIXEL_BUDGET = 24_000_000L;
 
-    /**
-     * Final review #3: a header claiming more pixels than any phone camera (a 200 MP sensor is
-     * 16320×12240) is refused before decoding, whatever its sides.
-     */
     static final long MAX_DECODE_PIXELS = 200_000_000L;
 
-    /**
-     * Final review #3: a progressive JPEG is decoded with every DCT coefficient held in native
-     * memory (up to about 6 bytes a pixel), which subsampling does not reduce. Phones write
-     * baseline JPEGs; a progressive one this large is a web export or an attack.
-     */
     static final long MAX_PROGRESSIVE_PIXELS = 24_000_000L;
 
     private static final String TOO_LARGE =
@@ -82,10 +46,8 @@ public final class ImageProbe {
 
     public record Probed(String mime, int width, int height) {}
 
-    /** A re-encoded photo and the size it was actually stored at. */
     public record Normalized(byte[] bytes, int width, int height) {}
 
-    /** What the JPEG header says before any pixel is decoded. */
     record JpegHeader(int width, int height, boolean progressive, int orientation) {}
 
     public static Probed probe(byte[] bytes) {
@@ -94,12 +56,9 @@ public final class ImageProbe {
         Probed probed =
                 switch (mime) {
                     case WEBP -> probeWebp(bytes);
-                    // Read from the header ourselves: the limits below must hold before ImageIO
-                    // (and libjpeg under it) sees the file
                     case JPEG -> new Probed(JPEG, jpeg.width(), jpeg.height());
                     default -> probeWithImageIo(bytes, mime);
                 };
-        // WebP is stored as is, so its size is capped; JPEG/PNG are decoded and scaled down later
         int limit = WEBP.equals(mime) ? MAX_SIDE : MAX_DECODE_SIDE;
         if (probed.width() > limit || probed.height() > limit) {
             throw new InvalidFieldException(
@@ -113,10 +72,6 @@ public final class ImageProbe {
         return probed;
     }
 
-    /**
-     * JPEG/PNG → re-encoded JPEG, at most MAX_SIDE on the long side. WebP → as is (the JDK has no
-     * encoder for it).
-     */
     public static byte[] normalize(byte[] bytes, String mime) {
         if (WEBP.equals(mime)) {
             return bytes;
@@ -124,21 +79,12 @@ public final class ImageProbe {
         return reencode(bytes, mime).bytes();
     }
 
-    /**
-     * JPEG/PNG → JPEG, upright and at most MAX_SIDE on the long side. EXIF goes away with the
-     * re-encode, so its Orientation is applied to the pixels first (final review #5), and the
-     * returned size is the one actually encoded.
-     */
     public static Normalized reencode(byte[] bytes, String mime) {
         int orientation = JPEG.equals(mime) ? readJpegHeader(bytes).orientation() : 1;
         BufferedImage upright = orient(fitWithin(decode(bytes), MAX_SIDE), orientation);
         return new Normalized(encodeJpeg(upright), upright.getWidth(), upright.getHeight());
     }
 
-    /**
-     * Walks the JPEG marker segments up to the first scan: the frame header (SOFn) gives the size
-     * and whether the image is progressive, an APP1 Exif segment gives the Orientation.
-     */
     static JpegHeader readJpegHeader(byte[] b) {
         int orientation = 1;
         int at = 2;
@@ -149,7 +95,6 @@ public final class ImageProbe {
                 }
                 int marker = b[at + 1] & 0xFF;
                 if (marker == 0xFF) {
-                    // Fill byte before a marker
                     at++;
                     continue;
                 }
@@ -166,7 +111,6 @@ public final class ImageProbe {
                 }
                 int data = at + 4;
                 if (isFrameHeader(marker)) {
-                    // precision (1) · height (2) · width (2) · components …
                     int height = be16(b, data + 1);
                     int width = be16(b, data + 3);
                     boolean progressive =
@@ -184,11 +128,9 @@ public final class ImageProbe {
         } catch (ArrayIndexOutOfBoundsException e) {
             throw new UnsupportedImageTypeException();
         }
-        // No frame header before the first scan: not a JPEG anything can decode
         throw new UnsupportedImageTypeException();
     }
 
-    /** SOF0–SOF15 except DHT (C4), JPG (C8) and DAC (CC), which share the range. */
     private static boolean isFrameHeader(int marker) {
         return marker >= 0xC0
                 && marker <= 0xCF
@@ -197,10 +139,6 @@ public final class ImageProbe {
                 && marker != 0xCC;
     }
 
-    /**
-     * "Exif\0\0" then a TIFF header (II or MM byte order, 42, offset of IFD0); tag 0x0112 in IFD0
-     * is the Orientation (1–8). Anything malformed counts as 1, the photo as it is.
-     */
     private static int exifOrientation(byte[] b, int start, int end) {
         if (end > b.length || end - start < 14 || !ascii(b, start, 4).equals("Exif")) {
             return 1;
@@ -228,10 +166,6 @@ public final class ImageProbe {
         return 1;
     }
 
-    /**
-     * Applies an EXIF Orientation: 2 mirror, 3 turn 180°, 4 flip, 5 transpose, 6 turn 90°
-     * clockwise, 7 transverse, 8 turn 90° anticlockwise. 5–8 swap width and height.
-     */
     private static BufferedImage orient(BufferedImage source, int orientation) {
         if (orientation <= 1 || orientation > 8) {
             return source;
@@ -313,10 +247,6 @@ public final class ImageProbe {
         if (b.length < 21 || !ascii(b, 0, 4).equals("RIFF") || !ascii(b, 8, 4).equals("WEBP")) {
             return false;
         }
-        // The RIFF size field counts every byte after it. Declaring more than the real file means
-        // the file is truncated
-        // or forged; declaring less means there is a tail that does not belong to the attached
-        // image.
         return le32(b, 4) == b.length - 8;
     }
 
@@ -324,28 +254,21 @@ public final class ImageProbe {
         return new String(b, from, length, StandardCharsets.US_ASCII);
     }
 
-    /**
-     * The three WebP chunk variants (RFC 9649 §2). A 12-byte RIFF header + an 8-byte chunk header,
-     * so the chunk payload starts at byte 20.
-     */
     private static Probed probeWebp(byte[] b) {
         String chunk = ascii(b, 12, 4);
         try {
             return switch (chunk) {
                 case "VP8 " -> {
-                    // 20: frame tag (3 byte) · 23: sync code 9d 01 2a · 26: width · 28: height
                     requireBytes(b, 23, 0x9d, 0x01, 0x2a);
                     int width = le16(b, 26) & 0x3FFF;
                     int height = le16(b, 28) & 0x3FFF;
                     yield new Probed(WEBP, width, height);
                 }
                 case "VP8L" -> {
-                    // 20: signature byte 0x2f · 21: 14 bits width-1 then 14 bits height-1
                     requireBytes(b, 20, 0x2f);
                     int bits = le32(b, 21);
                     yield new Probed(WEBP, (bits & 0x3FFF) + 1, ((bits >> 14) & 0x3FFF) + 1);
                 }
-                // 20: 4 flag bytes · 24: canvas width-1 (3 bytes) · 27: canvas height-1 (3 bytes)
                 case "VP8X" -> new Probed(WEBP, le24(b, 24) + 1, le24(b, 27) + 1);
                 default -> throw new UnsupportedImageTypeException();
             };
@@ -354,12 +277,6 @@ public final class ImageProbe {
         }
     }
 
-    /**
-     * WebP is stored as is (the JDK has no encoder for it), so if we only trusted "RIFF…WEBP" then
-     * 16 header bytes would be enough to stash any payload on the server and serve it back under
-     * Content-Type image/webp. The sync code / signature is the cheapest evidence that this really
-     * is an image frame.
-     */
     private static void requireBytes(byte[] b, int at, int... expected) {
         for (int i = 0; i < expected.length; i++) {
             if ((b[at + i] & 0xFF) != expected[i]) {
@@ -399,7 +316,6 @@ public final class ImageProbe {
         }
     }
 
-    /** Decodes with subsampling when the photo has more pixels than DECODE_PIXEL_BUDGET. */
     private static BufferedImage decode(byte[] bytes) {
         try (ImageInputStream in =
                 ImageIO.createImageInputStream(new ByteArrayInputStream(bytes))) {
@@ -433,7 +349,6 @@ public final class ImageProbe {
         }
     }
 
-    /** The size a photo of width×height is stored at: unchanged, or scaled to fit MAX_SIDE. */
     static int[] storedSize(int width, int height) {
         if (width <= MAX_SIDE && height <= MAX_SIDE) {
             return new int[] {width, height};
@@ -470,7 +385,6 @@ public final class ImageProbe {
         return scaled;
     }
 
-    /** JPEG has no alpha channel: the transparent part of a PNG becomes a white background. */
     private static byte[] encodeJpeg(BufferedImage source) {
         BufferedImage flat =
                 new BufferedImage(

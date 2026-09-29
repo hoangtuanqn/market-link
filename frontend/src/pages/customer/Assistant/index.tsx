@@ -4,11 +4,6 @@ import { Card } from '@/components/ui/card';
 
 const CAN_ANSWER = ['product', 'price', 'hours', 'stalls', 'slots', 'guide'] as const;
 
-/**
- * FR-090 FR-091 FR-092 — the assistant's full page. Claude picks read-only tools that run prepared queries (never
- * LLM-generated SQL, R-04) and answers how-to questions from the user guide; the conversation itself is AssistantChat,
- * shared with the floating launcher.
- */
 const CustomerAssistantPage = () => {
   const { t } = useTranslation('CustomerAssistant');
 

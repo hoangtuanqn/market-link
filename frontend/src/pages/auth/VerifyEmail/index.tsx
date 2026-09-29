@@ -25,7 +25,6 @@ type Status =
 const secondsUntil = (deadline: number, now: number) => Math.max(0, Math.ceil((deadline - now) / 1000));
 const minSec = (seconds: number) => `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, '0')}`;
 
-/** FR-009 — the 6-digit code mailed at sign-up; the right code creates the account and signs in. */
 const VerifyEmailPage = () => {
   const { t } = useTranslation('VerifyEmail');
   const navigate = useNavigate();
@@ -37,7 +36,6 @@ const VerifyEmailPage = () => {
   const [isResending, setIsResending] = useState(false);
   const now = useClock(1000).getTime();
 
-  // After a wrong code, hand focus back once the boxes are enabled again (a disabled input cannot take focus)
   useEffect(() => {
     if (status.kind === 'wrong') codeRef.current?.focus();
   }, [status]);
@@ -50,7 +48,6 @@ const VerifyEmailPage = () => {
   const usedUp = status.kind === 'usedUp' || codeLeft === 0;
   const locked = finished || usedUp;
 
-  /** "Change email" keeps this tab's token, so a corrected form updates the same sign-up; a dead sign-up drops it. */
   const backToForm = (keepToken: boolean) => {
     if (!keepToken) SignupStore.clearPending();
     navigate(REGISTER_PATH);
@@ -185,7 +182,6 @@ const VerifyEmailPage = () => {
 
           <div className="flex flex-col gap-2">
             <p className="text-small text-ink-muted">{t('help')}</p>
-            {/* Read out once when the button becomes usable, not on every tick of its countdown */}
             <p className="sr-only" aria-live="polite">
               {resendLeft === 0 && !isResending ? t('resendReady') : ''}
             </p>

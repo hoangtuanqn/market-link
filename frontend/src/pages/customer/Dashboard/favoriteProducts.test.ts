@@ -12,7 +12,6 @@ const httpError = (status: number) =>
   });
 
 describe('settledProducts (FR-040 dashboard favourites)', () => {
-  /** One favourite product that is gone (404) used to fail Promise.all and blank the whole block. */
   it('leaves out a product that failed and keeps the others in order', () => {
     expect(
       settledProducts([

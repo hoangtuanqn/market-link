@@ -4,7 +4,6 @@ import Helper from './helper';
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:8080';
 
 describe('Helper.mediaUrl', () => {
-  /** FR-020 / FR-062: uploaded images live on the backend, not on the frontend origin. */
   it('prefixes backend uploads with the API origin', () => {
     expect(Helper.mediaUrl('/uploads/market-images/cho-ba-chieu.jpg')).toBe(
       `${API}/uploads/market-images/cho-ba-chieu.jpg`,

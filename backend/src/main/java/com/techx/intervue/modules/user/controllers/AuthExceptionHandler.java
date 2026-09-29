@@ -36,11 +36,6 @@ import org.springframework.web.client.RestClientException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
-/**
- * Returns 400/401/403/409/502/503 for AuthController. The repo has no shared handler yet, so
- * without this class errors fall through to /error and come back as 401 (like
- * ChatExceptionHandler).
- */
 @Slf4j
 @RestControllerAdvice(
         assignableTypes = {
@@ -67,7 +62,6 @@ public class AuthExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", INVALID_MESSAGE, details);
     }
 
-    /** Google does not respond, times out or returns a 5xx error. */
     @ExceptionHandler(RestClientException.class)
     ResponseEntity<ApiResource<Void>> providerUnavailable(RestClientException e) {
         log.warn("OAuth provider call failed: {}", e.getMessage());
@@ -78,7 +72,6 @@ public class AuthExceptionHandler {
                 List.of());
     }
 
-    /** The client id / secret in app.oauth.* has not been filled in */
     @ExceptionHandler(OAuthNotConfiguredException.class)
     ResponseEntity<ApiResource<Void>> notConfigured(OAuthNotConfiguredException e) {
         log.error(e.getMessage());
@@ -89,12 +82,6 @@ public class AuthExceptionHandler {
                 List.of());
     }
 
-    /**
-     * Redis / the queue / the DB does not respond (UserSessionCache, RedisJobQueue throw
-     * IllegalStateException; a Redis drop throws DataAccessException).
-     * DataIntegrityViolationException has a more specific handler of its own so it does not fall in
-     * here.
-     */
     @ExceptionHandler({IllegalStateException.class, DataAccessException.class})
     ResponseEntity<ApiResource<Void>> unavailable(RuntimeException e) {
         log.error("Auth request failed: {}", e.getMessage());
@@ -142,8 +129,6 @@ public class AuthExceptionHandler {
                                 .build()));
     }
 
-    /** FR-007: the password-reset token is wrong, already used or expired. */
-    /** Avatar: the "file" part is missing or the multipart body is broken. */
     @ExceptionHandler({MissingServletRequestPartException.class, MultipartException.class})
     ResponseEntity<ApiResource<Void>> badUpload(Exception e) {
         return error(
@@ -167,7 +152,6 @@ public class AuthExceptionHandler {
         return error(HttpStatus.CONFLICT, "PASSWORD_ALREADY_SET", e.getMessage(), List.of());
     }
 
-    /** One detail per taken field, so email and phone are both marked at once (QA BUG-005). */
     @ExceptionHandler(DuplicateAccountException.class)
     ResponseEntity<ApiResource<Void>> duplicate(DuplicateAccountException e) {
         List<FieldErrorResource> details =
@@ -182,11 +166,6 @@ public class AuthExceptionHandler {
         return error(HttpStatus.CONFLICT, "DUPLICATE_ACCOUNT", e.getMessage(), details);
     }
 
-    /**
-     * Two requests with the same email/phone get past the check at the same time → the DB's UNIQUE
-     * blocks. Tell them apart by the key name in MySQL's message ("Duplicate entry '...' for key
-     * 'users.email'"); other errors (data too long...) are not a duplicate account → 400.
-     */
     @ExceptionHandler(DataIntegrityViolationException.class)
     ResponseEntity<ApiResource<Void>> uniqueViolation(DataIntegrityViolationException e) {
         String cause = String.valueOf(e.getMostSpecificCause().getMessage());
@@ -211,16 +190,11 @@ public class AuthExceptionHandler {
                 List.of(FieldErrorResource.builder().message(INVALID_MESSAGE).build()));
     }
 
-    /** FR-008: the pending-code token is wrong / expired → the user must sign in again. */
     @ExceptionHandler(MfaTokenInvalidException.class)
     ResponseEntity<ApiResource<Void>> mfaTokenInvalid(MfaTokenInvalidException e) {
         return error(HttpStatus.BAD_REQUEST, "MFA_TOKEN_INVALID", e.getMessage(), List.of());
     }
 
-    /**
-     * FR-008: a wrong code → 400 (not 401, the FE reads 401 as session ended); details carries the
-     * remaining attempts.
-     */
     @ExceptionHandler(MfaCodeInvalidException.class)
     ResponseEntity<ApiResource<Void>> mfaCodeInvalid(MfaCodeInvalidException e) {
         String left =
@@ -242,7 +216,6 @@ public class AuthExceptionHandler {
                 .body(ApiResource.error(error, e.getMessage()));
     }
 
-    /** FR-009: details carry the field message and the tries left as a number the FE translates. */
     @ExceptionHandler(SignupCodeInvalidException.class)
     ResponseEntity<ApiResource<Void>> signupCodeInvalid(SignupCodeInvalidException e) {
         return error(
@@ -262,7 +235,6 @@ public class AuthExceptionHandler {
         return error(HttpStatus.BAD_REQUEST, "SIGNUP_CODE_EXPIRED", e.getMessage(), List.of());
     }
 
-    /** FR-009: the parked form is gone (30 minutes) — the person fills the form in again. */
     @ExceptionHandler(SignupExpiredException.class)
     ResponseEntity<ApiResource<Void>> signupExpired(SignupExpiredException e) {
         return error(HttpStatus.GONE, "SIGNUP_EXPIRED", e.getMessage(), List.of());
@@ -277,7 +249,6 @@ public class AuthExceptionHandler {
                 .body(ApiResource.error(error, e.getMessage()));
     }
 
-    /** FR-003: too many wrong passwords; the FE counts the minutes from Retry-After. */
     @ExceptionHandler(LoginRateLimitedException.class)
     ResponseEntity<ApiResource<Void>> loginRateLimited(LoginRateLimitedException e) {
         ErrorResource error =
@@ -292,9 +263,6 @@ public class AuthExceptionHandler {
         return error(HttpStatus.CONFLICT, "MFA_STATE", e.getMessage(), List.of());
     }
 
-    /**
-     * @PreAuthorize("hasRole('ADMIN')") on MfaController: signed in but the wrong role → 403.
-     */
     @ExceptionHandler(AccessDeniedException.class)
     ResponseEntity<ApiResource<Void>> forbidden(AccessDeniedException e) {
         return error(

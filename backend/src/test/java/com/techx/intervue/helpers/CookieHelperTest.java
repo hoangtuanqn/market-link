@@ -40,7 +40,6 @@ class CookieHelperTest {
 
         assertThat(secure.isSecure()).isTrue();
         assertThat(plain.isSecure()).isFalse();
-        // no Max-Age: the browser removes it on close
         assertThat(plain.getMaxAge().isNegative()).isTrue();
     }
 

@@ -8,13 +8,6 @@ import java.time.format.DateTimeFormatter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/**
- * C5-6: the order code {@code ML-yyyyMMdd-XXXX}, the date in Vietnam time, XXXX is 4 random
- * unambiguous characters (0/O/1/I dropped). Does not count that day's orders: two place-order calls
- * at the same time would count the same number, and a UNIQUE violation breaks the whole JPA
- * transaction so it cannot be retried. Asks before inserting; UNIQUE(order_code) is the last
- * backstop (→ 409 in OrderExceptionHandler).
- */
 @Component
 @RequiredArgsConstructor
 public class OrderCodeGenerator {
@@ -36,7 +29,6 @@ public class OrderCodeGenerator {
                 return code;
             }
         }
-        // 32^4 ≈ 1 million codes a day: five collisions in a row only happens with a real bug
         throw new IllegalStateException(
                 "No free order code after " + MAX_ATTEMPTS + " attempts for " + prefix);
     }

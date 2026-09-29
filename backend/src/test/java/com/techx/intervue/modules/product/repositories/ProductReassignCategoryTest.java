@@ -13,10 +13,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-/**
- * FR-076 x FR-120: moving a category's products to another category clears their storage group,
- * which belonged to the old category, and keeps the shelf-life numbers as they were saved.
- */
 @SpringBootTest
 class ProductReassignCategoryTest {
 

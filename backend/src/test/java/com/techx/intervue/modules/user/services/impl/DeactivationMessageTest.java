@@ -10,12 +10,6 @@ import java.time.Instant;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.authentication.DisabledException;
 
-/**
- * FR-072: every auth path (password login, MFA step 2, refresh, Google sign-in, profile edits) must
- * tell a deactivated customer the same thing — the real reason, not a generic "locked". The guard
- * used to be copy-pasted in seven places and only one of them was updated, so Google sign-in still
- * showed the old wording.
- */
 class DeactivationMessageTest {
 
     @Test
@@ -44,10 +38,9 @@ class DeactivationMessageTest {
         assertThat(DeactivationMessage.of(user))
                 .contains("temporarily suspended")
                 .contains("No-shows")
-                .contains("09:00 05/10/2026"); // Asia/Ho_Chi_Minh
+                .contains("09:00 05/10/2026");
     }
 
-    /** A suspended account is not an FR-072 ban; it keeps the generic wording. */
     @Test
     void aNonInactiveStatusKeepsTheGenericWording() {
         User user = User.builder().status(UserStatus.SUSPENDED).build();

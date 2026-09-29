@@ -24,7 +24,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** FR-068/069. The stall is resolved from the caller's token, never from a request id (R-06). */
 @Service
 @AllArgsConstructor
 public class FarmerReportService implements FarmerReportServiceInterface {
@@ -41,7 +40,6 @@ public class FarmerReportService implements FarmerReportServiceInterface {
     @Override
     @Transactional(readOnly = true)
     public FarmerDashboardResource dashboard(long userId) {
-        // D-09: selling figures are part of the selling panel, so they close with it.
         StallSuspensionMessage.assertUsable(
                 farmerRepository
                         .findByUserId(userId)
@@ -51,12 +49,6 @@ public class FarmerReportService implements FarmerReportServiceInterface {
         return reports.dashboard(farmerId, monthStart).withLowStockCount(lowStockCount(farmerId));
     }
 
-    /**
-     * Available products whose nearest pickup date with stock has {@link
-     * FarmerReportRepository#LOW_STOCK} or fewer left — or that nothing makes orderable at all (no
-     * weekly template, or no pickup slot still open to orders): the Farmer has to act on both.
-     * Per-date stock (FR-063), the same numbers the catalogue shows.
-     */
     private long lowStockCount(long farmerId) {
         Map<Long, BigDecimal> prices =
                 products.findByFarmerIdAndDeletedFalse(farmerId).stream()

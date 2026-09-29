@@ -57,13 +57,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Task 5.7 (FR-042, D-11) — the brief's 6 tests: placing notifies the Farmer (not the customer),
- * accept/decline/ready notify the customer, cancelling notifies the Farmer, completing notifies
- * nobody (the customer is standing at the counter). The repository is a plain mock, like {@link
- * OrderTransitionTest}; the realtime STOMP push is checked by hand (report, Manual check section),
- * not here.
- */
 class OrderNotificationTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");
@@ -99,7 +92,6 @@ class OrderNotificationTest {
         farmerRepository = mock(FarmerProfileRepository.class);
         farmerMarketRepository = mock(FarmerMarketRepository.class);
         slotRepository = mock(PickupSlotRepository.class);
-        // Every slot's weekday is still open for its market and stall unless a test says otherwise
         when(slotRepository.isOnOpenDay(anyLong())).thenReturn(true);
         productRepository = mock(ProductRepository.class);
         dailyStockRepository = mock(ProductDailyStockRepository.class);
@@ -137,8 +129,6 @@ class OrderNotificationTest {
         when(orderQueries.items(ORDER_ID)).thenReturn(List.of());
         when(orderQueries.history(ORDER_ID)).thenReturn(List.of());
     }
-
-    // ---------- data ----------
 
     private static FarmerProfile approvedFarmer() {
         return FarmerProfile.builder()
@@ -218,8 +208,6 @@ class OrderNotificationTest {
                 .role(RoleType.CUSTOMER)
                 .build();
     }
-
-    // ---------- the brief's 6 tests (Step 1) ----------
 
     @Test
     void placingNotifiesTheFarmerNotTheCustomer() {
@@ -366,11 +354,6 @@ class OrderNotificationTest {
                                                                         + order.getId())));
     }
 
-    /**
-     * M-1 — editing an order down to 0 items also cancels it (D-07): the Farmer must get {@code
-     * order_cancelled} exactly as when the customer presses the cancel button directly ({@link
-     * #cancelNotifiesTheFarmer}).
-     */
     @Test
     void modifyingDownToNoItemsNotifiesTheFarmerLikeCancel() {
         Order order = orderWithStatus(OrderStatus.PLACED);
@@ -411,10 +394,6 @@ class OrderNotificationTest {
                                                                         + order.getId())));
     }
 
-    /**
-     * FR-035/D-07 (reproduced 29/09): editing an accepted order sent it back to placed with no word
-     * to the Farmer, who had to accept it again without knowing.
-     */
     @Test
     void modifyingAnAcceptedOrderTellsTheFarmerToAcceptItAgain() {
         Order order = orderWithStatus(OrderStatus.ACCEPTED);

@@ -15,7 +15,6 @@ describe('AccountDeactivatedDialog', () => {
 
     expect(screen.getByRole('alertdialog')).toBeInTheDocument();
     expect(screen.getByText(/Reason: No-shows\./)).toBeInTheDocument();
-    // consumed, so a later reload does not show it a second time
     expect(BlockedNotice.peek()).toBeNull();
   });
 

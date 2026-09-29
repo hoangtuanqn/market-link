@@ -7,10 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * The address columns shared by `users` and `markets` (V20260927002). Only AddressService builds
- * one, so the parts always agree with each other and with the composed `address` string.
- */
 @Embeddable
 @Getter
 @Setter

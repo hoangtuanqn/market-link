@@ -16,15 +16,11 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 const NO_MARKETS: StallMarketDto[] = [];
-/** How far ahead the day picker looks for a day that matches this market's operating days. */
 const DAYS_AHEAD = 14;
-/** The Generate dialog defaults to a 2-week range, same as the manual check in the task brief. */
 const GEN_RANGE_DAYS = 14;
 
 const pad = (n: number) => String(n).padStart(2, '0');
-/** Local date → "yyyy-MM-dd", the wire format for `date`, `fromDate` and `toDate`. */
 const isoDate = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-/** "yyyy-MM-dd" → a Date in local time (a UTC parse would land on the wrong day at UTC-x). */
 const localDay = (ymd: string) => {
   const [y, m, d] = ymd.split('-').map(Number);
   return new Date(y, m - 1, d);
@@ -35,7 +31,6 @@ const addDays = (d: Date, n: number) => {
   return next;
 };
 
-/** The next `DAYS_AHEAD` days that fall on one of this market's operating weekdays. */
 const buildDayOptions = (operatingDays: StallMarketDto['operatingDays']) => {
   const allowed = new Set(operatingDays.map((d) => d.dayOfWeek));
   const today = new Date();
@@ -48,10 +43,8 @@ const buildDayOptions = (operatingDays: StallMarketDto['operatingDays']) => {
   return options;
 };
 
-/** "06:00–06:30" from the DTO's own 24-hour fields, in the reader's clock. */
 const clockRange = (s: SlotDto) => `${formatClock(s.startTime)}–${formatClock(s.endTime)}`;
 
-/** The slot's start as a real Date, from its `slotDate` + `startTime`. */
 const slotStart = (s: SlotDto) => {
   const [h, m] = s.startTime.split(':').map(Number);
   const d = localDay(s.slotDate);
@@ -59,18 +52,8 @@ const slotStart = (s: SlotDto) => {
   return d;
 };
 
-/** When changes to this slot stop being accepted: its start minus the stall's order cutoff. */
 const closesAt = (s: SlotDto, cutoffHours: number) => new Date(slotStart(s).getTime() - cutoffHours * 3_600_000);
 
-/**
- * FR-032 FR-067 — pickup slots for one market day. The list comes from the public slots endpoint (same one customers
- * use), which only ever returns active slots; turning a slot off therefore drops it out of this table too. Calling
- * Generate again does not flip it back on (checked against the live API), and there is no farmer endpoint that lists
- * inactive slots either, so once a slot is off this screen has no way to show it or turn it back on — see
- * `table.reenableNote` (proposed to LEAD: a farmer-only slots list that includes inactive rows, docs/api-contract.md §6
- * handoff). Cancelling a whole market day ("away days") has no farmer-facing API and is not in the SRS, so it is not
- * part of this screen either.
- */
 const FarmerSlotsPage = () => {
   const { t } = useTranslation('FarmerSlots');
   const { t: tc } = useTranslation();
@@ -98,8 +81,6 @@ const FarmerSlotsPage = () => {
   const slots = slotsLoad.kind === 'ready' ? slotsLoad.data : [];
 
   const [savingMax, setSavingMax] = useState<number | null>(null);
-  // Bumped after every save attempt (success or not) so the input's `key` changes and it remounts from the latest
-  // committed value — the plain way to revert a failed edit without controlled state fighting the user's typing.
   const [maxAttempt, setMaxAttempt] = useState<Record<number, number>>({});
   const [closingId, setClosingId] = useState<number | null>(null);
 
@@ -125,7 +106,6 @@ const FarmerSlotsPage = () => {
 
   const saveMax = async (slot: SlotDto, raw: string) => {
     const parsed = Number(raw);
-    // The server also rejects maxOrders below 1 (VALIDATION_ERROR) regardless of bookedCount.
     const next = Number.isFinite(parsed) ? Math.max(slot.bookedCount, 1, Math.trunc(parsed)) : slot.maxOrders;
     if (next === slot.maxOrders) return;
     setSavingMax(slot.slotId);

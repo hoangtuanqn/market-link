@@ -36,7 +36,6 @@ const openRejectDialog = async () => {
 
 describe('Rejecting a Farmer application with reason chips (FR-071)', () => {
   beforeEach(() => {
-    // jsdom has no modal dialogs
     HTMLDialogElement.prototype.showModal ??= function (this: HTMLDialogElement) {
       this.setAttribute('open', '');
     };

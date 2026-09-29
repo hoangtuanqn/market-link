@@ -20,11 +20,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-122 (spec §4.4.2): the stall reads the reports about it and keeps one reply per report,
- * editable until an admin decides. A suspended stall may still reply (spec §8), so there is no
- * approval check here.
- */
 @Service
 @AllArgsConstructor
 public class FarmerQualityReportService implements FarmerQualityReportServiceInterface {
@@ -56,7 +51,6 @@ public class FarmerQualityReportService implements FarmerQualityReportServiceInt
     @Transactional
     public QualityReportResource respond(long farmerUserId, long reportId, String response) {
         FarmerProfile stall = stallOf(farmerUserId);
-        // Locked: an admin deciding at the same moment either sees this reply or refuses it
         QualityReport report =
                 reports.lockById(reportId).orElseThrow(QualityReportNotFoundException::new);
         if (!Objects.equals(report.getFarmerId(), stall.getId())) {
@@ -73,7 +67,6 @@ public class FarmerQualityReportService implements FarmerQualityReportServiceInt
                 .orElseThrow(QualityReportNotFoundException::new);
     }
 
-    /** R-06: the stall always comes from the caller's own account, never from the request. */
     private FarmerProfile stallOf(long farmerUserId) {
         return farmers.findByUserId(farmerUserId)
                 .orElseThrow(() -> new AccessDeniedException("No stall for this account."));

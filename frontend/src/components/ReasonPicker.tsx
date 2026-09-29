@@ -16,16 +16,11 @@ type ReasonPickerProps = {
   label: string;
   value: ReasonValue;
   onChange: (next: ReasonValue) => void;
-  /** At least one reason or a note is needed; the caller checks it and passes the message as `error`. */
   required?: boolean;
   error?: string;
   notePlaceholder?: string;
 };
 
-/**
- * Reasons an admin ticks instead of typing the same sentence every time (FR-071, FR-072), plus a note for anything
- * else. The line under it shows the exact sentence the recipient will read, which is what `composeReason` sends.
- */
 export default function ReasonPicker({
   id,
   kind,
@@ -57,7 +52,6 @@ export default function ReasonPicker({
             key={code}
             pressed={value.codes.includes(code)}
             onClick={() => onChange(toggleReason(value, code))}
-            // Labels are sentences; let them wrap on a phone instead of pushing the dialog sideways
             className="h-auto py-1.5 text-left whitespace-normal"
           >
             {reasonLabel(kind, code)}

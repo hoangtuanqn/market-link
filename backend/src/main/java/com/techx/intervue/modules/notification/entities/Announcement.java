@@ -15,10 +15,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * An announcement posted by an admin (FR-077). active / startsAt / endsAt only control the banner
- * on the public page; notifications rows already sent do not change when it is edited or removed.
- */
 @Entity
 @Getter
 @Setter

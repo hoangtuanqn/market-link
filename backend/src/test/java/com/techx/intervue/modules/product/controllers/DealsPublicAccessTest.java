@@ -11,7 +11,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.test.context.TestPropertySource;
 
-/** FR-125: the deals page reads GET /deals before signing in, like the product list. */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @TestPropertySource(properties = "app.chat.rabbitmq.host=")
 class DealsPublicAccessTest {
@@ -34,7 +33,6 @@ class DealsPublicAccessTest {
         assertThat(r.body()).contains("\"success\":true").contains("\"items\"");
     }
 
-    /** A query value of the wrong type keeps the envelope (ProductExceptionHandler covers it). */
     @Test
     void aDayThatIsNotANumberIs400() throws Exception {
         HttpResponse<String> r = get("/api/v1/deals?day=saturday");

@@ -2,12 +2,7 @@ import type { ApiResponse, PageType } from '@/types/api.types';
 import type { Announcement, AnnouncementInput } from '@/types/notification.types';
 import { privateApi } from '@/utils/axiosInstance';
 
-/** FR-077 — docs/api-contract.md §10. live() is public (a banner for guests too). */
 class AnnouncementApi {
-  /**
-   * When signed in, send the token along: the backend filters the banner by role (a "Farmers only" post does not show
-   * for a Customer).
-   */
   static live = async () => {
     const response = await privateApi.get<ApiResponse<Announcement | null>>('/announcements/active');
     return response.data;

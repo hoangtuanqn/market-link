@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-081 — {@code POST /feedbacks}, Public (contract §11); whitelisted in SecurityConfig. */
 @RestController
 @RequestMapping("/api/v1/feedbacks")
 @AllArgsConstructor
@@ -35,12 +34,6 @@ public class FeedbackController extends BaseController {
                 "Thanks, we read every message.");
     }
 
-    /**
-     * The rate-limit key. Never read {@code X-Forwarded-For} here: any client can send it and would
-     * bypass the limit. {@code server.forward-headers-strategy: native} makes Tomcat rewrite {@code
-     * getRemoteAddr()} from that header only for requests arriving from a trusted internal proxy,
-     * so the same code is right with and without a reverse proxy in front.
-     */
     static String clientKey(HttpServletRequest http) {
         String address = http.getRemoteAddr();
         return address == null || address.isBlank() ? "unknown" : address;

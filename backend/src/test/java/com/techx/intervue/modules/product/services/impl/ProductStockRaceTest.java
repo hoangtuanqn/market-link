@@ -25,18 +25,6 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
 
-/**
- * Task 5.3b (D-02, Review Focus #1 by another path). Thread A plays {@code OrderService.place}:
- * locks the product row, deducts stock to 0 and sets {@code sold_out}, then keeps the transaction
- * open ~500ms before committing. Thread B plays a Farmer changing the status right in the middle.
- * On the old code (no lock), B loads the old snapshot (stock = 1) and overwrites it just after A
- * commits — the stock comes back to life. After the fix, B must wait for A's lock and read the
- * correct stock = 0.
- *
- * <p>Runs on real MySQL (no {@code @Transactional}: each thread must really commit for the lock to
- * mean anything). The dev DB is shared with the demo seed, so every row the test creates carries
- * its own name and is deleted in {@code @AfterEach} (C5-7).
- */
 @SpringBootTest
 class ProductStockRaceTest {
 
@@ -71,11 +59,6 @@ class ProductStockRaceTest {
                         farmerUserId,
                         "Stall khoá tồn kho " + tag,
                         "Người bán " + tag);
-        // status starts as 'sold_out' (set by the Farmer earlier): thread B's setStatus(AVAILABLE)
-        // below is therefore a real change (Hibernate without @DynamicUpdate only issues an UPDATE
-        // when a column is dirty) — starting from 'available', setStatus(AVAILABLE) would be a
-        // no-op, Hibernate would skip the UPDATE entirely and never touch stock_quantity, hiding
-        // the bug this test must catch.
         productId =
                 insert(
                         "INSERT INTO products (farmer_id, category_id, name, price, unit,"

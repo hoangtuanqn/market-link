@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-068/069 — {@code /farmer/dashboard}, {@code /farmer/reports/*} (plan C9, Task 9.1). */
 @RestController
 @RequestMapping("/api/v1/farmer")
 @PreAuthorize("hasRole('FARMER')")

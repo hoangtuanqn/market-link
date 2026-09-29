@@ -20,12 +20,10 @@ vi.mock('@/api-requests/quality-report.requests', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/api-requests/quality-report.requests')>();
   return { ...real, default: { create: vi.fn(), uploadPhoto: vi.fn() } };
 });
-// Tuesday 06/10/2026 in Ho Chi Minh City, whatever day the test runs
 vi.mock('@/lib/spoilage', async (importOriginal) => {
   const real = await importOriginal<typeof import('@/lib/spoilage')>();
   return { ...real, todayInVietnam: () => '2026-10-06' };
 });
-// Leaflet does not run in jsdom; the map itself is not what this page test is about
 vi.mock('@/components/MarketMap', () => ({ default: () => <div data-testid="map" /> }));
 vi.mock('@/components/chat/MessageStallButton', () => ({
   default: (p: { farmerId: number; orderId?: number }) => (
@@ -119,7 +117,6 @@ beforeEach(() => {
 });
 
 describe('CustomerOrderDetailPage', () => {
-  /** Backend notifications link to /orders/{id}; the page reads the numeric id, as every OrderApi call needs. */
   it('loads the order by the id in the address', async () => {
     renderAt('/orders/21');
 
@@ -150,7 +147,6 @@ describe('CustomerOrderDetailPage', () => {
     expect(await screen.findByText(/Nguyễn Văn An/)).toBeInTheDocument();
   });
 
-  /** FR-114: the order page is where a customer asks the stall about this order — the chat opens with it pinned. */
   it('offers to message the stall about this order', async () => {
     renderAt('/orders/21');
 
@@ -168,7 +164,6 @@ describe('CustomerOrderDetailPage', () => {
     expect(await screen.findByText(/can no longer be changed/i)).toBeInTheDocument();
   });
 
-  /** The server decides (cutoff, status): the page does not work it out on its own. */
   it('does not offer to cancel when the server says it can no longer be cancelled', async () => {
     vi.mocked(OrderApi.get).mockResolvedValue(detail({ canCancel: false, canModify: false }, 'accepted'));
     renderAt('/orders/21');
@@ -186,7 +181,6 @@ describe('CustomerOrderDetailPage', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent(/could not cancel/i);
   });
 
-  /** 403 (someone else's order) and 404 look the same to the reader: the order is not theirs to see. */
   it('shows the not-found state for an order that is not yours', async () => {
     vi.mocked(OrderApi.get).mockRejectedValue(httpError(403));
     renderAt('/orders/99');
@@ -210,7 +204,6 @@ describe('CustomerOrderDetailPage', () => {
     expect(await screen.findByRole('heading', { level: 1, name: /Vườn Út Hiền/ })).toBeInTheDocument();
   });
 
-  /** Demo switches stay in the prototype (frontend/CLAUDE.md). */
   it('has no preview switch', async () => {
     renderAt('/orders/21');
     await screen.findByRole('heading', { level: 1, name: /Vườn Út Hiền/ });
@@ -219,7 +212,6 @@ describe('CustomerOrderDetailPage', () => {
   });
 });
 
-/** Water spinach picked up Saturday 03/10, 5 days in the fridge: good until the end of Monday 05/10. */
 const line = (patch: Partial<OrderItemDto> = {}): OrderItemDto => ({
   productId: 3,
   productName: 'Water spinach',
@@ -259,7 +251,6 @@ describe('reporting spoiled produce (FR-122)', () => {
     renderAt('/orders/21');
 
     expect(await screen.findByRole('button', { name: 'Report spoiled: Water spinach' })).toBeInTheDocument();
-    // good until 03/10: the window closed at the end of 05/10, today is 06/10
     expect(screen.queryByRole('button', { name: 'Report spoiled: Cherry tomatoes' })).not.toBeInTheDocument();
   });
 
@@ -366,7 +357,6 @@ describe('reporting spoiled produce (FR-122)', () => {
     expect(QualityReportApi.uploadPhoto).not.toHaveBeenCalled();
   });
 
-  /** Review Focus #3: a second send (another tab, a double click) is refused by the server. */
   it('says why a second report was refused', async () => {
     vi.mocked(OrderApi.get).mockResolvedValue(completed([line()]));
     vi.mocked(QualityReportApi.create).mockRejectedValue(

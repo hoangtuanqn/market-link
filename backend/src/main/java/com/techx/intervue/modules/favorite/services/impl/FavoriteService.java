@@ -29,10 +29,6 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-040, FR-014 — favourite stalls, products and markets. Customers and farmers keep favourites;
- * admin accounts do not (D-13). Everything is keyed by the token's user id (R-06).
- */
 @Service
 @AllArgsConstructor
 public class FavoriteService implements FavoriteServiceInterface {
@@ -55,12 +51,6 @@ public class FavoriteService implements FavoriteServiceInterface {
         return withPerDateStock(query.list(userId, type));
     }
 
-    /**
-     * Per-date stock (FR-063): whether a favourite product can still be ordered is the FR-041
-     * restock rule ({@link RestockNotifier#isOrderable} — the nearest pickup date still has stock),
-     * never products.stock_quantity, which is only the Farmer's reference number now. The SQL
-     * already settled the rest (listed, available, approved stall), so only those rows are checked.
-     */
     private List<FavoriteResource> withPerDateStock(List<FavoriteResource> rows) {
         List<Long> ids =
                 rows.stream()
@@ -99,11 +89,6 @@ public class FavoriteService implements FavoriteServiceInterface {
         return r.available() && FavoriteTargetType.PRODUCT.value().equals(r.targetType());
     }
 
-    /**
-     * Idempotent: the same target twice returns the existing favourite. Not @Transactional on
-     * purpose — saveAndFlush runs in its own transaction, so a double click that loses the race on
-     * uq_fav can still read the winner's row instead of failing.
-     */
     @Override
     public FavoriteResource add(long userId, FavoriteRequest request) {
         requireBuyer(userId);
@@ -144,14 +129,12 @@ public class FavoriteService implements FavoriteServiceInterface {
         try {
             return favorites.saveAndFlush(f);
         } catch (DataIntegrityViolationException e) {
-            // Two clicks at once: the other request stored it first — return that row
             return favorites
                     .findByCustomerIdAndTargetTypeAndTargetId(userId, type, targetId)
                     .orElseThrow(() -> e);
         }
     }
 
-    /** Exactly one id, and it must be the one matching targetType → otherwise 400. */
     private static Long targetIdOf(FavoriteTargetType type, FavoriteRequest r) {
         long sent =
                 Stream.of(r.farmerId(), r.productId(), r.marketId())
@@ -169,7 +152,6 @@ public class FavoriteService implements FavoriteServiceInterface {
         return id;
     }
 
-    /** Only what the public can see can be favourited — otherwise 404. */
     private void requirePublic(FavoriteTargetType type, Long id) {
         boolean visible =
                 switch (type) {
@@ -188,7 +170,6 @@ public class FavoriteService implements FavoriteServiceInterface {
         }
     }
 
-    /** D-13: an admin account is a job on the platform, not a buyer. */
     private void requireBuyer(long userId) {
         User user =
                 users.findById(userId)

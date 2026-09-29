@@ -10,10 +10,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * Reads the address master data of V20260927001. The first three lists are small and read once
- * (GeoDirectory keeps them); only the street search runs per request.
- */
 @Repository
 @RequiredArgsConstructor
 public class GeoQueryRepository {
@@ -47,13 +43,6 @@ public class GeoQueryRepository {
                                 rs.getString("full_name")));
     }
 
-    /**
-     * Streets of a province whose folded name contains every word. The SQL text depends only on how
-     * many words there are, never on what they say: each word is a bound parameter (R-04). Names
-     * that start with the first word come first, then shorter names.
-     *
-     * @param words already folded by TextNormalizer, at least one
-     */
     public List<StreetResource> searchStreets(String provinceCode, List<String> words, int limit) {
         MapSqlParameterSource params =
                 new MapSqlParameterSource()
@@ -74,7 +63,6 @@ public class GeoQueryRepository {
                 (rs, i) -> new StreetResource(rs.getString("name")));
     }
 
-    /** Folded words are [a-z0-9] only, but keep '%' and '_' literal anyway. */
     private static String escapeLike(String raw) {
         return raw.replace("!", "!!").replace("%", "!%").replace("_", "!_");
     }

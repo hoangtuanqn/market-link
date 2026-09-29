@@ -8,11 +8,6 @@ import javax.crypto.Cipher;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 
-/**
- * AES-256-GCM encryption for secrets that must be readable again (the TOTP key): unlike a password,
- * it cannot be hashed one-way. The result is the Base64 of iv (12 bytes) + ciphertext + tag, so a
- * leaked DB without the key cannot produce codes.
- */
 public final class SecretCipher {
 
     private static final int KEY_BYTES = 32;
@@ -22,9 +17,6 @@ public final class SecretCipher {
 
     private final SecretKeySpec key;
 
-    /**
-     * @param base64Key 32 bytes in Base64 — generate with {@code openssl rand -base64 32}
-     */
     public SecretCipher(String base64Key) {
         byte[] raw;
         try {
@@ -53,7 +45,6 @@ public final class SecretCipher {
         }
     }
 
-    /** A wrong key or tampered data → IllegalArgumentException (GCM checks the tag). */
     public byte[] decrypt(String encoded) {
         try {
             ByteBuffer data = ByteBuffer.wrap(Base64.getDecoder().decode(encoded));

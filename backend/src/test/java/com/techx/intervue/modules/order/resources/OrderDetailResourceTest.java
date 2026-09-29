@@ -9,13 +9,6 @@ import java.math.BigDecimal;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-/**
- * Controller ruling C5-16: {@code customer} must be ABSENT from the JSON when the caller is not the
- * Farmer who owns the order — not {@code "customer": null}. {@code customerNote}/{@code farmerNote}
- * are unaffected: {@code @JsonInclude} sits only on the {@code customer} component, not on the
- * whole record. Serialized through the exact {@code ObjectMapper} bean configuration of {@code
- * AppConfig} — this JSON test proves what the user really receives, not just an accessor call.
- */
 class OrderDetailResourceTest {
 
     private final ObjectMapper mapper =
@@ -73,9 +66,6 @@ class OrderDetailResourceTest {
         assertThat(json).contains("\"customerNote\":null");
     }
 
-    /**
-     * Task 8.3: the "Write a review" button reads {@code reviewed}; it must always be in the JSON.
-     */
     @Test
     void reviewedIsAlwaysSerialised() throws Exception {
         OrderDetailResource detail =

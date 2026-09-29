@@ -10,7 +10,6 @@ import RegisterCustomerPage from './index';
 
 vi.mock('@/api-requests/auth.requests', () => ({ default: { register: vi.fn() } }));
 vi.mock('@/utils/notification', () => ({ default: { error: vi.fn(), success: vi.fn(), warning: vi.fn() } }));
-// The address block loads the country and ward lists; it has its own tests
 vi.mock('@/components/address/AddressFields', () => ({ default: () => null }));
 vi.mock('@/lib/address', () => ({
   validateAddress: () => ({}),
@@ -83,7 +82,6 @@ describe('RegisterCustomer', () => {
     await userEvent.click(screen.getByRole('button', { name: 'Create account' }));
   };
 
-  /** Final review #1: a corrected form from the same browser keeps its sign-up. */
   it('sends the token of an earlier submit for the same address', async () => {
     SignupStore.setPending({ email: 'lan@example.com', token: 'tok-1', codeExpiresAt: 0, resendAt: 0 });
     vi.mocked(AuthApi.register).mockResolvedValue({

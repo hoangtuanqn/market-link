@@ -6,7 +6,6 @@ import java.time.LocalDate;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
-/** FR-125: {@code pickupDateByFarmer()} is the only logic on this record. */
 class PreviewRequestTest {
 
     private static final long FARMER_A = 10L;
@@ -19,7 +18,6 @@ class PreviewRequestTest {
         assertThat(request.pickupDateByFarmer()).isEmpty();
     }
 
-    /** The client re-sending an updated day for a stall keeps only the last one. */
     @Test
     void pickupDateByFarmerKeepsTheLastEntryWhenAStallIsListedTwice() {
         LocalDate firstPick = LocalDate.of(2026, 9, 28);

@@ -43,7 +43,6 @@ const farmer = (patch: Record<string, unknown> = {}) => ({
 
 const ok = (data: unknown) => ({ success: true, message: '', data, timestamp: '' }) as never;
 
-/** Fix round 1: exposes the router's current address so a test can check `?suspend=` was dropped after use. */
 const LocationProbe = () => {
   const location = useLocation();
   return <div data-testid="location">{location.pathname + location.search}</div>;
@@ -99,8 +98,6 @@ describe('AdminFarmerDetailPage — shelf-life strikes (FR-123)', () => {
 
     await screen.findByRole('alertdialog');
 
-    // The address update lands in the same effect but is not guaranteed to be in the DOM the instant the
-    // dialog itself appears, so wait for it instead of asserting right after findByRole (was flaky).
     await waitFor(() => expect(screen.getByTestId('location').textContent).toBe('/admin/farmers/15'));
   });
 
@@ -110,7 +107,6 @@ describe('AdminFarmerDetailPage — shelf-life strikes (FR-123)', () => {
     await screen.findByRole('alertdialog');
     await waitFor(() => expect(screen.getByTestId('location').textContent).toBe('/admin/farmers/15'));
 
-    // Give a would-be second effect run, triggered by the search-params setter changing identity, a chance to fire.
     await new Promise((resolve) => setTimeout(resolve, 0));
 
     expect(AdminFarmerApi.detail).toHaveBeenCalledTimes(1);

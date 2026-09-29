@@ -14,7 +14,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** A browser that registered for Web Push for an account (N3). */
 @Entity
 @Getter
 @Setter

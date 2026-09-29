@@ -18,27 +18,13 @@ import org.springframework.stereotype.Repository;
 public interface FarmerProfileRepository extends JpaRepository<FarmerProfile, Long> {
     Optional<FarmerProfile> findByUserId(Long userId);
 
-    /**
-     * The stall profiles of several people at once (the chat thread list); whoever is not a Farmer
-     * has none.
-     */
     List<FarmerProfile> findAllByUserIdIn(Collection<Long> userIds);
 
     boolean existsByUserId(Long userId);
 
-    /** FR-071: the stalls a temporary suspension's {@code until} has already passed for. */
     List<FarmerProfile> findByApprovalStatusAndSuspendedUntilLessThanEqual(
             ApprovalStatus status, Instant now);
 
-    /**
-     * §6.1 + docs/prototype/admin/farmers.html (the "Stall, contact person, phone" box). One join
-     * statement instead of "fetch a page of profiles then look up the user for each row" — the old
-     * way is N+1 queries per page.
-     *
-     * <p>A null {@code status} or {@code q} means no filtering by that criterion. {@code q} must be
-     * an already-lowercased LIKE pattern (see FarmerService), because the SQL compares lowercased
-     * strings.
-     */
     @Query(
             value =
                     "select new com.techx.intervue.modules.farmer.resources.AdminFarmerListItemResource("
@@ -59,12 +45,6 @@ public interface FarmerProfileRepository extends JpaRepository<FarmerProfile, Lo
     Page<AdminFarmerListItemResource> search(
             @Param("status") ApprovalStatus status, @Param("q") String q, Pageable pageable);
 
-    /**
-     * FR-115: an account with the farmer role and no row here is inconsistent data — FarmerService
-     * only sets role = FARMER on approve, so only a wrong seed or a manual DB edit can produce it.
-     * StallAccessPolicy fails closed for such accounts (spec §8.1), and it breaks silently, so
-     * ChatStallConsistencyCheck counts them at startup.
-     */
     @Query(
             "select count(u) from User u"
                     + " where u.role = com.techx.intervue.modules.user.enums.RoleType.FARMER"

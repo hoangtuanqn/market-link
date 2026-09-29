@@ -34,7 +34,6 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
-// FR-003: 429 LOGIN_LOCKED after too many wrong passwords — the wait comes from Retry-After, in the reader's language
 describe('sign-in lock', () => {
   it('the Customer/Farmer form says how many minutes to wait', async () => {
     vi.mocked(AuthApi.login).mockRejectedValue(locked('840'));

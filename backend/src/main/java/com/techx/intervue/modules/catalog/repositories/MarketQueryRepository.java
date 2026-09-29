@@ -14,11 +14,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-/**
- * Reads markets together with their operating days and the number of stalls selling. Uses
- * JdbcTemplate because three tables must be joined in one pass; every user value goes through
- * parameters, no string concatenation (R-04).
- */
 @Repository
 @RequiredArgsConstructor
 public class MarketQueryRepository {
@@ -94,7 +89,6 @@ public class MarketQueryRepository {
         return rows.stream().findFirst();
     }
 
-    /** '%' and '_' typed by the user in the search box must not act as wildcards. */
     private static String escapeLike(String raw) {
         return raw.replace("!", "!!").replace("%", "!%").replace("_", "!_");
     }
@@ -133,7 +127,6 @@ public class MarketQueryRepository {
                 rs.getLong("farmer_count"));
     }
 
-    /** A TIME column reads as "05:00:00"; the contract returns "05:00". */
     static String hhmm(String time) {
         return time == null ? null : time.substring(0, Math.min(5, time.length()));
     }

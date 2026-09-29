@@ -58,8 +58,6 @@ class MfaServiceTest {
         service = newService();
     }
 
-    // ---------- turn on / off ----------
-
     @Test
     void setupStoresEncryptedSecretThatIsNotYetEnabled() {
         var setup = service.setup(ADMIN_ID, "admin@marketlink.local");
@@ -155,12 +153,9 @@ class MfaServiceTest {
         advance(Duration.ofSeconds(30));
         service.disable(ADMIN_ID, currentCode());
 
-        // same 30-second step, new key → a different code, must not be treated as reuse
         service.setup(ADMIN_ID, "admin@marketlink.local");
         assertThat(service.enable(ADMIN_ID, currentCode())).hasSize(10);
     }
-
-    // ---------- step 2 sign-in ----------
 
     @Test
     void rightCodeCompletesPendingLoginOnce() {
@@ -171,7 +166,6 @@ class MfaServiceTest {
         PendingLogin login = service.verifyChallenge(token, currentCode(), null);
 
         assertThat(login).isEqualTo(new PendingLogin(ADMIN_ID, false));
-        // the pending token can only be used once
         assertThatThrownBy(() -> service.verifyChallenge(token, currentCode(), null))
                 .isInstanceOf(MfaTokenInvalidException.class);
     }
@@ -194,7 +188,7 @@ class MfaServiceTest {
 
     @Test
     void codeAlreadyUsedCannotBeReplayed() {
-        turnOn(); // the current code was already used to turn it on
+        turnOn();
         String token = service.startChallenge(ADMIN_ID, true);
 
         assertThatThrownBy(() -> service.verifyChallenge(token, currentCode(), null))
@@ -229,7 +223,6 @@ class MfaServiceTest {
                 .isInstanceOfSatisfying(
                         MfaLockedException.class,
                         e -> assertThat(e.getRetryAfterSeconds()).isEqualTo(900));
-        // once locked, even a correct code does not get through
         assertThatThrownBy(() -> service.verifyChallenge(token, currentCode(), null))
                 .isInstanceOf(MfaLockedException.class);
     }
@@ -248,8 +241,6 @@ class MfaServiceTest {
         assertThatThrownBy(() -> service.verifyChallenge(again, null, code))
                 .isInstanceOf(MfaCodeInvalidException.class);
     }
-
-    // ---------- helpers ----------
 
     private List<String> turnOn() {
         service.setup(ADMIN_ID, "admin@marketlink.local");

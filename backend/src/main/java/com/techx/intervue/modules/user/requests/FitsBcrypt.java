@@ -10,12 +10,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.nio.charset.StandardCharsets;
 
-/**
- * BCrypt only takes 72 bytes, not 72 characters: a Vietnamese letter with diacritics is 2–3 bytes
- * in UTF-8 and an emoji 4, so a password that passes @Size(max = 72) could still make the encoder
- * throw (a 500). This refuses it as a 400 on the password field instead. Longer than 72 characters
- * is left to @Size so the form shows only one message.
- */
 @Target({ElementType.FIELD, ElementType.PARAMETER, ElementType.RECORD_COMPONENT})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = FitsBcrypt.Validator.class)

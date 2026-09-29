@@ -40,7 +40,6 @@ type DeclineReason = (typeof DECLINE_REASONS)[number];
 const STOCK_ROWS = 6;
 const BEST_SELLER_LIMIT = 5;
 
-/** FR-065 FR-068 FR-069 — Farmer dashboard: KPIs, incoming orders, current stock and best sellers. */
 const FarmerOverviewPage = () => {
   const { t } = useTranslation('FarmerOverview');
   const { t: tc } = useTranslation();
@@ -76,7 +75,6 @@ const FarmerOverviewPage = () => {
       Notification.success({ text: successText });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
-      // 409 (D-04): the order moved on elsewhere — read the incoming orders again so the stale row goes away
       if (isAxiosError(error) && error.response?.status === 409) retryOrders();
     } finally {
       setBusyId(null);

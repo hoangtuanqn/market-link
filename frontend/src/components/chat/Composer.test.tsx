@@ -8,7 +8,6 @@ import { MAX_MEDIA_BYTES } from '@/lib/chat/media';
 const heic2any = vi.hoisted(() => vi.fn());
 vi.mock('heic2any', () => ({ default: heic2any }));
 
-// The pin cards load their own data; here we only need to know they are placed in the composer
 vi.mock('./OrderPin', () => ({ default: () => <span>order pin</span> }));
 vi.mock('./ProductPin', () => ({ default: () => <span>product pin</span> }));
 
@@ -20,7 +19,6 @@ const setup = () => {
 };
 
 describe('Composer', () => {
-  /** Review Focus #9: the hook filters out extra frames itself, Composer only has to report every keystroke. */
   it('says I am typing while there is text, and stopped once it is cleared', async () => {
     const { onTyping, box } = setup();
 
@@ -49,10 +47,6 @@ describe('Composer', () => {
     expect(onSend).toHaveBeenCalledWith('five bunches\nplease', {});
   });
 
-  /**
-   * A Vietnamese / Japanese / Chinese IME uses Enter to commit the word being composed: it must not send at that
-   * moment.
-   */
   it('does not send while an input method is still composing', () => {
     const { onSend, box } = setup();
 
@@ -72,11 +66,6 @@ describe('Composer', () => {
     expect(box).toHaveValue('hello');
   });
 
-  /**
-   * Typing continues right after sending: the browser drops focus from a disabled element, so the composer box must not
-   * lock while sending. jsdom does not simulate losing focus, so the test checks the real cause instead: the box stays
-   * open while a message is in flight.
-   */
   it('keeps the box open while a message is on its way, so the cursor stays', async () => {
     const onTyping = vi.fn();
     const onSend = vi.fn(() => new Promise<void>(() => {}));
@@ -99,7 +88,6 @@ describe('Composer', () => {
     expect(onSend).toHaveBeenCalledTimes(1);
   });
 
-  /** Typing continues while an earlier message is in flight: when it arrives, the new text must not be wiped. */
   it('does not wipe what I typed while the previous message was on its way', async () => {
     let arrive!: () => void;
     const onSend = vi.fn(() => new Promise<void>((r) => (arrive = r)));
@@ -124,7 +112,6 @@ describe('Composer', () => {
     expect(await screen.findByRole('alert')).toHaveTextContent('This stall is not taking messages right now');
   });
 
-  /** FR-114: opening the chat from an order sends that order with the first message. */
   it('sends the pinned order with the message', async () => {
     const onSend = vi.fn().mockResolvedValue(undefined);
     const onUnpin = vi.fn();
@@ -148,7 +135,6 @@ describe('Composer', () => {
       expect(screen.getByRole('button', { name: 'Add a photo or video' })).toBeEnabled();
       const accept = container.querySelector('input[type="file"]')!.getAttribute('accept')!;
       expect(accept).toContain('video/mp4');
-      // jsdom is not an iPhone, so HEIC stays in the list
       expect(accept).toContain('.heic');
     });
 

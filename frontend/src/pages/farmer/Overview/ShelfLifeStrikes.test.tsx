@@ -14,7 +14,6 @@ const renderCard = () =>
   );
 
 describe('ShelfLifeStrikes (FR-123)', () => {
-  /** Spec §4.4.4: the card only shows when the stall has strikes. */
   it('shows nothing while the stall has no strikes', async () => {
     vi.mocked(QualityReportApi.standing).mockResolvedValue({
       activeViolations: 0,
@@ -57,7 +56,6 @@ describe('ShelfLifeStrikes (FR-123)', () => {
     expect(await screen.findByText(/Longer shelf lives are locked until 15\/11\/2026\./)).toBeInTheDocument();
   });
 
-  /** Ruling 14: a secondary notice — a failed read leaves the dashboard as it was. */
   it('stays out of the way when the strikes cannot be read', async () => {
     vi.mocked(QualityReportApi.standing).mockRejectedValue(new Error('network'));
     const { container } = renderCard();

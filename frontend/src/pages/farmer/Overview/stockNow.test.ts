@@ -6,7 +6,6 @@ const product = (id: number, stock: number, nextLeft?: number): ProductType =>
   ({ id, name: `P${id}`, stock, nextLeft, nextDate: nextLeft === undefined ? undefined : '2026-10-03' }) as ProductType;
 
 describe('stockNow (FR-068)', () => {
-  /** `stock` is the reference number the Farmer typed on the product; what customers can buy is `nextLeft`. */
   it('shows the units left for the nearest orderable day, not the reference number', () => {
     expect(stockNow([product(1, 40, 3), product(2, 30, 28)], 6)).toEqual([
       { label: 'P1', value: 3 },

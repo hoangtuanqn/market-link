@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 
-/** FR-120: a group that already has that way of keeping → 409 on the groupName field. */
 class CatalogExceptionHandlerShelfLifeTest {
 
     @Test

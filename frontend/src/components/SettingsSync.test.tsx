@@ -28,7 +28,6 @@ describe('SettingsSync', () => {
     await i18n.changeLanguage('en');
   });
 
-  /** FR-003: an account that never saved settings keeps the visitor's language and theme after signing in. */
   it('keeps the choices on the device when the account has none saved', async () => {
     vi.mocked(SettingsApi.get).mockResolvedValue({ data: null } as GetResult);
     render(<SettingsSync>page</SettingsSync>);

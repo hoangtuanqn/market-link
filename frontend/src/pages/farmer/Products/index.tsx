@@ -23,7 +23,6 @@ type ProductFilter = 'all' | ProductStatus | 'deleted';
 const FILTERS: ProductFilter[] = ['all', ...STATUSES, 'deleted'];
 const NO_PRODUCTS: ProductType[] = [];
 
-/** FR-062 FR-064 — everything this stall can list: price, what is left and reserved for the next pickup day, status. */
 const FarmerProductsPage = () => {
   const { t } = useTranslation('FarmerProducts');
   const { t: tc } = useTranslation();
@@ -44,7 +43,6 @@ const FarmerProductsPage = () => {
   const [adjustError, setAdjustError] = useState<string | undefined>();
   const [adjustPriceError, setAdjustPriceError] = useState<string | undefined>();
   const [busyId, setBusyId] = useState<number | null>(null);
-  // FR-124: the product whose near-expiry deal dialog is open, and a counter that makes "On sale" read again
   const [dealTarget, setDealTarget] = useState<ProductType | null>(null);
   const [dealsVersion, setDealsVersion] = useState(0);
 
@@ -63,7 +61,6 @@ const FarmerProductsPage = () => {
     setBusyId(p.id);
     try {
       const saved = await ProductApi.setStatus(p.id, value);
-      // A status change moves no stock; keep the next-date numbers only the list read carries
       mutate((list) =>
         list.map((row) =>
           row.id === p.id
@@ -92,7 +89,6 @@ const FarmerProductsPage = () => {
     const quantity = Number(adjustQuantity);
     const price = adjustPrice.trim() === '' ? null : Number(adjustPrice);
     const quantityError = !Number.isInteger(quantity) || quantity < 0 ? t('adjustDialog.error.quantity') : undefined;
-    // The server only takes a price above $0 for a day (FarmerDailyStockRequest); blank keeps the current price
     const priceError =
       price !== null && (!Number.isFinite(price) || price <= 0) ? t('adjustDialog.error.price') : undefined;
     setAdjustError(quantityError);
@@ -101,10 +97,7 @@ const FarmerProductsPage = () => {
     setBusyId(adjustTarget.id);
     try {
       await ProductApi.overrideDailyStock(adjustTarget.id, adjustTarget.nextDate, quantity, price);
-      // The new number can change which date is "next" (e.g. dropping to 0), so reload the list
-      // instead of hand-patching nextLeft.
       retry();
-      // A price here also ends that day's near-expiry deal (Ruling 10), so "On sale" must read again.
       setDealsVersion((v) => v + 1);
       Notification.success({ text: t('toast.stockAdjusted', { day: stockDay(adjustTarget.nextDate) }) });
       setAdjustTarget(null);
@@ -186,8 +179,6 @@ const FarmerProductsPage = () => {
       },
     },
     {
-      // FR-031/FR-063: stock is per pickup date, so show the nearest date a customer can still order for and what is
-      // left for it — not products.stock_quantity, which is only the base number the edit form starts from.
       key: 's',
       label: t('col.left'),
       align: 'num',
@@ -195,7 +186,6 @@ const FarmerProductsPage = () => {
         const day = stockDay(p.nextDate);
         if (p.status === 'available' && day)
           return t('nextLeft', { day, qty: units(p.nextLeft ?? 0, p.unit, p.plural) });
-        // FR-062/FR-063: on sale but no customer can order it — usually no weekly stock yet
         if (p.status === 'available' && !p.hidden)
           return (
             <span className="text-small inline-flex flex-col items-end">
@@ -209,7 +199,6 @@ const FarmerProductsPage = () => {
       },
     },
     {
-      // Units that placed, accepted and ready orders hold for that same date.
       key: 'r',
       label: t('col.reserved'),
       align: 'num',
@@ -238,8 +227,6 @@ const FarmerProductsPage = () => {
       key: 'a',
       label: '',
       align: 'actions',
-      // FR-124: the deal button sits on a line of its own under the other three, so the column is no wider than
-      // before and the table still fits its card at 1440 px
       render: (p) => (
         <div className="flex flex-col items-end gap-2">
           <div className="flex justify-end gap-2">
@@ -370,7 +357,6 @@ const FarmerProductsPage = () => {
           onClose={() => setDealTarget(null)}
           onPosted={(row) => {
             setDealsVersion((v) => v + 1);
-            // The deal sets what is left for its day; the row's "next pickup day" number follows when it is that day
             mutate((list) =>
               list.map((r) =>
                 r.id === row.productId && r.nextDate === row.stockDate ? { ...r, nextLeft: row.quantityAvailable } : r,

@@ -13,25 +13,19 @@ export type MapMarker = {
   lat: number;
   lng: number;
   kind: 'market' | 'stall';
-  /** Name under the pin. */
   label?: string;
-  /** One or two characters inside the pin head; defaults to M for a market, S for a stall. */
   text?: string;
-  /** Draws the bigger outlined pin: this one is in the part of the list you are looking at. */
   selected?: boolean;
   popup?: {
     title: string;
     lines: string[];
-    /** Route this pin opens in the app, e.g. `/markets/3`. */
     href?: string;
   };
 };
 
 type MarketMapProps = {
-  /** Names the frame for screen readers. */
   label: string;
   markers: MapMarker[];
-  /** Height and any other frame classes; the frame itself comes from `.ml-map`. */
   className?: string;
   center?: [number, number];
   zoom?: number;
@@ -47,11 +41,6 @@ const pinHtml = ({ kind, label, text, selected }: MapMarker) =>
   (label ? `<span class="ml-pin-label">${esc(label)}</span>` : '') +
   '</span>';
 
-/**
- * Built when the popup opens rather than when the marker is drawn, so "Directions" picks up whatever start point the
- * visitor last chose — including a location they shared after this map was rendered. A popup is plain HTML inside
- * Leaflet and cannot open the React dialog, so it silently uses that remembered choice.
- */
 const popupHtml = (m: MapMarker, t: TFunction) => {
   const p = m.popup;
   if (!p) return '';
@@ -65,17 +54,11 @@ const popupHtml = (m: MapMarker, t: TFunction) => {
   );
 };
 
-/**
- * Leaflet + OpenStreetMap frame (D-12, FR-012). Pins use the design system's `.ml-pin`, so a market on the map and a
- * market in a list read as the same thing. Markers follow whatever the screen is filtered to; `selected` marks the ones
- * currently on screen in the list beside it.
- */
 const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = true }: MarketMapProps) => {
   const hostRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
   const navigate = useNavigate();
-  /** Tiles come over the network, so losing them is a state this frame has to be able to show (FR-084). */
   const [tilesFailed, setTilesFailed] = useState(false);
   const { t } = useTranslation();
 
@@ -83,17 +66,13 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
     const host = hostRef.current;
     if (!host) return;
 
-    // Leaflet takes over the element it is given, so it gets a child of the frame rather than the frame itself.
     const inner = document.createElement('div');
     host.appendChild(inner);
     const map = L.map(inner, { scrollWheelZoom, zoomControl: true, attributionControl: true });
     const tiles = L.tileLayer(TILE_URL, { maxZoom: MAX_ZOOM, attribution: tileAttribution(t) }).addTo(map);
-    // A tile 404s at the edge of the world as well, so the note goes up on failure and comes down as soon as
-    // any tile arrives, rather than latching on the first error.
     tiles.on('tileerror', () => setTilesFailed(true));
     tiles.on('load', () => setTilesFailed(false));
 
-    // "Open" points into the app, so it navigates instead of reloading the whole page.
     map.on('popupopen', (e: L.PopupEvent) => {
       e.popup
         .getElement()
@@ -144,10 +123,8 @@ const MarketMap = ({ label, markers, className, center, zoom, scrollWheelZoom = 
     else map.setView(CITY, 11);
   }, [markers, center, zoom, t]);
 
-  // isolate: Leaflet sets z-index 400–1000 for the layers inside; without isolation they overlap the sticky header (z-40)
   return (
     <div role="region" aria-label={label} className={Helper.cn('ml-map isolate', className)}>
-      {/* Leaflet owns this child outright; the note stays a sibling so React never fights it over the DOM. */}
       <div ref={hostRef} className="absolute inset-0" />
       {tilesFailed && <p className="ml-map-note m-0">{t('map.tilesFailed')}</p>}
     </div>

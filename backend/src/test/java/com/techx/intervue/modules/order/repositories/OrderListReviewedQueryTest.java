@@ -14,11 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
-/**
- * FR-033, FR-050: each row of the customer's order list says whether the order already carries a
- * review, so the list does not offer "Review" again on an order that was reviewed. Read in the same
- * statement as the list, not one query per row.
- */
 @SpringBootTest
 class OrderListReviewedQueryTest {
 

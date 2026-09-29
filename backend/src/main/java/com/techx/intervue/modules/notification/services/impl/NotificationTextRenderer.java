@@ -8,11 +8,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Component;
 
-/**
- * Notification text in the recipient's language (user_settings.language). Translated on the server
- * because Web Push is shown by the service worker, which has no app translator. Cut to the column
- * size: title 150, message 500.
- */
 @Component
 public class NotificationTextRenderer {
 

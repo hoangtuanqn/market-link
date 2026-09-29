@@ -32,7 +32,6 @@ beforeEach(() => {
 });
 
 describe('FarmerReviewsPage tabs', () => {
-  /** FR-122: QUALITY_REPORTED links to /farmer/reviews?tab=spoiled. */
   it('opens the spoiled reports from the address', async () => {
     renderAt('/farmer/reviews?tab=spoiled');
 

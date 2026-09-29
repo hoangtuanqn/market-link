@@ -17,10 +17,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.WebSocketSession;
 
-/**
- * Review #5: signing out of every device / a revoked session must close the open socket too, not
- * just block new requests.
- */
 class ChatSessionSweeperTest {
 
     static final Instant IAT = Instant.parse("2026-09-25T06:00:00Z");

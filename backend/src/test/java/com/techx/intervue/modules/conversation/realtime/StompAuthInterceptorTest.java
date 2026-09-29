@@ -159,10 +159,6 @@ class StompAuthInterceptorTest {
                 .isInstanceOf(AccessDeniedException.class);
     }
 
-    /**
-     * STOMP is an alias of CONNECT (STOMP 1.2): it must authenticate identically, it must not slip
-     * through the default.
-     */
     @Test
     void stompFrameIsAuthenticatedLikeConnect() {
         assertThatThrownBy(
@@ -173,10 +169,6 @@ class StompAuthInterceptorTest {
         assertThat(StompHeaderAccessor.wrap(out).getUser().getName()).isEqualTo("7");
     }
 
-    /**
-     * MESSAGE is a server → client frame; a client sending it up is injecting a fake event into
-     * someone else's queue.
-     */
     @Test
     void messageFrameFromAClientIsRejectedEvenWithAPrincipal() {
         assertThatThrownBy(
@@ -231,10 +223,6 @@ class StompAuthInterceptorTest {
         }
     }
 
-    /**
-     * The sweep of revoked sessions needs to know whose session this is and when the token was
-     * issued.
-     */
     @Test
     void connectStoresUserIdAndIssuedAtInTheSessionAttributes() {
         StompHeaderAccessor a = StompHeaderAccessor.create(StompCommand.CONNECT);

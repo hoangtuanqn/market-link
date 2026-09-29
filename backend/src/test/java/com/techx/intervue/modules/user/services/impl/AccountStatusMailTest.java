@@ -7,11 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-/**
- * FR-072: the deactivate/reactivate emails must be the same branded, readable letter the rest of
- * the product sends (FR-009 sign-up), not a bare paragraph — and every placeholder must resolve,
- * because MailTemplates throws on a missing one.
- */
 @SpringBootTest
 class AccountStatusMailTest {
 
@@ -24,11 +19,10 @@ class AccountStatusMailTest {
         assertThat(c.subject()).isEqualTo("Your MarketLink account has been deactivated");
         assertThat(c.html())
                 .contains("<!doctype html>")
-                .contains("MarketLink") // branded header bar
+                .contains("MarketLink")
                 .contains("Fake account")
                 .contains("Until an administrator restores the account")
                 .contains("admin@marketlink.vn");
-        // the plain-text alternative is a real letter too, not the HTML source
         assertThat(c.text()).contains("Fake account").doesNotContain("<table");
     }
 
@@ -38,7 +32,7 @@ class AccountStatusMailTest {
                 mail.deactivated(
                         "Trần Văn A", "No-shows", Instant.parse("2026-10-05T02:00:00Z"), "en");
 
-        assertThat(c.html()).contains("09:00 05/10/2026"); // Asia/Ho_Chi_Minh
+        assertThat(c.html()).contains("09:00 05/10/2026");
     }
 
     @Test

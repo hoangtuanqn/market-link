@@ -3,7 +3,6 @@ import Helper from '@/utils/helper';
 
 type CheckboxProps = InputHTMLAttributes<HTMLInputElement> & { children: ReactNode };
 
-/** Consent-style checkbox with a custom box (design system `.ml-check`). */
 export function Checkbox({ id, children, className, ...rest }: CheckboxProps) {
   return (
     <label

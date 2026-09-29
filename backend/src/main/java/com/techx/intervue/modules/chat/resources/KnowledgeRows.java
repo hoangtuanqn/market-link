@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalTime;
 import java.util.List;
 
-/** The data rows that ChatKnowledgeRepository reads out. */
 public final class KnowledgeRows {
 
     private KnowledgeRows() {}

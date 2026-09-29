@@ -33,7 +33,6 @@ describe('cutoffLabel', () => {
   });
 });
 
-// Dates are built from local calendar parts, so these hold in any time zone the test runner is in.
 describe('nextSevenDays', () => {
   it('returns today and the six days after it, at local midnight, with their weekdays', () => {
     const from = new Date(2026, 8, 27, 15, 30);
@@ -100,7 +99,6 @@ describe('matchesQuery', () => {
   });
 });
 
-/** Day chips and the home hero read dates from today, never from a fixed demo week. */
 describe('upcomingDate', () => {
   const sunday = new Date(2026, 8, 27, 10, 0);
 

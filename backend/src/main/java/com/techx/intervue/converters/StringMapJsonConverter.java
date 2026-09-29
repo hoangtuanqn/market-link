@@ -8,10 +8,6 @@ import jakarta.persistence.Converter;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-/**
- * A string → string map stored as one TEXT JSON column. A null or corrupt column becomes an empty
- * map.
- */
 @Converter
 public class StringMapJsonConverter implements AttributeConverter<Map<String, String>, String> {
 

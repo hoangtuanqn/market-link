@@ -31,11 +31,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-/**
- * Task 8.3 (FR-050): {@code GET /orders/{id}} tells the customer whether they already reviewed the
- * order, so the "Write a review" button shows only on a completed, not-yet-reviewed order. The flag
- * comes from the reviews table through {@link OrderQueryRepository#reviewed}.
- */
 class OrderReviewedFlagTest {
 
     private static final ZoneId HCM = ZoneId.of("Asia/Ho_Chi_Minh");

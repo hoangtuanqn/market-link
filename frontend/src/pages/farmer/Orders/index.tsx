@@ -27,10 +27,8 @@ type DeclineReason = (typeof DECLINE_REASONS)[number];
 type ConfirmDialog = { kind: 'decline' | 'complete'; orderId: number; orderCode: string } | null;
 
 const pad = (n: number) => String(n).padStart(2, '0');
-/** A Date, local time, as "yyyy-MM-dd" — what the server expects for `date`. */
 const ymd = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
 
-/** The next 7 market mornings, starting today. */
 const dayOptions = () =>
   Array.from({ length: 7 }, (_, i) => {
     const d = new Date();
@@ -38,10 +36,6 @@ const dayOptions = () =>
     return d;
   });
 
-/**
- * FR-065 FR-066 — Incoming orders: accept, decline, mark ready and complete, one status move at a time (D-04). Each tab
- * and pickup day is its own request to `GET /farmer/orders`; the search box only narrows what is already loaded.
- */
 const FarmerOrdersPage = () => {
   const { t } = useTranslation('FarmerOrders');
   const { t: tc } = useTranslation();
@@ -81,7 +75,6 @@ const FarmerOrdersPage = () => {
     setBusyId(id);
     try {
       await action();
-      // The row's status changed server-side, so it no longer belongs to this status tab.
       mutate((current) => ({
         ...current,
         items: current.items.filter((r) => r.orderId !== id),
@@ -90,8 +83,6 @@ const FarmerOrdersPage = () => {
       Notification.success({ text: successText });
     } catch (error) {
       Notification.error({ text: Helper.getErrorMessage(error, tc('errors.network')) });
-      // 409 (D-04): the order moved on elsewhere — the customer cancelled or changed it. Read the list again so the
-      // stale row and its buttons go away.
       if (isAxiosError(error) && error.response?.status === 409) retry();
     } finally {
       setBusyId(null);

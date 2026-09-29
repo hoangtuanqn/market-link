@@ -78,7 +78,6 @@ class MediaProbeTest {
                 .hasMessageContaining("HEIC");
     }
 
-    /** Review Focus #1. */
     @Test
     void refusesBytesThatOnlyClaimToBeMedia() throws Exception {
         byte[] html = "<html><script>alert(1)</script></html>".getBytes(StandardCharsets.UTF_8);
@@ -89,7 +88,6 @@ class MediaProbeTest {
         }
     }
 
-    /** Review Focus #2. */
     @Test
     void refusesAStoredAsIsFileWithATail() throws Exception {
         byte[] tail = "<?php system($_GET['c']); ?>".getBytes(StandardCharsets.US_ASCII);
@@ -140,8 +138,6 @@ class MediaProbeTest {
         assertThat(MediaProbe.extension("video/webm")).isEqualTo(".webm");
     }
 
-    // ---------- fixtures ----------
-
     private static byte[] image(String format, int w, int h) throws Exception {
         BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -149,9 +145,6 @@ class MediaProbeTest {
         return out.toByteArray();
     }
 
-    /**
-     * A GIF logical screen descriptor claiming w×h, then the trailer; enough for the header checks.
-     */
     private static byte[] gifHeader(int w, int h) {
         ByteBuffer b = ByteBuffer.allocate(14).order(ByteOrder.LITTLE_ENDIAN);
         b.put("GIF89a".getBytes(StandardCharsets.US_ASCII));
@@ -196,7 +189,6 @@ class MediaProbeTest {
                         compatible.getBytes(StandardCharsets.US_ASCII)));
     }
 
-    /** ftyp + optional moov + mdat: the smallest shape of an ISO BMFF video or HEIF file. */
     private static byte[] iso(String major, String compatible, boolean withMoov) {
         byte[] moov = withMoov ? box("moov", new byte[16]) : new byte[0];
         return concat(ftyp(major, compatible), moov, box("mdat", new byte[32]));
@@ -207,10 +199,9 @@ class MediaProbeTest {
                 box("wide", new byte[0]), box("mdat", new byte[24]), box("moov", new byte[8]));
     }
 
-    /** ftyp avif + meta holding an ispe box with the image size + mdat. */
     private static byte[] avif(int w, int h) {
         ByteBuffer ispe = ByteBuffer.allocate(12);
-        ispe.putInt(0); // version + flags
+        ispe.putInt(0);
         ispe.putInt(w);
         ispe.putInt(h);
         byte[] meta =
@@ -220,7 +211,6 @@ class MediaProbeTest {
         return concat(ftyp("avif", "mif1"), meta, box("mdat", new byte[16]));
     }
 
-    /** An EBML header whose DocType element (0x4282) names the container. */
     private static byte[] ebml(String docType) {
         byte[] name = docType.getBytes(StandardCharsets.US_ASCII);
         byte[] docTypeElement =

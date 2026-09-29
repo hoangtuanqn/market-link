@@ -22,10 +22,6 @@ import { settledRows } from './favorites.helpers';
 const FILTERS = ['all', 'inStock', 'soldOut'] as const;
 type Filter = (typeof FILTERS)[number];
 
-/**
- * A favourite paired with its detail fetch. `detail` is `null` when that fetch was rejected (a suspended stall or a
- * removed market answering 404, say) — the row still renders, from the favourite itself, with Remove still working.
- */
 type StallRow = { fav: FavoriteDto; detail: StallDetailDto | null };
 type MarketRow = { fav: FavoriteDto; detail: MarketType | null };
 
@@ -33,7 +29,6 @@ const NO_FAVORITES: FavoriteDto[] = [];
 const NO_STALLS: StallRow[] = [];
 const NO_MARKETS: MarketRow[] = [];
 
-/** One row of the products tab: title, subtitle, availability, add to cart / remove (contract §9, FR-040, FR-041). */
 const FavoriteProductRow = ({
   fav,
   onAddToCart,
@@ -100,10 +95,6 @@ const FavoriteProductRow = ({
   );
 };
 
-/**
- * A favourite whose target could not be loaded this time (a suspended stall, a removed market...). Still shown, from
- * the favourite itself, so it is not silently dropped and Remove still works.
- */
 const UnavailableFavoriteRow = ({ fav, onRemove }: { fav: FavoriteDto; onRemove: () => void }) => {
   const { t } = useTranslation('CustomerFavorites');
 
@@ -124,7 +115,6 @@ const UnavailableFavoriteRow = ({ fav, onRemove }: { fav: FavoriteDto; onRemove:
   );
 };
 
-/** A saved stall: name, the markets it sells at, a link to its page, and Remove. */
 const FavoriteStallCard = ({ stall, onRemove }: { stall: StallDetailDto; onRemove: () => void }) => {
   const { t } = useTranslation('CustomerFavorites');
   const marketNames = stall.markets.map((m) => m.marketName).join(', ');
@@ -160,7 +150,6 @@ const FavoriteStallCard = ({ stall, onRemove }: { stall: StallDetailDto; onRemov
   );
 };
 
-/** FR-014, FR-040, FR-041 — saved products, stalls and markets of the signed-in customer. */
 const CustomerFavoritesPage = () => {
   const { t } = useTranslation('CustomerFavorites');
   const { t: tc } = useTranslation();
@@ -187,9 +176,6 @@ const CustomerFavoritesPage = () => {
   const stallFavs = stallFavsLoad.kind === 'ready' ? stallFavsLoad.data : NO_FAVORITES;
   const marketFavs = marketFavsLoad.kind === 'ready' ? marketFavsLoad.data : NO_FAVORITES;
 
-  // The stall / market details are only worth fetching once their tab is open — a favourite list can hold many.
-  // Promise.allSettled, not Promise.all: one favourite whose target is gone (a suspended stall, a removed market —
-  // both answer 404) must not reject the whole tab and take every other favourite down with it.
   const stallIds = stallFavs.map((f) => f.targetId).join(',');
   const {
     state: stallDetailsLoad,
@@ -281,9 +267,6 @@ const CustomerFavoritesPage = () => {
     }
   };
 
-  // A MarketCard on this tab has its own heart (FavoriteButton), already wired to favoriteId. When the visitor
-  // unsaves from there, the API call already happened inside the button — this only drops the row from the two
-  // lists this page keeps, so it does not go stale (filled heart, or a "Remove" that 404s a favourite already gone).
   const dropMarketFavorite = (favoriteId: number) => {
     mutateMarketFavs((list) => list.filter((f) => f.id !== favoriteId));
     mutateMarketDetails((list) => list.filter((item) => item.fav.id !== favoriteId));
@@ -410,9 +393,6 @@ const CustomerFavoritesPage = () => {
               {marketDetailsLoad.kind === 'ready' &&
                 marketDetailsLoad.data.map((row) =>
                   row.detail ? (
-                    // MarketCard already renders its own heart (FavoriteButton, favoriteId={row.fav.id}); its
-                    // onChange drops this row via dropMarketFavorite once unsaved, so there is only one control that
-                    // removes a market favourite here — no separate "Remove" button duplicating it.
                     <MarketCard
                       key={row.fav.id}
                       market={row.detail}

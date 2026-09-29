@@ -41,7 +41,6 @@ beforeEach(() => {
 });
 
 describe('AdminModerationPage tabs', () => {
-  /** FR-123: QUALITY_ESCALATED links to /admin/moderation?tab=quality. */
   it('opens the spoiled reports queue from the address', async () => {
     renderAt('/admin/moderation?tab=quality');
 

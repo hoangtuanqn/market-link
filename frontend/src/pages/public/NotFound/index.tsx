@@ -9,10 +9,6 @@ type NotFoundPageProps = {
   standalone?: boolean;
 };
 
-/**
- * 404 Not Found page for invalid or unbuilt paths. Excludes main header/footer for distraction-free navigation back to
- * the marketplace.
- */
 const NotFoundPage = ({ standalone = true }: NotFoundPageProps) => {
   const { t } = useTranslation('NotFound');
 

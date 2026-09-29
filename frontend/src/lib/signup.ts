@@ -1,12 +1,7 @@
 import type { RegisterInput, SignupStartedType } from '@/types/auth.types';
 
-/**
- * FR-009: what the verify screen needs after the form, kept for this tab only (sessionStorage). `token` proves this tab
- * filled in the form: the server only lets its holder finish, resend or correct the sign-up.
- */
 export type PendingSignup = { email: string; token: string; codeExpiresAt: number; resendAt: number };
 
-/** The form without the passwords, so "Change email" comes back to a filled form. */
 export type SignupDraft = Pick<RegisterInput, 'fullName' | 'phone' | 'email' | 'addressParts'>;
 
 const PENDING_KEY = 'ml.signup.pending';

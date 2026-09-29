@@ -1,6 +1,5 @@
 import { Toaster } from 'sonner';
 
-/** A toast shared by every layout (Customer/Farmer and the admin area) — design system `Toast`. */
 const AppToaster = () => (
   <Toaster
     position="top-center"

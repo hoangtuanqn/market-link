@@ -7,7 +7,6 @@ import java.time.Instant;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-/** FR-071: the only place that writes farmer_status_history — mirrors UserStatusHistoryWriter. */
 @Component
 @RequiredArgsConstructor
 public class FarmerStatusHistoryWriter {

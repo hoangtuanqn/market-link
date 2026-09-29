@@ -28,7 +28,6 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
-// FR-008: turning 2FA on signs out every earlier session, this one too — the page must carry on with the new token
 describe('Setup2FA', () => {
   it('keeps the session going on the token the enable call returns', async () => {
     vi.mocked(MfaApi.enable).mockResolvedValue({

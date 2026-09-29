@@ -15,7 +15,6 @@ import { formatTime } from '@/lib/format';
 import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
-/** Same limit as ChatRequest on the server. */
 const MAX_LENGTH = 500;
 const SUGGESTIONS = ['find', 'hours', 'stalls', 'cancel'] as const;
 
@@ -30,11 +29,6 @@ type Entry = {
 
 type Load = 'loading' | 'error' | 'ready';
 
-/**
- * The route pattern rather than the URL: ids and codes belong in `recordRef`, and the server only accepts lowercase
- * letters, slashes, hyphens and colons here. A path segment that looks like an id or a code is replaced by its
- * placeholder, so /farmer/orders/ML-2026-0412 becomes farmer/orders/:code.
- */
 const routePattern = (pathname: string) =>
   pathname
     .split('/')
@@ -44,13 +38,6 @@ const routePattern = (pathname: string) =>
     .replace(/[^a-z/:-]/g, '')
     .slice(0, 64);
 
-/**
- * FR-093, FR-094: what a proposed action does when the person presses it.
- *
- * `run` calls the ordinary endpoint, which checks the role, the ownership and the state transition again — the
- * assistant has written nothing up to this point. Actions that need a reason have no `run`: they link to the screen
- * whose confirm dialog already collects one, rather than growing a second reason box inside the chat.
- */
 const ACTIONS: Record<
   ProposedActionDto['action'],
   { run?: (id: number) => Promise<unknown>; href?: (a: ProposedActionDto) => string }
@@ -59,7 +46,6 @@ const ACTIONS: Record<
   ready_order: { run: (id) => OrderApi.markReady(id) },
   complete_order: { run: (id) => OrderApi.complete(id) },
   approve_farmer: { run: (id) => AdminFarmerApi.approve(id) },
-  // The order page reads a numeric id; the label is the order code, which it cannot open
   decline_order: { href: (a) => `/farmer/orders/${a.id}` },
   reject_farmer: { href: (a) => `/admin/farmers/${a.id}` },
   suspend_farmer: { href: (a) => `/admin/farmers/${a.id}` },
@@ -72,14 +58,9 @@ const RESULT_PATH: Record<ChatResultDto['type'], string> = {
   order: '/farmer/orders',
 };
 
-/**
- * Where a result card leads. A stall card takes an admin to the admin stall page: the stalls in the approval queue are
- * pending, and a pending or suspended stall has no public page.
- */
 const resultPath = (r: ChatResultDto, role: string | undefined) =>
   r.type === 'farmer' && role === USER_ROLE.ADMIN ? `/admin/farmers/${r.id}` : `${RESULT_PATH[r.type]}/${r.id}`;
 
-/** One conversation per account and browser; "New conversation" swaps the key (the server keeps the old rows). */
 const storageKey = (userId: number) => `ml-assistant:${userId}`;
 
 const readSessionKey = (userId: number) => {
@@ -93,7 +74,6 @@ const readSessionKey = (userId: number) => {
 };
 
 const newSessionKey = (userId: number) => {
-  // randomUUID only exists in secure contexts (HTTPS / localhost); plain HTTP falls back to 16 random bytes in hex
   const key =
     typeof crypto.randomUUID === 'function'
       ? crypto.randomUUID()
@@ -106,40 +86,25 @@ const newSessionKey = (userId: number) => {
   return key;
 };
 
-/**
- * The chip under a bot reply (FR-092): the keyword engine's intent, or the tools Claude called ("AI:search_products").
- * Nothing when no lookup was needed.
- */
 const intentLabel = (intent: string | null | undefined, ai: (tools: string) => string) => {
   if (!intent || intent === 'UNKNOWN' || intent === 'AI:none') return undefined;
   if (intent.startsWith('AI:')) return ai(intent.slice(3).split('+').join(', '));
   return intent;
 };
 
-/**
- * The model sometimes marks a button name as **Cancel order** despite being asked for plain text: show it bold instead
- * of the raw asterisks. Built from React elements, so the text is never parsed as HTML.
- */
 const withBold = (text: string) =>
   text.split(/\*\*(.+?)\*\*/g).map((part, i) => (i % 2 === 1 ? <b key={i}>{part}</b> : part));
 
 type AssistantChatProps = {
-  /** Height of the whole block; the message list scrolls inside it. */
   className?: string;
 };
 
-/**
- * FR-090…092 — the customer's assistant: history on open, send, and result cards that link to the product, market or
- * stall. Claude answers signed-in customers; the server falls back to the keyword engine on its own.
- */
 const AssistantChat = ({ className }: AssistantChatProps) => {
   const { t } = useTranslation('common');
   const { pathname } = useLocation();
   const assistant = useAssistant();
   const record = assistant?.record ?? null;
   const cart = assistant?.cart ?? [];
-  // FR-093, FR-094: a proposed action is pressed once. `running` disables the button while the real endpoint
-  // works, `done` replaces it afterwards so the same change cannot be sent twice from scrollback.
   const [running, setRunning] = useState<string | null>(null);
   const [done, setDone] = useState<Record<string, boolean>>({});
 
@@ -152,7 +117,6 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
       setDone((prev) => ({ ...prev, [key]: true }));
       Notification.success({ title: t('assistant.action.doneTitle'), text: action.label });
     } catch {
-      // The endpoint refused it: wrong owner, or the state moved on since the assistant looked.
       Notification.error({ title: t('assistant.action.failedTitle'), text: t('assistant.action.failedText') });
     } finally {
       setRunning(null);
@@ -161,18 +125,14 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
 
   const { user } = useSession();
   const userId = user?.id;
-  // Derived from the account during render (not in an effect): another account signing in gets its own conversation
   const [session, setSession] = useState<{ userId: number; key: string } | null>(null);
   if (userId !== undefined && session?.userId !== userId) {
     setSession({ userId, key: readSessionKey(userId) });
   }
   const sessionKey = userId !== undefined && session?.userId === userId ? session.key : null;
   const [log, setLog] = useState<Entry[]>([]);
-  // Which key's history has answered, and how; any other key is still loading
   const [loaded, setLoaded] = useState<{ key: string; ok: boolean } | null>(null);
   const load: Load = !sessionKey || loaded?.key !== sessionKey ? 'loading' : loaded.ok ? 'ready' : 'error';
-  // The composer text belongs to the provider so an "ask about this" button can fill it in; the local state is the
-  // fallback for a chat mounted outside one.
   const [localDraft, setLocalDraft] = useState('');
   const draft = assistant ? assistant.draft : localDraft;
   const setDraft = assistant ? assistant.setDraft : setLocalDraft;
@@ -180,7 +140,6 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
   const [sendFailed, setSendFailed] = useState<string | null>(null);
   const listRef = useRef<HTMLDivElement>(null);
 
-  /** Loads a key's stored messages; `isStale()` drops an answer that arrives after the key has changed. */
   const fetchHistory = useCallback((key: string, isStale: () => boolean = () => false) => {
     ChatApi.history(key)
       .then((data) => {
@@ -215,7 +174,6 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
     fetchHistory(sessionKey);
   };
 
-  // Keep the newest message in view
   useEffect(() => {
     const list = listRef.current;
     if (list) list.scrollTop = list.scrollHeight;
@@ -230,7 +188,6 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
     setSending(true);
     try {
       const context: PageContextDto = {
-        // The home page has an empty pattern, which the server rejects; no page is a valid answer
         page: routePattern(pathname) || undefined,
         recordType: record?.type,
         recordRef: record?.ref,
@@ -251,7 +208,6 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
         ]);
       }
     } catch {
-      // Keep what they typed so they can send it again
       setLog((prev) => prev.slice(0, -1));
       setDraft(message);
       setSendFailed(message);
@@ -267,7 +223,6 @@ const AssistantChat = ({ className }: AssistantChatProps) => {
 
   const startOver = () => {
     if (userId === undefined) return;
-    // The new key reloads an (empty) history through the effect above
     setSession({ userId, key: newSessionKey(userId) });
     setLog([]);
     setSendFailed(null);

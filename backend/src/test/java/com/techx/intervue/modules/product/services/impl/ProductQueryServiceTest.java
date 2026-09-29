@@ -77,10 +77,6 @@ class ProductQueryServiceTest {
         return new ProductSearchCriteria(null, null, null, null, null, min, max, sort, 1, pageSize);
     }
 
-    /**
-     * `sort` from the query string goes through the whitelist, never concatenated straight into
-     * ORDER BY (R-04).
-     */
     @Test
     void searchMapsSortPriceAscToOrderByPrice() {
         service.search(criteria("price_asc", null, null, 12));
@@ -123,10 +119,6 @@ class ProductQueryServiceTest {
         assertThatThrownBy(() -> service.detail(9L)).isInstanceOf(ProductNotFoundException.class);
     }
 
-    /**
-     * A soft-deleted product does not pass the public filter; the service has no path that returns
-     * stale data.
-     */
     @Test
     void detailOnDeletedProductThrows() {
         assertThat(ProductQueryRepository.DETAIL_SQL)
@@ -136,10 +128,6 @@ class ProductQueryServiceTest {
         assertThatThrownBy(() -> service.detail(5L)).isInstanceOf(ProductNotFoundException.class);
     }
 
-    /**
-     * search() overwrites stockQuantity/price with the nearest orderable date's numbers, and names
-     * that date.
-     */
     @Test
     void searchOverlaysTheNearestAvailableDateOntoEachItem() {
         ProductListItemResource raw = item(1L);
@@ -157,15 +145,9 @@ class ProductQueryServiceTest {
 
         assertThat(result.items().getFirst().stockQuantity()).isEqualTo(40);
         assertThat(result.items().getFirst().price()).isEqualByComparingTo("13000");
-        // FR-022: the number names the pickup date it is for
         assertThat(result.items().getFirst().availableDate()).isEqualTo("2026-09-28");
     }
 
-    /**
-     * FR-124: a nearest day on a near-expiry deal keeps the regular price on the card (reproduced
-     * 29/09: a 35% deal on 03/10 listed a $0.50 product at $0.33 with nothing saying it was a
-     * deal).
-     */
     @Test
     void searchShowsTheRegularPriceWhenTheNearestDayIsOnADeal() {
         when(repository.search(any(), anyString(), anyInt(), anyInt()))
@@ -192,10 +174,6 @@ class ProductQueryServiceTest {
         assertThat(shown.availableDate()).isEqualTo("2026-10-03");
     }
 
-    /**
-     * The total is the query's count of every matching product, not the size of this page — the
-     * catalogue works out how many pages there are from it.
-     */
     @Test
     void searchKeepsTheQueryTotalNotThePageSize() {
         ProductListItemResource raw = item(1L);
@@ -215,11 +193,6 @@ class ProductQueryServiceTest {
         assertThat(result.total()).isEqualTo(30);
     }
 
-    /**
-     * Which products are listed is the query's job (VISIBILITY_FILTER: an active weekly template
-     * exists); a row it returned is never dropped afterwards, or the page and its total would
-     * disagree. A template switched off in between shows as sold out.
-     */
     @Test
     void searchNeverDropsARowTheQueryReturned() {
         ProductListItemResource raw = item(1L);
@@ -235,10 +208,6 @@ class ProductQueryServiceTest {
         assertThat(result.total()).isEqualTo(1);
     }
 
-    /**
-     * detail() overlays the same way; a product with no active template is already left out by the
-     * query (findVisibleById → empty → 404).
-     */
     @Test
     void detailOverlaysTheNearestAvailableDate() {
         when(repository.findVisibleById(1L))
@@ -269,7 +238,6 @@ class ProductQueryServiceTest {
         assertThat(result.product().price()).isEqualByComparingTo("13000");
     }
 
-    /** Same rule as search: the query decides visibility, a row it returned shows as sold out. */
     @Test
     void detailShowsAProductWithNoResolvedDateAsSoldOut() {
         when(repository.findVisibleById(1L))
@@ -292,10 +260,6 @@ class ProductQueryServiceTest {
         assertThat(service.detail(1L).product().stockQuantity()).isZero();
     }
 
-    /**
-     * C8 (FR-052): `reviewsSummary` is the real average and histogram, no longer the C3
-     * placeholder.
-     */
     @Test
     void detailCarriesTheReviewSummaryOfTheProduct() {
         ProductListItemResource item = item(5L);
@@ -327,7 +291,6 @@ class ProductQueryServiceTest {
         assertThat(service.detail(5L).reviewsSummary()).isSameAs(summary);
     }
 
-    /** FR-121: the public product page carries the stored shelf-life block as-is. */
     @Test
     void detailCarriesTheStoredShelfLife() {
         when(repository.findVisibleById(1L))

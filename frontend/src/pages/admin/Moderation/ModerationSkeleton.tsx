@@ -23,14 +23,12 @@ export const ReviewCardSkeleton = () => (
 
 export const ProductModerationTableSkeleton = () => (
   <div className="border-line-strong bg-surface-raised flex w-full flex-col overflow-hidden rounded-md border-[1.5px]">
-    {/* Table Header */}
     <div className="bg-surface-sunken/60 border-line-strong grid grid-cols-[1.5fr_120px_2fr_140px] items-center gap-4 border-b-[1.5px] px-4 py-2.5">
       <div className="bg-surface-sunken h-3.5 w-20 rounded-sm" />
       <div className="bg-surface-sunken h-3.5 w-14 justify-self-end rounded-sm" />
       <div className="bg-surface-sunken h-3.5 w-24 rounded-sm" />
       <div className="bg-surface-sunken h-3.5 w-16 justify-self-end rounded-sm" />
     </div>
-    {/* Rows */}
     <div className="flex flex-col">
       {Array.from({ length: 4 }).map((_, i) => (
         <div
@@ -70,7 +68,6 @@ export const ReportedMessagesSkeleton = () => (
   </div>
 );
 
-/** ModerationSkeleton mirrors the respective active tab's layout in Admin Moderation. */
 const ModerationSkeleton = ({ tab = 'reviews' }: { tab?: 'reviews' | 'products' | 'hidden' | 'messages' }) => {
   const { t } = useTranslation();
 

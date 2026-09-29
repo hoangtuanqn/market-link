@@ -18,7 +18,6 @@ describe('parseCoordinate', () => {
 });
 
 describe('parseCoordinatePair', () => {
-  /** QA E2E v2 MARKET-ADMIN-002: a location copied from a map or a chat answer must land in both fields. */
   it('splits "lat, lng" as copied from a map', () => {
     expect(parseCoordinatePair('10.7725, 106.698')).toEqual({ lat: 10.7725, lng: 106.698 });
     expect(parseCoordinatePair('10.7725,106.698')).toEqual({ lat: 10.7725, lng: 106.698 });

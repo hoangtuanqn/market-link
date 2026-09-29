@@ -1,24 +1,12 @@
 import type { LatLng } from '@/lib/geo';
 
-/**
- * Where the browser thinks the visitor is (FR-010, FR-013).
- *
- * Shared through one module-level value rather than per-component state, the same way `Session` works, so the markets
- * list and a directions dialog never disagree about where you are or ask for permission twice.
- *
- * Nothing here runs on its own: `request()` is only ever called from a click. Asking for someone's location the moment
- * a page loads is the pattern browsers penalise and people refuse, and a refusal is permanent until they go and change
- * it in site settings.
- */
 export type GeoFailure = 'insecure' | 'failed';
 
 export type GeoState =
   | { status: 'idle' }
   | { status: 'asking' }
   | { status: 'ready'; at: LatLng }
-  /** The person said no. Nothing we can do from JavaScript; they have to change it in site settings. */
   | { status: 'denied' }
-  /** `insecure`: served over plain http. `failed`: the device could not fix a position. Worded by `geo.<reason>`. */
   | { status: 'unavailable'; reason: GeoFailure };
 
 const KEY = 'geo_position';
@@ -36,10 +24,8 @@ function load(): GeoState {
   return IDLE;
 }
 
-/** Held for the tab only: a position from last week is worse than no position at all. */
 let state: GeoState = load();
 
-/** One in-flight request at a time: two buttons pressed together must not raise two permission prompts. */
 let pending: Promise<GeoState> | null = null;
 
 const set = (next: GeoState) => {
@@ -48,7 +34,6 @@ const set = (next: GeoState) => {
 };
 
 class Geolocation {
-  /** Stable reference between renders, as `useSyncExternalStore` requires. */
   static get(): GeoState {
     return state;
   }
@@ -58,15 +43,9 @@ class Geolocation {
     return () => window.removeEventListener(CHANGE_EVENT, callback);
   }
 
-  /**
-   * Asks the browser, and resolves with the state it settled on. Returning the result means a caller can act on it
-   * straight after the click instead of watching for it in an effect. Two callers asking at once share one prompt.
-   */
   static request(): Promise<GeoState> {
     if (pending) return pending;
 
-    // Geolocation is a secure-context API: over plain http it is simply absent. localhost counts as secure,
-    // so this only bites a deployment served without https.
     if (!window.isSecureContext || !('geolocation' in navigator)) {
       set({ status: 'unavailable', reason: 'insecure' });
       return Promise.resolve(state);
@@ -91,7 +70,6 @@ class Geolocation {
           );
           resolve(state);
         },
-        // A market is hundreds of metres across, so metre-level accuracy is not worth the battery or the wait.
         { enableHighAccuracy: false, timeout: 10_000, maximumAge: 300_000 },
       );
     }).finally(() => {

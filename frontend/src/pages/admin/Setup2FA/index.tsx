@@ -35,12 +35,6 @@ const Step = ({ n, title, text, children }: { n: number; title: string; text: st
   </li>
 );
 
-/**
- * FR-008 — mandatory first-time two-step verification setup for an admin who has never configured it. Reached only
- * right after sign-in (FormAdminLogin) or by AdminLayout's route guard (mfaSetupRequired). An admin who later turns
- * this off from /admin/security and wants it back on lands here too, from the "Turn on" button there — so this page
- * only refuses to run the wizard again when the account is _already_ enabled (prototype admin/security.html).
- */
 const AdminSetup2FAPage = () => {
   const { t } = useTranslation('AdminSecurity');
   const navigate = useNavigate();
@@ -63,7 +57,6 @@ const AdminSetup2FAPage = () => {
 
   useEffect(fetchStatus, [fetchStatus]);
 
-  // Auto-start: arriving here already means "set it up now", no extra click needed.
   useEffect(() => {
     if (status.kind !== 'ready' || status.data.enabled || startedRef.current) return;
     startedRef.current = true;
@@ -94,7 +87,6 @@ const AdminSetup2FAPage = () => {
     setBusy(true);
     try {
       const response = await MfaApi.enable(confirmCode);
-      // Every session opened before this was signed out, this one included: keep going on the new token
       if (response.data.accessToken && user) Session.refreshed({ accessToken: response.data.accessToken, user });
       setNewCodes(response.data.codes);
       setConfirmError(undefined);

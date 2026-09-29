@@ -3,7 +3,6 @@ import { ButtonLink } from '@/components/ui/button';
 import { dayList, formatClock } from '@/lib/format';
 import type { MarketType } from '@/types/market.types';
 
-/** Chalkboard listing the markets open this weekend. */
 const OpenMarketsBoard = ({ markets }: { markets: MarketType[] }) => {
   const { t } = useTranslation('Home');
   return (

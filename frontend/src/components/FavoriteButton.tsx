@@ -11,32 +11,19 @@ import { HeartIcon } from './icons';
 type FavoriteButtonProps = {
   targetType: FavoriteTargetType;
   targetId: number;
-  /** The favourite's id when already saved, null/undefined when not saved. */
   favoriteId?: number | null;
-  /** Accessible labels for the off / on state, e.g. "Save Thảo Điền Weekend Market" */
   labelOff: string;
   labelOn: string;
   className?: string;
-  /**
-   * Called after a successful add/remove, with the new favourite id (`null` once removed). Lets a caller that shows its
-   * own list of favourites (e.g. the Favorites page) drop or update the row instead of leaving it stale after the heart
-   * itself — not a page-level Remove button — is what the visitor clicked.
-   */
   onChange?: (favoriteId: number | null) => void;
 };
 
-/** `FavoriteInput` sends exactly the id field that matches `targetType` (contract §9). */
 const toInput = (targetType: FavoriteTargetType, targetId: number): FavoriteInput => {
   if (targetType === 'product') return { targetType, productId: targetId };
   if (targetType === 'farmer') return { targetType, farmerId: targetId };
   return { targetType, marketId: targetId };
 };
 
-/**
- * FR-040, FR-014 — a heart that saves or removes one favourite of the signed-in account. The caller loads whether the
- * target is already saved (`favoriteId`) and passes `key={favoriteId ?? 'none'}` so a freshly loaded value resets the
- * button's own state instead of fighting with it.
- */
 const FavoriteButton = ({
   targetType,
   targetId,
@@ -54,8 +41,6 @@ const FavoriteButton = ({
   const navigate = useNavigate();
   const on = id != null;
 
-  // A favourite belongs to an account: a signed-out visitor who clicks the heart goes to sign in and then comes back
-  // to this exact page, instead of turning red a heart that is saved nowhere and cannot be viewed again anywhere.
   const toggle = async () => {
     if (!isLoggedIn) {
       const state: LoginRedirectState = { from: pathname + search };
@@ -89,7 +74,6 @@ const FavoriteButton = ({
       disabled={busy}
       onClick={() => void toggle()}
       className={Helper.cn(
-        // size-11 = 44px, the floor for a touch target (Apple HIG, WCAG 2.5.5).
         'bg-surface-raised text-ink aria-pressed:text-danger grid size-11 cursor-pointer place-items-center rounded-full disabled:opacity-60',
         className,
       )}

@@ -25,7 +25,6 @@ type MarketsTabProps = {
   onSave: () => void;
 };
 
-/** The markets tab: which markets the stall sells at, then one card of days, window and pin per market. */
 const MarketsTab = ({
   stall,
   allMarkets,

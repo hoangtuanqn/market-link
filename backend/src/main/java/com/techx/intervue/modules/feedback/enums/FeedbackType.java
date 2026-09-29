@@ -5,7 +5,6 @@ import com.techx.intervue.converters.LowercaseEnumConverter;
 import jakarta.persistence.Converter;
 import java.util.Locale;
 
-/** FR-081: the three kinds the form offers (contract §11). */
 public enum FeedbackType {
     BUG,
     SUGGESTION,
@@ -16,7 +15,6 @@ public enum FeedbackType {
         return name().toLowerCase(Locale.ROOT);
     }
 
-    /** Lower-case JSON value → enum; unknown text throws (the caller decides the field name). */
     public static FeedbackType parse(String value) {
         if (value == null) {
             throw new IllegalArgumentException("type must be 'bug', 'suggestion' or 'query'.");

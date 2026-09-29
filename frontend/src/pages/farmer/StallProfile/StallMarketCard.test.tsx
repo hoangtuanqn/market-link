@@ -3,7 +3,6 @@ import { describe, expect, it, vi } from 'vitest';
 import StallMarketCard from './StallMarketCard';
 
 describe('StallMarketCard', () => {
-  /** FR-060: the server caps the stall code at 30 characters; a longer one used to reach it and fail with a vague 400. */
   it('caps the stall code at the length the server accepts', () => {
     render(
       <StallMarketCard

@@ -69,11 +69,6 @@ public class ProductService implements ProductServiceInterface {
                 withNextDate(rows.items()), rows.page(), rows.pageSize(), rows.total());
     }
 
-    /**
-     * FR-031, FR-063: the nearest date a customer can still order for — the same date and number
-     * the public pages show — plus what active orders already hold for that date. The raw {@code
-     * stockQuantity} is left as the Farmer typed it.
-     */
     private List<FarmerProductResource> withNextDate(List<FarmerProductResource> rows) {
         Map<Long, BigDecimal> prices =
                 rows.stream()
@@ -101,10 +96,6 @@ public class ProductService implements ProductServiceInterface {
                 .toList();
     }
 
-    /**
-     * Read-only, outside a transaction: reads without the row lock that {@link #owned} takes (a
-     * PESSIMISTIC_WRITE query needs a transaction), with the same 404 / 403.
-     */
     @Override
     public FarmerProductResource mineOne(long userId, long productId) {
         FarmerProfile profile = mine(userId);
@@ -133,13 +124,6 @@ public class ProductService implements ProductServiceInterface {
         return toResource(products.save(product), profile, category, guide);
     }
 
-    /**
-     * {@code stockQuantity} here is a reference number only — actual availability is per pickup
-     * date ({@code product_daily_stock}, D-02 redesign) and comes from the weekly template, not
-     * from this field. Editing it (or anything else {@link ProductRequest} carries) never changes
-     * {@link ProductStatus} and is never a restock event. A new price reaches the upcoming pickup
-     * days that were still sold at the old one ({@link DailyStockTemplateSync#followPrice}).
-     */
     @Override
     @Transactional
     public FarmerProductResource update(long userId, long productId, ProductRequest request) {
@@ -156,7 +140,6 @@ public class ProductService implements ProductServiceInterface {
         return toResource(saved, profile, category, guide);
     }
 
-    /** Soft delete — order_items point to product_id, old orders must stay readable (FR-036). */
     @Override
     @Transactional
     public void softDelete(long userId, long productId) {
@@ -168,10 +151,6 @@ public class ProductService implements ProductServiceInterface {
         templates.deleteByProductId(productId);
     }
 
-    /**
-     * FR-064: sold out / paused is a state the Farmer sets themself; stock and the admin's hide
-     * flag do not change.
-     */
     @Override
     @Transactional
     public FarmerProductResource setStatus(long userId, long productId, ProductStatus status) {
@@ -181,7 +160,6 @@ public class ProductService implements ProductServiceInterface {
         boolean wasOrderable = restock.isOrderable(product);
         product.setStatus(status);
         Product saved = products.save(product);
-        // FR-041: lifting a pause or a manual "sold out" can make it orderable again
         restock.afterChange(saved, wasOrderable, restock.isOrderable(saved));
         return toResource(
                 saved,
@@ -240,14 +218,6 @@ public class ProductService implements ProductServiceInterface {
         return toResource(product, profile, category, guideOf(product));
     }
 
-    /**
-     * R-06: the profile is always looked up by the token's userId; there is no path that takes a
-     * farmerId from the request.
-     */
-    /**
-     * D-09: every product screen — the list and the detail as much as the writes — goes through
-     * here, so a suspended stall sees none of them. Orders are deliberately not routed this way.
-     */
     private FarmerProfile mine(long userId) {
         FarmerProfile profile =
                 farmers.findByUserId(userId).orElseThrow(FarmerProfileNotFoundException::new);
@@ -255,14 +225,6 @@ public class ProductService implements ProductServiceInterface {
         return profile;
     }
 
-    /**
-     * D-02 / Review Focus #1 by another path (Task 5.3b, Ruling C5-14): a Farmer/Admin editing a
-     * product must lock the same row that {@code OrderService.place} locks, never read an unlocked
-     * snapshot and then {@code save()} — Hibernate has no {@code @DynamicUpdate}, so the UPDATE
-     * rewrites every column, including a {@code stock_quantity} an order deducted while it was
-     * being read. {@code deleted} is filtered here (after locking) to keep the 404 that {@code
-     * findByIdAndDeletedFalse} used to give, not in the SQL.
-     */
     private Product owned(FarmerProfile profile, long productId) {
         return requireOwner(profile, notDeleted(productId));
     }
@@ -282,20 +244,12 @@ public class ProductService implements ProductServiceInterface {
         return product;
     }
 
-    /**
-     * C5-2: locks one product through {@code lockAllById} — the same locking path {@code
-     * OrderService} uses.
-     */
     private Product locked(long productId) {
         return products.lockAllById(List.of(productId)).stream()
                 .findFirst()
                 .orElseThrow(() -> new ProductNotFoundException(productId));
     }
 
-    /**
-     * An unknown or disabled category → 400 attached to the categoryId field, so the form marks the
-     * right box.
-     */
     private Category activeCategory(Long categoryId) {
         return categories
                 .findById(categoryId)
@@ -331,12 +285,6 @@ public class ProductService implements ProductServiceInterface {
                         : request.imageUrl().trim());
     }
 
-    /**
-     * FR-121 (spec §4.2): the suggestion comes from the chosen group, or from the category's upper
-     * bound when the category has no groups; the server never trusts a number the client sends.
-     * Longer than the suggestion needs the Farmer's promise and is recorded with its time; more
-     * than twice the suggestion is refused.
-     */
     private ShelfLifeGuide applyShelfLife(
             Product product, ProductRequest request, Category category) {
         int days = request.shelfLifeDays();
@@ -381,7 +329,6 @@ public class ProductService implements ProductServiceInterface {
         }
         boolean extended = ShelfLifePolicy.extendedBy(days, suggested) > 0;
         if (extended) {
-            // FR-123 (spec §4.2, §4.4.4): 3 strikes in 90 days lock anything above the suggestion
             shelfLifeStanding.requireCanExtend(product.getFarmerId());
         }
         if (extended && !Boolean.TRUE.equals(request.acknowledgeLongerShelfLife())) {
@@ -390,8 +337,6 @@ public class ProductService implements ProductServiceInterface {
                     "Confirm that the product stays good for the longer time.");
         }
         Long guideId = guide == null ? null : guide.getId();
-        // Spec §4.2: the time is when the Farmer ticked the promise, so a save that keeps the same
-        // promise (same group, way of keeping and days), such as a price change, keeps its time
         boolean samePromise =
                 product.isShelfLifeExtended()
                         && product.getShelfLifeAckAt() != null

@@ -29,34 +29,24 @@ import FarmerDetailSkeleton from './FarmerDetailSkeleton';
 type Status = { kind: 'loading' } | { kind: 'error' } | { kind: 'ready'; data: AdminFarmerDetailType };
 type DialogKind = 'approve' | 'reject' | 'suspend' | 'reinstate';
 
-/** Milestones in the History block; the label is `history.<key>`. */
 type HistoryKey = 'suspended' | 'approved' | 'sent' | 'customer';
 
-/** Toast after an action finishes: `AdminFarmers:toast.<key>`. */
 const DONE_TOAST = { approve: 'approved', reject: 'rejected', suspend: 'suspended', reinstate: 'reinstated' } as const;
 
 const fileUrl = (path: string) => `${import.meta.env.VITE_API_URL ?? 'http://localhost:8080'}${path}`;
 
-/** §6.2, §7, §8 — an Admin views the detail of a Farmer application, approves/rejects/suspends/reinstates. */
 const AdminFarmerDetailPage = () => {
   const { t } = useTranslation('AdminFarmerDetail');
   const { t: tAssistant } = useTranslation('common');
-  // the dialogs, status, rejection reason and toast are shared with the list page
   const { t: tf } = useTranslation('AdminFarmers');
   const { id } = useParams<{ id: string }>();
   const [status, setStatus] = useState<Status>({ kind: 'loading' });
   const [busy, setBusy] = useState(false);
   const [dialog, setDialog] = useState<DialogKind | null>(null);
-  /** One reason used for both reject and suspend — only one dialog can be open at a time. */
   const [reason, setReason] = useState<ReasonValue>(emptyReason);
   const [reasonError, setReasonError] = useState<string>();
   const [searchParams, setSearchParams] = useSearchParams();
-  // FR-123: the spoiled-report queue links here with ?suspend=<reason> to open the suspend dialog pre-filled, once
   const presetSuspend = useRef(searchParams.get('suspend'));
-  // Kept fresh on every render instead of in fetchDetail's own dependency array (M-3 fix): in react-router 8.4,
-  // useSearchParams memoizes its setter on location.search, so depending on setSearchParams directly would make
-  // fetchDetail change identity the moment the "suspend" param is stripped below, re-running the fetch effect and
-  // firing a second GET that can race the first and overwrite a fast "Suspend stall" click with stale data.
   const setSearchParamsRef = useRef(setSearchParams);
   useEffect(() => {
     setSearchParamsRef.current = setSearchParams;
@@ -76,7 +66,6 @@ const AdminFarmerDetailPage = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  // only setState in a promise callback (the initial state is already loading)
   const fetchDetail = useCallback(() => {
     AdminFarmerApi.detail(Number(id))
       .then((response) => {
@@ -84,8 +73,6 @@ const AdminFarmerDetailPage = () => {
         const code = presetSuspend.current;
         presetSuspend.current = null;
         if (code && isReasonCode('suspend', code)) {
-          // Consumed: drop it from the address (keeping any other params) so a reload, or opening the same link
-          // again, does not reopen the dialog (FR-123 fix round 1).
           setSearchParamsRef.current(
             (prev) => {
               const next = new URLSearchParams(prev);
@@ -118,10 +105,6 @@ const AdminFarmerDetailPage = () => {
     setDialog(kind);
   };
 
-  /**
-   * History milestones built from real data, newest on top. Rejection has no milestone of its own here because it
-   * belongs to one specific submission — see the "Application history" block right below.
-   */
   const historyOf = (f: AdminFarmerDetailType) => {
     const entries: { key: HistoryKey; status: OrderStatus; at: string; by: string }[] = [];
     if (f.approvedAt) {
@@ -137,7 +120,6 @@ const AdminFarmerDetailPage = () => {
 
   const confirmDialog = async () => {
     if (!dialog) return;
-    // The server requires a reason for both (@NotBlank, at most 255) — block it here so the admin does not lose the dialog.
     const written = dialog === 'reject' || dialog === 'suspend' ? composeReason(dialog, reason) : '';
     if (dialog === 'reject' || dialog === 'suspend') {
       if (!written) return setReasonError(tf(`${dialog}.required`));
@@ -273,7 +255,6 @@ const AdminFarmerDetailPage = () => {
                             />
                           </a>
                         ))}
-                        {/* Video plays in place, not by opening a new tab and losing the context of the review. */}
                         {f.videoUrl && <VideoThumb url={f.videoUrl} className="size-28" />}
                       </div>
                       <p className="text-small text-ink-muted">{t('photos.hint')}</p>
@@ -302,8 +283,6 @@ const AdminFarmerDetailPage = () => {
                     </Card>
                   </section>
 
-                  {/* docs/prototype/admin/farmer.html: each milestone is a dot coloured by status + an icon,
-                      then the title and a "date · who did it" line. Newest on top. */}
                   {f.history.length > 0 && (
                     <section className="flex flex-col gap-3">
                       <h2 className="text-h2">{t('attempts.title')}</h2>
@@ -452,7 +431,6 @@ const AdminFarmerDetailPage = () => {
         }
       >
         <div className="flex flex-col gap-3">
-          {/* approving from the detail page says it more clearly: the role becomes Farmer, everything of the Customer is kept */}
           <p>{dialog === 'approve' ? t('approveText') : dialog ? tf(`${dialog}.text`) : ''}</p>
           {dialog === 'suspend' && <BanDurationPicker value={duration} onChange={setDuration} />}
           {(dialog === 'reject' || dialog === 'suspend') && (

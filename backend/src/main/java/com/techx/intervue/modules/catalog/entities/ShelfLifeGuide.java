@@ -12,10 +12,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * FR-120: one group of products inside a category, kept one way, with the shelf life the app
- * suggests. Master data managed by the admin. Table `shelf_life_guides` (V20260928011).
- */
 @Entity
 @Getter
 @Setter
@@ -33,7 +29,6 @@ public class ShelfLifeGuide {
     @Column(name = "group_name", nullable = false, length = 80)
     private String groupName;
 
-    /** Comma-separated product words shown to the Farmer and used to pick the group by name. */
     @Column(nullable = false, length = 255)
     private String examples = "";
 
@@ -44,7 +39,6 @@ public class ShelfLifeGuide {
     @Column(name = "suggested_days", nullable = false)
     private int suggestedDays;
 
-    /** Soft delete, like categories: products that point to it keep their saved numbers. */
     @Column(name = "is_active", nullable = false)
     private boolean active = true;
 }

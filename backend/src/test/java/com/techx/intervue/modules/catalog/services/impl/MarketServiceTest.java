@@ -55,14 +55,11 @@ class MarketServiceTest {
                         imageRepository,
                         queryRepository,
                         stallService,
-                        // Real address rules on a slice of the master data
                         new AddressService(new GeoDirectory(GeoFixtures.repository())));
     }
 
-    /** A valid images list, for tests that are not themselves about the images field. */
     private static final List<String> ONE_IMAGE = List.of("/uploads/market-images/a.jpg");
 
-    /** A market address in Vietnam without a house number, as markets usually are. */
     private static final AddressPartsRequest LE_LOI =
             new AddressPartsRequest(
                     "VN", GeoFixtures.HCM, GeoFixtures.BEN_THANH, "Lê Lợi", null, null, null);
@@ -127,7 +124,6 @@ class MarketServiceTest {
         assertThat(result.addressParts().streetName()).isEqualTo("Lê Lợi");
     }
 
-    /** Customers pick up at the market, so it has to be somewhere they can go. */
     @Test
     void createRejectsAMarketOutsideVietnam() {
         AddressPartsRequest tokyo =
@@ -164,7 +160,6 @@ class MarketServiceTest {
                 .hasMessageContaining("closing");
     }
 
-    /** D-12: map_provider is always 'osm', the client cannot send it. */
     @Test
     void createAlwaysStoresOsmAsMapProvider() {
         when(repository.save(any(Market.class))).thenReturn(saved());
@@ -176,9 +171,6 @@ class MarketServiceTest {
         assertThat(captor.getValue().getMapProvider()).isEqualTo("osm");
     }
 
-    /**
-     * Soft delete — old orders still point to this market (orders.market_id is a non-nullable FK).
-     */
     @Test
     void deactivateFlipsIsActiveInsteadOfDeleting() {
         Market m = saved();
@@ -270,7 +262,6 @@ class MarketServiceTest {
         assertThat(existing.getImageUrl()).isEqualTo("/uploads/market-images/c.jpg");
     }
 
-    /** QA E2E v2 MARKET-ADMIN-002: adding back a removed market's name restores that market. */
     @Test
     void createRestoresARemovedMarketWithTheSameName() {
         Market removed = saved();
@@ -287,7 +278,6 @@ class MarketServiceTest {
         verify(imageRepository).replaceImages(1L, ONE_IMAGE);
     }
 
-    /** An active market keeps its name: the new row is left to uq_market_name (→ 409). */
     @Test
     void createDoesNotTakeOverAnActiveMarketWithTheSameName() {
         when(repository.findByMarketName("Chợ Bà Chiểu")).thenReturn(Optional.of(saved()));

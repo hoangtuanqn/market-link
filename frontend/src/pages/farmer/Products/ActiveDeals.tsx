@@ -11,16 +11,11 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 
 type ActiveDealsProps = {
-  /** Bumped by the page after a deal is posted, so the list is read again. */
   version: number;
 };
 
 const keyOf = (d: FarmerDealDto) => `${d.productId}@${d.stockDate}`;
 
-/**
- * FR-124 — the stall's deal days from today on, each with its "Remove deal" button (spec §4.5.3). Hidden while there is
- * none; the last list stays on screen while it is read again after a new deal, so the block does not blink.
- */
 const ActiveDeals = ({ version }: ActiveDealsProps) => {
   const { t } = useTranslation('FarmerProducts');
   const { t: tc } = useTranslation();
@@ -45,8 +40,6 @@ const ActiveDeals = ({ version }: ActiveDealsProps) => {
     }
   };
 
-  // Only the first load (no "last" list yet) shows this; a re-read after posting or removing a deal keeps
-  // showing the old list instead, so the block does not blink to a loading line and back.
   if (state.kind === 'loading' && last === null) {
     return (
       <p role="status" className="text-ink-muted">

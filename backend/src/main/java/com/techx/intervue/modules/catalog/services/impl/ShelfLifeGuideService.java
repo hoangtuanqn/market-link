@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 @AllArgsConstructor
 public class ShelfLifeGuideService implements ShelfLifeGuideServiceInterface {
 
-    /** Below this many products the median is hidden, so one stall's number never shows. */
     static final int MIN_PEERS = 3;
 
     private final ShelfLifeGuideRepository guides;
@@ -37,8 +36,6 @@ public class ShelfLifeGuideService implements ShelfLifeGuideServiceInterface {
 
     @Override
     public List<ShelfLifeGuideGroupResource> listForCategory(long categoryId, long viewerUserId) {
-        // The asking stall's own products never count as "other stalls" (spec §4.1); an admin has
-        // no stall, so every stall counts
         Long ownStall = farmers.findByUserId(viewerUserId).map(FarmerProfile::getId).orElse(null);
         List<ShelfLifeGuide> rows =
                 guides.findByCategoryIdAndActiveTrueOrderByGroupNameAscStorageModeAsc(categoryId);
@@ -85,17 +82,12 @@ public class ShelfLifeGuideService implements ShelfLifeGuideServiceInterface {
                 .toList();
     }
 
-    /**
-     * saveAndFlush: a duplicate group and mode fails inside the call, where the handler maps it.
-     */
     @Override
     @Transactional
     public ShelfLifeGuideResource create(ShelfLifeGuideRequest request) {
         requireCategory(request.categoryId());
         ShelfLifeGuide guide = new ShelfLifeGuide();
         apply(guide, request);
-        // The product form groups rows by their exact name, while the unique key ignores case and
-        // accents: a new way of keeping for "leafy Greens" joins the existing "Leafy greens"
         guides.findFirstByCategoryIdAndGroupNameOrderByIdAsc(
                         guide.getCategoryId(), guide.getGroupName())
                 .ifPresent(same -> guide.setGroupName(same.getGroupName()));
@@ -108,9 +100,6 @@ public class ShelfLifeGuideService implements ShelfLifeGuideServiceInterface {
     public ShelfLifeGuideResource update(long id, ShelfLifeGuideRequest request) {
         ShelfLifeGuide guide =
                 guides.findById(id).orElseThrow(() -> new ShelfLifeGuideNotFoundException(id));
-        // A group never moves: the products that use it would point at another category's group,
-        // or keep a way of keeping the group no longer has, and the form and the peer numbers
-        // both follow the guide
         if (!guide.getCategoryId().equals(request.categoryId())) {
             throw new InvalidFieldException(
                     "categoryId",

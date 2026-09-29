@@ -14,16 +14,10 @@ import nl.martijndwars.webpush.Notification;
 import nl.martijndwars.webpush.PushService;
 import org.springframework.stereotype.Component;
 
-/**
- * FR-042 N3 — sends Web Push (RFC 8291 aes128gcm + VAPID) to every registered browser of one
- * person. Runs on its own thread so the request that caused the notification does not wait for the
- * push service. 404/410 = the browser unsubscribed → delete.
- */
 @Slf4j
 @Component
 public class WebPushSender {
 
-    /** The content the service worker reads (public/sw.js); no other personal data is added. */
     record PushMessage(String kind, String title, String message, String link, String tag) {}
 
     private static final ObjectMapper JSON = new ObjectMapper();
@@ -51,13 +45,11 @@ public class WebPushSender {
         return gateway.service().isPresent();
     }
 
-    /** Asynchronous; errors are only logged. */
     public void send(Long userId, NotificationPayload payload) {
         if (!enabled()) return;
         executor.execute(() -> sendNow(userId, payload));
     }
 
-    /** Synchronous (used by tests and the web-push flow). */
     public void sendNow(Long userId, NotificationPayload payload) {
         PushService push = gateway.service().orElse(null);
         if (push == null) return;

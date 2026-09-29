@@ -37,11 +37,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * Spec §2: every notification source goes through dispatch. Stored in the caller's transaction;
- * pushed after commit so the FE does not receive a frame about a row that does not exist yet. A
- * push failure for one person does not block others.
- */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -199,7 +194,6 @@ public class NotificationService implements NotificationServiceInterface {
                 NotificationEvent.of(NotificationKind.TEST, settingsLink(role), Map.of()));
     }
 
-    /** Each role has its own Settings page in the frontend (App.tsx routes). */
     static String settingsLink(RoleType role) {
         return switch (role) {
             case ADMIN -> "/admin/settings";

@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-/** FR-050/051 — {@code POST /reviews} (contract §8). Farmers buy too (D-13), admins never. */
 @RestController
 @RequestMapping("/api/v1/reviews")
 @PreAuthorize("hasAnyRole('CUSTOMER','FARMER')")

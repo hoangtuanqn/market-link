@@ -11,10 +11,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/**
- * FR-123 (spec §4.4.4): the lock on longer shelf lives is never stored; it is read from the strikes
- * of the last 90 days every time, so it ends by itself and cannot drift from them.
- */
 @Service
 @AllArgsConstructor
 public class ShelfLifeStandingService implements ShelfLifeStandingServiceInterface {

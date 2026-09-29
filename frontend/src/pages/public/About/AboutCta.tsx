@@ -6,9 +6,7 @@ const AboutCta = () => {
 
   return (
     <>
-      {/* 9. DUAL CALL TO ACTION */}
       <section className="about-cta-grid">
-        {/* Shopper Box */}
         <div className="about-cta-box cta-shopper">
           <div className="about-cta-content">
             <span className="about-eyebrow" style={{ color: 'var(--brand)' }}>
@@ -29,7 +27,6 @@ const AboutCta = () => {
           </ButtonLink>
         </div>
 
-        {/* Farmer Box */}
         <div className="about-cta-box cta-farmer">
           <div className="about-cta-content">
             <span className="about-eyebrow" style={{ color: '#a3e635' }}>
@@ -49,7 +46,6 @@ const AboutCta = () => {
         </div>
       </section>
 
-      {/* 10. CONTACT & FEEDBACK STRIP */}
       <section style={{ marginTop: '40px' }}>
         <div className="about-contact-strip">
           <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
@@ -73,7 +69,6 @@ const AboutCta = () => {
           </div>
         </div>
 
-        {/* Micro-Credits line to fulfill FR-082 tests cleanly */}
         <div className="about-micro-credits">
           <span>{t('credits.photosValue', 'Photos on this page from Unsplash, under the Unsplash License')}</span>
           <span>·</span>

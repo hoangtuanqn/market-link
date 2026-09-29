@@ -2,10 +2,6 @@ import { useTranslation } from 'react-i18next';
 
 const SKELETON_ROWS = 5;
 
-/**
- * AnnouncementTableSkeleton mirrors the Announcement table structure with identical column widths and row heights to
- * prevent layout shift during loading.
- */
 const AnnouncementTableSkeleton = () => {
   const { t } = useTranslation('AdminAnnouncements');
 
@@ -38,26 +34,21 @@ const AnnouncementTableSkeleton = () => {
         <tbody>
           {Array.from({ length: SKELETON_ROWS }, (_, i) => (
             <tr key={i} className="hover:bg-surface-quiet">
-              {/* Title & Content */}
               <td className="border-line border-t px-4 py-3 align-middle">
                 <div className="flex flex-col gap-1.5">
                   <div className="bg-surface-sunken h-4 w-44 max-w-full rounded-sm" />
                   <div className="bg-surface-sunken h-3 w-64 max-w-full rounded-sm" />
                 </div>
               </td>
-              {/* Show To */}
               <td className="border-line border-t px-4 py-3 align-middle">
                 <div className="bg-surface-sunken h-5 w-16 rounded-sm" />
               </td>
-              {/* Window */}
               <td className="border-line border-t px-4 py-3 align-middle">
                 <div className="bg-surface-sunken h-4 w-28 rounded-sm" />
               </td>
-              {/* Status */}
               <td className="border-line border-t px-4 py-3 align-middle">
                 <div className="bg-surface-sunken h-6 w-20 rounded-full" />
               </td>
-              {/* Action */}
               <td className="border-line border-t px-4 py-3 text-right align-middle whitespace-nowrap">
                 <div className="bg-surface-sunken ml-auto h-8 w-20 rounded-sm" />
               </td>

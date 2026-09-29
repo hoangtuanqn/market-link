@@ -16,10 +16,6 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-/**
- * Your own avatar: the id comes from the access token, another person's avatar cannot be changed
- * (R-06). Not in api-contract.md yet — proposed in docs/proposals/avatar-api.md.
- */
 @RestController
 @RequestMapping("/api/v1/auth/me/avatar")
 @AllArgsConstructor

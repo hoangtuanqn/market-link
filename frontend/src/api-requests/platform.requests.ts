@@ -5,7 +5,6 @@ export type PlatformStatusType = {
   maintenanceMode: boolean;
 };
 
-/** Site-wide maintenance mode: status() is public (every visitor polls it before anything else loads). */
 class PlatformApi {
   static status = async () => {
     const response = await publicApi.get<ApiResponse<PlatformStatusType>>('/platform/status');

@@ -1,6 +1,5 @@
 package com.techx.intervue.modules.catalog.exceptions;
 
-/** Two different names can produce the same slug ("Rau củ" and "Rau cu") → 409, not 400. */
 public class DuplicateCategoryException extends RuntimeException {
     private final String slug;
 

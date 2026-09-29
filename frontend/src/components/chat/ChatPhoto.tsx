@@ -3,17 +3,8 @@ import { useTranslation } from 'react-i18next';
 import ConversationApi from '@/api-requests/conversation.requests';
 import type { ChatAttachment } from '@/types/chat.types';
 
-/** Only what drawing the photo needs, so the admin view can pass an attachment it only knows the id of. */
 type Props = { attachment: Pick<ChatAttachment, 'attachmentId' | 'width' | 'height'>; alt: string };
 
-/**
- * The JWT travels in the `Authorization` header, not a cookie, so `<img src="/api/v1/attachments/5">` returns 401. Load
- * it with axios and wrap it as a blob URL, and revoke it on leaving the screen — a blob is not cleaned up by itself,
- * and leaving it leaks memory every time an image scrolls by.
- *
- * The caller must pass `key={attachment.attachmentId}`: changing the image makes React remount the component, so state
- * clears itself without needing setState inside an effect (react-hooks/set-state-in-effect).
- */
 export default function ChatPhoto({ attachment, alt }: Props) {
   const { t } = useTranslation('common');
   const [src, setSrc] = useState<string | null>(null);
@@ -29,7 +20,6 @@ export default function ChatPhoto({ attachment, alt }: Props) {
           url = blobUrl;
           setSrc(blobUrl);
         } else {
-          // Leaving the screen before the blob arrives: revoke right away, do not touch state
           URL.revokeObjectURL(blobUrl);
         }
       })
@@ -51,7 +41,6 @@ export default function ChatPhoto({ attachment, alt }: Props) {
     );
   }
 
-  // Reserve the exact space the server's size says, so the chat frame does not jump once the image finishes loading
   const ratio = attachment.width && attachment.height ? `${attachment.width} / ${attachment.height}` : '4 / 3';
 
   return (

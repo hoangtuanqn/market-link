@@ -16,7 +16,6 @@ import Helper from '@/utils/helper';
 import Notification from '@/utils/notification';
 import AnnouncementTableSkeleton from './AnnouncementTableSkeleton';
 
-/** API value → the page's old translation key (audience.Everyone / Customers / Farmers). */
 const AUDIENCES: { value: AnnouncementAudience; label: 'Everyone' | 'Customers' | 'Farmers' }[] = [
   { value: 'all', label: 'Everyone' },
   { value: 'customers', label: 'Customers' },
@@ -33,11 +32,9 @@ type Load = { status: 'loading' } | { status: 'error' } | { status: 'ready'; ite
 
 const EMPTY: Form = { title: '', content: '', audience: 'all', from: '', to: '' };
 
-/** The date box's Yyyy-mm-dd → ISO; "to" counts through the end of that day. Empty → null (no limit). */
 const toIso = (day: string, endOfDay: boolean) =>
   day ? new Date(`${day}T${endOfDay ? '23:59:59' : '00:00:00'}`).toISOString() : null;
 
-/** Removed or past "to" → ended; still on but not yet at "from" → scheduled (not ended). */
 const phaseOf = (a: Announcement, now = Date.now()): 'live' | 'scheduled' | 'ended' => {
   if (!a.active || (a.endsAt && new Date(a.endsAt).getTime() <= now)) return 'ended';
   if (a.startsAt && new Date(a.startsAt).getTime() > now) return 'scheduled';
@@ -50,11 +47,6 @@ const PHASE_BADGE = {
   ended: { className: 'bg-status-cancelled-bg text-status-cancelled-ink', Icon: CircleSlashIcon },
 } as const;
 
-/**
- * FR-077 — platform-wide announcements: the banner strip on the header (banner) and a row in the notifications of
- * everyone in the audience. Posting sends immediately; removing only removes the banner, notifications already sent are
- * kept.
- */
 const AdminAnnouncementsPage = () => {
   const { t } = useTranslation('AdminAnnouncements');
   const { t: tAssistant } = useTranslation('common');

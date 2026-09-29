@@ -13,7 +13,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/** FR-038: one order status change. The first row has fromStatus = NULL (at order time). */
 @Entity
 @Getter
 @Setter
@@ -42,7 +41,6 @@ public class OrderStatusHistory {
     @Column(length = 255)
     private String note;
 
-    /** Filled in by the database (DEFAULT CURRENT_TIMESTAMP); read-only. */
     @Column(name = "changed_at", insertable = false, updatable = false)
     private Instant changedAt;
 }

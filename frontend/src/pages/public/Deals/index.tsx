@@ -13,14 +13,9 @@ import useRequest from '@/hooks/useRequest';
 import type { MarketType } from '@/types/market.types';
 
 const PAGE_SIZE = 12;
-/** The market filter's "no filter" value. */
 const ALL_MARKETS = 'all';
 const NO_MARKETS: MarketType[] = [];
 
-/**
- * FR-125 — near-expiry deals (spec §4.5.4): one card per product and pickup day customers can still order for, nearest
- * day first, then the biggest discount. Filtering and paging happen on the server.
- */
 const DealsPage = () => {
   const { t } = useTranslation('Deals');
   const [categoryId, setCategoryId] = useState<number | null>(null);
@@ -102,7 +97,6 @@ const DealsPage = () => {
         <LoadError noun={t('noun')} onRetry={retry} />
       ) : items.length ? (
         <>
-          {/* Each card's name is an h3; this hidden h2 keeps the outline h1 → h2 → h3 */}
           <h2 className="sr-only">{t('results')}</h2>
           <div className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2 lg:grid-cols-3">
             {items.map((d) => (

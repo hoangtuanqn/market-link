@@ -6,7 +6,6 @@ export type FarmerType = {
   person: string;
   phone: string;
   email: string;
-  /** Market ids this stall sells at. */
   markets: number[];
   days: string;
   pickup: string;
@@ -23,27 +22,17 @@ export type FarmerType = {
   suspendedReason?: string;
 };
 
-/**
- * The optional part of the application: stall introduction and evidence. The products, farming method and markets they
- * want to sell at are declared after the Admin approves, in the Farmer panel (FR-060…FR-064), so they are not here.
- * Images/videos store a local path (for test/demo only, not production infrastructure).
- */
 export type FarmerApplicationDetails = {
   description?: string | null;
   photoUrls?: string[];
   videoUrl?: string | null;
 };
 
-/**
- * FR-002 (second route — a signed-in customer applies to become a Farmer; see the caption in
- * CustomerBecomeFarmer/index.tsx).
- */
 export type FarmerApplicationInput = {
   stallName: string;
   contactPerson: string;
 } & FarmerApplicationDetails;
 
-/** A past application — its content at submission, the outcome and the reason if rejected. */
 export type FarmerApplicationAttemptType = {
   id: number;
   attempt: number;
@@ -58,7 +47,6 @@ export type FarmerApplicationAttemptType = {
   submittedAt: string;
 };
 
-/** The caller's own Farmer profile. */
 export type FarmerProfileType = {
   id: number;
   stallName: string;
@@ -70,7 +58,6 @@ export type FarmerProfileType = {
   createdAt: string;
 } & FarmerApplicationDetails;
 
-/** §6.1 — one row in the Admin's Farmer list. */
 export type AdminFarmerListItemType = {
   id: number;
   stallName: string;
@@ -82,7 +69,6 @@ export type AdminFarmerListItemType = {
   avatarUrl?: string | null;
 };
 
-/** §6.2 — full detail so the Admin can approve or suspend. */
 export type AdminFarmerDetailType = {
   id: number;
   userId: number;
@@ -98,16 +84,12 @@ export type AdminFarmerDetailType = {
   suspendedAt: string | null;
   createdAt: string;
   history: FarmerApplicationAttemptType[];
-  /** The Customer account already existed — this is not the creation date of this Farmer profile. */
   customerSince: string;
   accountStatus: 'active' | 'inactive' | 'suspended';
-  /** FR-123: shelf-life strikes of the last 90 days. */
   activeViolations: number;
-  /** FR-123: when the lock on longer shelf lives ends (ISO 8601); null when the stall is not locked. */
   extensionLockedUntil: string | null;
 } & FarmerApplicationDetails;
 
-/** Images/videos uploaded before submitting the main form. */
 export type UploadedFileType = {
   url: string;
 };

@@ -15,7 +15,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-/** FR-116, spec §8.3. */
 @Service
 @RequiredArgsConstructor
 public class MessageReportService implements MessageReportServiceInterface {
@@ -31,14 +30,7 @@ public class MessageReportService implements MessageReportServiceInterface {
         Message message =
                 messages.findById(messageId)
                         .orElseThrow(() -> new EntityNotFoundException("Message not found."));
-        // R-06 BEFORE any other check. If "already hidden" were checked first, an outsider would
-        // get 404
-        // for a hidden message and 403 for a visible one — i.e. they could guess the moderation
-        // state of a
-        // message they have no right to know exists.
         lookup.requireMember(meId, message.getConversationId());
-        // A hidden message has already disappeared from the user's list; do not let them report a
-        // ghost
         if (message.isHidden()) {
             throw new EntityNotFoundException("Message not found.");
         }

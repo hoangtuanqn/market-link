@@ -25,12 +25,6 @@ import org.springframework.core.io.FileSystemResource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-/**
- * FR-115 §5: the stream endpoint behind a signed link. MockMvc runs the real Spring MVC return
- * value handling, which is what turns a Range request into 206 — the part a browser needs to seek.
- * The signature and permission rules are AttachmentServiceTest's job; the real filter chain
- * (permitAll without a token) is covered in AttachmentDownloadControllerTest.
- */
 class AttachmentStreamControllerTest {
 
     static final String LINK = "/api/v1/attachments/55/stream?u=3&s=u&e=1790000000&t=sig";
@@ -96,9 +90,6 @@ class AttachmentStreamControllerTest {
                 .andExpect(jsonPath("$.error.code").value("STREAM_LINK_INVALID"));
     }
 
-    /**
-     * A link with a missing or mangled part is just as invalid as a forged one — never a 400/500.
-     */
     @Test
     void aMalformedLinkIsForbiddenToo() throws Exception {
         for (String query :
