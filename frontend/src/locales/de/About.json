@@ -50,31 +50,26 @@
   },
   "team": {
     "title": "Das Team",
-    "subtitle": "Sechs Personen, aufgeteilt nach ihren Bereichen im Repository",
-    "namePending": "Name folgt",
+    "subtitle": "Fünf Personen, aufgeteilt nach ihren Zuständigkeiten im Repository",
     "lead": {
-      "role": "Teamleitung",
-      "note": "Das Schema, der API-Vertrag und die zwölf Entscheidungen, auf denen das restliche Team aufbaut"
+      "role": "Systemarchitekt & Teamleiter",
+      "note": "Das Datenschema, der API-Vertrag und die Kernentscheidungen für das Team"
     },
-    "be1": {
-      "role": "Backend",
-      "note": "Anmeldung, Rollen und der Lebenszyklus einer Bestellung, von der Aufgabe bis zum Abschluss"
+    "devops": {
+      "role": "DevOps & Infrastruktur",
+      "note": "CI/CD-Pipelines, Docker-Umgebungen, Vercel-SPA-Deployment und Systemstabilität"
     },
-    "be2": {
-      "role": "Backend",
-      "note": "Produkte, Märkte, Wochenbestand, Berichte und die Beispieldaten für die Demo"
+    "be": {
+      "role": "Backend & Kernmodule",
+      "note": "Marktstände, Abholzeiten, Bestandslebenszyklus und Datenverwaltung"
     },
-    "fe1": {
-      "role": "Frontend",
-      "note": "Das Designsystem, die öffentlichen Seiten, die Karte und das Customer-Dashboard"
-    },
-    "fe2": {
-      "role": "Frontend",
-      "note": "Die Dashboards für Farmer und Admin sowie jedes Formular im Produkt"
+    "fe": {
+      "role": "Frontend & UI/UX",
+      "note": "Das Designsystem, öffentliche Seiten, Feedback-Portale und Kunden-Dashboard"
     },
     "qa": {
-      "role": "Qualität und Dokumentation",
-      "note": "Die Anforderungsliste, die Testdaten und die Dokumente, die zur Einreichung gehören"
+      "role": "Qualitätssicherung & Dokumentation",
+      "note": "Anforderungsprüfung, E2E-Tests, SRS-Konformität und Projektdokumentation"
     }
   },
   "stack": {

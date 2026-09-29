@@ -50,31 +50,26 @@
   },
   "team": {
     "title": "L'équipe",
-    "subtitle": "Six personnes, réparties selon ce dont chacune est responsable dans le dépôt",
-    "namePending": "Nom à ajouter",
+    "subtitle": "Cinq personnes, réparties selon leurs responsabilités dans le dépôt",
     "lead": {
-      "role": "Chef d'équipe",
-      "note": "Le schéma, le contrat d'API et les douze décisions sur lesquelles s'appuie le reste de l'équipe"
+      "role": "Architecte système & Chef d'équipe",
+      "note": "Le schéma de données, le contrat d'API et les décisions fondatrices du projet"
     },
-    "be1": {
-      "role": "Backend",
-      "note": "La connexion, les rôles et le cycle de vie des commandes, de la passation jusqu'à la fin"
+    "devops": {
+      "role": "DevOps & Infrastructure",
+      "note": "Pipelines CI/CD, environnements Docker, déploiement Vercel et fiabilité"
     },
-    "be2": {
-      "role": "Backend",
-      "note": "Les produits, les marchés, le stock hebdomadaire, les rapports et les données de démonstration"
+    "be": {
+      "role": "Backend & Modules clés",
+      "note": "Stands fermiers, créneaux de retrait, cycle de vie des stocks et données"
     },
-    "fe1": {
-      "role": "Frontend",
-      "note": "Le design system, les pages publiques, la carte et le tableau de bord Customer"
-    },
-    "fe2": {
-      "role": "Frontend",
-      "note": "Les tableaux de bord Farmer et Admin, et tous les formulaires du produit"
+    "fe": {
+      "role": "Frontend & UI/UX",
+      "note": "Système de design, pages publiques, portail d'avis et tableau de bord client"
     },
     "qa": {
-      "role": "Qualité et documentation",
-      "note": "La liste des exigences, les données de test et les documents joints au dossier"
+      "role": "Assurance qualité & Documentation",
+      "note": "Matrice des exigences, tests E2E, conformité SRS et livrables de projet"
     }
   },
   "stack": {

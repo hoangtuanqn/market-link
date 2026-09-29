@@ -50,31 +50,26 @@
   },
   "team": {
     "title": "The team",
-    "subtitle": "Six people, split by what they own in the repository",
-    "namePending": "Name to add",
+    "subtitle": "Five people, split by what they own in the repository",
     "lead": {
-      "role": "Team lead",
+      "role": "System Architect & Tech Lead",
       "note": "The schema, the API contract and the twelve decisions the rest of the team builds against"
     },
-    "be1": {
-      "role": "Backend",
-      "note": "Sign-in, roles and the order lifecycle, from placed through to completed"
+    "devops": {
+      "role": "DevOps & Infrastructure",
+      "note": "CI/CD branch guards, Docker compose environments, Vercel SPA hosting, and deployment pipeline"
     },
-    "be2": {
-      "role": "Backend",
-      "note": "Products, markets, weekly stock, reports and the seed data for the demo"
+    "be": {
+      "role": "Backend & Core Modules",
+      "note": "Farmer stalls, pickup schedules, inventory lifecycle, and soft-delete data management"
     },
-    "fe1": {
-      "role": "Frontend",
-      "note": "The design system, the public pages, the map and the Customer dashboard"
-    },
-    "fe2": {
-      "role": "Frontend",
-      "note": "The Farmer and Admin dashboards, and every form in the product"
+    "fe": {
+      "role": "Frontend & UI/UX",
+      "note": "The Hang tag design system, public discovery pages, feedback portals, and customer dashboard"
     },
     "qa": {
-      "role": "Quality and documents",
-      "note": "The requirements list, the test data and the documents that go with the submission"
+      "role": "QA & Technical Documentation",
+      "note": "The requirements list, E2E test scenarios, SRS compliance verification, and project deliverables"
     }
   },
   "stack": {
