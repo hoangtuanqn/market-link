@@ -78,6 +78,14 @@ services:
       CHAT_TYPING_FRAMES_PER_MINUTE: ${CHAT_TYPING_FRAMES_PER_MINUTE:?Thiếu CHAT_TYPING_FRAMES_PER_MINUTE trong .env.production}
     ports: !override
       - "${BACKEND_PORT:-8080}:8080"
+    # /ping is public (SecurityConfig), so a hung JVM or a stuck Tomcat shows up as unhealthy.
+    # start_period covers Flyway + Spring startup (~15s on the Mac mini, longer after a cold boot).
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "-o", "/dev/null", "http://localhost:8080/ping"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 90s
     # No source mount; only keep user-uploaded images (project prod → its own volume separate from dev)
     volumes: !override
       - uploads-data:/app/uploads
