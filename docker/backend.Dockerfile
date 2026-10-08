@@ -29,6 +29,9 @@ RUN ./mvnw -B -q package -DskipTests \
 # ---------- prod ----------
 FROM eclipse-temurin:25-jre AS prod
 WORKDIR /app
+# curl is for the compose healthcheck (GET /ping); the JRE base image has no HTTP client.
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
 # the uploads-data volume is initialized from /app/uploads, so the spring user can write uploaded images.
 # Same for the chat-uploads volume (FR-115): without the directory in the image Docker creates it root-owned.
 RUN groupadd -r spring && useradd -r -g spring spring \
