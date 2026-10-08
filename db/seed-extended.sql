@@ -13,149 +13,149 @@ SET @pw := '$2y$10$QECyiDw14FWH42GLLZE9l.wmNFH4v8ZHLz.UORUBYw3xGS4iDsTtW';
 -- ===== 1. ADDITIONAL USERS =====
 
 -- 1.1 Second admin
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
   ('admin2@marketlink.vn', @pw, 'admin', 'Phạm Minh Quang', '0900000100',
-   'Quận 3, TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 170 DAY)
+   '115 Nguyễn Đình Chiểu, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Nguyễn Đình Chiểu', '115', 'active', UTC_TIMESTAMP() - INTERVAL 170 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,
                         phone = new.phone, role = new.role, status = new.status;
 
 -- 1.2 Customers (100+)
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('customer2@marketlink.vn', @pw, 'customer', 'Đặng Quốc Khang', '0943045625', '83 Lê Văn Sỹ, Tân Bình', 'active', UTC_TIMESTAMP() - INTERVAL 177 DAY),
-  ('customer3@marketlink.vn', @pw, 'customer', 'Châu Ngọc Nam', '0940253393', '187 Phan Đình Phùng, Gò Vấp', 'active', UTC_TIMESTAMP() - INTERVAL 176 DAY),
-  ('customer4@marketlink.vn', @pw, 'customer', 'Từ Bảo Huy', '0969808602', '60 Cách Mạng Tháng 8, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 174 DAY),
-  ('customer5@marketlink.vn', @pw, 'customer', 'Võ Hữu Phong', '0941185591', '130 Nam Kỳ Khởi Nghĩa, Quận 1', 'active', UTC_TIMESTAMP() - INTERVAL 173 DAY),
-  ('customer6@marketlink.vn', @pw, 'customer', 'Bùi Thị Quyên', '0980931061', '7 Hoàng Sa, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 171 DAY),
-  ('customer7@marketlink.vn', @pw, 'customer', 'Phan Thị Trinh', '0982857613', '154 Trần Hưng Đạo, Gò Vấp', 'active', UTC_TIMESTAMP() - INTERVAL 169 DAY),
-  ('customer8@marketlink.vn', @pw, 'customer', 'Trần Thị Mai', '0960108281', '10 Phan Đình Phùng, Gò Vấp', 'active', UTC_TIMESTAMP() - INTERVAL 168 DAY),
-  ('customer9@marketlink.vn', @pw, 'customer', 'Lý Đức Trung', '0985005255', '158 Nguyễn Đình Chiểu, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 166 DAY),
-  ('customer10@marketlink.vn', @pw, 'customer', 'Vũ Phương Phong', '0932110171', '85 Nguyễn Đình Chiểu, Tân Phú', 'active', UTC_TIMESTAMP() - INTERVAL 165 DAY),
-  ('customer11@marketlink.vn', @pw, 'customer', 'Bùi Thị Trinh', '0982554646', '120 Nguyễn Văn Trỗi, Quận 1', 'active', UTC_TIMESTAMP() - INTERVAL 163 DAY),
-  ('customer12@marketlink.vn', @pw, 'customer', 'Tạ Đức Khang', '0969238962', '141 Hoàng Sa, Quận 10', 'active', UTC_TIMESTAMP() - INTERVAL 161 DAY),
-  ('customer13@marketlink.vn', @pw, 'customer', 'Đặng Thị Trang', '0916608190', '112 Lê Lợi, Tân Phú', 'active', UTC_TIMESTAMP() - INTERVAL 160 DAY),
-  ('customer14@marketlink.vn', @pw, 'customer', 'Trần Thị Nhung', '0970717906', '165 Trương Định, Tân Bình', 'active', UTC_TIMESTAMP() - INTERVAL 158 DAY),
-  ('customer15@marketlink.vn', @pw, 'customer', 'Dương Thị Vân', '0950596987', '124 Sương Nguyệt Ánh, Gò Vấp', 'active', UTC_TIMESTAMP() - INTERVAL 157 DAY),
-  ('customer16@marketlink.vn', @pw, 'customer', 'Cao Văn Tài', '0994689397', '180 Nguyễn Thị Minh Khai, Gò Vấp', 'active', UTC_TIMESTAMP() - INTERVAL 155 DAY),
-  ('customer17@marketlink.vn', @pw, 'customer', 'Châu Thị Đạt', '0999629941', '28 Trương Định, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 153 DAY),
-  ('customer18@marketlink.vn', @pw, 'customer', 'Hoàng Thị Chi', '0913878641', '58 Phan Đình Phùng, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 152 DAY),
-  ('customer19@marketlink.vn', @pw, 'customer', 'Võ Thị Gia', '0997008861', '197 Võ Văn Tần, Quận 10', 'active', UTC_TIMESTAMP() - INTERVAL 150 DAY),
-  ('customer20@marketlink.vn', @pw, 'customer', 'Từ Minh Long', '0942884770', '45 Lê Văn Sỹ, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 149 DAY),
-  ('customer21@marketlink.vn', @pw, 'customer', 'Hoàng Thị Bích', '0980752405', '76 Lý Tự Trọng, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 147 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('customer2@marketlink.vn', @pw, 'customer', 'Đinh Thanh Gia', '0963722033', '68 Nguyễn Đình Chiểu, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Nguyễn Đình Chiểu', '68', 'active', UTC_TIMESTAMP() - INTERVAL 177 DAY),
+  ('customer3@marketlink.vn', @pw, 'customer', 'Huỳnh Thị Thảo', '0993936347', '119 Nguyễn Văn Trỗi, Phường Chợ Lớn, Thành phố Hồ Chí Minh', 'VN', '79', '27343', 'Nguyễn Văn Trỗi', '119', 'active', UTC_TIMESTAMP() - INTERVAL 176 DAY),
+  ('customer4@marketlink.vn', @pw, 'customer', 'Tô Phương Tài', '0981893180', '131 Pasteur, Phường Tân Phú, Thành phố Hồ Chí Minh', 'VN', '79', '27031', 'Pasteur', '131', 'active', UTC_TIMESTAMP() - INTERVAL 174 DAY),
+  ('customer5@marketlink.vn', @pw, 'customer', 'Nguyễn Thị Hương', '0988213909', '21 Nguyễn Thị Minh Khai, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Nguyễn Thị Minh Khai', '21', 'active', UTC_TIMESTAMP() - INTERVAL 173 DAY),
+  ('customer6@marketlink.vn', @pw, 'customer', 'Hoàng Thị Diễm', '0939592897', '108 Điện Biên Phủ, Phường Diên Hồng, Thành phố Hồ Chí Minh', 'VN', '79', '27169', 'Điện Biên Phủ', '108', 'active', UTC_TIMESTAMP() - INTERVAL 171 DAY),
+  ('customer7@marketlink.vn', @pw, 'customer', 'Hồ Kim Kiệt', '0942997321', '200 Lý Tự Trọng, Phường Diên Hồng, Thành phố Hồ Chí Minh', 'VN', '79', '27169', 'Lý Tự Trọng', '200', 'active', UTC_TIMESTAMP() - INTERVAL 169 DAY),
+  ('customer8@marketlink.vn', @pw, 'customer', 'Phan Thị Anh', '0994752122', '68 Cách Mạng Tháng 8, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Cách Mạng Tháng 8', '68', 'active', UTC_TIMESTAMP() - INTERVAL 168 DAY),
+  ('customer9@marketlink.vn', @pw, 'customer', 'Tô Thị Diễm', '0998072401', '31 Lê Duẩn, Phường Diên Hồng, Thành phố Hồ Chí Minh', 'VN', '79', '27169', 'Lê Duẩn', '31', 'active', UTC_TIMESTAMP() - INTERVAL 166 DAY),
+  ('customer10@marketlink.vn', @pw, 'customer', 'Hồ Xuân Quang', '0926975302', '155 Pasteur, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Pasteur', '155', 'active', UTC_TIMESTAMP() - INTERVAL 165 DAY),
+  ('customer11@marketlink.vn', @pw, 'customer', 'Tô Thị Uyên', '0954298890', '16 Nam Kỳ Khởi Nghĩa, Phường Tân Bình, Thành phố Hồ Chí Minh', 'VN', '79', '27004', 'Nam Kỳ Khởi Nghĩa', '16', 'active', UTC_TIMESTAMP() - INTERVAL 163 DAY),
+  ('customer12@marketlink.vn', @pw, 'customer', 'Võ Thị Ngọc', '0939477488', '94 Lê Duẩn, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Lê Duẩn', '94', 'active', UTC_TIMESTAMP() - INTERVAL 161 DAY),
+  ('customer13@marketlink.vn', @pw, 'customer', 'Mai Thị Hương', '0952715668', '59 Bùi Viện, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Bùi Viện', '59', 'active', UTC_TIMESTAMP() - INTERVAL 160 DAY),
+  ('customer14@marketlink.vn', @pw, 'customer', 'Trịnh Thị Trang', '0940209929', '37 Nam Kỳ Khởi Nghĩa, Phường Bình Thạnh, Thành phố Hồ Chí Minh', 'VN', '79', '26929', 'Nam Kỳ Khởi Nghĩa', '37', 'active', UTC_TIMESTAMP() - INTERVAL 158 DAY),
+  ('customer15@marketlink.vn', @pw, 'customer', 'Phạm Thị Trinh', '0915994521', '162 Sương Nguyệt Ánh, Phường Sài Gòn, Thành phố Hồ Chí Minh', 'VN', '79', '26740', 'Sương Nguyệt Ánh', '162', 'active', UTC_TIMESTAMP() - INTERVAL 157 DAY),
+  ('customer16@marketlink.vn', @pw, 'customer', 'Cao Thị Chi', '0984578728', '30 Lý Tự Trọng, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Lý Tự Trọng', '30', 'active', UTC_TIMESTAMP() - INTERVAL 155 DAY),
+  ('customer17@marketlink.vn', @pw, 'customer', 'Trịnh Thị Linh', '0998301397', '45 Nguyễn Văn Trỗi, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Nguyễn Văn Trỗi', '45', 'active', UTC_TIMESTAMP() - INTERVAL 153 DAY),
+  ('customer18@marketlink.vn', @pw, 'customer', 'Tạ Phương Long', '0968807310', '78 Lê Văn Sỹ, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Lê Văn Sỹ', '78', 'active', UTC_TIMESTAMP() - INTERVAL 152 DAY),
+  ('customer19@marketlink.vn', @pw, 'customer', 'Mai Ngọc Cường', '0925936485', '199 Nguyễn Đình Chiểu, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Nguyễn Đình Chiểu', '199', 'active', UTC_TIMESTAMP() - INTERVAL 150 DAY),
+  ('customer20@marketlink.vn', @pw, 'customer', 'Trịnh Thị My', '0999721330', '92 Nguyễn Huệ, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Nguyễn Huệ', '92', 'active', UTC_TIMESTAMP() - INTERVAL 149 DAY),
+  ('customer21@marketlink.vn', @pw, 'customer', 'Đặng Thị Trung', '0959476347', '69 Trần Hưng Đạo, Phường Tân Bình, Thành phố Hồ Chí Minh', 'VN', '79', '27004', 'Trần Hưng Đạo', '69', 'active', UTC_TIMESTAMP() - INTERVAL 147 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,
                         phone = new.phone, status = new.status;
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('customer22@marketlink.vn', @pw, 'customer', 'Tô Thị Hà', '0928623978', '117 Nguyễn Huệ, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 145 DAY),
-  ('customer23@marketlink.vn', @pw, 'customer', 'Lương Thị My', '0916606571', '141 Lý Tự Trọng, Tân Bình', 'active', UTC_TIMESTAMP() - INTERVAL 144 DAY),
-  ('customer24@marketlink.vn', @pw, 'customer', 'Tạ Thị Thảo', '0946513637', '107 Lý Tự Trọng, Quận 10', 'active', UTC_TIMESTAMP() - INTERVAL 142 DAY),
-  ('customer25@marketlink.vn', @pw, 'customer', 'Vũ Anh Phong', '0978243163', '142 Nguyễn Huệ, Bình Thạnh', 'active', UTC_TIMESTAMP() - INTERVAL 141 DAY),
-  ('customer26@marketlink.vn', @pw, 'customer', 'Châu Thị Trang', '0961013619', '126 Phan Đình Phùng, Quận 5', 'active', UTC_TIMESTAMP() - INTERVAL 139 DAY),
-  ('customer27@marketlink.vn', @pw, 'customer', 'Huỳnh Phương Dũng', '0988364062', '16 Pasteur, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 138 DAY),
-  ('customer28@marketlink.vn', @pw, 'customer', 'Hồ Thị Oanh', '0918266629', '68 Pasteur, Tân Bình', 'active', UTC_TIMESTAMP() - INTERVAL 136 DAY),
-  ('customer29@marketlink.vn', @pw, 'customer', 'Phạm Thị Phượng', '0937429719', '140 Hai Bà Trưng, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 134 DAY),
-  ('customer30@marketlink.vn', @pw, 'customer', 'Tô Thị Bích', '0926486339', '43 Pasteur, Quận 7', 'active', UTC_TIMESTAMP() - INTERVAL 133 DAY),
-  ('customer31@marketlink.vn', @pw, 'customer', 'Lê Thị Linh', '0997053343', '58 Lê Lợi, Quận 7', 'active', UTC_TIMESTAMP() - INTERVAL 131 DAY),
-  ('customer32@marketlink.vn', @pw, 'customer', 'Dương Minh Cường', '0935334325', '68 Nguyễn Đình Chiểu, Quận 7', 'active', UTC_TIMESTAMP() - INTERVAL 130 DAY),
-  ('customer33@marketlink.vn', @pw, 'customer', 'Trần Thị Tuyết', '0974715134', '132 Hai Bà Trưng, Quận 10', 'active', UTC_TIMESTAMP() - INTERVAL 128 DAY),
-  ('customer34@marketlink.vn', @pw, 'customer', 'Nguyễn Thị Trang', '0982846091', '41 Nguyễn Văn Trỗi, Tân Phú', 'active', UTC_TIMESTAMP() - INTERVAL 126 DAY),
-  ('customer35@marketlink.vn', @pw, 'customer', 'Đặng Thị My', '0987051655', '41 Nguyễn Văn Trỗi, Quận 1', 'active', UTC_TIMESTAMP() - INTERVAL 125 DAY),
-  ('customer36@marketlink.vn', @pw, 'customer', 'Đặng Bảo Quang', '0994737885', '67 Phan Đình Phùng, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 123 DAY),
-  ('customer37@marketlink.vn', @pw, 'customer', 'Cao Ngọc Lâm', '0935411939', '173 Phan Đình Phùng, Quận 5', 'active', UTC_TIMESTAMP() - INTERVAL 122 DAY),
-  ('customer38@marketlink.vn', @pw, 'customer', 'Bùi Thanh Bình', '0912140024', '13 Lê Duẩn, Quận 7', 'active', UTC_TIMESTAMP() - INTERVAL 120 DAY),
-  ('customer39@marketlink.vn', @pw, 'customer', 'Tô Thị Thuỷ', '0995159254', '51 Phan Đình Phùng, Quận 3', 'active', UTC_TIMESTAMP() - INTERVAL 118 DAY),
-  ('customer40@marketlink.vn', @pw, 'customer', 'Cao Thị Hà', '0975681706', '175 Nguyễn Huệ, Phú Nhuận', 'active', UTC_TIMESTAMP() - INTERVAL 117 DAY),
-  ('customer41@marketlink.vn', @pw, 'customer', 'Đinh Thị Phong', '0969099238', '55 Lê Duẩn, Quận 10', 'active', UTC_TIMESTAMP() - INTERVAL 115 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('customer22@marketlink.vn', @pw, 'customer', 'Ngô Phương Tài', '0972615655', '1 Nguyễn Thị Minh Khai, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Nguyễn Thị Minh Khai', '1', 'active', UTC_TIMESTAMP() - INTERVAL 145 DAY),
+  ('customer23@marketlink.vn', @pw, 'customer', 'Trần Bảo Thắng', '0967934354', '108 Lý Tự Trọng, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Lý Tự Trọng', '108', 'active', UTC_TIMESTAMP() - INTERVAL 144 DAY),
+  ('customer24@marketlink.vn', @pw, 'customer', 'Bùi Xuân Thắng', '0945108414', '36 Nguyễn Thị Minh Khai, Phường Tân Mỹ, Thành phố Hồ Chí Minh', 'VN', '79', '27487', 'Nguyễn Thị Minh Khai', '36', 'active', UTC_TIMESTAMP() - INTERVAL 142 DAY),
+  ('customer25@marketlink.vn', @pw, 'customer', 'Trần Thị Anh', '0940051984', '111 Hoàng Sa, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Hoàng Sa', '111', 'active', UTC_TIMESTAMP() - INTERVAL 141 DAY),
+  ('customer26@marketlink.vn', @pw, 'customer', 'Trần Hữu Minh', '0914060594', '150 Bùi Viện, Phường Bình Tân, Thành phố Hồ Chí Minh', 'VN', '79', '27442', 'Bùi Viện', '150', 'active', UTC_TIMESTAMP() - INTERVAL 139 DAY),
+  ('customer27@marketlink.vn', @pw, 'customer', 'Ngô Thị Phượng', '0911926563', '127 Nguyễn Đình Chiểu, Phường Bình Thạnh, Thành phố Hồ Chí Minh', 'VN', '79', '26929', 'Nguyễn Đình Chiểu', '127', 'active', UTC_TIMESTAMP() - INTERVAL 138 DAY),
+  ('customer28@marketlink.vn', @pw, 'customer', 'Võ Quốc Long', '0966875173', '29 Lê Văn Sỹ, Phường Sài Gòn, Thành phố Hồ Chí Minh', 'VN', '79', '26740', 'Lê Văn Sỹ', '29', 'active', UTC_TIMESTAMP() - INTERVAL 136 DAY),
+  ('customer29@marketlink.vn', @pw, 'customer', 'Cao Thanh Dũng', '0995215926', '29 Nguyễn Đình Chiểu, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Nguyễn Đình Chiểu', '29', 'active', UTC_TIMESTAMP() - INTERVAL 134 DAY),
+  ('customer30@marketlink.vn', @pw, 'customer', 'Võ Thị Thảo', '0958344088', '41 Trần Hưng Đạo, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Trần Hưng Đạo', '41', 'active', UTC_TIMESTAMP() - INTERVAL 133 DAY),
+  ('customer31@marketlink.vn', @pw, 'customer', 'Nguyễn Bảo Nam', '0959087073', '145 Trương Định, Phường Bình Tân, Thành phố Hồ Chí Minh', 'VN', '79', '27442', 'Trương Định', '145', 'active', UTC_TIMESTAMP() - INTERVAL 131 DAY),
+  ('customer32@marketlink.vn', @pw, 'customer', 'Lê Thị Anh', '0921510039', '109 Phan Đình Phùng, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Phan Đình Phùng', '109', 'active', UTC_TIMESTAMP() - INTERVAL 130 DAY),
+  ('customer33@marketlink.vn', @pw, 'customer', 'Lương Đức Phong', '0935426099', '170 Lê Lợi, Phường Tân Mỹ, Thành phố Hồ Chí Minh', 'VN', '79', '27487', 'Lê Lợi', '170', 'active', UTC_TIMESTAMP() - INTERVAL 128 DAY),
+  ('customer34@marketlink.vn', @pw, 'customer', 'Tạ Thị Hà', '0929825714', '86 Pasteur, Phường Tân Mỹ, Thành phố Hồ Chí Minh', 'VN', '79', '27487', 'Pasteur', '86', 'active', UTC_TIMESTAMP() - INTERVAL 126 DAY),
+  ('customer35@marketlink.vn', @pw, 'customer', 'Trần Thị Trang', '0998933670', '81 Phan Đình Phùng, Phường Bình Thạnh, Thành phố Hồ Chí Minh', 'VN', '79', '26929', 'Phan Đình Phùng', '81', 'active', UTC_TIMESTAMP() - INTERVAL 125 DAY),
+  ('customer36@marketlink.vn', @pw, 'customer', 'Châu Minh Huy', '0914082149', '184 Phan Đình Phùng, Phường Tân Bình, Thành phố Hồ Chí Minh', 'VN', '79', '27004', 'Phan Đình Phùng', '184', 'active', UTC_TIMESTAMP() - INTERVAL 123 DAY),
+  ('customer37@marketlink.vn', @pw, 'customer', 'Trần Thị Nhung', '0973603315', '169 Nguyễn Thị Minh Khai, Phường Bình Thạnh, Thành phố Hồ Chí Minh', 'VN', '79', '26929', 'Nguyễn Thị Minh Khai', '169', 'active', UTC_TIMESTAMP() - INTERVAL 122 DAY),
+  ('customer38@marketlink.vn', @pw, 'customer', 'Đinh Anh Kiệt', '0920647494', '82 Lý Tự Trọng, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Lý Tự Trọng', '82', 'active', UTC_TIMESTAMP() - INTERVAL 120 DAY),
+  ('customer39@marketlink.vn', @pw, 'customer', 'Huỳnh Thị Thuỷ', '0986964808', '151 Cách Mạng Tháng 8, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Cách Mạng Tháng 8', '151', 'active', UTC_TIMESTAMP() - INTERVAL 118 DAY),
+  ('customer40@marketlink.vn', @pw, 'customer', 'Lê Thanh Minh', '0924520642', '69 Nguyễn Văn Trỗi, Phường Bình Thạnh, Thành phố Hồ Chí Minh', 'VN', '79', '26929', 'Nguyễn Văn Trỗi', '69', 'active', UTC_TIMESTAMP() - INTERVAL 117 DAY),
+  ('customer41@marketlink.vn', @pw, 'customer', 'Dương Phương Nam', '0966655573', '140 Nguyễn Thị Minh Khai, Phường Tân Mỹ, Thành phố Hồ Chí Minh', 'VN', '79', '27487', 'Nguyễn Thị Minh Khai', '140', 'active', UTC_TIMESTAMP() - INTERVAL 115 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,
                         phone = new.phone, status = new.status;
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('customer42@marketlink.vn', @pw, 'customer', 'Võ Đức Quang', '0952002887', '18 Trương Định, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 114 DAY),
-  ('customer43@marketlink.vn', @pw, 'customer', 'Tạ Minh Quang', '0916274934', '38 Nguyễn Huệ, Quận 10', 'active', UTC_TIMESTAMP() - INTERVAL 112 DAY),
-  ('customer44@marketlink.vn', @pw, 'customer', 'Hoàng Thị Quyên', '0985472806', '27 Nguyễn Huệ, Quận 10', 'active', UTC_TIMESTAMP() - INTERVAL 110 DAY),
-  ('customer45@marketlink.vn', @pw, 'customer', 'Từ Thị Trang', '0912436052', '4 Nguyễn Văn Trỗi, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 109 DAY),
-  ('customer46@marketlink.vn', @pw, 'customer', 'Hoàng Hoàng Dũng', '0964448478', '21 Bùi Viện, Quận 7', 'active', UTC_TIMESTAMP() - INTERVAL 107 DAY),
-  ('customer47@marketlink.vn', @pw, 'customer', 'Mai Thị Thảo', '0984354237', '178 Lý Tự Trọng, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 106 DAY),
-  ('customer48@marketlink.vn', @pw, 'customer', 'Đinh Thanh Sơn', '0994468186', '36 Võ Văn Tần, Quận 5', 'active', UTC_TIMESTAMP() - INTERVAL 104 DAY),
-  ('customer49@marketlink.vn', @pw, 'customer', 'Nguyễn Anh Sơn', '0952757423', '142 Võ Văn Tần, Quận 10', 'active', UTC_TIMESTAMP() - INTERVAL 103 DAY),
-  ('customer50@marketlink.vn', @pw, 'customer', 'Trần Thị Toàn', '0923939070', '184 Nam Kỳ Khởi Nghĩa, Phú Nhuận', 'inactive', UTC_TIMESTAMP() - INTERVAL 101 DAY),
-  ('customer51@marketlink.vn', @pw, 'customer', 'Phan Tuấn Huy', '0951243315', '62 Lê Lợi, Quận 3', 'active', UTC_TIMESTAMP() - INTERVAL 99 DAY),
-  ('customer52@marketlink.vn', @pw, 'customer', 'Tô Thị Hà', '0947853274', '134 Lý Tự Trọng, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 98 DAY),
-  ('customer53@marketlink.vn', @pw, 'customer', 'Tô Đức Trung', '0935402561', '12 Nguyễn Đình Chiểu, Tân Phú', 'active', UTC_TIMESTAMP() - INTERVAL 96 DAY),
-  ('customer54@marketlink.vn', @pw, 'customer', 'Đặng Thị Bích', '0968018674', '105 Nam Kỳ Khởi Nghĩa, Quận 1', 'active', UTC_TIMESTAMP() - INTERVAL 95 DAY),
-  ('customer55@marketlink.vn', @pw, 'customer', 'Hoàng Thị Tuyết', '0994251148', '65 Phan Đình Phùng, Tân Bình', 'active', UTC_TIMESTAMP() - INTERVAL 93 DAY),
-  ('customer56@marketlink.vn', @pw, 'customer', 'Phạm Xuân Khang', '0986162953', '105 Nguyễn Thị Minh Khai, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 91 DAY),
-  ('customer57@marketlink.vn', @pw, 'customer', 'Hồ Quốc Phúc', '0985898457', '10 Trần Hưng Đạo, Tân Bình', 'active', UTC_TIMESTAMP() - INTERVAL 90 DAY),
-  ('customer58@marketlink.vn', @pw, 'customer', 'Võ Đức Đạt', '0947085931', '189 Bùi Viện, Quận 7', 'active', UTC_TIMESTAMP() - INTERVAL 88 DAY),
-  ('customer59@marketlink.vn', @pw, 'customer', 'Trần Văn Phong', '0991168178', '34 Trần Hưng Đạo, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 87 DAY),
-  ('customer60@marketlink.vn', @pw, 'customer', 'Hồ Thị Anh', '0917657130', '143 Lý Tự Trọng, Quận 7', 'active', UTC_TIMESTAMP() - INTERVAL 85 DAY),
-  ('customer61@marketlink.vn', @pw, 'customer', 'Bùi Thị Thuỷ', '0957968937', '183 Điện Biên Phủ, Tân Phú', 'active', UTC_TIMESTAMP() - INTERVAL 83 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('customer42@marketlink.vn', @pw, 'customer', 'Vũ Thị Hoa', '0925946545', '125 Trương Định, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Trương Định', '125', 'active', UTC_TIMESTAMP() - INTERVAL 114 DAY),
+  ('customer43@marketlink.vn', @pw, 'customer', 'Đặng Thị Thảo', '0926693879', '136 Nam Kỳ Khởi Nghĩa, Phường Sài Gòn, Thành phố Hồ Chí Minh', 'VN', '79', '26740', 'Nam Kỳ Khởi Nghĩa', '136', 'active', UTC_TIMESTAMP() - INTERVAL 112 DAY),
+  ('customer44@marketlink.vn', @pw, 'customer', 'Lê Thị Yến', '0991385899', '149 Võ Văn Tần, Phường Tân Bình, Thành phố Hồ Chí Minh', 'VN', '79', '27004', 'Võ Văn Tần', '149', 'active', UTC_TIMESTAMP() - INTERVAL 110 DAY),
+  ('customer45@marketlink.vn', @pw, 'customer', 'Dương Thị Mai', '0951425748', '59 Nguyễn Đình Chiểu, Phường Bình Thạnh, Thành phố Hồ Chí Minh', 'VN', '79', '26929', 'Nguyễn Đình Chiểu', '59', 'active', UTC_TIMESTAMP() - INTERVAL 109 DAY),
+  ('customer46@marketlink.vn', @pw, 'customer', 'Bùi Hoàng Long', '0982691534', '96 Điện Biên Phủ, Phường Tân Bình, Thành phố Hồ Chí Minh', 'VN', '79', '27004', 'Điện Biên Phủ', '96', 'active', UTC_TIMESTAMP() - INTERVAL 107 DAY),
+  ('customer47@marketlink.vn', @pw, 'customer', 'Phạm Thị Lan', '0920695567', '17 Nam Kỳ Khởi Nghĩa, Phường Tân Phú, Thành phố Hồ Chí Minh', 'VN', '79', '27031', 'Nam Kỳ Khởi Nghĩa', '17', 'active', UTC_TIMESTAMP() - INTERVAL 106 DAY),
+  ('customer48@marketlink.vn', @pw, 'customer', 'Châu Thị Hoa', '0986264312', '193 Cách Mạng Tháng 8, Phường Tân Mỹ, Thành phố Hồ Chí Minh', 'VN', '79', '27487', 'Cách Mạng Tháng 8', '193', 'active', UTC_TIMESTAMP() - INTERVAL 104 DAY),
+  ('customer49@marketlink.vn', @pw, 'customer', 'Phan Thị Hoa', '0963749983', '109 Trương Định, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Trương Định', '109', 'active', UTC_TIMESTAMP() - INTERVAL 103 DAY),
+  ('customer50@marketlink.vn', @pw, 'customer', 'Phạm Thị Mai', '0990651293', '38 Lê Lợi, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Lê Lợi', '38', 'inactive', UTC_TIMESTAMP() - INTERVAL 101 DAY),
+  ('customer51@marketlink.vn', @pw, 'customer', 'Hồ Hoàng Hiếu', '0936455857', '131 Nguyễn Huệ, Phường Sài Gòn, Thành phố Hồ Chí Minh', 'VN', '79', '26740', 'Nguyễn Huệ', '131', 'active', UTC_TIMESTAMP() - INTERVAL 99 DAY),
+  ('customer52@marketlink.vn', @pw, 'customer', 'Tô Thị Quyên', '0983368186', '69 Nguyễn Đình Chiểu, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Nguyễn Đình Chiểu', '69', 'active', UTC_TIMESTAMP() - INTERVAL 98 DAY),
+  ('customer53@marketlink.vn', @pw, 'customer', 'Từ Thị Uyên', '0994716354', '199 Nguyễn Văn Trỗi, Phường Sài Gòn, Thành phố Hồ Chí Minh', 'VN', '79', '26740', 'Nguyễn Văn Trỗi', '199', 'active', UTC_TIMESTAMP() - INTERVAL 96 DAY),
+  ('customer54@marketlink.vn', @pw, 'customer', 'Nguyễn Thị Chi', '0921104621', '155 Phan Đình Phùng, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Phan Đình Phùng', '155', 'active', UTC_TIMESTAMP() - INTERVAL 95 DAY),
+  ('customer55@marketlink.vn', @pw, 'customer', 'Phạm Thị Hoa', '0998885462', '28 Hai Bà Trưng, Phường Bình Thạnh, Thành phố Hồ Chí Minh', 'VN', '79', '26929', 'Hai Bà Trưng', '28', 'active', UTC_TIMESTAMP() - INTERVAL 93 DAY),
+  ('customer56@marketlink.vn', @pw, 'customer', 'Châu Bảo Gia', '0959217085', '86 Cách Mạng Tháng 8, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Cách Mạng Tháng 8', '86', 'active', UTC_TIMESTAMP() - INTERVAL 91 DAY),
+  ('customer57@marketlink.vn', @pw, 'customer', 'Trịnh Thị Quyên', '0925826876', '183 Hai Bà Trưng, Phường Tân Mỹ, Thành phố Hồ Chí Minh', 'VN', '79', '27487', 'Hai Bà Trưng', '183', 'active', UTC_TIMESTAMP() - INTERVAL 90 DAY),
+  ('customer58@marketlink.vn', @pw, 'customer', 'Hồ Quốc Phong', '0944713053', '56 Lê Duẩn, Phường Sài Gòn, Thành phố Hồ Chí Minh', 'VN', '79', '26740', 'Lê Duẩn', '56', 'active', UTC_TIMESTAMP() - INTERVAL 88 DAY),
+  ('customer59@marketlink.vn', @pw, 'customer', 'Tạ Văn Tài', '0968161981', '90 Võ Văn Tần, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Võ Văn Tần', '90', 'active', UTC_TIMESTAMP() - INTERVAL 87 DAY),
+  ('customer60@marketlink.vn', @pw, 'customer', 'Lê Xuân Hào', '0941532268', '93 Pasteur, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Pasteur', '93', 'active', UTC_TIMESTAMP() - INTERVAL 85 DAY),
+  ('customer61@marketlink.vn', @pw, 'customer', 'Châu Phương Vinh', '0919279593', '181 Hai Bà Trưng, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Hai Bà Trưng', '181', 'active', UTC_TIMESTAMP() - INTERVAL 83 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,
                         phone = new.phone, status = new.status;
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('customer62@marketlink.vn', @pw, 'customer', 'Đặng Thị Oanh', '0947874763', '28 Hoàng Sa, Tân Bình', 'active', UTC_TIMESTAMP() - INTERVAL 82 DAY),
-  ('customer63@marketlink.vn', @pw, 'customer', 'Lương Thị Hà', '0957687719', '60 Điện Biên Phủ, Quận 7', 'active', UTC_TIMESTAMP() - INTERVAL 80 DAY),
-  ('customer64@marketlink.vn', @pw, 'customer', 'Võ Anh Sơn', '0967416395', '25 Hai Bà Trưng, Tân Bình', 'active', UTC_TIMESTAMP() - INTERVAL 79 DAY),
-  ('customer65@marketlink.vn', @pw, 'customer', 'Bùi Thị Uyên', '0966920406', '186 Phan Đình Phùng, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 77 DAY),
-  ('customer66@marketlink.vn', @pw, 'customer', 'Ngô Thị Gia', '0989187364', '193 Lê Lợi, Tân Phú', 'active', UTC_TIMESTAMP() - INTERVAL 75 DAY),
-  ('customer67@marketlink.vn', @pw, 'customer', 'Nguyễn Anh Đạt', '0927966361', '156 Điện Biên Phủ, Quận 5', 'active', UTC_TIMESTAMP() - INTERVAL 74 DAY),
-  ('customer68@marketlink.vn', @pw, 'customer', 'Lê Thị Quyên', '0981665733', '37 Nguyễn Văn Trỗi, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 72 DAY),
-  ('customer69@marketlink.vn', @pw, 'customer', 'Đỗ Thị Anh', '0927373860', '153 Hai Bà Trưng, Quận 7', 'active', UTC_TIMESTAMP() - INTERVAL 71 DAY),
-  ('customer70@marketlink.vn', @pw, 'customer', 'Cao Văn Huy', '0930340424', '90 Nguyễn Huệ, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 69 DAY),
-  ('customer71@marketlink.vn', @pw, 'customer', 'Đỗ Phương Quang', '0950191349', '176 Lê Lợi, Tân Phú', 'active', UTC_TIMESTAMP() - INTERVAL 68 DAY),
-  ('customer72@marketlink.vn', @pw, 'customer', 'Mai Tuấn Phúc', '0980323814', '102 Điện Biên Phủ, Bình Thạnh', 'active', UTC_TIMESTAMP() - INTERVAL 66 DAY),
-  ('customer73@marketlink.vn', @pw, 'customer', 'Dương Thị Oanh', '0976053488', '79 Lê Duẩn, Phú Nhuận', 'active', UTC_TIMESTAMP() - INTERVAL 64 DAY),
-  ('customer74@marketlink.vn', @pw, 'customer', 'Đinh Thị Trinh', '0994518659', '182 Lý Tự Trọng, Quận 10', 'active', UTC_TIMESTAMP() - INTERVAL 63 DAY),
-  ('customer75@marketlink.vn', @pw, 'customer', 'Lý Đức Thắng', '0998714300', '95 Nguyễn Đình Chiểu, Quận 1', 'inactive', UTC_TIMESTAMP() - INTERVAL 61 DAY),
-  ('customer76@marketlink.vn', @pw, 'customer', 'Hồ Xuân Cường', '0947305642', '92 Phan Đình Phùng, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 60 DAY),
-  ('customer77@marketlink.vn', @pw, 'customer', 'Lê Thị Phượng', '0934576970', '187 Lê Văn Sỹ, Quận 10', 'active', UTC_TIMESTAMP() - INTERVAL 58 DAY),
-  ('customer78@marketlink.vn', @pw, 'customer', 'Vũ Thanh Phong', '0918207013', '10 Pasteur, Quận 5', 'active', UTC_TIMESTAMP() - INTERVAL 56 DAY),
-  ('customer79@marketlink.vn', @pw, 'customer', 'Ngô Quốc Phong', '0982833028', '155 Lê Lợi, Quận 1', 'active', UTC_TIMESTAMP() - INTERVAL 55 DAY),
-  ('customer80@marketlink.vn', @pw, 'customer', 'Mai Thị An', '0969622676', '50 Lê Văn Sỹ, Quận 5', 'active', UTC_TIMESTAMP() - INTERVAL 53 DAY),
-  ('customer81@marketlink.vn', @pw, 'customer', 'Trần Thị Chi', '0935109255', '174 Điện Biên Phủ, Quận 1', 'active', UTC_TIMESTAMP() - INTERVAL 52 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('customer62@marketlink.vn', @pw, 'customer', 'Hoàng Thị Chi', '0981946108', '170 Nguyễn Đình Chiểu, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Nguyễn Đình Chiểu', '170', 'active', UTC_TIMESTAMP() - INTERVAL 82 DAY),
+  ('customer63@marketlink.vn', @pw, 'customer', 'Lý Minh Phúc', '0985135558', '8 Võ Văn Tần, Phường Tân Bình, Thành phố Hồ Chí Minh', 'VN', '79', '27004', 'Võ Văn Tần', '8', 'active', UTC_TIMESTAMP() - INTERVAL 80 DAY),
+  ('customer64@marketlink.vn', @pw, 'customer', 'Nguyễn Thị Ngọc', '0927665691', '54 Pasteur, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Pasteur', '54', 'active', UTC_TIMESTAMP() - INTERVAL 79 DAY),
+  ('customer65@marketlink.vn', @pw, 'customer', 'Ngô Văn Dũng', '0917866534', '104 Nam Kỳ Khởi Nghĩa, Phường Chợ Lớn, Thành phố Hồ Chí Minh', 'VN', '79', '27343', 'Nam Kỳ Khởi Nghĩa', '104', 'active', UTC_TIMESTAMP() - INTERVAL 77 DAY),
+  ('customer66@marketlink.vn', @pw, 'customer', 'Vũ Tuấn Dũng', '0913087251', '63 Lý Tự Trọng, Phường Sài Gòn, Thành phố Hồ Chí Minh', 'VN', '79', '26740', 'Lý Tự Trọng', '63', 'active', UTC_TIMESTAMP() - INTERVAL 75 DAY),
+  ('customer67@marketlink.vn', @pw, 'customer', 'Trịnh Minh Long', '0995691196', '127 Bùi Viện, Phường Bình Thạnh, Thành phố Hồ Chí Minh', 'VN', '79', '26929', 'Bùi Viện', '127', 'active', UTC_TIMESTAMP() - INTERVAL 74 DAY),
+  ('customer68@marketlink.vn', @pw, 'customer', 'Vũ Thị Thảo', '0933381723', '184 Điện Biên Phủ, Phường Diên Hồng, Thành phố Hồ Chí Minh', 'VN', '79', '27169', 'Điện Biên Phủ', '184', 'active', UTC_TIMESTAMP() - INTERVAL 72 DAY),
+  ('customer69@marketlink.vn', @pw, 'customer', 'Lê Thị Trinh', '0997730467', '188 Lê Duẩn, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Lê Duẩn', '188', 'active', UTC_TIMESTAMP() - INTERVAL 71 DAY),
+  ('customer70@marketlink.vn', @pw, 'customer', 'Bùi Thị Trang', '0961004086', '190 Nam Kỳ Khởi Nghĩa, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Nam Kỳ Khởi Nghĩa', '190', 'active', UTC_TIMESTAMP() - INTERVAL 69 DAY),
+  ('customer71@marketlink.vn', @pw, 'customer', 'Phạm Thị Hương', '0982777864', '159 Hai Bà Trưng, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Hai Bà Trưng', '159', 'active', UTC_TIMESTAMP() - INTERVAL 68 DAY),
+  ('customer72@marketlink.vn', @pw, 'customer', 'Bùi Xuân Dũng', '0941688724', '115 Phan Đình Phùng, Phường Bình Tân, Thành phố Hồ Chí Minh', 'VN', '79', '27442', 'Phan Đình Phùng', '115', 'active', UTC_TIMESTAMP() - INTERVAL 66 DAY),
+  ('customer73@marketlink.vn', @pw, 'customer', 'Tạ Thị Linh', '0999643062', '193 Lê Văn Sỹ, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Lê Văn Sỹ', '193', 'active', UTC_TIMESTAMP() - INTERVAL 64 DAY),
+  ('customer74@marketlink.vn', @pw, 'customer', 'Mai Minh Gia', '0937952133', '81 Lê Lợi, Phường Chợ Lớn, Thành phố Hồ Chí Minh', 'VN', '79', '27343', 'Lê Lợi', '81', 'active', UTC_TIMESTAMP() - INTERVAL 63 DAY),
+  ('customer75@marketlink.vn', @pw, 'customer', 'Đinh Thị Hương', '0987827256', '115 Lê Lợi, Phường Chợ Lớn, Thành phố Hồ Chí Minh', 'VN', '79', '27343', 'Lê Lợi', '115', 'inactive', UTC_TIMESTAMP() - INTERVAL 61 DAY),
+  ('customer76@marketlink.vn', @pw, 'customer', 'Vũ Thị Trinh', '0996011003', '133 Hoàng Sa, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Hoàng Sa', '133', 'active', UTC_TIMESTAMP() - INTERVAL 60 DAY),
+  ('customer77@marketlink.vn', @pw, 'customer', 'Vũ Thị Phượng', '0944679975', '14 Nam Kỳ Khởi Nghĩa, Phường Sài Gòn, Thành phố Hồ Chí Minh', 'VN', '79', '26740', 'Nam Kỳ Khởi Nghĩa', '14', 'active', UTC_TIMESTAMP() - INTERVAL 58 DAY),
+  ('customer78@marketlink.vn', @pw, 'customer', 'Trần Thị Tuyết', '0989735213', '105 Hoàng Sa, Phường Tân Mỹ, Thành phố Hồ Chí Minh', 'VN', '79', '27487', 'Hoàng Sa', '105', 'active', UTC_TIMESTAMP() - INTERVAL 56 DAY),
+  ('customer79@marketlink.vn', @pw, 'customer', 'Lý Minh Long', '0930027962', '141 Hai Bà Trưng, Phường Sài Gòn, Thành phố Hồ Chí Minh', 'VN', '79', '26740', 'Hai Bà Trưng', '141', 'active', UTC_TIMESTAMP() - INTERVAL 55 DAY),
+  ('customer80@marketlink.vn', @pw, 'customer', 'Trần Đức Huy', '0953397337', '69 Lý Tự Trọng, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Lý Tự Trọng', '69', 'active', UTC_TIMESTAMP() - INTERVAL 53 DAY),
+  ('customer81@marketlink.vn', @pw, 'customer', 'Từ Bảo Nam', '0978625993', '158 Nguyễn Văn Trỗi, Phường Sài Gòn, Thành phố Hồ Chí Minh', 'VN', '79', '26740', 'Nguyễn Văn Trỗi', '158', 'active', UTC_TIMESTAMP() - INTERVAL 52 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,
                         phone = new.phone, status = new.status;
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('customer82@marketlink.vn', @pw, 'customer', 'Châu Thị Trang', '0999782832', '191 Lý Tự Trọng, Bình Thạnh', 'active', UTC_TIMESTAMP() - INTERVAL 50 DAY),
-  ('customer83@marketlink.vn', @pw, 'customer', 'Đặng Thị Thảo', '0962227613', '58 Lý Tự Trọng, Quận 3', 'active', UTC_TIMESTAMP() - INTERVAL 48 DAY),
-  ('customer84@marketlink.vn', @pw, 'customer', 'Hồ Quốc Huy', '0960829751', '39 Nam Kỳ Khởi Nghĩa, Tân Bình', 'active', UTC_TIMESTAMP() - INTERVAL 47 DAY),
-  ('customer85@marketlink.vn', @pw, 'customer', 'Đỗ Đức Hào', '0932138214', '95 Hai Bà Trưng, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 45 DAY),
-  ('customer86@marketlink.vn', @pw, 'customer', 'Đinh Thị Hiền', '0955817745', '36 Lý Tự Trọng, Tân Phú', 'active', UTC_TIMESTAMP() - INTERVAL 44 DAY),
-  ('customer87@marketlink.vn', @pw, 'customer', 'Bùi Thị Hương', '0969981202', '78 Phan Đình Phùng, Bình Thạnh', 'active', UTC_TIMESTAMP() - INTERVAL 42 DAY),
-  ('customer88@marketlink.vn', @pw, 'customer', 'Tạ Hoàng Toàn', '0923065428', '42 Hai Bà Trưng, Quận 3', 'active', UTC_TIMESTAMP() - INTERVAL 40 DAY),
-  ('customer89@marketlink.vn', @pw, 'customer', 'Lê Thị Vân', '0952898004', '122 Lê Duẩn, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 39 DAY),
-  ('customer90@marketlink.vn', @pw, 'customer', 'Bùi Thị Huy', '0911801791', '169 Nguyễn Thị Minh Khai, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 37 DAY),
-  ('customer91@marketlink.vn', @pw, 'customer', 'Trịnh Thị Phượng', '0950442290', '85 Bùi Viện, Bình Thạnh', 'active', UTC_TIMESTAMP() - INTERVAL 36 DAY),
-  ('customer92@marketlink.vn', @pw, 'customer', 'Hoàng Minh Minh', '0969469825', '63 Trương Định, Bình Thạnh', 'active', UTC_TIMESTAMP() - INTERVAL 34 DAY),
-  ('customer93@marketlink.vn', @pw, 'customer', 'Từ Kim Huy', '0994806144', '189 Sương Nguyệt Ánh, TP. Thủ Đức', 'active', UTC_TIMESTAMP() - INTERVAL 33 DAY),
-  ('customer94@marketlink.vn', @pw, 'customer', 'Đỗ Thị My', '0991920793', '5 Lê Văn Sỹ, Quận 5', 'active', UTC_TIMESTAMP() - INTERVAL 31 DAY),
-  ('customer95@marketlink.vn', @pw, 'customer', 'Ngô Minh Long', '0979526088', '182 Nguyễn Thị Minh Khai, Gò Vấp', 'active', UTC_TIMESTAMP() - INTERVAL 29 DAY),
-  ('customer96@marketlink.vn', @pw, 'customer', 'Huỳnh Thanh Hiếu', '0975744966', '104 Hoàng Sa, Phú Nhuận', 'active', UTC_TIMESTAMP() - INTERVAL 28 DAY),
-  ('customer97@marketlink.vn', @pw, 'customer', 'Lương Thị Bích', '0968999536', '108 Lê Văn Sỹ, Bình Thạnh', 'active', UTC_TIMESTAMP() - INTERVAL 26 DAY),
-  ('customer98@marketlink.vn', @pw, 'customer', 'Trịnh Thị Hoa', '0919031329', '113 Lê Lợi, Bình Thạnh', 'active', UTC_TIMESTAMP() - INTERVAL 25 DAY),
-  ('customer99@marketlink.vn', @pw, 'customer', 'Trịnh Phương Dũng', '0982310947', '105 Nguyễn Huệ, Phú Nhuận', 'active', UTC_TIMESTAMP() - INTERVAL 23 DAY),
-  ('customer100@marketlink.vn', @pw, 'customer', 'Châu Thị Hà', '0944236478', '25 Trương Định, Quận 1', 'suspended', UTC_TIMESTAMP() - INTERVAL 21 DAY),
-  ('customer101@marketlink.vn', @pw, 'customer', 'Hoàng Anh Trung', '0952951170', '199 Lê Văn Sỹ, Phú Nhuận', 'active', UTC_TIMESTAMP() - INTERVAL 20 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('customer82@marketlink.vn', @pw, 'customer', 'Dương Quốc Quang', '0936121597', '78 Trần Hưng Đạo, Phường Tân Bình, Thành phố Hồ Chí Minh', 'VN', '79', '27004', 'Trần Hưng Đạo', '78', 'active', UTC_TIMESTAMP() - INTERVAL 50 DAY),
+  ('customer83@marketlink.vn', @pw, 'customer', 'Nguyễn Hoàng Tài', '0967982639', '106 Nguyễn Đình Chiểu, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Nguyễn Đình Chiểu', '106', 'active', UTC_TIMESTAMP() - INTERVAL 48 DAY),
+  ('customer84@marketlink.vn', @pw, 'customer', 'Nguyễn Thị Vân', '0968278199', '150 Hai Bà Trưng, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Hai Bà Trưng', '150', 'active', UTC_TIMESTAMP() - INTERVAL 47 DAY),
+  ('customer85@marketlink.vn', @pw, 'customer', 'Bùi Ngọc Nam', '0922377514', '181 Nguyễn Huệ, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Nguyễn Huệ', '181', 'active', UTC_TIMESTAMP() - INTERVAL 45 DAY),
+  ('customer86@marketlink.vn', @pw, 'customer', 'Châu Thị Diễm', '0992973076', '107 Điện Biên Phủ, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Điện Biên Phủ', '107', 'active', UTC_TIMESTAMP() - INTERVAL 44 DAY),
+  ('customer87@marketlink.vn', @pw, 'customer', 'Lương Văn Minh', '0977373914', '156 Võ Văn Tần, Phường Diên Hồng, Thành phố Hồ Chí Minh', 'VN', '79', '27169', 'Võ Văn Tần', '156', 'active', UTC_TIMESTAMP() - INTERVAL 42 DAY),
+  ('customer88@marketlink.vn', @pw, 'customer', 'Đỗ Thị Yến', '0934220983', '57 Sương Nguyệt Ánh, Phường Bình Tân, Thành phố Hồ Chí Minh', 'VN', '79', '27442', 'Sương Nguyệt Ánh', '57', 'active', UTC_TIMESTAMP() - INTERVAL 40 DAY),
+  ('customer89@marketlink.vn', @pw, 'customer', 'Đinh Thanh Dũng', '0915970601', '50 Lý Tự Trọng, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Lý Tự Trọng', '50', 'active', UTC_TIMESTAMP() - INTERVAL 39 DAY),
+  ('customer90@marketlink.vn', @pw, 'customer', 'Huỳnh Thị Hoa', '0925793170', '163 Võ Văn Tần, Phường Sài Gòn, Thành phố Hồ Chí Minh', 'VN', '79', '26740', 'Võ Văn Tần', '163', 'active', UTC_TIMESTAMP() - INTERVAL 37 DAY),
+  ('customer91@marketlink.vn', @pw, 'customer', 'Tô Hoàng Dũng', '0976446664', '44 Trương Định, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Trương Định', '44', 'active', UTC_TIMESTAMP() - INTERVAL 36 DAY),
+  ('customer92@marketlink.vn', @pw, 'customer', 'Lê Hữu Đạt', '0984272841', '89 Sương Nguyệt Ánh, Phường Tân Bình, Thành phố Hồ Chí Minh', 'VN', '79', '27004', 'Sương Nguyệt Ánh', '89', 'active', UTC_TIMESTAMP() - INTERVAL 34 DAY),
+  ('customer93@marketlink.vn', @pw, 'customer', 'Ngô Thị Anh', '0963412177', '1 Hoàng Sa, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Hoàng Sa', '1', 'active', UTC_TIMESTAMP() - INTERVAL 33 DAY),
+  ('customer94@marketlink.vn', @pw, 'customer', 'Lê Văn Đạt', '0953949173', '116 Lê Lợi, Phường Tân Mỹ, Thành phố Hồ Chí Minh', 'VN', '79', '27487', 'Lê Lợi', '116', 'active', UTC_TIMESTAMP() - INTERVAL 31 DAY),
+  ('customer95@marketlink.vn', @pw, 'customer', 'Phan Bảo Minh', '0992820663', '12 Nguyễn Đình Chiểu, Phường Diên Hồng, Thành phố Hồ Chí Minh', 'VN', '79', '27169', 'Nguyễn Đình Chiểu', '12', 'active', UTC_TIMESTAMP() - INTERVAL 29 DAY),
+  ('customer96@marketlink.vn', @pw, 'customer', 'Ngô Thị Phúc', '0969602094', '172 Lê Duẩn, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Lê Duẩn', '172', 'active', UTC_TIMESTAMP() - INTERVAL 28 DAY),
+  ('customer97@marketlink.vn', @pw, 'customer', 'Hồ Hữu Cường', '0972615472', '105 Bùi Viện, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Bùi Viện', '105', 'active', UTC_TIMESTAMP() - INTERVAL 26 DAY),
+  ('customer98@marketlink.vn', @pw, 'customer', 'Đặng Thị My', '0934450706', '59 Lê Văn Sỹ, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Lê Văn Sỹ', '59', 'active', UTC_TIMESTAMP() - INTERVAL 25 DAY),
+  ('customer99@marketlink.vn', @pw, 'customer', 'Bùi Thị Hoa', '0985244935', '182 Nguyễn Đình Chiểu, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Nguyễn Đình Chiểu', '182', 'active', UTC_TIMESTAMP() - INTERVAL 23 DAY),
+  ('customer100@marketlink.vn', @pw, 'customer', 'Nguyễn Thị Tài', '0964778140', '192 Trương Định, Phường Chợ Lớn, Thành phố Hồ Chí Minh', 'VN', '79', '27343', 'Trương Định', '192', 'suspended', UTC_TIMESTAMP() - INTERVAL 21 DAY),
+  ('customer101@marketlink.vn', @pw, 'customer', 'Tô Thị Khang', '0934367078', '33 Phan Đình Phùng, Phường Bình Thạnh, Thành phố Hồ Chí Minh', 'VN', '79', '26929', 'Phan Đình Phùng', '33', 'active', UTC_TIMESTAMP() - INTERVAL 20 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,
                         phone = new.phone, status = new.status;
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('customer102@marketlink.vn', @pw, 'customer', 'Châu Thanh Dũng', '0946806645', '121 Sương Nguyệt Ánh, Quận 5', 'active', UTC_TIMESTAMP() - INTERVAL 18 DAY),
-  ('customer103@marketlink.vn', @pw, 'customer', 'Cao Thị Hà', '0992803382', '68 Hoàng Sa, Phú Nhuận', 'active', UTC_TIMESTAMP() - INTERVAL 17 DAY),
-  ('customer104@marketlink.vn', @pw, 'customer', 'Mai Quốc Lâm', '0978944202', '137 Lê Duẩn, Bình Tân', 'active', UTC_TIMESTAMP() - INTERVAL 15 DAY),
-  ('customer105@marketlink.vn', @pw, 'customer', 'Đỗ Thị Oanh', '0977483668', '6 Nguyễn Thị Minh Khai, Quận 7', 'active', UTC_TIMESTAMP() - INTERVAL 13 DAY),
-  ('customer106@marketlink.vn', @pw, 'customer', 'Hồ Đức Hiếu', '0925139338', '73 Bùi Viện, Tân Phú', 'active', UTC_TIMESTAMP() - INTERVAL 12 DAY),
-  ('customer107@marketlink.vn', @pw, 'customer', 'Đỗ Thanh Dũng', '0953441894', '60 Hai Bà Trưng, Quận 5', 'active', UTC_TIMESTAMP() - INTERVAL 10 DAY),
-  ('customer108@marketlink.vn', @pw, 'customer', 'Tô Quốc Hào', '0975395940', '55 Hoàng Sa, Quận 5', 'active', UTC_TIMESTAMP() - INTERVAL 9 DAY),
-  ('customer109@marketlink.vn', @pw, 'customer', 'Phạm Thị Thảo', '0986372198', '170 Hai Bà Trưng, Quận 1', 'active', UTC_TIMESTAMP() - INTERVAL 7 DAY),
-  ('customer110@marketlink.vn', @pw, 'customer', 'Cao Thị My', '0935335696', '20 Trương Định, Quận 10', 'active', UTC_TIMESTAMP() - INTERVAL 5 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('customer102@marketlink.vn', @pw, 'customer', 'Phạm Minh Trung', '0952743233', '23 Trần Hưng Đạo, Phường Bàn Cờ, Thành phố Hồ Chí Minh', 'VN', '79', '27154', 'Trần Hưng Đạo', '23', 'active', UTC_TIMESTAMP() - INTERVAL 18 DAY),
+  ('customer103@marketlink.vn', @pw, 'customer', 'Nguyễn Bảo Toàn', '0934830501', '152 Nguyễn Thị Minh Khai, Phường Bình Tân, Thành phố Hồ Chí Minh', 'VN', '79', '27442', 'Nguyễn Thị Minh Khai', '152', 'active', UTC_TIMESTAMP() - INTERVAL 17 DAY),
+  ('customer104@marketlink.vn', @pw, 'customer', 'Dương Thanh Quang', '0919940077', '55 Lý Tự Trọng, Phường Tân Mỹ, Thành phố Hồ Chí Minh', 'VN', '79', '27487', 'Lý Tự Trọng', '55', 'active', UTC_TIMESTAMP() - INTERVAL 15 DAY),
+  ('customer105@marketlink.vn', @pw, 'customer', 'Trịnh Thị Quyên', '0956943003', '161 Lý Tự Trọng, Phường Phú Nhuận, Thành phố Hồ Chí Minh', 'VN', '79', '27073', 'Lý Tự Trọng', '161', 'active', UTC_TIMESTAMP() - INTERVAL 13 DAY),
+  ('customer106@marketlink.vn', @pw, 'customer', 'Vũ Hoàng Nam', '0911214430', '113 Pasteur, Phường Chợ Lớn, Thành phố Hồ Chí Minh', 'VN', '79', '27343', 'Pasteur', '113', 'active', UTC_TIMESTAMP() - INTERVAL 12 DAY),
+  ('customer107@marketlink.vn', @pw, 'customer', 'Từ Hữu Toàn', '0945089985', '171 Hoàng Sa, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Hoàng Sa', '171', 'active', UTC_TIMESTAMP() - INTERVAL 10 DAY),
+  ('customer108@marketlink.vn', @pw, 'customer', 'Lý Hữu Nam', '0973353673', '69 Võ Văn Tần, Phường Gò Vấp, Thành phố Hồ Chí Minh', 'VN', '79', '26884', 'Võ Văn Tần', '69', 'active', UTC_TIMESTAMP() - INTERVAL 9 DAY),
+  ('customer109@marketlink.vn', @pw, 'customer', 'Huỳnh Thị Anh', '0942584220', '194 Pasteur, Phường Thủ Đức, Thành phố Hồ Chí Minh', 'VN', '79', '26824', 'Pasteur', '194', 'active', UTC_TIMESTAMP() - INTERVAL 7 DAY),
+  ('customer110@marketlink.vn', @pw, 'customer', 'Võ Ngọc Dũng', '0933469657', '164 Hoàng Sa, Phường Bình Thạnh, Thành phố Hồ Chí Minh', 'VN', '79', '26929', 'Hoàng Sa', '164', 'active', UTC_TIMESTAMP() - INTERVAL 5 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name,
                         phone = new.phone, status = new.status;
 
 -- 1.3 Additional Farmers (11-20)
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer11@marketlink.vn', @pw, 'farmer', 'Nguyễn Hoàng Nam', '0918877668', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 141 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('farmer11@marketlink.vn', @pw, 'farmer', 'Châu Thị Thuỷ', '0926365915', '320 Tỉnh lộ 8, Xã Củ Chi, Thành phố Hồ Chí Minh', 'VN', '79', '27553', 'Tỉnh lộ 8', '320', 'active', UTC_TIMESTAMP() - INTERVAL 141 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -164,40 +164,40 @@ FROM users u WHERE u.email = 'farmer11@marketlink.vn'
 ON DUPLICATE KEY UPDATE stall_name = 'Vườn rau Tân Phú', description = 'Rau xanh hữu cơ trồng tại vườn nhà Tân Phú, thu hoạch sáng sớm.', order_cutoff_hours = 12, approval_status = 'approved';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'B-19', m.latitude + -0.00004, m.longitude + -0.00008, TRUE
+SELECT f.id, m.id, 'B-28', m.latitude + -0.00005, m.longitude + 0.00012, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
 WHERE u.email = 'farmer11@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'B-19', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'B-28', is_active = TRUE;
 
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 4, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer11@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 5, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer11@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 1, '07:00:00', '11:00:00'
+SELECT fm.id, 3, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer11@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 6, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer11@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 2, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer11@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 0, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer11@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'B-37', m.latitude + 0.00003, m.longitude + 0.00005, TRUE
+SELECT f.id, m.id, 'B-24', m.latitude + -0.00005, m.longitude + 0.00005, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Bến Thành'
 WHERE u.email = 'farmer11@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'B-37', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'B-24', is_active = TRUE;
 
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 6, '07:00:00', '11:00:00'
+SELECT fm.id, 4, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer11@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
@@ -207,18 +207,13 @@ FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users 
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer11@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 3, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer11@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 4, '07:00:00', '11:00:00'
+SELECT fm.id, 1, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer11@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer12@marketlink.vn', @pw, 'farmer', 'Đặng Đức Tài', '0928124843', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 148 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('farmer12@marketlink.vn', @pw, 'farmer', 'Tạ Xuân Dũng', '0919270661', '160 Tỉnh lộ 8, Xã Củ Chi, Thành phố Hồ Chí Minh', 'VN', '79', '27553', 'Tỉnh lộ 8', '160', 'active', UTC_TIMESTAMP() - INTERVAL 138 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -227,30 +222,30 @@ FROM users u WHERE u.email = 'farmer12@marketlink.vn'
 ON DUPLICATE KEY UPDATE stall_name = 'Trái cây Cần Thơ', description = 'Trái cây miền Tây tươi mỗi ngày: mận, chôm chôm, nhãn, măng cụt.', order_cutoff_hours = 24, approval_status = 'approved';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'T-18', m.latitude + -0.00013, m.longitude + 0.00009, TRUE
+SELECT f.id, m.id, 'T-46', m.latitude + -0.00013, m.longitude + -0.00005, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'T-18', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'T-46', is_active = TRUE;
 
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 0, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer12@marketlink.vn' AND m.market_name = 'Chợ Thảo Điền';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 6, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer12@marketlink.vn' AND m.market_name = 'Chợ Thảo Điền';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 0, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer12@marketlink.vn' AND m.market_name = 'Chợ Thảo Điền';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'T-24', m.latitude + -0.00001, m.longitude + -0.00012, TRUE
+SELECT f.id, m.id, 'T-29', m.latitude + 0.00012, m.longitude + -0.00009, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Tân Định'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'T-24', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'T-29', is_active = TRUE;
 
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 5, '07:00:00', '11:00:00'
+SELECT fm.id, 0, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer12@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
@@ -260,12 +255,22 @@ FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users 
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer12@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 1, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer12@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 2, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer12@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 1, '07:00:00', '11:00:00'
+SELECT fm.id, 4, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer12@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 5, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer12@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
@@ -275,8 +280,8 @@ FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users 
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer12@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer13@marketlink.vn', @pw, 'farmer', 'Phạm Bảo Toàn', '0917353698', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 156 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('farmer13@marketlink.vn', @pw, 'farmer', 'Vũ Thị Phượng', '0971141577', '200 Tỉnh lộ 8, Xã Củ Chi, Thành phố Hồ Chí Minh', 'VN', '79', '27553', 'Tỉnh lộ 8', '200', 'active', UTC_TIMESTAMP() - INTERVAL 148 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -285,18 +290,13 @@ FROM users u WHERE u.email = 'farmer13@marketlink.vn'
 ON DUPLICATE KEY UPDATE stall_name = 'Hải sản Phan Thiết', description = 'Tôm, cá, mực tươi sống từ Phan Thiết, đánh bắt đêm giao sáng.', order_cutoff_hours = 6, approval_status = 'approved';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'B-33', m.latitude + 0.00005, m.longitude + -0.00002, TRUE
+SELECT f.id, m.id, 'B-36', m.latitude + 0.00000, m.longitude + 0.00006, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Bến Thành'
 WHERE u.email = 'farmer13@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'B-33', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'B-36', is_active = TRUE;
 
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 1, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer13@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 4, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer13@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
@@ -306,18 +306,13 @@ FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users 
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer13@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 5, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer13@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 6, '07:00:00', '11:00:00'
+SELECT fm.id, 4, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer13@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer14@marketlink.vn', @pw, 'farmer', 'Nguyễn Thị Vân', '0921892381', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 137 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('farmer14@marketlink.vn', @pw, 'farmer', 'Phan Kim Phong', '0914833100', '330 Tỉnh lộ 8, Xã Củ Chi, Thành phố Hồ Chí Minh', 'VN', '79', '27553', 'Tỉnh lộ 8', '330', 'active', UTC_TIMESTAMP() - INTERVAL 133 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -326,38 +321,23 @@ FROM users u WHERE u.email = 'farmer14@marketlink.vn'
 ON DUPLICATE KEY UPDATE stall_name = 'Gà vịt Bình Dương', description = 'Gà ta thả vườn, vịt cỏ, thịt tươi mỗi sáng.', order_cutoff_hours = 12, approval_status = 'approved';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'B-10', m.latitude + -0.00011, m.longitude + 0.00007, TRUE
+SELECT f.id, m.id, 'B-13', m.latitude + -0.00004, m.longitude + 0.00002, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
 WHERE u.email = 'farmer14@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'B-10', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'B-13', is_active = TRUE;
 
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 5, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 0, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 1, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 6, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 2, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 3, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 5, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
@@ -368,18 +348,13 @@ JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'T-43', m.latitude + -0.00009, m.longitude + 0.00007, TRUE
+SELECT f.id, m.id, 'T-41', m.latitude + -0.00014, m.longitude + 0.00013, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Tân Định'
 WHERE u.email = 'farmer14@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'T-43', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'T-41', is_active = TRUE;
 
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 2, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 5, '07:00:00', '11:00:00'
+SELECT fm.id, 4, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
@@ -389,13 +364,23 @@ FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users 
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 2, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 0, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 6, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer14@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer15@marketlink.vn', @pw, 'farmer', 'Đinh Thị Hoa', '0962051866', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 126 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('farmer15@marketlink.vn', @pw, 'farmer', 'Đinh Văn An', '0972973738', '144 Tỉnh lộ 8, Xã Củ Chi, Thành phố Hồ Chí Minh', 'VN', '79', '27553', 'Tỉnh lộ 8', '144', 'active', UTC_TIMESTAMP() - INTERVAL 137 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -404,13 +389,13 @@ FROM users u WHERE u.email = 'farmer15@marketlink.vn'
 ON DUPLICATE KEY UPDATE stall_name = 'Đậu hạt Đắk Lắk', description = 'Đậu phộng, hạt điều, cà phê rang xay Đắk Lắk chính gốc.', order_cutoff_hours = 48, approval_status = 'approved';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'B-20', m.latitude + -0.00005, m.longitude + 0.00008, TRUE
+SELECT f.id, m.id, 'B-35', m.latitude + -0.00005, m.longitude + -0.00012, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Bến Thành'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'B-20', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'B-35', is_active = TRUE;
 
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 6, '07:00:00', '11:00:00'
+SELECT fm.id, 2, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer15@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
@@ -419,36 +404,26 @@ SELECT fm.id, 3, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer15@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 5, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer15@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 4, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer15@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'T-48', m.latitude + -0.00011, m.longitude + 0.00004, TRUE
+SELECT f.id, m.id, 'T-14', m.latitude + 0.00002, m.longitude + 0.00004, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'T-48', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'T-14', is_active = TRUE;
 
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 6, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer15@marketlink.vn' AND m.market_name = 'Chợ Thảo Điền';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 0, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer15@marketlink.vn' AND m.market_name = 'Chợ Thảo Điền';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 6, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer15@marketlink.vn' AND m.market_name = 'Chợ Thảo Điền';
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer16@marketlink.vn', @pw, 'farmer', 'Lý Thị Phượng', '0981304605', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 141 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('farmer16@marketlink.vn', @pw, 'farmer', 'Lương Thị Thuỷ', '0951445977', '146 Tỉnh lộ 8, Xã Củ Chi, Thành phố Hồ Chí Minh', 'VN', '79', '27553', 'Tỉnh lộ 8', '146', 'active', UTC_TIMESTAMP() - INTERVAL 122 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -457,55 +432,30 @@ FROM users u WHERE u.email = 'farmer16@marketlink.vn'
 ON DUPLICATE KEY UPDATE stall_name = 'Bánh ngọt Sài Gòn', description = 'Bánh flan, chè, bánh plan caramel tự làm từ nguyên liệu sạch.', order_cutoff_hours = 12, approval_status = 'approved';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'T-24', m.latitude + -0.00015, m.longitude + -0.00007, TRUE
+SELECT f.id, m.id, 'T-14', m.latitude + 0.00004, m.longitude + 0.00004, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Tân Định'
 WHERE u.email = 'farmer16@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'T-24', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'T-14', is_active = TRUE;
 
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 4, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 3, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 6, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 2, '07:00:00', '11:00:00'
+SELECT fm.id, 0, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'B-15', m.latitude + 0.00014, m.longitude + -0.00004, TRUE
+SELECT f.id, m.id, 'B-27', m.latitude + 0.00010, m.longitude + -0.00015, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
 WHERE u.email = 'farmer16@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'B-15', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'B-27', is_active = TRUE;
 
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 2, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 0, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 5, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 4, '07:00:00', '11:00:00'
+SELECT fm.id, 3, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
@@ -515,18 +465,28 @@ FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users 
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 6, '07:00:00', '11:00:00'
+SELECT fm.id, 0, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 3, '07:00:00', '11:00:00'
+SELECT fm.id, 2, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 4, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 6, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer16@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer17@marketlink.vn', @pw, 'farmer', 'Hoàng Thị Lan', '0968365795', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 146 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('farmer17@marketlink.vn', @pw, 'farmer', 'Từ Thị Diễm', '0936659930', '261 Tỉnh lộ 8, Xã Củ Chi, Thành phố Hồ Chí Minh', 'VN', '79', '27553', 'Tỉnh lộ 8', '261', 'active', UTC_TIMESTAMP() - INTERVAL 159 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -535,10 +495,10 @@ FROM users u WHERE u.email = 'farmer17@marketlink.vn'
 ON DUPLICATE KEY UPDATE stall_name = 'Nấm Lâm Đồng', description = 'Nấm linh chi, nấm hương, nấm đùi gà từ Lâm Đồng.', order_cutoff_hours = 24, approval_status = 'approved';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'T-16', m.latitude + -0.00008, m.longitude + 0.00014, TRUE
+SELECT f.id, m.id, 'T-30', m.latitude + -0.00012, m.longitude + -0.00009, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
 WHERE u.email = 'farmer17@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'T-16', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'T-30', is_active = TRUE;
 
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 6, '07:00:00', '11:00:00'
@@ -551,8 +511,8 @@ FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users 
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer17@marketlink.vn' AND m.market_name = 'Chợ Thảo Điền';
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer18@marketlink.vn', @pw, 'farmer', 'Tạ Thị Mai', '0956375288', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 167 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('farmer18@marketlink.vn', @pw, 'farmer', 'Cao Thị Thuỷ', '0938402995', '398 Tỉnh lộ 8, Xã Củ Chi, Thành phố Hồ Chí Minh', 'VN', '79', '27553', 'Tỉnh lộ 8', '398', 'active', UTC_TIMESTAMP() - INTERVAL 148 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -561,60 +521,35 @@ FROM users u WHERE u.email = 'farmer18@marketlink.vn'
 ON DUPLICATE KEY UPDATE stall_name = 'Rau Đà Lạt Xanh', description = 'Rau cải, súp lơ, atiso từ Đà Lạt, xe lạnh mỗi đêm.', order_cutoff_hours = 24, approval_status = 'approved';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'B-48', m.latitude + -0.00014, m.longitude + 0.00012, TRUE
+SELECT f.id, m.id, 'B-50', m.latitude + -0.00001, m.longitude + 0.00013, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Bến Thành'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'B-48', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'B-50', is_active = TRUE;
 
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 1, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 3, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 5, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 4, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 2, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 6, '07:00:00', '11:00:00'
+SELECT fm.id, 3, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'B-34', m.latitude + 0.00014, m.longitude + 0.00002, TRUE
+SELECT f.id, m.id, 'B-33', m.latitude + -0.00006, m.longitude + 0.00004, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'B-34', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'B-33', is_active = TRUE;
 
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 1, '07:00:00', '11:00:00'
+SELECT fm.id, 6, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 3, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 5, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
@@ -629,18 +564,13 @@ FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users 
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 4, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 6, '07:00:00', '11:00:00'
+SELECT fm.id, 1, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer18@marketlink.vn' AND m.market_name = 'Chợ Bà Chiểu';
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer19@marketlink.vn', @pw, 'farmer', 'Đặng Thanh Cường', '0931305575', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 133 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('farmer19@marketlink.vn', @pw, 'farmer', 'Tô Thị Kiệt', '0928543218', '337 Tỉnh lộ 8, Xã Củ Chi, Thành phố Hồ Chí Minh', 'VN', '79', '27553', 'Tỉnh lộ 8', '337', 'active', UTC_TIMESTAMP() - INTERVAL 170 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -649,13 +579,18 @@ FROM users u WHERE u.email = 'farmer19@marketlink.vn'
 ON DUPLICATE KEY UPDATE stall_name = 'Sữa dê Long An', description = 'Sữa dê tươi, sữa chua dê, phô mai dê nhà làm.', order_cutoff_hours = 12, approval_status = 'approved';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'T-21', m.latitude + -0.00005, m.longitude + -0.00015, TRUE
+SELECT f.id, m.id, 'T-35', m.latitude + -0.00006, m.longitude + -0.00008, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Tân Định'
 WHERE u.email = 'farmer19@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'T-21', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'T-35', is_active = TRUE;
 
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 0, '07:00:00', '11:00:00'
+SELECT fm.id, 3, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer19@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 4, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer19@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
@@ -665,23 +600,18 @@ FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users 
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer19@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 0, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer19@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 1, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer19@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 5, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer19@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 4, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer19@marketlink.vn' AND m.market_name = 'Chợ Tân Định';
 
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
-  ('farmer20@marketlink.vn', @pw, 'farmer', 'Nguyễn Văn Toàn', '0923883964', 'TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 121 DAY)
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
+  ('farmer20@marketlink.vn', @pw, 'farmer', 'Dương Thị Vân', '0939125023', '105 Tỉnh lộ 8, Xã Củ Chi, Thành phố Hồ Chí Minh', 'VN', '79', '27553', 'Tỉnh lộ 8', '105', 'active', UTC_TIMESTAMP() - INTERVAL 131 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name, phone = new.phone;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status, approved_at)
@@ -690,28 +620,18 @@ FROM users u WHERE u.email = 'farmer20@marketlink.vn'
 ON DUPLICATE KEY UPDATE stall_name = 'Cá khô Châu Đốc', description = 'Khô cá lóc, khô cá sặc, mắm Châu Đốc truyền thống.', order_cutoff_hours = 48, approval_status = 'approved';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'B-25', m.latitude + -0.00010, m.longitude + -0.00006, TRUE
+SELECT f.id, m.id, 'B-49', m.latitude + -0.00005, m.longitude + 0.00000, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Bến Thành'
 WHERE u.email = 'farmer20@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'B-25', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'B-49', is_active = TRUE;
 
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 1, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer20@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 3, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer20@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 6, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer20@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 4, '07:00:00', '11:00:00'
+SELECT fm.id, 1, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer20@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
@@ -722,26 +642,26 @@ JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer20@marketlink.vn' AND m.market_name = 'Chợ Bến Thành';
 
 INSERT INTO farmer_markets (farmer_id, market_id, stall_code, stall_latitude, stall_longitude, is_active)
-SELECT f.id, m.id, 'T-17', m.latitude + 0.00004, m.longitude + -0.00002, TRUE
+SELECT f.id, m.id, 'T-44', m.latitude + -0.00012, m.longitude + -0.00014, TRUE
 FROM farmer_profiles f JOIN users u ON u.id = f.user_id JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
 WHERE u.email = 'farmer20@marketlink.vn'
-ON DUPLICATE KEY UPDATE stall_code = 'T-17', is_active = TRUE;
+ON DUPLICATE KEY UPDATE stall_code = 'T-44', is_active = TRUE;
 
-INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
-SELECT fm.id, 0, '07:00:00', '11:00:00'
-FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
-JOIN markets m ON m.id = fm.market_id
-WHERE u.email = 'farmer20@marketlink.vn' AND m.market_name = 'Chợ Thảo Điền';
 INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
 SELECT fm.id, 6, '07:00:00', '11:00:00'
 FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
 JOIN markets m ON m.id = fm.market_id
 WHERE u.email = 'farmer20@marketlink.vn' AND m.market_name = 'Chợ Thảo Điền';
+INSERT IGNORE INTO farmer_operating_days (farmer_market_id, day_of_week, pickup_start_time, pickup_end_time)
+SELECT fm.id, 0, '07:00:00', '11:00:00'
+FROM farmer_markets fm JOIN farmer_profiles f ON f.id = fm.farmer_id JOIN users u ON u.id = f.user_id
+JOIN markets m ON m.id = fm.market_id
+WHERE u.email = 'farmer20@marketlink.vn' AND m.market_name = 'Chợ Thảo Điền';
 
 -- 1.4 Pending farmer
-INSERT INTO users (email, password_hash, role, full_name, phone, address, status, created_at) VALUES
+INSERT INTO users (email, password_hash, role, full_name, phone, address, country_code, province_code, ward_code, street_name, address_line, status, created_at) VALUES
   ('farmer-pending@marketlink.vn', @pw, 'farmer', 'Trịnh Văn Tài', '0900000301',
-   'Hóc Môn, TP. Hồ Chí Minh', 'active', UTC_TIMESTAMP() - INTERVAL 3 DAY)
+   '235 Tỉnh lộ 8, Xã Hóc Môn, Thành phố Hồ Chí Minh', 'VN', '79', '27559', 'Tỉnh lộ 8', '235', 'active', UTC_TIMESTAMP() - INTERVAL 3 DAY)
 AS new ON DUPLICATE KEY UPDATE password_hash = new.password_hash, full_name = new.full_name;
 
 INSERT INTO farmer_profiles (user_id, stall_name, contact_person, description, order_cutoff_hours, approval_status)
@@ -751,220 +671,220 @@ FROM users u WHERE u.email = 'farmer-pending@marketlink.vn'
 ON DUPLICATE KEY UPDATE stall_name = 'Rau sạch Tài Hóc Môn', approval_status = 'pending';
 
 -- ===== 2. NEW PRODUCTS =====
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Rau cải bó xôi', 'Cải bó xôi hữu cơ, lá non.', 1.00, 'bunch', 40, 'available', FALSE
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Rau cải bó xôi', 'Cải bó xôi hữu cơ, lá non.', 1.00, 'bunch', 40, 'available', FALSE, '/uploads/product-images/cai-kale.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer11@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cải bó xôi hữu cơ, lá non.', price = 1.00, stock_quantity = 40;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Rau xà lách Iceberg', 'Xà lách giòn, trồng sạch.', 0.70, 'kg', 35, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Cải bó xôi hữu cơ, lá non.', price = 1.00, stock_quantity = 40, image_url = '/uploads/product-images/cai-kale.jpg';
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Rau xà lách Iceberg', 'Xà lách giòn, trồng sạch.', 0.70, 'kg', 35, 'available', FALSE, '/uploads/product-images/xa-lach-lo-lo.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer11@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Xà lách giòn, trồng sạch.', price = 0.70, stock_quantity = 35;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Cải thìa', 'Cải thìa baby, nấu canh ngọt.', 0.60, 'bunch', 50, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Xà lách giòn, trồng sạch.', price = 0.70, stock_quantity = 35, image_url = '/uploads/product-images/xa-lach-lo-lo.jpg';
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Cải thìa', 'Cải thìa baby, nấu canh ngọt.', 0.60, 'bunch', 50, 'available', FALSE, '/uploads/product-images/cai-ngot.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer11@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cải thìa baby, nấu canh ngọt.', price = 0.60, stock_quantity = 50;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Rau má', 'Rau má tươi, xay sinh tố.', 0.50, 'bunch', 30, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Cải thìa baby, nấu canh ngọt.', price = 0.60, stock_quantity = 50, image_url = '/uploads/product-images/cai-ngot.jpg';
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Rau má', 'Rau má tươi, xay sinh tố.', 0.50, 'bunch', 30, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer11@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Rau má tươi, xay sinh tố.', price = 0.50, stock_quantity = 30;
+ON DUPLICATE KEY UPDATE description = 'Rau má tươi, xay sinh tố.', price = 0.50, stock_quantity = 30, image_url = NULL;
 
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Chôm chôm', 'Chôm chôm nhãn Bến Tre, ngọt lịm.', 1.40, 'kg', 60, 'available', FALSE
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Chôm chôm', 'Chôm chôm nhãn Bến Tre, ngọt lịm.', 1.40, 'kg', 60, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'fruits'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Chôm chôm nhãn Bến Tre, ngọt lịm.', price = 1.40, stock_quantity = 60;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Mận An Phước', 'Mận hồng đào, giòn ngọt.', 1.60, 'kg', 25, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Chôm chôm nhãn Bến Tre, ngọt lịm.', price = 1.40, stock_quantity = 60, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Mận An Phước', 'Mận hồng đào, giòn ngọt.', 1.60, 'kg', 25, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'fruits'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Mận hồng đào, giòn ngọt.', price = 1.60, stock_quantity = 25;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Nhãn lồng', 'Nhãn lồng Hưng Yên cơm dày.', 2.20, 'kg', 30, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Mận hồng đào, giòn ngọt.', price = 1.60, stock_quantity = 25, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Nhãn lồng', 'Nhãn lồng Hưng Yên cơm dày.', 2.20, 'kg', 30, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'fruits'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Nhãn lồng Hưng Yên cơm dày.', price = 2.20, stock_quantity = 30;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Măng cụt', 'Măng cụt Lái Thiêu tím đậm.', 2.60, 'kg', 20, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Nhãn lồng Hưng Yên cơm dày.', price = 2.20, stock_quantity = 30, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Măng cụt', 'Măng cụt Lái Thiêu tím đậm.', 2.60, 'kg', 20, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'fruits'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Măng cụt Lái Thiêu tím đậm.', price = 2.60, stock_quantity = 20;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Vú sữa', 'Vú sữa Lò Rèn Vĩnh Kim.', 1.80, 'kg', 15, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Măng cụt Lái Thiêu tím đậm.', price = 2.60, stock_quantity = 20, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Vú sữa', 'Vú sữa Lò Rèn Vĩnh Kim.', 1.80, 'kg', 15, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'fruits'
 WHERE u.email = 'farmer12@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Vú sữa Lò Rèn Vĩnh Kim.', price = 1.80, stock_quantity = 15;
+ON DUPLICATE KEY UPDATE description = 'Vú sữa Lò Rèn Vĩnh Kim.', price = 1.80, stock_quantity = 15, image_url = NULL;
 
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Tôm sú', 'Tôm sú biển tươi sống, size 20 con/kg.', 11.20, 'kg', 20, 'available', FALSE
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Tôm sú', 'Tôm sú biển tươi sống, size 20 con/kg.', 11.20, 'kg', 20, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer13@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Tôm sú biển tươi sống, size 20 con/kg.', price = 11.20, stock_quantity = 20;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Cá thu', 'Cá thu một nắng Phan Thiết.', 7.20, 'kg', 15, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Tôm sú biển tươi sống, size 20 con/kg.', price = 11.20, stock_quantity = 20, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Cá thu', 'Cá thu một nắng Phan Thiết.', 7.20, 'kg', 15, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer13@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cá thu một nắng Phan Thiết.', price = 7.20, stock_quantity = 15;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Mực ống', 'Mực ống tươi, đánh bắt đêm.', 8.80, 'kg', 10, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Cá thu một nắng Phan Thiết.', price = 7.20, stock_quantity = 15, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Mực ống', 'Mực ống tươi, đánh bắt đêm.', 8.80, 'kg', 10, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer13@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Mực ống tươi, đánh bắt đêm.', price = 8.80, stock_quantity = 10;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Nghêu', 'Nghêu lụa Bến Tre, sạch cát.', 1.80, 'kg', 40, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Mực ống tươi, đánh bắt đêm.', price = 8.80, stock_quantity = 10, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Nghêu', 'Nghêu lụa Bến Tre, sạch cát.', 1.80, 'kg', 40, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer13@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Nghêu lụa Bến Tre, sạch cát.', price = 1.80, stock_quantity = 40;
+ON DUPLICATE KEY UPDATE description = 'Nghêu lụa Bến Tre, sạch cát.', price = 1.80, stock_quantity = 40, image_url = NULL;
 
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Gà ta nguyên con', 'Gà ta thả vườn 1.5–2 kg.', 6.40, 'kg', 15, 'available', FALSE
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Gà ta nguyên con', 'Gà ta thả vườn 1.5–2 kg.', 6.40, 'kg', 15, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'meat_and_poultry'
 WHERE u.email = 'farmer14@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Gà ta thả vườn 1.5–2 kg.', price = 6.40, stock_quantity = 15;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Vịt cỏ', 'Vịt cỏ nuôi đồng, thịt chắc.', 4.80, 'kg', 10, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Gà ta thả vườn 1.5–2 kg.', price = 6.40, stock_quantity = 15, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Vịt cỏ', 'Vịt cỏ nuôi đồng, thịt chắc.', 4.80, 'kg', 10, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'meat_and_poultry'
 WHERE u.email = 'farmer14@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Vịt cỏ nuôi đồng, thịt chắc.', price = 4.80, stock_quantity = 10;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Ức gà', 'Ức gà lọc xương, đóng gói sạch.', 3.80, 'kg', 25, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Vịt cỏ nuôi đồng, thịt chắc.', price = 4.80, stock_quantity = 10, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Ức gà', 'Ức gà lọc xương, đóng gói sạch.', 3.80, 'kg', 25, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'meat_and_poultry'
 WHERE u.email = 'farmer14@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Ức gà lọc xương, đóng gói sạch.', price = 3.80, stock_quantity = 25;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Trứng gà ta', 'Trứng gà ta thả vườn Bình Dương.', 2.00, 'tray of 30', 30, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Ức gà lọc xương, đóng gói sạch.', price = 3.80, stock_quantity = 25, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Trứng gà ta', 'Trứng gà ta thả vườn Bình Dương.', 2.00, 'tray of 30', 30, 'available', FALSE, '/uploads/product-images/trung-ga-tha-vuon.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'meat_and_poultry'
 WHERE u.email = 'farmer14@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Trứng gà ta thả vườn Bình Dương.', price = 2.00, stock_quantity = 30;
+ON DUPLICATE KEY UPDATE description = 'Trứng gà ta thả vườn Bình Dương.', price = 2.00, stock_quantity = 30, image_url = '/uploads/product-images/trung-ga-tha-vuon.jpg';
 
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Đậu phộng rang', 'Đậu phộng rang tỏi ớt, giòn rụm.', 2.40, 'kg', 30, 'available', FALSE
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Đậu phộng rang', 'Đậu phộng rang tỏi ớt, giòn rụm.', 2.40, 'kg', 30, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'grains_beans_and_nuts'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Đậu phộng rang tỏi ớt, giòn rụm.', price = 2.40, stock_quantity = 30;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Hạt điều rang muối', 'Hạt điều Bình Phước A+, rang muối.', 8.80, 'kg', 15, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Đậu phộng rang tỏi ớt, giòn rụm.', price = 2.40, stock_quantity = 30, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Hạt điều rang muối', 'Hạt điều Bình Phước A+, rang muối.', 8.80, 'kg', 15, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'grains_beans_and_nuts'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Hạt điều Bình Phước A+, rang muối.', price = 8.80, stock_quantity = 15;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Cà phê rang xay', 'Cà phê Robusta Đắk Lắk, rang mộc.', 6.00, 'kg', 20, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Hạt điều Bình Phước A+, rang muối.', price = 8.80, stock_quantity = 15, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Cà phê rang xay', 'Cà phê Robusta Đắk Lắk, rang mộc.', 6.00, 'kg', 20, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'grains_beans_and_nuts'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cà phê Robusta Đắk Lắk, rang mộc.', price = 6.00, stock_quantity = 20;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Gạo ST25', 'Gạo ST25 Sóc Trăng, thơm dẻo.', 1.40, 'kg', 50, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Cà phê Robusta Đắk Lắk, rang mộc.', price = 6.00, stock_quantity = 20, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Gạo ST25', 'Gạo ST25 Sóc Trăng, thơm dẻo.', 1.40, 'kg', 50, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'grains_beans_and_nuts'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Gạo ST25 Sóc Trăng, thơm dẻo.', price = 1.40, stock_quantity = 50;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Đậu đen', 'Đậu đen xanh lòng, nấu chè.', 1.60, 'kg', 25, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Gạo ST25 Sóc Trăng, thơm dẻo.', price = 1.40, stock_quantity = 50, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Đậu đen', 'Đậu đen xanh lòng, nấu chè.', 1.60, 'kg', 25, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'grains_beans_and_nuts'
 WHERE u.email = 'farmer15@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Đậu đen xanh lòng, nấu chè.', price = 1.60, stock_quantity = 25;
+ON DUPLICATE KEY UPDATE description = 'Đậu đen xanh lòng, nấu chè.', price = 1.60, stock_quantity = 25, image_url = NULL;
 
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Bánh flan caramel', 'Bánh flan mềm mịn, caramel đắng nhẹ.', 0.60, 'jar', 40, 'available', FALSE
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Bánh flan caramel', 'Bánh flan mềm mịn, caramel đắng nhẹ.', 0.60, 'jar', 40, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'baked_goods'
 WHERE u.email = 'farmer16@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Bánh flan mềm mịn, caramel đắng nhẹ.', price = 0.60, stock_quantity = 40;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Chè khúc bạch', 'Chè khúc bạch vải thiều.', 0.80, 'jar', 30, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Bánh flan mềm mịn, caramel đắng nhẹ.', price = 0.60, stock_quantity = 40, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Chè khúc bạch', 'Chè khúc bạch vải thiều.', 0.80, 'jar', 30, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'baked_goods'
 WHERE u.email = 'farmer16@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Chè khúc bạch vải thiều.', price = 0.80, stock_quantity = 30;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Bánh tiramisu hộp', 'Tiramisu cà phê, hộp 2 người.', 3.40, 'jar', 12, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Chè khúc bạch vải thiều.', price = 0.80, stock_quantity = 30, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Bánh tiramisu hộp', 'Tiramisu cà phê, hộp 2 người.', 3.40, 'jar', 12, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'baked_goods'
 WHERE u.email = 'farmer16@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Tiramisu cà phê, hộp 2 người.', price = 3.40, stock_quantity = 12;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Cookies socola', 'Cookies socola chip, bơ thật.', 2.60, 'jar', 20, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Tiramisu cà phê, hộp 2 người.', price = 3.40, stock_quantity = 12, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Cookies socola', 'Cookies socola chip, bơ thật.', 2.60, 'jar', 20, 'available', FALSE, '/uploads/product-images/banh-quy-bo.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'baked_goods'
 WHERE u.email = 'farmer16@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cookies socola chip, bơ thật.', price = 2.60, stock_quantity = 20;
+ON DUPLICATE KEY UPDATE description = 'Cookies socola chip, bơ thật.', price = 2.60, stock_quantity = 20, image_url = '/uploads/product-images/banh-quy-bo.jpg';
 
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Nấm linh chi đỏ', 'Nấm linh chi đỏ Lâm Đồng sấy khô.', 14.00, 'kg', 8, 'available', FALSE
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Nấm linh chi đỏ', 'Nấm linh chi đỏ Lâm Đồng sấy khô.', 14.00, 'kg', 8, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'mushrooms'
 WHERE u.email = 'farmer17@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Nấm linh chi đỏ Lâm Đồng sấy khô.', price = 14.00, stock_quantity = 8;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Nấm hương khô', 'Nấm hương rừng Lâm Đồng.', 11.20, 'kg', 10, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Nấm linh chi đỏ Lâm Đồng sấy khô.', price = 14.00, stock_quantity = 8, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Nấm hương khô', 'Nấm hương rừng Lâm Đồng.', 11.20, 'kg', 10, 'available', FALSE, '/uploads/product-images/nam-dong-co-tuoi.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'mushrooms'
 WHERE u.email = 'farmer17@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Nấm hương rừng Lâm Đồng.', price = 11.20, stock_quantity = 10;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Nấm đùi gà', 'Nấm đùi gà tươi, thịt chắc.', 2.20, 'kg', 25, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Nấm hương rừng Lâm Đồng.', price = 11.20, stock_quantity = 10, image_url = '/uploads/product-images/nam-dong-co-tuoi.jpg';
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Nấm đùi gà', 'Nấm đùi gà tươi, thịt chắc.', 2.20, 'kg', 25, 'available', FALSE, '/uploads/product-images/nam-bao-ngu.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'mushrooms'
 WHERE u.email = 'farmer17@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Nấm đùi gà tươi, thịt chắc.', price = 2.20, stock_quantity = 25;
+ON DUPLICATE KEY UPDATE description = 'Nấm đùi gà tươi, thịt chắc.', price = 2.20, stock_quantity = 25, image_url = '/uploads/product-images/nam-bao-ngu.jpg';
 
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Súp lơ trắng', 'Súp lơ trắng Đà Lạt, bông to.', 1.20, 'kg', 30, 'available', FALSE
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Súp lơ trắng', 'Súp lơ trắng Đà Lạt, bông to.', 1.20, 'kg', 30, 'available', FALSE, '/uploads/product-images/bong-cai-xanh.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Súp lơ trắng Đà Lạt, bông to.', price = 1.20, stock_quantity = 30;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Atiso', 'Atiso tươi Đà Lạt, nấu canh.', 1.80, 'kg', 20, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Súp lơ trắng Đà Lạt, bông to.', price = 1.20, stock_quantity = 30, image_url = '/uploads/product-images/bong-cai-xanh.jpg';
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Atiso', 'Atiso tươi Đà Lạt, nấu canh.', 1.80, 'kg', 20, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Atiso tươi Đà Lạt, nấu canh.', price = 1.80, stock_quantity = 20;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Bắp cải tím', 'Bắp cải tím Đà Lạt, làm salad.', 1.00, 'kg', 25, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Atiso tươi Đà Lạt, nấu canh.', price = 1.80, stock_quantity = 20, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Bắp cải tím', 'Bắp cải tím Đà Lạt, làm salad.', 1.00, 'kg', 25, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Bắp cải tím Đà Lạt, làm salad.', price = 1.00, stock_quantity = 25;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Cà rốt baby', 'Cà rốt baby Đà Lạt, ăn sống.', 1.40, 'kg', 40, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Bắp cải tím Đà Lạt, làm salad.', price = 1.00, stock_quantity = 25, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Cà rốt baby', 'Cà rốt baby Đà Lạt, ăn sống.', 1.40, 'kg', 40, 'available', FALSE, '/uploads/product-images/ca-rot.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Cà rốt baby Đà Lạt, ăn sống.', price = 1.40, stock_quantity = 40;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Đậu Hà Lan', 'Đậu Hà Lan tươi, bóc vỏ.', 2.00, 'kg', 15, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Cà rốt baby Đà Lạt, ăn sống.', price = 1.40, stock_quantity = 40, image_url = '/uploads/product-images/ca-rot.jpg';
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Đậu Hà Lan', 'Đậu Hà Lan tươi, bóc vỏ.', 2.00, 'kg', 15, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'vegetables'
 WHERE u.email = 'farmer18@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Đậu Hà Lan tươi, bóc vỏ.', price = 2.00, stock_quantity = 15;
+ON DUPLICATE KEY UPDATE description = 'Đậu Hà Lan tươi, bóc vỏ.', price = 2.00, stock_quantity = 15, image_url = NULL;
 
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Sữa dê tươi', 'Sữa dê tươi thanh trùng Long An.', 2.60, 'litre', 20, 'available', FALSE
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Sữa dê tươi', 'Sữa dê tươi thanh trùng Long An.', 2.60, 'litre', 20, 'available', FALSE, '/uploads/product-images/sua-tuoi-thanh-trung.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'eggs_and_dairy'
 WHERE u.email = 'farmer19@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Sữa dê tươi thanh trùng Long An.', price = 2.60, stock_quantity = 20;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Sữa chua dê', 'Sữa chua dê nhà làm, hũ 120ml.', 0.70, 'jar', 50, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Sữa dê tươi thanh trùng Long An.', price = 2.60, stock_quantity = 20, image_url = '/uploads/product-images/sua-tuoi-thanh-trung.jpg';
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Sữa chua dê', 'Sữa chua dê nhà làm, hũ 120ml.', 0.70, 'jar', 50, 'available', FALSE, '/uploads/product-images/sua-chua-nha-lam.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'eggs_and_dairy'
 WHERE u.email = 'farmer19@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Sữa chua dê nhà làm, hũ 120ml.', price = 0.70, stock_quantity = 50;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Phô mai dê', 'Phô mai dê soft, hộp 200g.', 4.80, 'jar', 10, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Sữa chua dê nhà làm, hũ 120ml.', price = 0.70, stock_quantity = 50, image_url = '/uploads/product-images/sua-chua-nha-lam.jpg';
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Phô mai dê', 'Phô mai dê soft, hộp 200g.', 4.80, 'jar', 10, 'available', FALSE, '/uploads/product-images/pho-mai-tuoi.jpg'
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'eggs_and_dairy'
 WHERE u.email = 'farmer19@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Phô mai dê soft, hộp 200g.', price = 4.80, stock_quantity = 10;
+ON DUPLICATE KEY UPDATE description = 'Phô mai dê soft, hộp 200g.', price = 4.80, stock_quantity = 10, image_url = '/uploads/product-images/pho-mai-tuoi.jpg';
 
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Khô cá lóc', 'Khô cá lóc Châu Đốc, phơi nắng.', 8.00, 'kg', 15, 'available', FALSE
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Khô cá lóc', 'Khô cá lóc Châu Đốc, phơi nắng.', 8.00, 'kg', 15, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer20@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Khô cá lóc Châu Đốc, phơi nắng.', price = 8.00, stock_quantity = 15;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Khô cá sặc', 'Khô cá sặc bướm An Giang.', 7.20, 'kg', 12, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Khô cá lóc Châu Đốc, phơi nắng.', price = 8.00, stock_quantity = 15, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Khô cá sặc', 'Khô cá sặc bướm An Giang.', 7.20, 'kg', 12, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer20@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Khô cá sặc bướm An Giang.', price = 7.20, stock_quantity = 12;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Mắm cá linh', 'Mắm cá linh truyền thống.', 3.20, 'litre', 20, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Khô cá sặc bướm An Giang.', price = 7.20, stock_quantity = 12, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Mắm cá linh', 'Mắm cá linh truyền thống.', 3.20, 'litre', 20, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer20@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Mắm cá linh truyền thống.', price = 3.20, stock_quantity = 20;
-INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden)
-SELECT f.id, c.id, 'Tôm khô', 'Tôm khô loại 1 Cà Mau.', 14.00, 'kg', 8, 'available', FALSE
+ON DUPLICATE KEY UPDATE description = 'Mắm cá linh truyền thống.', price = 3.20, stock_quantity = 20, image_url = NULL;
+INSERT INTO products (farmer_id, category_id, name, description, price, unit, stock_quantity, status, is_hidden, image_url)
+SELECT f.id, c.id, 'Tôm khô', 'Tôm khô loại 1 Cà Mau.', 14.00, 'kg', 8, 'available', FALSE, NULL
 FROM users u JOIN farmer_profiles f ON f.user_id = u.id JOIN categories c ON c.slug = 'seafood'
 WHERE u.email = 'farmer20@marketlink.vn'
-ON DUPLICATE KEY UPDATE description = 'Tôm khô loại 1 Cà Mau.', price = 14.00, stock_quantity = 8;
+ON DUPLICATE KEY UPDATE description = 'Tôm khô loại 1 Cà Mau.', price = 14.00, stock_quantity = 8, image_url = NULL;
 
 -- Weekly stock templates for new products
 INSERT INTO weekly_stock_templates (farmer_id, product_id, day_of_week, default_quantity, default_price, is_active)
@@ -994,36 +914,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0001' AS code, 'customer3@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 159 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0002' AS code, 'customer54@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 155 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0003' AS code, 'customer70@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 167 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0004' AS code, 'customer38@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 160 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0005' AS code, 'customer76@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 173 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0006' AS code, 'customer109@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 179 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0007' AS code, 'customer102@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 151 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0008' AS code, 'customer86@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 150 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0009' AS code, 'customer93@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 158 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0010' AS code, 'customer71@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 160 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0011' AS code, 'customer55@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 178 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0012' AS code, 'customer46@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 156 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0013' AS code, 'customer12@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 174 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0014' AS code, 'customer103@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 166 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0015' AS code, 'customer73@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 165 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0016' AS code, 'customer101@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 168 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0017' AS code, 'customer38@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 173 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0018' AS code, 'customer10@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 169 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0019' AS code, 'customer11@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 157 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0020' AS code, 'customer56@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 161 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0021' AS code, 'customer72@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 175 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0022' AS code, 'customer13@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 153 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0023' AS code, 'customer80@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 159 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0024' AS code, 'customer83@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 159 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0025' AS code, 'customer45@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 174 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0026' AS code, 'customer74@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 160 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0027' AS code, 'customer70@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 172 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0028' AS code, 'customer46@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 163 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0029' AS code, 'customer110@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 174 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0030' AS code, 'customer32@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 159 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0001' AS code, 'customer35@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 179 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0002' AS code, 'customer37@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 154 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0003' AS code, 'customer80@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 161 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0004' AS code, 'customer9@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 159 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0005' AS code, 'customer97@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 170 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0006' AS code, 'customer49@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 176 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0007' AS code, 'customer2@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 151 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0008' AS code, 'customer58@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 157 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0009' AS code, 'customer51@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 152 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0010' AS code, 'customer40@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 161 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0011' AS code, 'customer2@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 165 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0012' AS code, 'customer81@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 173 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0013' AS code, 'customer79@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 152 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0014' AS code, 'customer34@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 151 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0015' AS code, 'customer28@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 162 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0016' AS code, 'customer67@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 151 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0017' AS code, 'customer67@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 159 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0018' AS code, 'customer@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 159 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0019' AS code, 'customer62@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 177 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0020' AS code, 'customer65@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 167 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0021' AS code, 'customer94@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 180 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0022' AS code, 'customer64@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 170 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0023' AS code, 'customer103@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 158 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0024' AS code, 'customer108@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 163 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0025' AS code, 'customer@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 159 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0026' AS code, 'customer16@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 162 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0027' AS code, 'customer73@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 166 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0028' AS code, 'customer56@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 176 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0029' AS code, 'customer80@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 156 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0030' AS code, 'customer83@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 152 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1041,36 +961,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0031' AS code, 'customer91@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 137 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0032' AS code, 'customer86@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 131 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0033' AS code, 'customer82@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 141 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0034' AS code, 'customer103@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 143 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0035' AS code, 'customer56@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 125 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0036' AS code, 'customer40@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 148 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0037' AS code, 'customer94@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 128 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0038' AS code, 'customer26@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 126 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0039' AS code, 'customer58@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 122 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0040' AS code, 'customer30@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 138 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0041' AS code, 'customer40@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 145 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0042' AS code, 'customer94@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 124 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0043' AS code, 'customer65@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 135 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0044' AS code, 'customer89@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 126 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0045' AS code, 'customer92@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 147 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0046' AS code, 'customer74@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 148 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0047' AS code, 'customer85@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 120 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0048' AS code, 'customer37@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 123 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0049' AS code, 'customer13@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 128 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0050' AS code, 'customer10@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 140 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0051' AS code, 'customer48@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 143 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0052' AS code, 'customer26@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 134 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0053' AS code, 'customer79@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 131 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0054' AS code, 'customer31@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 126 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0055' AS code, 'customer43@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 127 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0056' AS code, 'customer31@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 125 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0057' AS code, 'customer4@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 126 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0058' AS code, 'customer32@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 139 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0059' AS code, 'customer61@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 126 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0060' AS code, 'customer11@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 135 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0031' AS code, 'customer92@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 129 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0032' AS code, 'customer47@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 120 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0033' AS code, 'customer99@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 125 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0034' AS code, 'customer82@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 148 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0035' AS code, 'customer30@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 128 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0036' AS code, 'customer87@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 127 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0037' AS code, 'customer93@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 135 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0038' AS code, 'customer11@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 136 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0039' AS code, 'customer68@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 140 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0040' AS code, 'customer20@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 136 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0041' AS code, 'customer107@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 125 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0042' AS code, 'customer90@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 128 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0043' AS code, 'customer91@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 144 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0044' AS code, 'customer29@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 122 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0045' AS code, 'customer71@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 145 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0046' AS code, 'customer@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 130 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0047' AS code, 'customer43@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 133 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0048' AS code, 'customer72@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 132 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0049' AS code, 'customer48@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 142 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0050' AS code, 'customer33@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 127 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0051' AS code, 'customer48@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 147 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0052' AS code, 'customer89@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 127 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0053' AS code, 'customer82@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 127 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0054' AS code, 'customer36@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 141 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0055' AS code, 'customer83@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 141 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0056' AS code, 'customer31@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 129 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0057' AS code, 'customer@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 125 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0058' AS code, 'customer70@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 128 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0059' AS code, 'customer4@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 121 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0060' AS code, 'customer17@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 120 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1088,26 +1008,26 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0061' AS code, 'customer42@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 142 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0062' AS code, 'customer95@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 128 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0063' AS code, 'customer38@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 135 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0064' AS code, 'customer42@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 125 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0065' AS code, 'customer110@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 131 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0066' AS code, 'customer18@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 126 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0067' AS code, 'customer12@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 125 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0068' AS code, 'customer30@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 125 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0069' AS code, 'customer87@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 135 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0070' AS code, 'customer61@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 145 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0071' AS code, 'customer82@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 137 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0072' AS code, 'customer55@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 126 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0073' AS code, 'customer23@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 125 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0074' AS code, 'customer9@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 134 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0075' AS code, 'customer97@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 144 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0076' AS code, 'customer26@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 136 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0077' AS code, 'customer26@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 147 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0078' AS code, 'customer72@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 132 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0079' AS code, 'customer18@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 127 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0080' AS code, 'customer103@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 144 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0061' AS code, 'customer95@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 124 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0062' AS code, 'customer104@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 132 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0063' AS code, 'customer4@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 147 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0064' AS code, 'customer93@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 144 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0065' AS code, 'customer71@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 131 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0066' AS code, 'customer83@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 142 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0067' AS code, 'customer68@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 124 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0068' AS code, 'customer52@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 129 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0069' AS code, 'customer27@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 149 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0070' AS code, 'customer70@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 132 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0071' AS code, 'customer27@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 130 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0072' AS code, 'customer95@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 128 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0073' AS code, 'customer37@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 142 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0074' AS code, 'customer81@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 122 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0075' AS code, 'customer93@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 136 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0076' AS code, 'customer8@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 138 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0077' AS code, 'customer52@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 149 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0078' AS code, 'customer69@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 132 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0079' AS code, 'customer51@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 131 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0080' AS code, 'customer11@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 132 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1125,36 +1045,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0081' AS code, 'customer65@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 94 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0082' AS code, 'customer91@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 95 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0083' AS code, 'customer110@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 105 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0084' AS code, 'customer110@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 116 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0085' AS code, 'customer6@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 94 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0086' AS code, 'customer54@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 112 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0087' AS code, 'customer105@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 110 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0088' AS code, 'customer25@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 112 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0089' AS code, 'customer62@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 113 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0090' AS code, 'customer72@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 98 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0091' AS code, 'customer6@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 93 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0092' AS code, 'customer28@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 119 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0093' AS code, 'customer15@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 117 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0094' AS code, 'customer@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 119 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0095' AS code, 'customer104@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 115 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0096' AS code, 'customer10@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 104 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0097' AS code, 'customer110@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 114 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0098' AS code, 'customer44@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 90 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0099' AS code, 'customer4@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 106 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0100' AS code, 'customer34@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 109 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0101' AS code, 'customer99@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 118 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0102' AS code, 'customer49@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 109 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0103' AS code, 'customer58@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 108 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0104' AS code, 'customer109@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 119 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0105' AS code, 'customer98@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 110 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0106' AS code, 'customer12@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 118 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0107' AS code, 'customer40@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 119 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0108' AS code, 'customer11@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 94 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0109' AS code, 'customer33@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 112 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0110' AS code, 'customer3@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 91 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0081' AS code, 'customer31@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 108 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0082' AS code, 'customer31@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 104 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0083' AS code, 'customer27@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 113 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0084' AS code, 'customer61@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 112 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0085' AS code, 'customer34@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 95 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0086' AS code, 'customer70@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 106 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0087' AS code, 'customer10@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 101 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0088' AS code, 'customer49@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 93 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0089' AS code, 'customer11@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 98 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0090' AS code, 'customer108@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 104 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0091' AS code, 'customer73@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 107 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0092' AS code, 'customer104@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 93 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0093' AS code, 'customer77@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 110 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0094' AS code, 'customer62@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 100 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0095' AS code, 'customer14@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 113 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0096' AS code, 'customer81@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 104 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0097' AS code, 'customer27@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 111 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0098' AS code, 'customer79@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 91 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0099' AS code, 'customer101@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 99 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0100' AS code, 'customer18@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 91 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0101' AS code, 'customer9@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 119 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0102' AS code, 'customer27@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 104 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0103' AS code, 'customer77@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 112 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0104' AS code, 'customer3@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 105 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0105' AS code, 'customer108@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 113 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0106' AS code, 'customer38@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 99 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0107' AS code, 'customer97@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 107 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0108' AS code, 'customer69@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 97 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0109' AS code, 'customer107@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 103 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0110' AS code, 'customer57@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 107 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1172,36 +1092,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0111' AS code, 'customer92@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 118 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0112' AS code, 'customer96@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 104 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0113' AS code, 'customer68@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 94 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0114' AS code, 'customer82@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 118 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0115' AS code, 'customer28@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 102 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0116' AS code, 'customer79@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 102 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0117' AS code, 'customer24@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 101 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0118' AS code, 'customer99@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 104 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0119' AS code, 'customer38@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 91 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0120' AS code, 'customer7@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 110 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0121' AS code, 'customer9@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 95 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0122' AS code, 'customer42@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 113 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0123' AS code, 'customer44@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 101 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0124' AS code, 'customer16@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 103 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0125' AS code, 'customer95@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 96 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0126' AS code, 'customer79@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 99 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0127' AS code, 'customer85@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 90 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0128' AS code, 'customer10@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 115 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0129' AS code, 'customer87@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 97 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0130' AS code, 'customer33@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 114 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0131' AS code, 'customer47@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 98 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0132' AS code, 'customer80@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 118 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0133' AS code, 'customer87@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 96 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0134' AS code, 'customer14@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 93 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0135' AS code, 'customer72@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 97 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0136' AS code, 'customer16@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 105 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0137' AS code, 'customer17@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 115 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0138' AS code, 'customer41@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 107 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0139' AS code, 'customer66@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 104 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0140' AS code, 'customer45@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 90 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0111' AS code, 'customer12@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 119 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0112' AS code, 'customer38@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 96 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0113' AS code, 'customer85@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 97 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0114' AS code, 'customer62@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 95 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0115' AS code, 'customer104@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 99 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0116' AS code, 'customer16@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 116 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0117' AS code, 'customer42@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 93 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0118' AS code, 'customer92@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 101 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0119' AS code, 'customer87@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 104 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0120' AS code, 'customer80@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 97 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0121' AS code, 'customer93@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 98 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0122' AS code, 'customer40@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 100 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0123' AS code, 'customer59@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 96 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0124' AS code, 'customer11@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 94 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0125' AS code, 'customer86@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 112 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0126' AS code, 'customer72@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 103 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0127' AS code, 'customer28@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 97 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0128' AS code, 'customer96@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 112 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0129' AS code, 'customer14@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 92 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0130' AS code, 'customer60@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 96 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0131' AS code, 'customer58@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 101 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0132' AS code, 'customer69@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 108 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0133' AS code, 'customer17@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 115 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0134' AS code, 'customer95@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 105 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0135' AS code, 'customer34@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 114 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0136' AS code, 'customer45@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 100 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0137' AS code, 'customer81@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 116 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0138' AS code, 'customer84@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 92 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0139' AS code, 'customer34@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 109 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0140' AS code, 'customer72@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 98 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1219,16 +1139,16 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0141' AS code, 'customer14@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 92 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0142' AS code, 'customer106@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 98 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0143' AS code, 'customer21@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 107 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0144' AS code, 'customer95@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 115 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0145' AS code, 'customer11@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 95 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0146' AS code, 'customer81@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 117 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0147' AS code, 'customer97@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 114 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0148' AS code, 'customer55@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 104 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0149' AS code, 'customer58@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 97 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0150' AS code, 'customer16@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 90 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0141' AS code, 'customer69@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 110 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0142' AS code, 'customer89@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 117 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0143' AS code, 'customer5@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 100 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0144' AS code, 'customer4@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 98 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0145' AS code, 'customer51@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 114 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0146' AS code, 'customer26@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 102 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0147' AS code, 'customer44@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 98 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0148' AS code, 'customer59@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 96 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0149' AS code, 'customer81@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 92 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0150' AS code, 'customer71@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 117 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1246,36 +1166,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0151' AS code, 'customer6@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 71 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0152' AS code, 'customer21@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 71 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0153' AS code, 'customer17@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 66 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0154' AS code, 'customer46@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 80 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0155' AS code, 'customer97@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 63 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0156' AS code, 'customer5@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 69 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0157' AS code, 'customer98@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 85 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0158' AS code, 'customer15@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 75 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0159' AS code, 'customer33@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 89 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0160' AS code, 'customer17@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 76 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0161' AS code, 'customer42@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 63 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0162' AS code, 'customer108@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 78 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0163' AS code, 'customer61@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 69 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0164' AS code, 'customer110@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 71 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0165' AS code, 'customer72@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 64 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0166' AS code, 'customer82@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 84 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0167' AS code, 'customer78@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 75 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0168' AS code, 'customer66@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 60 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0169' AS code, 'customer10@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 89 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0170' AS code, 'customer39@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 77 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0171' AS code, 'customer77@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 71 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0172' AS code, 'customer89@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 84 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0173' AS code, 'customer76@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 79 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0174' AS code, 'customer103@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 82 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0175' AS code, 'customer76@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 71 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0176' AS code, 'customer13@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 81 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0177' AS code, 'customer54@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 69 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0178' AS code, 'customer82@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 60 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0179' AS code, 'customer95@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 61 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0180' AS code, 'customer96@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 82 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0151' AS code, 'customer40@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 76 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0152' AS code, 'customer16@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 69 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0153' AS code, 'customer13@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 81 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0154' AS code, 'customer10@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 60 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0155' AS code, 'customer56@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 68 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0156' AS code, 'customer22@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 67 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0157' AS code, 'customer15@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 62 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0158' AS code, 'customer83@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 72 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0159' AS code, 'customer71@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 68 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0160' AS code, 'customer105@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 69 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0161' AS code, 'customer94@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 61 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0162' AS code, 'customer8@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 61 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0163' AS code, 'customer13@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 60 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0164' AS code, 'customer84@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 87 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0165' AS code, 'customer51@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 75 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0166' AS code, 'customer83@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 66 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0167' AS code, 'customer5@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 63 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0168' AS code, 'customer33@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 82 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0169' AS code, 'customer25@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 83 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0170' AS code, 'customer94@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 84 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0171' AS code, 'customer5@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 76 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0172' AS code, 'customer63@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 71 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0173' AS code, 'customer110@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 75 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0174' AS code, 'customer91@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 71 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0175' AS code, 'customer29@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 75 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0176' AS code, 'customer91@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 64 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0177' AS code, 'customer16@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 89 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0178' AS code, 'customer77@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 64 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0179' AS code, 'customer106@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 60 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0180' AS code, 'customer20@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 74 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1293,36 +1213,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0181' AS code, 'customer103@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 61 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0182' AS code, 'customer68@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 64 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0183' AS code, 'customer28@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 85 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0184' AS code, 'customer53@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 84 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0185' AS code, 'customer51@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 75 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0186' AS code, 'customer15@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 61 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0187' AS code, 'customer90@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 84 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0188' AS code, 'customer69@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 64 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0189' AS code, 'customer24@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 69 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0190' AS code, 'customer109@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 73 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0191' AS code, 'customer@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 65 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0192' AS code, 'customer15@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 78 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0193' AS code, 'customer72@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 65 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0194' AS code, 'customer30@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 76 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0195' AS code, 'customer48@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 87 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0196' AS code, 'customer98@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 89 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0197' AS code, 'customer105@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 86 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0198' AS code, 'customer35@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 62 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0199' AS code, 'customer99@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 64 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0200' AS code, 'customer63@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 66 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0201' AS code, 'customer58@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 73 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0202' AS code, 'customer84@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 84 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0203' AS code, 'customer104@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 80 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0204' AS code, 'customer65@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 79 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0205' AS code, 'customer70@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 64 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0206' AS code, 'customer33@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 69 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0207' AS code, 'customer18@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 76 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0208' AS code, 'customer109@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 80 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0209' AS code, 'customer101@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 85 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0210' AS code, 'customer92@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 61 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0181' AS code, 'customer12@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 69 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0182' AS code, 'customer40@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 65 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0183' AS code, 'customer35@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 66 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0184' AS code, 'customer56@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 66 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0185' AS code, 'customer69@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 81 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0186' AS code, 'customer63@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 66 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0187' AS code, 'customer78@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 79 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0188' AS code, 'customer43@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 86 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0189' AS code, 'customer54@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 70 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0190' AS code, 'customer26@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 66 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0191' AS code, 'customer91@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 62 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0192' AS code, 'customer65@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 76 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0193' AS code, 'customer61@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 86 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0194' AS code, 'customer46@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 69 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0195' AS code, 'customer@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 84 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0196' AS code, 'customer82@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 79 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0197' AS code, 'customer110@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 76 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0198' AS code, 'customer21@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 78 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0199' AS code, 'customer6@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 83 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0200' AS code, 'customer108@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 89 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0201' AS code, 'customer95@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 60 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0202' AS code, 'customer33@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 60 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0203' AS code, 'customer27@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 73 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0204' AS code, 'customer32@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 82 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0205' AS code, 'customer53@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 61 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0206' AS code, 'customer@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 76 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0207' AS code, 'customer24@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 89 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0208' AS code, 'customer61@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 69 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0209' AS code, 'customer53@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 65 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0210' AS code, 'customer32@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 87 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1340,36 +1260,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0211' AS code, 'customer93@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 68 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0212' AS code, 'customer33@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 85 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0213' AS code, 'customer3@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 64 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0214' AS code, 'customer31@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 76 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0215' AS code, 'customer103@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 66 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0216' AS code, 'customer88@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 74 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0217' AS code, 'customer44@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 83 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0218' AS code, 'customer92@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 62 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0219' AS code, 'customer41@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 70 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0220' AS code, 'customer3@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 86 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0221' AS code, 'customer30@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 71 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0222' AS code, 'customer83@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 84 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0223' AS code, 'customer26@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 69 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0224' AS code, 'customer47@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 61 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0225' AS code, 'customer4@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 73 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0226' AS code, 'customer45@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 76 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0227' AS code, 'customer90@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 88 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0228' AS code, 'customer40@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 74 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0229' AS code, 'customer22@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 63 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0230' AS code, 'customer70@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 73 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0231' AS code, 'customer8@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 63 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0232' AS code, 'customer54@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 63 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0233' AS code, 'customer9@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 61 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0234' AS code, 'customer8@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 77 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0235' AS code, 'customer76@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 67 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0236' AS code, 'customer80@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 77 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0237' AS code, 'customer29@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 85 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0238' AS code, 'customer72@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 75 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0239' AS code, 'customer87@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 67 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0240' AS code, 'customer93@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 84 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0211' AS code, 'customer67@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 77 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0212' AS code, 'customer88@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 83 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0213' AS code, 'customer109@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 85 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0214' AS code, 'customer68@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 88 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0215' AS code, 'customer61@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 86 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0216' AS code, 'customer29@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 66 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0217' AS code, 'customer45@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 69 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0218' AS code, 'customer51@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 65 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0219' AS code, 'customer108@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 69 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0220' AS code, 'customer80@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 82 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0221' AS code, 'customer32@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 70 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0222' AS code, 'customer92@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 71 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0223' AS code, 'customer12@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 79 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0224' AS code, 'customer24@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 73 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0225' AS code, 'customer27@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 81 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0226' AS code, 'customer73@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 68 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0227' AS code, 'customer107@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 73 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0228' AS code, 'customer35@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 72 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0229' AS code, 'customer19@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 77 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0230' AS code, 'customer59@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 67 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0231' AS code, 'customer19@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 76 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0232' AS code, 'customer56@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 85 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0233' AS code, 'customer17@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 80 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0234' AS code, 'customer76@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 72 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0235' AS code, 'customer42@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 63 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0236' AS code, 'customer99@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 79 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0237' AS code, 'customer66@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 87 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0238' AS code, 'customer106@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 76 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0239' AS code, 'customer85@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 85 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0240' AS code, 'customer103@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 63 AS days_ago, 'cancelled' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1387,36 +1307,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0241' AS code, 'customer63@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 43 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0242' AS code, 'customer103@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 53 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0243' AS code, 'customer24@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 30 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0244' AS code, 'customer33@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 38 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0245' AS code, 'customer61@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 36 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0246' AS code, 'customer102@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 33 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0247' AS code, 'customer105@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 41 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0248' AS code, 'customer9@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 56 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0249' AS code, 'customer12@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 53 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0250' AS code, 'customer66@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 32 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0251' AS code, 'customer41@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 53 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0252' AS code, 'customer19@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 59 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0253' AS code, 'customer97@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 36 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0254' AS code, 'customer62@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 46 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0255' AS code, 'customer97@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 30 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0256' AS code, 'customer51@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 58 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0257' AS code, 'customer103@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 44 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0258' AS code, 'customer98@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 48 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0259' AS code, 'customer27@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 46 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0260' AS code, 'customer37@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 34 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0261' AS code, 'customer42@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 33 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0262' AS code, 'customer45@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 30 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0263' AS code, 'customer23@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 39 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0264' AS code, 'customer57@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 49 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0265' AS code, 'customer10@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 58 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0266' AS code, 'customer41@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 58 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0267' AS code, 'customer21@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 54 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0268' AS code, 'customer28@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 58 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0269' AS code, 'customer103@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 58 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0270' AS code, 'customer60@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 57 AS days_ago, 'cancelled' AS status
+  SELECT 'ML-HIST-0241' AS code, 'customer58@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 44 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0242' AS code, 'customer@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 44 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0243' AS code, 'customer9@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 34 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0244' AS code, 'customer67@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 32 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0245' AS code, 'customer37@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 58 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0246' AS code, 'customer19@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 42 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0247' AS code, 'customer55@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 46 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0248' AS code, 'customer33@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 31 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0249' AS code, 'customer19@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 42 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0250' AS code, 'customer51@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 51 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0251' AS code, 'customer81@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 30 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0252' AS code, 'customer71@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 33 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0253' AS code, 'customer22@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 36 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0254' AS code, 'customer55@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 51 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0255' AS code, 'customer56@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 50 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0256' AS code, 'customer96@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 43 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0257' AS code, 'customer16@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 30 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0258' AS code, 'customer99@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 50 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0259' AS code, 'customer32@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 59 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0260' AS code, 'customer3@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 47 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0261' AS code, 'customer67@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 58 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0262' AS code, 'customer46@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 57 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0263' AS code, 'customer58@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 47 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0264' AS code, 'customer57@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 34 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0265' AS code, 'customer93@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 47 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0266' AS code, 'customer105@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 30 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0267' AS code, 'customer89@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 39 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0268' AS code, 'customer67@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 36 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0269' AS code, 'customer37@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 54 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0270' AS code, 'customer18@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 42 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1434,36 +1354,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0271' AS code, 'customer25@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 46 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0272' AS code, 'customer94@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 39 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0273' AS code, 'customer70@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 55 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0274' AS code, 'customer49@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 35 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0275' AS code, 'customer40@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 44 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0276' AS code, 'customer40@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 53 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0277' AS code, 'customer71@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 42 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0278' AS code, 'customer62@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 41 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0279' AS code, 'customer106@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 58 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0280' AS code, 'customer42@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 31 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0281' AS code, 'customer37@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 40 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0282' AS code, 'customer71@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 45 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0283' AS code, 'customer33@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 33 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0284' AS code, 'customer99@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 47 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0285' AS code, 'customer37@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 44 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0286' AS code, 'customer16@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 31 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0287' AS code, 'customer86@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 58 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0288' AS code, 'customer65@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 56 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0289' AS code, 'customer56@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 54 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0290' AS code, 'customer99@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 43 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0291' AS code, 'customer26@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 57 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0292' AS code, 'customer43@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 45 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0293' AS code, 'customer64@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 39 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0294' AS code, 'customer66@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 37 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0295' AS code, 'customer6@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 32 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0296' AS code, 'customer43@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 46 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0297' AS code, 'customer63@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 54 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0298' AS code, 'customer57@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 46 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0299' AS code, 'customer14@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 53 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0300' AS code, 'customer67@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 40 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0271' AS code, 'customer108@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 54 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0272' AS code, 'customer86@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 46 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0273' AS code, 'customer91@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 57 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0274' AS code, 'customer45@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 36 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0275' AS code, 'customer41@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 49 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0276' AS code, 'customer110@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 57 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0277' AS code, 'customer44@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 32 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0278' AS code, 'customer78@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 39 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0279' AS code, 'customer96@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 44 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0280' AS code, 'customer40@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 33 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0281' AS code, 'customer84@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 38 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0282' AS code, 'customer92@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 51 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0283' AS code, 'customer23@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 39 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0284' AS code, 'customer54@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 35 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0285' AS code, 'customer11@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 31 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0286' AS code, 'customer92@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 50 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0287' AS code, 'customer99@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 38 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0288' AS code, 'customer63@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 31 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0289' AS code, 'customer59@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 58 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0290' AS code, 'customer51@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 47 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0291' AS code, 'customer7@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 57 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0292' AS code, 'customer59@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 54 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0293' AS code, 'customer107@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 31 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0294' AS code, 'customer44@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 44 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0295' AS code, 'customer9@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 40 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0296' AS code, 'customer109@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 44 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0297' AS code, 'customer38@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 41 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0298' AS code, 'customer56@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 42 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0299' AS code, 'customer31@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 37 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0300' AS code, 'customer68@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 35 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1481,36 +1401,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0301' AS code, 'customer72@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 39 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0302' AS code, 'customer4@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 47 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0303' AS code, 'customer25@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 50 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0304' AS code, 'customer78@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 58 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0305' AS code, 'customer60@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 54 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0306' AS code, 'customer33@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 39 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0307' AS code, 'customer58@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 43 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0308' AS code, 'customer86@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 31 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0309' AS code, 'customer78@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 36 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0310' AS code, 'customer48@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 58 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0311' AS code, 'customer70@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 56 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0312' AS code, 'customer4@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 43 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0313' AS code, 'customer13@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 30 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0314' AS code, 'customer89@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 34 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0315' AS code, 'customer15@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 55 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0316' AS code, 'customer40@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 45 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0317' AS code, 'customer26@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 50 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0318' AS code, 'customer66@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 37 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0319' AS code, 'customer52@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 54 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0320' AS code, 'customer56@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 51 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0321' AS code, 'customer27@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 38 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0322' AS code, 'customer36@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 57 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0323' AS code, 'customer88@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 34 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0324' AS code, 'customer109@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 57 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0325' AS code, 'customer2@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 57 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0326' AS code, 'customer23@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 52 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0327' AS code, 'customer92@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 47 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0328' AS code, 'customer65@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 44 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0329' AS code, 'customer6@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 58 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0330' AS code, 'customer96@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 32 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0301' AS code, 'customer23@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 46 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0302' AS code, 'customer90@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 56 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0303' AS code, 'customer45@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 46 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0304' AS code, 'customer41@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 49 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0305' AS code, 'customer98@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 54 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0306' AS code, 'customer54@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 33 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0307' AS code, 'customer23@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 31 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0308' AS code, 'customer18@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 30 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0309' AS code, 'customer34@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 31 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0310' AS code, 'customer38@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 30 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0311' AS code, 'customer82@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 57 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0312' AS code, 'customer101@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 52 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0313' AS code, 'customer106@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 30 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0314' AS code, 'customer38@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 38 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0315' AS code, 'customer76@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 36 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0316' AS code, 'customer102@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 40 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0317' AS code, 'customer53@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 45 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0318' AS code, 'customer105@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 32 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0319' AS code, 'customer85@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 44 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0320' AS code, 'customer42@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 39 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0321' AS code, 'customer85@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 36 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0322' AS code, 'customer66@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 53 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0323' AS code, 'customer72@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 33 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0324' AS code, 'customer10@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 45 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0325' AS code, 'customer103@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 30 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0326' AS code, 'customer95@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 35 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0327' AS code, 'customer4@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 30 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0328' AS code, 'customer18@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 49 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0329' AS code, 'customer49@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 34 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0330' AS code, 'customer46@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 33 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1528,36 +1448,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0331' AS code, 'customer13@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 53 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0332' AS code, 'customer69@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 37 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0333' AS code, 'customer42@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 56 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0334' AS code, 'customer18@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 42 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0335' AS code, 'customer59@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 54 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0336' AS code, 'customer15@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 36 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0337' AS code, 'customer37@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 39 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0338' AS code, 'customer22@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 44 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0339' AS code, 'customer24@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 57 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0340' AS code, 'customer31@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 53 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0341' AS code, 'customer18@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 38 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0342' AS code, 'customer83@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 44 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0343' AS code, 'customer31@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 54 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0344' AS code, 'customer39@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 38 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0345' AS code, 'customer12@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 50 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0346' AS code, 'customer53@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 48 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0347' AS code, 'customer8@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 44 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0348' AS code, 'customer22@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 54 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0349' AS code, 'customer98@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 51 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0350' AS code, 'customer39@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 34 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0351' AS code, 'customer71@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 51 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0352' AS code, 'customer34@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 45 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0353' AS code, 'customer39@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 31 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0354' AS code, 'customer5@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 55 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0355' AS code, 'customer101@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 50 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0356' AS code, 'customer4@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 45 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0357' AS code, 'customer18@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 40 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0358' AS code, 'customer110@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 44 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0359' AS code, 'customer52@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 53 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0360' AS code, 'customer6@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 54 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0331' AS code, 'customer71@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 54 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0332' AS code, 'customer102@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 45 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0333' AS code, 'customer49@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 46 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0334' AS code, 'customer60@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 52 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0335' AS code, 'customer43@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 32 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0336' AS code, 'customer86@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 54 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0337' AS code, 'customer25@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 57 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0338' AS code, 'customer43@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 52 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0339' AS code, 'customer58@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 43 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0340' AS code, 'customer41@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 35 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0341' AS code, 'customer70@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 34 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0342' AS code, 'customer80@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 37 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0343' AS code, 'customer4@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 38 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0344' AS code, 'customer105@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 43 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0345' AS code, 'customer15@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 52 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0346' AS code, 'customer29@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 44 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0347' AS code, 'customer12@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 33 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0348' AS code, 'customer17@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 49 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0349' AS code, 'customer80@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 45 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0350' AS code, 'customer72@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 55 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0351' AS code, 'customer64@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 54 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0352' AS code, 'customer93@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 54 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0353' AS code, 'customer79@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 58 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0354' AS code, 'customer74@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 57 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0355' AS code, 'customer98@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 39 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0356' AS code, 'customer110@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 52 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0357' AS code, 'customer@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 52 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0358' AS code, 'customer@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 54 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0359' AS code, 'customer94@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 56 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0360' AS code, 'customer56@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 41 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1575,36 +1495,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0361' AS code, 'customer71@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 7 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0362' AS code, 'customer44@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 1 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0363' AS code, 'customer65@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 12 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0364' AS code, 'customer34@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 1 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0365' AS code, 'customer13@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 15 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0366' AS code, 'customer65@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 20 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0367' AS code, 'customer46@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 10 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0368' AS code, 'customer76@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 13 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0369' AS code, 'customer20@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 8 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0370' AS code, 'customer4@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 29 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0371' AS code, 'customer87@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 23 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0372' AS code, 'customer36@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 7 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0373' AS code, 'customer33@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 10 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0374' AS code, 'customer88@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 21 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0375' AS code, 'customer79@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 17 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0376' AS code, 'customer64@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 28 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0377' AS code, 'customer84@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 3 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0378' AS code, 'customer3@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 4 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0379' AS code, 'customer54@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 12 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0380' AS code, 'customer55@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 7 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0381' AS code, 'customer103@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 22 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0382' AS code, 'customer@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 8 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0383' AS code, 'customer18@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 26 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0384' AS code, 'customer74@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 16 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0385' AS code, 'customer39@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 6 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0386' AS code, 'customer42@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 22 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0387' AS code, 'customer17@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 19 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0388' AS code, 'customer41@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 6 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0389' AS code, 'customer78@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 9 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0390' AS code, 'customer49@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 17 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0361' AS code, 'customer43@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 21 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0362' AS code, 'customer92@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 9 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0363' AS code, 'customer79@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 9 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0364' AS code, 'customer21@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 11 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0365' AS code, 'customer66@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 5 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0366' AS code, 'customer45@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 15 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0367' AS code, 'customer27@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 12 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0368' AS code, 'customer77@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 4 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0369' AS code, 'customer43@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 5 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0370' AS code, 'customer22@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 17 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0371' AS code, 'customer66@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 17 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0372' AS code, 'customer97@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 3 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0373' AS code, 'customer47@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 7 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0374' AS code, 'customer42@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 12 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0375' AS code, 'customer38@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 19 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0376' AS code, 'customer90@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 23 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0377' AS code, 'customer10@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 12 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0378' AS code, 'customer44@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 9 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0379' AS code, 'customer@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 25 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0380' AS code, 'customer104@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 18 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0381' AS code, 'customer79@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 19 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0382' AS code, 'customer12@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 26 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0383' AS code, 'customer28@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 8 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0384' AS code, 'customer13@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 11 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0385' AS code, 'customer102@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 5 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0386' AS code, 'customer28@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 18 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0387' AS code, 'customer29@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 8 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0388' AS code, 'customer51@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 8 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0389' AS code, 'customer32@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 5 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0390' AS code, 'customer44@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 8 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1622,36 +1542,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0391' AS code, 'customer99@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 28 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0392' AS code, 'customer102@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 10 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0393' AS code, 'customer93@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 2 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0394' AS code, 'customer92@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 23 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0395' AS code, 'customer94@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 19 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0396' AS code, 'customer43@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 11 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0397' AS code, 'customer55@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 26 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0398' AS code, 'customer7@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 24 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0399' AS code, 'customer34@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 21 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0400' AS code, 'customer19@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 1 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0401' AS code, 'customer13@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 29 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0402' AS code, 'customer76@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 10 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0403' AS code, 'customer25@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 6 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0404' AS code, 'customer103@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 9 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0405' AS code, 'customer80@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 2 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0406' AS code, 'customer109@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 19 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0407' AS code, 'customer56@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 26 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0408' AS code, 'customer103@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 13 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0409' AS code, 'customer4@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 22 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0410' AS code, 'customer2@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 20 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0411' AS code, 'customer25@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 19 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0412' AS code, 'customer83@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 9 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0413' AS code, 'customer79@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 8 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0414' AS code, 'customer49@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 16 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0415' AS code, 'customer14@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 18 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0416' AS code, 'customer51@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 15 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0417' AS code, 'customer55@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 2 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0418' AS code, 'customer103@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 13 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0419' AS code, 'customer93@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 1 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0420' AS code, 'customer28@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 8 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0391' AS code, 'customer54@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 7 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0392' AS code, 'customer48@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 21 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0393' AS code, 'customer20@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 5 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0394' AS code, 'customer84@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 26 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0395' AS code, 'customer18@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 23 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0396' AS code, 'customer106@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 2 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0397' AS code, 'customer83@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 22 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0398' AS code, 'customer44@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 11 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0399' AS code, 'customer63@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 8 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0400' AS code, 'customer11@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 28 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0401' AS code, 'customer53@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 23 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0402' AS code, 'customer52@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 21 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0403' AS code, 'customer66@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 29 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0404' AS code, 'customer45@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 25 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0405' AS code, 'customer92@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 3 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0406' AS code, 'customer80@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 16 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0407' AS code, 'customer55@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 24 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0408' AS code, 'customer31@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 29 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0409' AS code, 'customer65@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 29 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0410' AS code, 'customer84@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 1 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0411' AS code, 'customer65@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 3 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0412' AS code, 'customer14@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 1 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0413' AS code, 'customer47@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 9 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0414' AS code, 'customer101@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 14 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0415' AS code, 'customer44@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 15 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0416' AS code, 'customer19@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 8 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0417' AS code, 'customer18@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 25 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0418' AS code, 'customer62@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 18 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0419' AS code, 'customer64@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 18 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0420' AS code, 'customer91@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 20 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1669,36 +1589,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0421' AS code, 'customer37@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 10 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0422' AS code, 'customer29@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 13 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0423' AS code, 'customer65@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 8 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0424' AS code, 'customer10@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 18 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0425' AS code, 'customer21@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 1 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0426' AS code, 'customer12@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 27 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0427' AS code, 'customer84@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 11 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0428' AS code, 'customer33@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 17 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0429' AS code, 'customer36@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 26 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0430' AS code, 'customer30@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 2 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0431' AS code, 'customer107@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 5 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0432' AS code, 'customer56@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 5 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0433' AS code, 'customer11@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 7 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0434' AS code, 'customer44@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 28 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0435' AS code, 'customer5@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 10 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0436' AS code, 'customer31@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 19 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0437' AS code, 'customer97@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 20 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0438' AS code, 'customer55@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 15 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0439' AS code, 'customer96@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 20 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0440' AS code, 'customer23@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 25 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0441' AS code, 'customer98@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 21 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0442' AS code, 'customer67@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 10 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0443' AS code, 'customer51@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 5 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0444' AS code, 'customer106@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 20 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0445' AS code, 'customer55@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 1 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0446' AS code, 'customer21@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 2 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0447' AS code, 'customer43@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 16 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0448' AS code, 'customer4@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 11 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0449' AS code, 'customer45@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 3 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0450' AS code, 'customer16@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 26 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0421' AS code, 'customer96@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 4 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0422' AS code, 'customer43@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 24 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0423' AS code, 'customer81@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 21 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0424' AS code, 'customer101@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 27 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0425' AS code, 'customer35@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 10 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0426' AS code, 'customer58@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 11 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0427' AS code, 'customer59@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 7 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0428' AS code, 'customer3@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 5 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0429' AS code, 'customer4@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 2 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0430' AS code, 'customer24@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 26 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0431' AS code, 'customer85@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 29 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0432' AS code, 'customer61@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 5 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0433' AS code, 'customer62@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 9 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0434' AS code, 'customer82@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 7 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0435' AS code, 'customer106@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 27 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0436' AS code, 'customer28@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 16 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0437' AS code, 'customer13@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 5 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0438' AS code, 'customer99@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 12 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0439' AS code, 'customer27@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 1 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0440' AS code, 'customer97@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 9 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0441' AS code, 'customer92@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 5 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0442' AS code, 'customer4@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 6 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0443' AS code, 'customer96@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 20 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0444' AS code, 'customer6@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 10 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0445' AS code, 'customer23@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 3 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0446' AS code, 'customer102@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 10 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0447' AS code, 'customer84@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 14 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0448' AS code, 'customer77@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 25 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0449' AS code, 'customer23@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 24 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0450' AS code, 'customer70@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 24 AS days_ago, 'completed' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1716,36 +1636,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0451' AS code, 'customer98@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 1 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0452' AS code, 'customer70@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 26 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0453' AS code, 'customer28@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 20 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0454' AS code, 'customer32@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 7 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0455' AS code, 'customer14@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 20 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0456' AS code, 'customer104@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 26 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0457' AS code, 'customer74@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 23 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0458' AS code, 'customer9@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 27 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0459' AS code, 'customer91@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 16 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0460' AS code, 'customer66@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 7 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0461' AS code, 'customer19@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 28 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0462' AS code, 'customer77@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 27 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0463' AS code, 'customer44@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 12 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0464' AS code, 'customer109@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 19 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0465' AS code, 'customer91@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 20 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0466' AS code, 'customer12@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 18 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0467' AS code, 'customer20@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 17 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0468' AS code, 'customer5@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 9 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0469' AS code, 'customer7@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 9 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0470' AS code, 'customer10@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 18 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0471' AS code, 'customer69@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 29 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0472' AS code, 'customer52@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 16 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0473' AS code, 'customer101@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 15 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0474' AS code, 'customer49@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 17 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0475' AS code, 'customer37@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 11 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0476' AS code, 'customer95@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 17 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0477' AS code, 'customer58@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 20 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0478' AS code, 'customer77@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 4 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0479' AS code, 'customer66@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 7 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0480' AS code, 'customer32@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 5 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0451' AS code, 'customer34@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 4 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0452' AS code, 'customer8@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 8 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0453' AS code, 'customer85@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 29 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0454' AS code, 'customer66@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 28 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0455' AS code, 'customer34@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 23 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0456' AS code, 'customer20@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 8 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0457' AS code, 'customer13@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 13 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0458' AS code, 'customer37@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 23 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0459' AS code, 'customer89@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 18 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0460' AS code, 'customer51@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 19 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0461' AS code, 'customer28@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 13 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0462' AS code, 'customer51@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 9 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0463' AS code, 'customer99@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 7 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0464' AS code, 'customer106@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 22 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0465' AS code, 'customer5@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 10 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0466' AS code, 'customer37@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 29 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0467' AS code, 'customer72@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 19 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0468' AS code, 'customer9@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 28 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0469' AS code, 'customer39@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 20 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0470' AS code, 'customer108@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 12 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0471' AS code, 'customer57@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 29 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0472' AS code, 'customer26@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 22 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0473' AS code, 'customer76@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 23 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0474' AS code, 'customer91@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 28 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0475' AS code, 'customer57@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 26 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0476' AS code, 'customer79@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 14 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0477' AS code, 'customer85@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 21 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0478' AS code, 'customer48@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 20 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0479' AS code, 'customer73@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 22 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0480' AS code, 'customer96@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 10 AS days_ago, 'cancelled' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1763,36 +1683,36 @@ SELECT x.code, c.id, f.id, m.id, NULL,
        0, x.status,
        TIMESTAMP(DATE(UTC_TIMESTAMP() + INTERVAL 7 HOUR) - INTERVAL (x.days_ago + 2) DAY, '08:00:00') - INTERVAL 7 HOUR
 FROM (
-  SELECT 'ML-HIST-0481' AS code, 'customer86@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 18 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0482' AS code, 'customer94@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 26 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0483' AS code, 'customer104@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 25 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0484' AS code, 'customer57@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 9 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0485' AS code, 'customer53@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 21 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0486' AS code, 'customer96@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 16 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0487' AS code, 'customer40@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 5 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0488' AS code, 'customer25@marketlink.vn' AS cust, 'farmer7@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 23 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0489' AS code, 'customer27@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 8 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0490' AS code, 'customer70@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 8 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0491' AS code, 'customer52@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 23 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0492' AS code, 'customer40@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 10 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0493' AS code, 'customer70@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 3 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0494' AS code, 'customer27@marketlink.vn' AS cust, 'farmer3@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 17 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0495' AS code, 'customer4@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 11 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0496' AS code, 'customer107@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 14 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0497' AS code, 'customer54@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 14 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0498' AS code, 'customer58@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 15 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0499' AS code, 'customer43@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 3 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0500' AS code, 'customer9@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 26 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0501' AS code, 'customer16@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 22 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0502' AS code, 'customer96@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 10 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0503' AS code, 'customer91@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 6 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0504' AS code, 'customer102@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 25 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0505' AS code, 'customer24@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 22 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0506' AS code, 'customer39@marketlink.vn' AS cust, 'farmer16@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 4 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0507' AS code, 'customer81@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 26 AS days_ago, 'declined' AS status
-  UNION ALL SELECT 'ML-HIST-0508' AS code, 'customer@marketlink.vn' AS cust, 'farmer9@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 16 AS days_ago, 'completed' AS status
-  UNION ALL SELECT 'ML-HIST-0509' AS code, 'customer105@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 8 AS days_ago, 'cancelled' AS status
-  UNION ALL SELECT 'ML-HIST-0510' AS code, 'customer85@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 21 AS days_ago, 'completed' AS status
+  SELECT 'ML-HIST-0481' AS code, 'customer109@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 20 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0482' AS code, 'customer39@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 11 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0483' AS code, 'customer36@marketlink.vn' AS cust, 'farmer15@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 14 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0484' AS code, 'customer3@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 1 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0485' AS code, 'customer90@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 9 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0486' AS code, 'customer6@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 25 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0487' AS code, 'customer22@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 28 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0488' AS code, 'customer19@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 17 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0489' AS code, 'customer59@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 13 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0490' AS code, 'customer79@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 14 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0491' AS code, 'customer18@marketlink.vn' AS cust, 'farmer18@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 16 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0492' AS code, 'customer15@marketlink.vn' AS cust, 'farmer8@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 17 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0493' AS code, 'customer87@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 28 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0494' AS code, 'customer37@marketlink.vn' AS cust, 'farmer@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 16 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0495' AS code, 'customer97@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 25 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0496' AS code, 'customer60@marketlink.vn' AS cust, 'farmer14@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 4 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0497' AS code, 'customer62@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 1 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0498' AS code, 'customer101@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 27 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0499' AS code, 'customer4@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 29 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0500' AS code, 'customer77@marketlink.vn' AS cust, 'farmer4@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 23 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0501' AS code, 'customer12@marketlink.vn' AS cust, 'farmer20@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 8 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0502' AS code, 'customer86@marketlink.vn' AS cust, 'farmer11@marketlink.vn' AS farm, 'Chợ Bà Chiểu' AS mkt, 17 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0503' AS code, 'customer97@marketlink.vn' AS cust, 'farmer2@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 20 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0504' AS code, 'customer109@marketlink.vn' AS cust, 'farmer13@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 2 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0505' AS code, 'customer109@marketlink.vn' AS cust, 'farmer19@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 18 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0506' AS code, 'customer68@marketlink.vn' AS cust, 'farmer17@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 14 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0507' AS code, 'customer84@marketlink.vn' AS cust, 'farmer5@marketlink.vn' AS farm, 'Chợ Tân Định' AS mkt, 26 AS days_ago, 'completed' AS status
+  UNION ALL SELECT 'ML-HIST-0508' AS code, 'customer48@marketlink.vn' AS cust, 'farmer10@marketlink.vn' AS farm, 'Chợ Bến Thành' AS mkt, 26 AS days_ago, 'declined' AS status
+  UNION ALL SELECT 'ML-HIST-0509' AS code, 'customer78@marketlink.vn' AS cust, 'farmer12@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 5 AS days_ago, 'cancelled' AS status
+  UNION ALL SELECT 'ML-HIST-0510' AS code, 'customer25@marketlink.vn' AS cust, 'farmer6@marketlink.vn' AS farm, 'Chợ Thảo Điền' AS mkt, 12 AS days_ago, 'cancelled' AS status
 ) x
 JOIN users c ON c.email = x.cust
 JOIN users u ON u.email = x.farm
@@ -1919,1144 +1839,1093 @@ UPDATE farmer_profiles f SET f.rating_avg = COALESCE((SELECT ROUND(AVG(r.rating)
 
 -- ===== 7. FAVORITES =====
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer19@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer27@marketlink.vn';
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer7@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer23@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer17@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer54@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer15@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer10@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer11@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer98@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer14@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer103@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer17@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer80@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer6@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer11@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer9@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer102@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer11@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer70@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer17@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer60@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer11@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer2@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer18@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer16@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer18@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer8@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer22@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer13@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer83@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer8@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer87@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer18@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer104@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer18@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer29@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer2@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer108@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer14@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer52@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer16@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer20@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer10@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer14@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer19@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer78@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer18@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer68@marketlink.vn';
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer7@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer94@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
 SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer4@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer@marketlink.vn';
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer69@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
 SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer20@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer59@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer7@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer13@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer12@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer84@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer7@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer106@marketlink.vn';
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer58@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
 SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer19@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer82@marketlink.vn';
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer72@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer15@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer85@marketlink.vn';
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer10@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer105@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer14@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer47@marketlink.vn';
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer2@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer89@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer16@marketlink.vn'
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer7@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer86@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer9@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer9@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer37@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer9@marketlink.vn'
 JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer17@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer4@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer24@marketlink.vn';
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer17@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer3@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer2@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer28@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer12@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer22@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer8@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer35@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer14@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer30@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer12@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer4@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer18@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer60@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer10@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer107@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer8@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer57@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer76@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer6@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer98@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
 SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer13@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer89@marketlink.vn';
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer84@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer18@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer99@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer18@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer85@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer16@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer56@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer96@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer14@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer73@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer2@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer40@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer2@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer97@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer5@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer42@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer14@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer5@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
 SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer6@marketlink.vn'
 JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer95@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer11@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer12@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer12@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer45@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer7@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer63@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
 SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer19@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer67@marketlink.vn';
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer26@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer20@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer40@marketlink.vn';
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer13@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer25@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer19@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer90@marketlink.vn';
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer3@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer16@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer@marketlink.vn'
-JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer91@marketlink.vn';
+SELECT c.id, 'farmer', f.id, NULL, NULL, f.id FROM users c JOIN users fu ON fu.email = 'farmer17@marketlink.vn'
+JOIN farmer_profiles f ON f.user_id = fu.id WHERE c.email = 'customer41@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
 SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bến Thành'
-WHERE c.email = 'customer101@marketlink.vn';
+WHERE c.email = 'customer85@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
+WHERE c.email = 'customer109@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Tân Định'
+WHERE c.email = 'customer102@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
 SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bến Thành'
+WHERE c.email = 'customer42@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
+WHERE c.email = 'customer94@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
+WHERE c.email = 'customer32@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
+WHERE c.email = 'customer55@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Tân Định'
 WHERE c.email = 'customer25@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
 SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bến Thành'
-WHERE c.email = 'customer28@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
-WHERE c.email = 'customer35@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Tân Định'
-WHERE c.email = 'customer54@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Tân Định'
-WHERE c.email = 'customer64@marketlink.vn';
+WHERE c.email = 'customer24@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
 SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
+WHERE c.email = 'customer69@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bến Thành'
+WHERE c.email = 'customer96@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Tân Định'
+WHERE c.email = 'customer83@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
+WHERE c.email = 'customer108@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
+WHERE c.email = 'customer77@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
+WHERE c.email = 'customer69@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
 WHERE c.email = 'customer51@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
-WHERE c.email = 'customer33@marketlink.vn';
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
+WHERE c.email = 'customer53@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
+WHERE c.email = 'customer25@marketlink.vn';
+INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
+SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
+WHERE c.email = 'customer7@marketlink.vn';
 INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
 SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bến Thành'
-WHERE c.email = 'customer4@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
-WHERE c.email = 'customer104@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Tân Định'
-WHERE c.email = 'customer76@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
-WHERE c.email = 'customer4@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
-WHERE c.email = 'customer13@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bà Chiểu'
-WHERE c.email = 'customer72@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
-WHERE c.email = 'customer39@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
-WHERE c.email = 'customer34@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Thảo Điền'
-WHERE c.email = 'customer64@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Tân Định'
-WHERE c.email = 'customer82@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Tân Định'
-WHERE c.email = 'customer72@marketlink.vn';
-INSERT IGNORE INTO favorites (customer_id, target_type, farmer_id, product_id, market_id, target_id)
-SELECT c.id, 'market', NULL, NULL, m.id, m.id FROM users c JOIN markets m ON m.market_name = 'Chợ Bến Thành'
-WHERE c.email = 'customer95@marketlink.vn';
+WHERE c.email = 'customer11@marketlink.vn';
 
 -- ===== 8. FEEDBACK =====
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'bug', 'Trang giỏ hàng không hiện badge số lượng trên điện thoại Samsung.', 'resolved', UTC_TIMESTAMP() - INTERVAL 90 DAY
-FROM users u WHERE u.email = 'customer67@marketlink.vn'
+SELECT u.id, 'bug', 'Trang giỏ hàng không hiện badge số lượng trên điện thoại Samsung.', 'resolved', UTC_TIMESTAMP() - INTERVAL 136 DAY
+FROM users u WHERE u.email = 'customer13@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Trang giỏ hàng không hiện badge số lượng trên điện thoại Samsung.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'suggestion', 'Cho phép lọc sản phẩm theo khoảng cách từ vị trí hiện tại.', 'reviewed', UTC_TIMESTAMP() - INTERVAL 72 DAY
-FROM users u WHERE u.email = 'customer14@marketlink.vn'
+SELECT u.id, 'suggestion', 'Cho phép lọc sản phẩm theo khoảng cách từ vị trí hiện tại.', 'reviewed', UTC_TIMESTAMP() - INTERVAL 56 DAY
+FROM users u WHERE u.email = 'customer73@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Cho phép lọc sản phẩm theo khoảng cách từ vị trí hiện tại.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'query', 'Tôi muốn đăng ký bán hàng trên MarketLink, cần điều kiện gì?', 'resolved', UTC_TIMESTAMP() - INTERVAL 111 DAY
-FROM users u WHERE u.email = 'customer31@marketlink.vn'
+SELECT u.id, 'query', 'Tôi muốn đăng ký bán hàng trên MarketLink, cần điều kiện gì?', 'resolved', UTC_TIMESTAMP() - INTERVAL 163 DAY
+FROM users u WHERE u.email = 'customer35@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Tôi muốn đăng ký bán hàng trên MarketLink, cần điều kiện gì?');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT NULL, 'bug', 'Nút Thêm vào yêu thích bị lỗi trên Firefox khi bấm nhanh liên tục.', 'resolved', UTC_TIMESTAMP() - INTERVAL 37 DAY
+SELECT NULL, 'bug', 'Nút Thêm vào yêu thích bị lỗi trên Firefox khi bấm nhanh liên tục.', 'resolved', UTC_TIMESTAMP() - INTERVAL 38 DAY
 FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Nút Thêm vào yêu thích bị lỗi trên Firefox khi bấm nhanh liên tục.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT NULL, 'suggestion', 'Thêm tính năng so sánh giá giữa các sạp cho cùng một sản phẩm.', 'new', UTC_TIMESTAMP() - INTERVAL 71 DAY
-FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Thêm tính năng so sánh giá giữa các sạp cho cùng một sản phẩm.');
+SELECT u.id, 'suggestion', 'Thêm tính năng so sánh giá giữa các sạp cho cùng một sản phẩm.', 'new', UTC_TIMESTAMP() - INTERVAL 108 DAY
+FROM users u WHERE u.email = 'customer80@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Thêm tính năng so sánh giá giữa các sạp cho cùng một sản phẩm.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT NULL, 'query', 'Đơn hàng bị từ chối thì có bị trừ tiền không?', 'resolved', UTC_TIMESTAMP() - INTERVAL 24 DAY
-FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Đơn hàng bị từ chối thì có bị trừ tiền không?');
+SELECT u.id, 'query', 'Đơn hàng bị từ chối thì có bị trừ tiền không?', 'resolved', UTC_TIMESTAMP() - INTERVAL 56 DAY
+FROM users u WHERE u.email = 'customer17@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Đơn hàng bị từ chối thì có bị trừ tiền không?');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'bug', 'Bản đồ chợ load chậm khi mở trên 3G.', 'reviewed', UTC_TIMESTAMP() - INTERVAL 33 DAY
-FROM users u WHERE u.email = 'customer53@marketlink.vn'
+SELECT u.id, 'bug', 'Bản đồ chợ load chậm khi mở trên 3G.', 'reviewed', UTC_TIMESTAMP() - INTERVAL 108 DAY
+FROM users u WHERE u.email = 'customer104@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Bản đồ chợ load chậm khi mở trên 3G.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'suggestion', 'Cho đặt hàng định kỳ hàng tuần, không cần vào đặt lại mỗi lần.', 'new', UTC_TIMESTAMP() - INTERVAL 25 DAY
-FROM users u WHERE u.email = 'customer74@marketlink.vn'
+SELECT u.id, 'suggestion', 'Cho đặt hàng định kỳ hàng tuần, không cần vào đặt lại mỗi lần.', 'new', UTC_TIMESTAMP() - INTERVAL 60 DAY
+FROM users u WHERE u.email = 'customer21@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Cho đặt hàng định kỳ hàng tuần, không cần vào đặt lại mỗi lần.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT NULL, 'query', 'Có ship hàng về nhà không hay phải tới chợ lấy?', 'resolved', UTC_TIMESTAMP() - INTERVAL 88 DAY
-FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Có ship hàng về nhà không hay phải tới chợ lấy?');
+SELECT u.id, 'query', 'Có ship hàng về nhà không hay phải tới chợ lấy?', 'resolved', UTC_TIMESTAMP() - INTERVAL 99 DAY
+FROM users u WHERE u.email = 'customer40@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Có ship hàng về nhà không hay phải tới chợ lấy?');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'bug', 'Thông báo đơn hàng mới không hiện trên iOS Safari.', 'new', UTC_TIMESTAMP() - INTERVAL 82 DAY
-FROM users u WHERE u.email = 'customer66@marketlink.vn'
+SELECT u.id, 'bug', 'Thông báo đơn hàng mới không hiện trên iOS Safari.', 'new', UTC_TIMESTAMP() - INTERVAL 72 DAY
+FROM users u WHERE u.email = 'customer55@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Thông báo đơn hàng mới không hiện trên iOS Safari.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'suggestion', 'Thêm mục Sản phẩm mới tuần này trên trang chủ.', 'reviewed', UTC_TIMESTAMP() - INTERVAL 46 DAY
-FROM users u WHERE u.email = 'customer31@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Thêm mục Sản phẩm mới tuần này trên trang chủ.');
+SELECT NULL, 'suggestion', 'Thêm mục Sản phẩm mới tuần này trên trang chủ.', 'reviewed', UTC_TIMESTAMP() - INTERVAL 27 DAY
+FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Thêm mục Sản phẩm mới tuần này trên trang chủ.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'query', 'Có chương trình giảm giá cho khách mua thường xuyên không?', 'new', UTC_TIMESTAMP() - INTERVAL 169 DAY
-FROM users u WHERE u.email = 'customer80@marketlink.vn'
+SELECT u.id, 'query', 'Có chương trình giảm giá cho khách mua thường xuyên không?', 'new', UTC_TIMESTAMP() - INTERVAL 163 DAY
+FROM users u WHERE u.email = 'customer63@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Có chương trình giảm giá cho khách mua thường xuyên không?');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'bug', 'Ảnh sản phẩm bị mờ trên iPad Pro.', 'new', UTC_TIMESTAMP() - INTERVAL 169 DAY
-FROM users u WHERE u.email = 'customer101@marketlink.vn'
+SELECT u.id, 'bug', 'Ảnh sản phẩm bị mờ trên iPad Pro.', 'new', UTC_TIMESTAMP() - INTERVAL 63 DAY
+FROM users u WHERE u.email = 'customer59@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Ảnh sản phẩm bị mờ trên iPad Pro.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT NULL, 'suggestion', 'Cho phép nhắn tin với admin khi có vấn đề đơn hàng.', 'new', UTC_TIMESTAMP() - INTERVAL 153 DAY
-FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Cho phép nhắn tin với admin khi có vấn đề đơn hàng.');
+SELECT u.id, 'suggestion', 'Cho phép nhắn tin với admin khi có vấn đề đơn hàng.', 'new', UTC_TIMESTAMP() - INTERVAL 4 DAY
+FROM users u WHERE u.email = 'customer37@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Cho phép nhắn tin với admin khi có vấn đề đơn hàng.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'query', 'Ứng dụng có trên Google Play Store không?', 'new', UTC_TIMESTAMP() - INTERVAL 118 DAY
-FROM users u WHERE u.email = 'customer30@marketlink.vn'
+SELECT u.id, 'query', 'Ứng dụng có trên Google Play Store không?', 'new', UTC_TIMESTAMP() - INTERVAL 109 DAY
+FROM users u WHERE u.email = 'customer25@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Ứng dụng có trên Google Play Store không?');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'bug', 'Khi đổi ngôn ngữ sang tiếng Anh thì một số chỗ vẫn hiện tiếng Việt.', 'new', UTC_TIMESTAMP() - INTERVAL 67 DAY
-FROM users u WHERE u.email = 'customer5@marketlink.vn'
+SELECT u.id, 'bug', 'Khi đổi ngôn ngữ sang tiếng Anh thì một số chỗ vẫn hiện tiếng Việt.', 'new', UTC_TIMESTAMP() - INTERVAL 153 DAY
+FROM users u WHERE u.email = 'customer11@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Khi đổi ngôn ngữ sang tiếng Anh thì một số chỗ vẫn hiện tiếng Việt.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'suggestion', 'Nên có tính năng đánh giá bằng hình ảnh (review kèm ảnh).', 'new', UTC_TIMESTAMP() - INTERVAL 150 DAY
-FROM users u WHERE u.email = 'customer52@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Nên có tính năng đánh giá bằng hình ảnh (review kèm ảnh).');
+SELECT NULL, 'suggestion', 'Nên có tính năng đánh giá bằng hình ảnh (review kèm ảnh).', 'new', UTC_TIMESTAMP() - INTERVAL 84 DAY
+FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Nên có tính năng đánh giá bằng hình ảnh (review kèm ảnh).');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'bug', 'Scroll bị giật khi mở danh sách sản phẩm trên Oppo A15.', 'reviewed', UTC_TIMESTAMP() - INTERVAL 61 DAY
-FROM users u WHERE u.email = 'customer108@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Scroll bị giật khi mở danh sách sản phẩm trên Oppo A15.');
+SELECT NULL, 'bug', 'Scroll bị giật khi mở danh sách sản phẩm trên Oppo A15.', 'reviewed', UTC_TIMESTAMP() - INTERVAL 17 DAY
+FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Scroll bị giật khi mở danh sách sản phẩm trên Oppo A15.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'suggestion', 'Thêm filter theo vùng miền (miền Tây, Đà Lạt, miền Trung).', 'new', UTC_TIMESTAMP() - INTERVAL 3 DAY
-FROM users u WHERE u.email = 'customer96@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Thêm filter theo vùng miền (miền Tây, Đà Lạt, miền Trung).');
+SELECT NULL, 'suggestion', 'Thêm filter theo vùng miền (miền Tây, Đà Lạt, miền Trung).', 'new', UTC_TIMESTAMP() - INTERVAL 110 DAY
+FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Thêm filter theo vùng miền (miền Tây, Đà Lạt, miền Trung).');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT NULL, 'query', 'Mình mua nhiều sạp cùng lúc thì nhận hàng như thế nào?', 'resolved', UTC_TIMESTAMP() - INTERVAL 59 DAY
-FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Mình mua nhiều sạp cùng lúc thì nhận hàng như thế nào?');
+SELECT u.id, 'query', 'Mình mua nhiều sạp cùng lúc thì nhận hàng như thế nào?', 'resolved', UTC_TIMESTAMP() - INTERVAL 79 DAY
+FROM users u WHERE u.email = 'customer78@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Mình mua nhiều sạp cùng lúc thì nhận hàng như thế nào?');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT NULL, 'bug', 'Trang đơn hàng bị trắng khi mất kết nối internet rồi có lại.', 'new', UTC_TIMESTAMP() - INTERVAL 16 DAY
-FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Trang đơn hàng bị trắng khi mất kết nối internet rồi có lại.');
+SELECT u.id, 'bug', 'Trang đơn hàng bị trắng khi mất kết nối internet rồi có lại.', 'new', UTC_TIMESTAMP() - INTERVAL 105 DAY
+FROM users u WHERE u.email = 'customer110@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Trang đơn hàng bị trắng khi mất kết nối internet rồi có lại.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'suggestion', 'Cho xem lịch sử giá sản phẩm theo tuần.', 'new', UTC_TIMESTAMP() - INTERVAL 55 DAY
-FROM users u WHERE u.email = 'customer30@marketlink.vn'
+SELECT u.id, 'suggestion', 'Cho xem lịch sử giá sản phẩm theo tuần.', 'new', UTC_TIMESTAMP() - INTERVAL 92 DAY
+FROM users u WHERE u.email = 'customer9@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Cho xem lịch sử giá sản phẩm theo tuần.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'query', 'Farmer có bị tính phí khi dùng MarketLink không?', 'resolved', UTC_TIMESTAMP() - INTERVAL 41 DAY
-FROM users u WHERE u.email = 'customer46@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Farmer có bị tính phí khi dùng MarketLink không?');
+SELECT NULL, 'query', 'Farmer có bị tính phí khi dùng MarketLink không?', 'resolved', UTC_TIMESTAMP() - INTERVAL 80 DAY
+FROM DUAL WHERE NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Farmer có bị tính phí khi dùng MarketLink không?');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'bug', 'Chuyển trang chậm khi bấm từ giỏ hàng sang thanh toán.', 'reviewed', UTC_TIMESTAMP() - INTERVAL 103 DAY
-FROM users u WHERE u.email = 'customer88@marketlink.vn'
+SELECT u.id, 'bug', 'Chuyển trang chậm khi bấm từ giỏ hàng sang thanh toán.', 'reviewed', UTC_TIMESTAMP() - INTERVAL 132 DAY
+FROM users u WHERE u.email = 'customer18@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Chuyển trang chậm khi bấm từ giỏ hàng sang thanh toán.');
 INSERT INTO feedbacks (user_id, type, message, status, created_at)
-SELECT u.id, 'suggestion', 'Thêm chức năng quét QR code để nhận hàng nhanh.', 'new', UTC_TIMESTAMP() - INTERVAL 168 DAY
-FROM users u WHERE u.email = 'customer61@marketlink.vn'
+SELECT u.id, 'suggestion', 'Thêm chức năng quét QR code để nhận hàng nhanh.', 'new', UTC_TIMESTAMP() - INTERVAL 97 DAY
+FROM users u WHERE u.email = 'customer67@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM feedbacks f WHERE f.message = 'Thêm chức năng quét QR code để nhận hàng nhanh.');
 
 -- ===== 9. CHAT MESSAGES =====
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-0'), 'user', 'Chợ nào gần Quận 1 nhất?', 'market_search', UTC_TIMESTAMP() - INTERVAL 32 DAY
-FROM users u WHERE u.email = 'customer102@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-0'), 'user', 'Chợ nào gần Quận 1 nhất?', 'market_search', UTC_TIMESTAMP() - INTERVAL 34 DAY
+FROM users u WHERE u.email = 'customer13@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ nào gần Quận 1 nhất?');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-0'), 'bot', 'Chợ Bến Thành ở Lê Lợi, Quận 1 là gần nhất, mở cửa 06:00-19:00.', NULL, UTC_TIMESTAMP() - INTERVAL 32 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer102@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-0'), 'bot', 'Chợ Bến Thành ở Lê Lợi, Quận 1 là gần nhất, mở cửa 06:00-19:00.', NULL, UTC_TIMESTAMP() - INTERVAL 34 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer13@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành ở Lê Lợi, Quận 1 là gần nhất, mở cửa 06:00-19:00.');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-1'), 'user', 'Có bán trái cây không?', 'product_search', UTC_TIMESTAMP() - INTERVAL 154 DAY
-FROM users u WHERE u.email = 'customer3@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-1'), 'user', 'Có bán trái cây không?', 'product_search', UTC_TIMESTAMP() - INTERVAL 89 DAY
+FROM users u WHERE u.email = 'customer59@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có bán trái cây không?');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-1'), 'bot', 'Có! Sạp Trái cây Ba Tơ bán bưởi, cam sành, xoài tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 154 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer3@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-1'), 'bot', 'Có! Sạp Trái cây Ba Tơ bán bưởi, cam sành, xoài tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 89 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer59@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có! Sạp Trái cây Ba Tơ bán bưởi, cam sành, xoài tại Chợ Bến Thành.');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-2'), 'user', 'Tôi muốn mua rau muống', 'product_search', UTC_TIMESTAMP() - INTERVAL 30 DAY
-FROM users u WHERE u.email = 'customer8@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-2'), 'user', 'Tôi muốn mua rau muống', 'product_search', UTC_TIMESTAMP() - INTERVAL 159 DAY
+FROM users u WHERE u.email = 'customer29@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Tôi muốn mua rau muống');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-2'), 'bot', 'Sạp Vườn Út Hiền ở Chợ Bà Chiểu bán rau muống, giá 12,000d/bó.', NULL, UTC_TIMESTAMP() - INTERVAL 30 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer8@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-2'), 'bot', 'Sạp Vườn Út Hiền ở Chợ Bà Chiểu bán rau muống, giá 12,000d/bó.', NULL, UTC_TIMESTAMP() - INTERVAL 159 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer29@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Vườn Út Hiền ở Chợ Bà Chiểu bán rau muống, giá 12,000d/bó.');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-3'), 'user', 'Cách huỷ đơn hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 162 DAY
-FROM users u WHERE u.email = 'customer51@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-3'), 'user', 'Cách huỷ đơn hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 36 DAY
+FROM users u WHERE u.email = 'customer40@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Cách huỷ đơn hàng?');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-3'), 'bot', 'Vào Đơn hàng, chọn đơn muốn huỷ, bấm Huỷ đơn. Chỉ huỷ trước giờ cutoff.', NULL, UTC_TIMESTAMP() - INTERVAL 162 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer51@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-3'), 'bot', 'Vào Đơn hàng, chọn đơn muốn huỷ, bấm Huỷ đơn. Chỉ huỷ trước giờ cutoff.', NULL, UTC_TIMESTAMP() - INTERVAL 36 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer40@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Vào Đơn hàng, chọn đơn muốn huỷ, bấm Huỷ đơn. Chỉ huỷ trước giờ cutoff.');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-4'), 'user', 'Nấm bào ngư ở đâu?', 'product_search', UTC_TIMESTAMP() - INTERVAL 14 DAY
-FROM users u WHERE u.email = 'customer33@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-4'), 'user', 'Nấm bào ngư ở đâu?', 'product_search', UTC_TIMESTAMP() - INTERVAL 156 DAY
+FROM users u WHERE u.email = 'customer16@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Nấm bào ngư ở đâu?');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-4'), 'bot', 'Sạp Nấm sạch Thu Thảo ở Chợ Thảo Điền, giá 40,000d/kg.', NULL, UTC_TIMESTAMP() - INTERVAL 14 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer33@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-4'), 'bot', 'Sạp Nấm sạch Thu Thảo ở Chợ Thảo Điền, giá 40,000d/kg.', NULL, UTC_TIMESTAMP() - INTERVAL 156 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer16@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Nấm sạch Thu Thảo ở Chợ Thảo Điền, giá 40,000d/kg.');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-5'), 'user', 'Giờ mở cửa Chợ Thảo Điền?', 'market_info', UTC_TIMESTAMP() - INTERVAL 130 DAY
-FROM users u WHERE u.email = 'customer32@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-5'), 'user', 'Giờ mở cửa Chợ Thảo Điền?', 'market_info', UTC_TIMESTAMP() - INTERVAL 144 DAY
+FROM users u WHERE u.email = 'customer6@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Giờ mở cửa Chợ Thảo Điền?');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-5'), 'bot', 'Chợ Thảo Điền mở 06:00-20:00, chỉ Thứ bảy và Chủ nhật.', NULL, UTC_TIMESTAMP() - INTERVAL 130 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer32@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-5'), 'bot', 'Chợ Thảo Điền mở 06:00-20:00, chỉ Thứ bảy và Chủ nhật.', NULL, UTC_TIMESTAMP() - INTERVAL 144 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer6@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Thảo Điền mở 06:00-20:00, chỉ Thứ bảy và Chủ nhật.');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
 SELECT u.id, CONCAT('ext-sess-', u.id, '-6'), 'user', 'Sạp nào bán mật ong?', 'product_search', UTC_TIMESTAMP() - INTERVAL 12 DAY
-FROM users u WHERE u.email = 'customer2@marketlink.vn'
+FROM users u WHERE u.email = 'customer36@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp nào bán mật ong?');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
 SELECT u.id, CONCAT('ext-sess-', u.id, '-6'), 'bot', 'Sạp Mật ong U Minh bán mật ong rừng tràm 250,000d/lít.', NULL, UTC_TIMESTAMP() - INTERVAL 12 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer36@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Mật ong U Minh bán mật ong rừng tràm 250,000d/lít.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-7'), 'user', 'Có giao hàng không?', 'general', UTC_TIMESTAMP() - INTERVAL 25 DAY
+FROM users u WHERE u.email = 'customer49@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có giao hàng không?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-7'), 'bot', 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 25 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer49@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-8'), 'user', 'Làm sao tạo tài khoản farmer?', 'account_help', UTC_TIMESTAMP() - INTERVAL 78 DAY
+FROM users u WHERE u.email = 'customer38@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Làm sao tạo tài khoản farmer?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-8'), 'bot', 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.', NULL, UTC_TIMESTAMP() - INTERVAL 78 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer38@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-9'), 'user', 'Đơn bị từ chối có được hoàn tiền?', 'order_help', UTC_TIMESTAMP() - INTERVAL 144 DAY
+FROM users u WHERE u.email = 'customer17@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối có được hoàn tiền?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-9'), 'bot', 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 144 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer17@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-10'), 'user', 'Có thể đổi giờ nhận hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 134 DAY
+FROM users u WHERE u.email = 'customer53@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có thể đổi giờ nhận hàng?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-10'), 'bot', 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.', NULL, UTC_TIMESTAMP() - INTERVAL 134 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer53@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-11'), 'user', 'Sạp nào bán hải sản?', 'product_search', UTC_TIMESTAMP() - INTERVAL 48 DAY
+FROM users u WHERE u.email = 'customer66@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp nào bán hải sản?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-11'), 'bot', 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 48 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer66@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-12'), 'user', 'Chợ Bến Thành bán gì?', 'market_info', UTC_TIMESTAMP() - INTERVAL 148 DAY
+FROM users u WHERE u.email = 'customer45@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành bán gì?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-12'), 'bot', 'Chợ Bến Thành có nhiều sạp: trái cây, rau củ, hải sản, bánh ngọt...', NULL, UTC_TIMESTAMP() - INTERVAL 148 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer45@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành có nhiều sạp: trái cây, rau củ, hải sản, bánh ngọt...');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-13'), 'user', 'Tôi muốn mua gà ta', 'product_search', UTC_TIMESTAMP() - INTERVAL 53 DAY
+FROM users u WHERE u.email = 'customer43@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Tôi muốn mua gà ta');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-13'), 'bot', 'Sạp Gà vịt Bình Dương bán gà ta nguyên con 160,000d/kg tại Chợ Bà Chiểu.', NULL, UTC_TIMESTAMP() - INTERVAL 53 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer43@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Gà vịt Bình Dương bán gà ta nguyên con 160,000d/kg tại Chợ Bà Chiểu.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-14'), 'user', 'Thanh toán bằng gì?', 'general', UTC_TIMESTAMP() - INTERVAL 109 DAY
+FROM users u WHERE u.email = 'customer91@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Thanh toán bằng gì?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-14'), 'bot', 'Hiện tại thanh toán trực tiếp tại sạp khi nhận hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 109 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer91@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Hiện tại thanh toán trực tiếp tại sạp khi nhận hàng.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-15'), 'user', 'Có ưu đãi gì cho khách mới?', 'general', UTC_TIMESTAMP() - INTERVAL 151 DAY
+FROM users u WHERE u.email = 'customer19@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có ưu đãi gì cho khách mới?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-15'), 'bot', 'Bạn xem mục Thông báo trên app để cập nhật các ưu đãi mới nhất.', NULL, UTC_TIMESTAMP() - INTERVAL 151 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer19@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Bạn xem mục Thông báo trên app để cập nhật các ưu đãi mới nhất.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-16'), 'user', 'Rau hữu cơ ở sạp nào?', 'product_search', UTC_TIMESTAMP() - INTERVAL 115 DAY
+FROM users u WHERE u.email = 'customer60@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Rau hữu cơ ở sạp nào?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-16'), 'bot', 'Sạp Vườn rau Tân Phú và Rau Đà Lạt Xanh bán rau hữu cơ.', NULL, UTC_TIMESTAMP() - INTERVAL 115 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer60@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Vườn rau Tân Phú và Rau Đà Lạt Xanh bán rau hữu cơ.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-17'), 'user', 'Đậu phộng rang ở đâu?', 'product_search', UTC_TIMESTAMP() - INTERVAL 113 DAY
+FROM users u WHERE u.email = 'customer48@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đậu phộng rang ở đâu?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-17'), 'bot', 'Sạp Đậu hạt Đắk Lắk bán đậu phộng rang tỏi ớt, 60,000d/kg.', NULL, UTC_TIMESTAMP() - INTERVAL 113 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer48@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Đậu hạt Đắk Lắk bán đậu phộng rang tỏi ớt, 60,000d/kg.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-18'), 'user', 'Chợ nào gần Quận 1 nhất?', 'market_search', UTC_TIMESTAMP() - INTERVAL 59 DAY
+FROM users u WHERE u.email = 'customer98@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ nào gần Quận 1 nhất?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-18'), 'bot', 'Chợ Bến Thành ở Lê Lợi, Quận 1 là gần nhất, mở cửa 06:00-19:00.', NULL, UTC_TIMESTAMP() - INTERVAL 59 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer98@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành ở Lê Lợi, Quận 1 là gần nhất, mở cửa 06:00-19:00.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-19'), 'user', 'Có bán trái cây không?', 'product_search', UTC_TIMESTAMP() - INTERVAL 104 DAY
+FROM users u WHERE u.email = 'customer23@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có bán trái cây không?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-19'), 'bot', 'Có! Sạp Trái cây Ba Tơ bán bưởi, cam sành, xoài tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 104 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer23@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có! Sạp Trái cây Ba Tơ bán bưởi, cam sành, xoài tại Chợ Bến Thành.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-20'), 'user', 'Tôi muốn mua rau muống', 'product_search', UTC_TIMESTAMP() - INTERVAL 145 DAY
+FROM users u WHERE u.email = 'customer64@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Tôi muốn mua rau muống');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-20'), 'bot', 'Sạp Vườn Út Hiền ở Chợ Bà Chiểu bán rau muống, giá 12,000d/bó.', NULL, UTC_TIMESTAMP() - INTERVAL 145 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer64@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Vườn Út Hiền ở Chợ Bà Chiểu bán rau muống, giá 12,000d/bó.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-21'), 'user', 'Cách huỷ đơn hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 169 DAY
+FROM users u WHERE u.email = 'customer39@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Cách huỷ đơn hàng?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-21'), 'bot', 'Vào Đơn hàng, chọn đơn muốn huỷ, bấm Huỷ đơn. Chỉ huỷ trước giờ cutoff.', NULL, UTC_TIMESTAMP() - INTERVAL 169 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer39@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Vào Đơn hàng, chọn đơn muốn huỷ, bấm Huỷ đơn. Chỉ huỷ trước giờ cutoff.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-22'), 'user', 'Nấm bào ngư ở đâu?', 'product_search', UTC_TIMESTAMP() - INTERVAL 143 DAY
+FROM users u WHERE u.email = 'customer47@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Nấm bào ngư ở đâu?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-22'), 'bot', 'Sạp Nấm sạch Thu Thảo ở Chợ Thảo Điền, giá 40,000d/kg.', NULL, UTC_TIMESTAMP() - INTERVAL 143 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer47@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Nấm sạch Thu Thảo ở Chợ Thảo Điền, giá 40,000d/kg.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-23'), 'user', 'Giờ mở cửa Chợ Thảo Điền?', 'market_info', UTC_TIMESTAMP() - INTERVAL 119 DAY
+FROM users u WHERE u.email = 'customer70@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Giờ mở cửa Chợ Thảo Điền?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-23'), 'bot', 'Chợ Thảo Điền mở 06:00-20:00, chỉ Thứ bảy và Chủ nhật.', NULL, UTC_TIMESTAMP() - INTERVAL 119 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer70@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Thảo Điền mở 06:00-20:00, chỉ Thứ bảy và Chủ nhật.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-24'), 'user', 'Sạp nào bán mật ong?', 'product_search', UTC_TIMESTAMP() - INTERVAL 88 DAY
+FROM users u WHERE u.email = 'customer109@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp nào bán mật ong?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-24'), 'bot', 'Sạp Mật ong U Minh bán mật ong rừng tràm 250,000d/lít.', NULL, UTC_TIMESTAMP() - INTERVAL 88 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer109@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Mật ong U Minh bán mật ong rừng tràm 250,000d/lít.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-25'), 'user', 'Có giao hàng không?', 'general', UTC_TIMESTAMP() - INTERVAL 148 DAY
+FROM users u WHERE u.email = 'customer85@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có giao hàng không?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-25'), 'bot', 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 148 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer85@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-26'), 'user', 'Làm sao tạo tài khoản farmer?', 'account_help', UTC_TIMESTAMP() - INTERVAL 30 DAY
+FROM users u WHERE u.email = 'customer26@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Làm sao tạo tài khoản farmer?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-26'), 'bot', 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.', NULL, UTC_TIMESTAMP() - INTERVAL 30 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer26@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-27'), 'user', 'Đơn bị từ chối có được hoàn tiền?', 'order_help', UTC_TIMESTAMP() - INTERVAL 45 DAY
+FROM users u WHERE u.email = 'customer44@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối có được hoàn tiền?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-27'), 'bot', 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 45 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer44@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-28'), 'user', 'Có thể đổi giờ nhận hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 128 DAY
+FROM users u WHERE u.email = 'customer35@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có thể đổi giờ nhận hàng?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-28'), 'bot', 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.', NULL, UTC_TIMESTAMP() - INTERVAL 128 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer35@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-29'), 'user', 'Sạp nào bán hải sản?', 'product_search', UTC_TIMESTAMP() - INTERVAL 107 DAY
+FROM users u WHERE u.email = 'customer95@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp nào bán hải sản?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-29'), 'bot', 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 107 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer95@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-30'), 'user', 'Chợ Bến Thành bán gì?', 'market_info', UTC_TIMESTAMP() - INTERVAL 70 DAY
+FROM users u WHERE u.email = 'customer54@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành bán gì?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-30'), 'bot', 'Chợ Bến Thành có nhiều sạp: trái cây, rau củ, hải sản, bánh ngọt...', NULL, UTC_TIMESTAMP() - INTERVAL 70 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer54@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành có nhiều sạp: trái cây, rau củ, hải sản, bánh ngọt...');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-31'), 'user', 'Tôi muốn mua gà ta', 'product_search', UTC_TIMESTAMP() - INTERVAL 156 DAY
+FROM users u WHERE u.email = 'customer55@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Tôi muốn mua gà ta');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-31'), 'bot', 'Sạp Gà vịt Bình Dương bán gà ta nguyên con 160,000d/kg tại Chợ Bà Chiểu.', NULL, UTC_TIMESTAMP() - INTERVAL 156 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer55@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Gà vịt Bình Dương bán gà ta nguyên con 160,000d/kg tại Chợ Bà Chiểu.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-32'), 'user', 'Thanh toán bằng gì?', 'general', UTC_TIMESTAMP() - INTERVAL 61 DAY
+FROM users u WHERE u.email = 'customer56@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Thanh toán bằng gì?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-32'), 'bot', 'Hiện tại thanh toán trực tiếp tại sạp khi nhận hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 61 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer56@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Hiện tại thanh toán trực tiếp tại sạp khi nhận hàng.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-33'), 'user', 'Có ưu đãi gì cho khách mới?', 'general', UTC_TIMESTAMP() - INTERVAL 100 DAY
+FROM users u WHERE u.email = 'customer93@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có ưu đãi gì cho khách mới?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-33'), 'bot', 'Bạn xem mục Thông báo trên app để cập nhật các ưu đãi mới nhất.', NULL, UTC_TIMESTAMP() - INTERVAL 100 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer93@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Bạn xem mục Thông báo trên app để cập nhật các ưu đãi mới nhất.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-34'), 'user', 'Rau hữu cơ ở sạp nào?', 'product_search', UTC_TIMESTAMP() - INTERVAL 111 DAY
+FROM users u WHERE u.email = 'customer7@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Rau hữu cơ ở sạp nào?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-34'), 'bot', 'Sạp Vườn rau Tân Phú và Rau Đà Lạt Xanh bán rau hữu cơ.', NULL, UTC_TIMESTAMP() - INTERVAL 111 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer7@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Vườn rau Tân Phú và Rau Đà Lạt Xanh bán rau hữu cơ.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-35'), 'user', 'Đậu phộng rang ở đâu?', 'product_search', UTC_TIMESTAMP() - INTERVAL 139 DAY
+FROM users u WHERE u.email = 'customer58@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đậu phộng rang ở đâu?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-35'), 'bot', 'Sạp Đậu hạt Đắk Lắk bán đậu phộng rang tỏi ớt, 60,000d/kg.', NULL, UTC_TIMESTAMP() - INTERVAL 139 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer58@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Đậu hạt Đắk Lắk bán đậu phộng rang tỏi ớt, 60,000d/kg.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-36'), 'user', 'Chợ nào gần Quận 1 nhất?', 'market_search', UTC_TIMESTAMP() - INTERVAL 47 DAY
+FROM users u WHERE u.email = 'customer69@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ nào gần Quận 1 nhất?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-36'), 'bot', 'Chợ Bến Thành ở Lê Lợi, Quận 1 là gần nhất, mở cửa 06:00-19:00.', NULL, UTC_TIMESTAMP() - INTERVAL 47 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer69@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành ở Lê Lợi, Quận 1 là gần nhất, mở cửa 06:00-19:00.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-37'), 'user', 'Có bán trái cây không?', 'product_search', UTC_TIMESTAMP() - INTERVAL 56 DAY
+FROM users u WHERE u.email = 'customer106@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có bán trái cây không?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-37'), 'bot', 'Có! Sạp Trái cây Ba Tơ bán bưởi, cam sành, xoài tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 56 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer106@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có! Sạp Trái cây Ba Tơ bán bưởi, cam sành, xoài tại Chợ Bến Thành.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-38'), 'user', 'Tôi muốn mua rau muống', 'product_search', UTC_TIMESTAMP() - INTERVAL 36 DAY
+FROM users u WHERE u.email = 'customer83@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Tôi muốn mua rau muống');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-38'), 'bot', 'Sạp Vườn Út Hiền ở Chợ Bà Chiểu bán rau muống, giá 12,000d/bó.', NULL, UTC_TIMESTAMP() - INTERVAL 36 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer83@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Vườn Út Hiền ở Chợ Bà Chiểu bán rau muống, giá 12,000d/bó.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-39'), 'user', 'Cách huỷ đơn hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 170 DAY
+FROM users u WHERE u.email = 'customer4@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Cách huỷ đơn hàng?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-39'), 'bot', 'Vào Đơn hàng, chọn đơn muốn huỷ, bấm Huỷ đơn. Chỉ huỷ trước giờ cutoff.', NULL, UTC_TIMESTAMP() - INTERVAL 170 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer4@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Vào Đơn hàng, chọn đơn muốn huỷ, bấm Huỷ đơn. Chỉ huỷ trước giờ cutoff.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-40'), 'user', 'Nấm bào ngư ở đâu?', 'product_search', UTC_TIMESTAMP() - INTERVAL 36 DAY
+FROM users u WHERE u.email = 'customer67@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Nấm bào ngư ở đâu?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-40'), 'bot', 'Sạp Nấm sạch Thu Thảo ở Chợ Thảo Điền, giá 40,000d/kg.', NULL, UTC_TIMESTAMP() - INTERVAL 36 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer67@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Nấm sạch Thu Thảo ở Chợ Thảo Điền, giá 40,000d/kg.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-41'), 'user', 'Giờ mở cửa Chợ Thảo Điền?', 'market_info', UTC_TIMESTAMP() - INTERVAL 69 DAY
+FROM users u WHERE u.email = 'customer42@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Giờ mở cửa Chợ Thảo Điền?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-41'), 'bot', 'Chợ Thảo Điền mở 06:00-20:00, chỉ Thứ bảy và Chủ nhật.', NULL, UTC_TIMESTAMP() - INTERVAL 69 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer42@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Thảo Điền mở 06:00-20:00, chỉ Thứ bảy và Chủ nhật.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-42'), 'user', 'Sạp nào bán mật ong?', 'product_search', UTC_TIMESTAMP() - INTERVAL 170 DAY
+FROM users u WHERE u.email = 'customer87@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp nào bán mật ong?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-42'), 'bot', 'Sạp Mật ong U Minh bán mật ong rừng tràm 250,000d/lít.', NULL, UTC_TIMESTAMP() - INTERVAL 170 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer87@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Mật ong U Minh bán mật ong rừng tràm 250,000d/lít.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-43'), 'user', 'Có giao hàng không?', 'general', UTC_TIMESTAMP() - INTERVAL 145 DAY
+FROM users u WHERE u.email = 'customer63@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có giao hàng không?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-43'), 'bot', 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 145 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer63@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-44'), 'user', 'Làm sao tạo tài khoản farmer?', 'account_help', UTC_TIMESTAMP() - INTERVAL 170 DAY
+FROM users u WHERE u.email = 'customer76@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Làm sao tạo tài khoản farmer?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-44'), 'bot', 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.', NULL, UTC_TIMESTAMP() - INTERVAL 170 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer76@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-45'), 'user', 'Đơn bị từ chối có được hoàn tiền?', 'order_help', UTC_TIMESTAMP() - INTERVAL 128 DAY
+FROM users u WHERE u.email = 'customer107@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối có được hoàn tiền?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-45'), 'bot', 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 128 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer107@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-46'), 'user', 'Có thể đổi giờ nhận hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 33 DAY
+FROM users u WHERE u.email = 'customer33@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có thể đổi giờ nhận hàng?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-46'), 'bot', 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.', NULL, UTC_TIMESTAMP() - INTERVAL 33 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer33@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-47'), 'user', 'Sạp nào bán hải sản?', 'product_search', UTC_TIMESTAMP() - INTERVAL 118 DAY
+FROM users u WHERE u.email = 'customer37@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp nào bán hải sản?');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-47'), 'bot', 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 118 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer37@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.');
+INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
+SELECT u.id, CONCAT('ext-sess-', u.id, '-48'), 'user', 'Chợ Bến Thành bán gì?', 'market_info', UTC_TIMESTAMP() - INTERVAL 9 DAY
 FROM users u WHERE u.email = 'customer2@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Mật ong U Minh bán mật ong rừng tràm 250,000d/lít.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-7'), 'user', 'Có giao hàng không?', 'general', UTC_TIMESTAMP() - INTERVAL 46 DAY
-FROM users u WHERE u.email = 'customer22@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có giao hàng không?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-7'), 'bot', 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 46 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer22@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-8'), 'user', 'Làm sao tạo tài khoản farmer?', 'account_help', UTC_TIMESTAMP() - INTERVAL 163 DAY
-FROM users u WHERE u.email = 'customer29@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Làm sao tạo tài khoản farmer?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-8'), 'bot', 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.', NULL, UTC_TIMESTAMP() - INTERVAL 163 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer29@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-9'), 'user', 'Đơn bị từ chối có được hoàn tiền?', 'order_help', UTC_TIMESTAMP() - INTERVAL 9 DAY
-FROM users u WHERE u.email = 'customer40@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối có được hoàn tiền?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-9'), 'bot', 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 9 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer40@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-10'), 'user', 'Có thể đổi giờ nhận hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 105 DAY
-FROM users u WHERE u.email = 'customer53@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có thể đổi giờ nhận hàng?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-10'), 'bot', 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.', NULL, UTC_TIMESTAMP() - INTERVAL 105 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer53@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-11'), 'user', 'Sạp nào bán hải sản?', 'product_search', UTC_TIMESTAMP() - INTERVAL 4 DAY
-FROM users u WHERE u.email = 'customer15@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp nào bán hải sản?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-11'), 'bot', 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 4 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer15@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-12'), 'user', 'Chợ Bến Thành bán gì?', 'market_info', UTC_TIMESTAMP() - INTERVAL 91 DAY
-FROM users u WHERE u.email = 'customer42@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành bán gì?');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-12'), 'bot', 'Chợ Bến Thành có nhiều sạp: trái cây, rau củ, hải sản, bánh ngọt...', NULL, UTC_TIMESTAMP() - INTERVAL 91 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer42@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-48'), 'bot', 'Chợ Bến Thành có nhiều sạp: trái cây, rau củ, hải sản, bánh ngọt...', NULL, UTC_TIMESTAMP() - INTERVAL 9 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer2@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành có nhiều sạp: trái cây, rau củ, hải sản, bánh ngọt...');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-13'), 'user', 'Tôi muốn mua gà ta', 'product_search', UTC_TIMESTAMP() - INTERVAL 55 DAY
-FROM users u WHERE u.email = 'customer59@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Tôi muốn mua gà ta');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-13'), 'bot', 'Sạp Gà vịt Bình Dương bán gà ta nguyên con 160,000d/kg tại Chợ Bà Chiểu.', NULL, UTC_TIMESTAMP() - INTERVAL 55 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer59@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Gà vịt Bình Dương bán gà ta nguyên con 160,000d/kg tại Chợ Bà Chiểu.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-14'), 'user', 'Thanh toán bằng gì?', 'general', UTC_TIMESTAMP() - INTERVAL 103 DAY
-FROM users u WHERE u.email = 'customer14@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Thanh toán bằng gì?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-14'), 'bot', 'Hiện tại thanh toán trực tiếp tại sạp khi nhận hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 103 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer14@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Hiện tại thanh toán trực tiếp tại sạp khi nhận hàng.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-15'), 'user', 'Có ưu đãi gì cho khách mới?', 'general', UTC_TIMESTAMP() - INTERVAL 56 DAY
-FROM users u WHERE u.email = 'customer109@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có ưu đãi gì cho khách mới?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-15'), 'bot', 'Bạn xem mục Thông báo trên app để cập nhật các ưu đãi mới nhất.', NULL, UTC_TIMESTAMP() - INTERVAL 56 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer109@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Bạn xem mục Thông báo trên app để cập nhật các ưu đãi mới nhất.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-16'), 'user', 'Rau hữu cơ ở sạp nào?', 'product_search', UTC_TIMESTAMP() - INTERVAL 146 DAY
-FROM users u WHERE u.email = 'customer85@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Rau hữu cơ ở sạp nào?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-16'), 'bot', 'Sạp Vườn rau Tân Phú và Rau Đà Lạt Xanh bán rau hữu cơ.', NULL, UTC_TIMESTAMP() - INTERVAL 146 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer85@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Vườn rau Tân Phú và Rau Đà Lạt Xanh bán rau hữu cơ.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-17'), 'user', 'Đậu phộng rang ở đâu?', 'product_search', UTC_TIMESTAMP() - INTERVAL 34 DAY
-FROM users u WHERE u.email = 'customer74@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đậu phộng rang ở đâu?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-17'), 'bot', 'Sạp Đậu hạt Đắk Lắk bán đậu phộng rang tỏi ớt, 60,000d/kg.', NULL, UTC_TIMESTAMP() - INTERVAL 34 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer74@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Đậu hạt Đắk Lắk bán đậu phộng rang tỏi ớt, 60,000d/kg.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-18'), 'user', 'Chợ nào gần Quận 1 nhất?', 'market_search', UTC_TIMESTAMP() - INTERVAL 8 DAY
-FROM users u WHERE u.email = 'customer28@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ nào gần Quận 1 nhất?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-18'), 'bot', 'Chợ Bến Thành ở Lê Lợi, Quận 1 là gần nhất, mở cửa 06:00-19:00.', NULL, UTC_TIMESTAMP() - INTERVAL 8 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer28@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành ở Lê Lợi, Quận 1 là gần nhất, mở cửa 06:00-19:00.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-19'), 'user', 'Có bán trái cây không?', 'product_search', UTC_TIMESTAMP() - INTERVAL 152 DAY
-FROM users u WHERE u.email = 'customer21@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có bán trái cây không?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-19'), 'bot', 'Có! Sạp Trái cây Ba Tơ bán bưởi, cam sành, xoài tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 152 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer21@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có! Sạp Trái cây Ba Tơ bán bưởi, cam sành, xoài tại Chợ Bến Thành.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-20'), 'user', 'Tôi muốn mua rau muống', 'product_search', UTC_TIMESTAMP() - INTERVAL 97 DAY
-FROM users u WHERE u.email = 'customer58@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Tôi muốn mua rau muống');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-20'), 'bot', 'Sạp Vườn Út Hiền ở Chợ Bà Chiểu bán rau muống, giá 12,000d/bó.', NULL, UTC_TIMESTAMP() - INTERVAL 97 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer58@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Vườn Út Hiền ở Chợ Bà Chiểu bán rau muống, giá 12,000d/bó.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-21'), 'user', 'Cách huỷ đơn hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 26 DAY
-FROM users u WHERE u.email = 'customer97@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Cách huỷ đơn hàng?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-21'), 'bot', 'Vào Đơn hàng, chọn đơn muốn huỷ, bấm Huỷ đơn. Chỉ huỷ trước giờ cutoff.', NULL, UTC_TIMESTAMP() - INTERVAL 26 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer97@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Vào Đơn hàng, chọn đơn muốn huỷ, bấm Huỷ đơn. Chỉ huỷ trước giờ cutoff.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-22'), 'user', 'Nấm bào ngư ở đâu?', 'product_search', UTC_TIMESTAMP() - INTERVAL 140 DAY
-FROM users u WHERE u.email = 'customer57@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Nấm bào ngư ở đâu?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-22'), 'bot', 'Sạp Nấm sạch Thu Thảo ở Chợ Thảo Điền, giá 40,000d/kg.', NULL, UTC_TIMESTAMP() - INTERVAL 140 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer57@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Nấm sạch Thu Thảo ở Chợ Thảo Điền, giá 40,000d/kg.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-23'), 'user', 'Giờ mở cửa Chợ Thảo Điền?', 'market_info', UTC_TIMESTAMP() - INTERVAL 142 DAY
-FROM users u WHERE u.email = 'customer10@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Giờ mở cửa Chợ Thảo Điền?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-23'), 'bot', 'Chợ Thảo Điền mở 06:00-20:00, chỉ Thứ bảy và Chủ nhật.', NULL, UTC_TIMESTAMP() - INTERVAL 142 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer10@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Thảo Điền mở 06:00-20:00, chỉ Thứ bảy và Chủ nhật.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-24'), 'user', 'Sạp nào bán mật ong?', 'product_search', UTC_TIMESTAMP() - INTERVAL 13 DAY
-FROM users u WHERE u.email = 'customer84@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp nào bán mật ong?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-24'), 'bot', 'Sạp Mật ong U Minh bán mật ong rừng tràm 250,000d/lít.', NULL, UTC_TIMESTAMP() - INTERVAL 13 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer84@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Mật ong U Minh bán mật ong rừng tràm 250,000d/lít.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-25'), 'user', 'Có giao hàng không?', 'general', UTC_TIMESTAMP() - INTERVAL 34 DAY
-FROM users u WHERE u.email = 'customer62@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có giao hàng không?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-25'), 'bot', 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 34 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer62@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-26'), 'user', 'Làm sao tạo tài khoản farmer?', 'account_help', UTC_TIMESTAMP() - INTERVAL 138 DAY
-FROM users u WHERE u.email = 'customer89@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Làm sao tạo tài khoản farmer?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-26'), 'bot', 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.', NULL, UTC_TIMESTAMP() - INTERVAL 138 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer89@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-27'), 'user', 'Đơn bị từ chối có được hoàn tiền?', 'order_help', UTC_TIMESTAMP() - INTERVAL 36 DAY
-FROM users u WHERE u.email = 'customer99@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối có được hoàn tiền?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-27'), 'bot', 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 36 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer99@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-28'), 'user', 'Có thể đổi giờ nhận hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 92 DAY
-FROM users u WHERE u.email = 'customer91@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có thể đổi giờ nhận hàng?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-28'), 'bot', 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.', NULL, UTC_TIMESTAMP() - INTERVAL 92 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer91@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-29'), 'user', 'Sạp nào bán hải sản?', 'product_search', UTC_TIMESTAMP() - INTERVAL 140 DAY
-FROM users u WHERE u.email = 'customer18@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp nào bán hải sản?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-29'), 'bot', 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 140 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer18@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-30'), 'user', 'Chợ Bến Thành bán gì?', 'market_info', UTC_TIMESTAMP() - INTERVAL 94 DAY
-FROM users u WHERE u.email = 'customer104@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành bán gì?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-30'), 'bot', 'Chợ Bến Thành có nhiều sạp: trái cây, rau củ, hải sản, bánh ngọt...', NULL, UTC_TIMESTAMP() - INTERVAL 94 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer104@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành có nhiều sạp: trái cây, rau củ, hải sản, bánh ngọt...');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-31'), 'user', 'Tôi muốn mua gà ta', 'product_search', UTC_TIMESTAMP() - INTERVAL 17 DAY
-FROM users u WHERE u.email = 'customer81@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Tôi muốn mua gà ta');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-31'), 'bot', 'Sạp Gà vịt Bình Dương bán gà ta nguyên con 160,000d/kg tại Chợ Bà Chiểu.', NULL, UTC_TIMESTAMP() - INTERVAL 17 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer81@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Gà vịt Bình Dương bán gà ta nguyên con 160,000d/kg tại Chợ Bà Chiểu.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-32'), 'user', 'Thanh toán bằng gì?', 'general', UTC_TIMESTAMP() - INTERVAL 150 DAY
-FROM users u WHERE u.email = 'customer56@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Thanh toán bằng gì?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-32'), 'bot', 'Hiện tại thanh toán trực tiếp tại sạp khi nhận hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 150 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer56@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Hiện tại thanh toán trực tiếp tại sạp khi nhận hàng.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-33'), 'user', 'Có ưu đãi gì cho khách mới?', 'general', UTC_TIMESTAMP() - INTERVAL 111 DAY
-FROM users u WHERE u.email = 'customer107@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có ưu đãi gì cho khách mới?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-33'), 'bot', 'Bạn xem mục Thông báo trên app để cập nhật các ưu đãi mới nhất.', NULL, UTC_TIMESTAMP() - INTERVAL 111 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer107@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Bạn xem mục Thông báo trên app để cập nhật các ưu đãi mới nhất.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-34'), 'user', 'Rau hữu cơ ở sạp nào?', 'product_search', UTC_TIMESTAMP() - INTERVAL 69 DAY
-FROM users u WHERE u.email = 'customer17@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Rau hữu cơ ở sạp nào?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-34'), 'bot', 'Sạp Vườn rau Tân Phú và Rau Đà Lạt Xanh bán rau hữu cơ.', NULL, UTC_TIMESTAMP() - INTERVAL 69 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer17@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Vườn rau Tân Phú và Rau Đà Lạt Xanh bán rau hữu cơ.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-35'), 'user', 'Đậu phộng rang ở đâu?', 'product_search', UTC_TIMESTAMP() - INTERVAL 83 DAY
-FROM users u WHERE u.email = 'customer73@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đậu phộng rang ở đâu?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-35'), 'bot', 'Sạp Đậu hạt Đắk Lắk bán đậu phộng rang tỏi ớt, 60,000d/kg.', NULL, UTC_TIMESTAMP() - INTERVAL 83 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer73@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Đậu hạt Đắk Lắk bán đậu phộng rang tỏi ớt, 60,000d/kg.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-36'), 'user', 'Chợ nào gần Quận 1 nhất?', 'market_search', UTC_TIMESTAMP() - INTERVAL 18 DAY
-FROM users u WHERE u.email = 'customer96@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ nào gần Quận 1 nhất?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-36'), 'bot', 'Chợ Bến Thành ở Lê Lợi, Quận 1 là gần nhất, mở cửa 06:00-19:00.', NULL, UTC_TIMESTAMP() - INTERVAL 18 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer96@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành ở Lê Lợi, Quận 1 là gần nhất, mở cửa 06:00-19:00.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-37'), 'user', 'Có bán trái cây không?', 'product_search', UTC_TIMESTAMP() - INTERVAL 25 DAY
+SELECT u.id, CONCAT('ext-sess-', u.id, '-49'), 'user', 'Tôi muốn mua gà ta', 'product_search', UTC_TIMESTAMP() - INTERVAL 17 DAY
 FROM users u WHERE u.email = 'customer11@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có bán trái cây không?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-37'), 'bot', 'Có! Sạp Trái cây Ba Tơ bán bưởi, cam sành, xoài tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 25 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer11@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có! Sạp Trái cây Ba Tơ bán bưởi, cam sành, xoài tại Chợ Bến Thành.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-38'), 'user', 'Tôi muốn mua rau muống', 'product_search', UTC_TIMESTAMP() - INTERVAL 95 DAY
-FROM users u WHERE u.email = 'customer4@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Tôi muốn mua rau muống');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-38'), 'bot', 'Sạp Vườn Út Hiền ở Chợ Bà Chiểu bán rau muống, giá 12,000d/bó.', NULL, UTC_TIMESTAMP() - INTERVAL 95 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer4@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Vườn Út Hiền ở Chợ Bà Chiểu bán rau muống, giá 12,000d/bó.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-39'), 'user', 'Cách huỷ đơn hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 65 DAY
-FROM users u WHERE u.email = 'customer63@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Cách huỷ đơn hàng?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-39'), 'bot', 'Vào Đơn hàng, chọn đơn muốn huỷ, bấm Huỷ đơn. Chỉ huỷ trước giờ cutoff.', NULL, UTC_TIMESTAMP() - INTERVAL 65 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer63@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Vào Đơn hàng, chọn đơn muốn huỷ, bấm Huỷ đơn. Chỉ huỷ trước giờ cutoff.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-40'), 'user', 'Nấm bào ngư ở đâu?', 'product_search', UTC_TIMESTAMP() - INTERVAL 50 DAY
-FROM users u WHERE u.email = 'customer98@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Nấm bào ngư ở đâu?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-40'), 'bot', 'Sạp Nấm sạch Thu Thảo ở Chợ Thảo Điền, giá 40,000d/kg.', NULL, UTC_TIMESTAMP() - INTERVAL 50 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer98@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Nấm sạch Thu Thảo ở Chợ Thảo Điền, giá 40,000d/kg.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-41'), 'user', 'Giờ mở cửa Chợ Thảo Điền?', 'market_info', UTC_TIMESTAMP() - INTERVAL 110 DAY
-FROM users u WHERE u.email = 'customer9@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Giờ mở cửa Chợ Thảo Điền?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-41'), 'bot', 'Chợ Thảo Điền mở 06:00-20:00, chỉ Thứ bảy và Chủ nhật.', NULL, UTC_TIMESTAMP() - INTERVAL 110 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer9@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Thảo Điền mở 06:00-20:00, chỉ Thứ bảy và Chủ nhật.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-42'), 'user', 'Sạp nào bán mật ong?', 'product_search', UTC_TIMESTAMP() - INTERVAL 46 DAY
-FROM users u WHERE u.email = 'customer6@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp nào bán mật ong?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-42'), 'bot', 'Sạp Mật ong U Minh bán mật ong rừng tràm 250,000d/lít.', NULL, UTC_TIMESTAMP() - INTERVAL 46 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer6@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Mật ong U Minh bán mật ong rừng tràm 250,000d/lít.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-43'), 'user', 'Có giao hàng không?', 'general', UTC_TIMESTAMP() - INTERVAL 114 DAY
-FROM users u WHERE u.email = 'customer54@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có giao hàng không?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-43'), 'bot', 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 114 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer54@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'MarketLink chỉ hỗ trợ đặt trước và nhận tại sạp, chưa có giao hàng.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-44'), 'user', 'Làm sao tạo tài khoản farmer?', 'account_help', UTC_TIMESTAMP() - INTERVAL 13 DAY
-FROM users u WHERE u.email = 'customer95@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Làm sao tạo tài khoản farmer?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-44'), 'bot', 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.', NULL, UTC_TIMESTAMP() - INTERVAL 13 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer95@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Vào Tài khoản → Đăng ký bán hàng, điền thông tin sạp chờ admin duyệt.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-45'), 'user', 'Đơn bị từ chối có được hoàn tiền?', 'order_help', UTC_TIMESTAMP() - INTERVAL 156 DAY
-FROM users u WHERE u.email = 'customer78@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối có được hoàn tiền?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-45'), 'bot', 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.', NULL, UTC_TIMESTAMP() - INTERVAL 156 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer78@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Đơn bị từ chối sẽ không bị trừ tiền vì MarketLink tính tiền khi nhận hàng.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-46'), 'user', 'Có thể đổi giờ nhận hàng?', 'order_help', UTC_TIMESTAMP() - INTERVAL 120 DAY
-FROM users u WHERE u.email = 'customer61@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Có thể đổi giờ nhận hàng?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-46'), 'bot', 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.', NULL, UTC_TIMESTAMP() - INTERVAL 120 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer61@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Bạn cần huỷ đơn cũ và đặt lại đơn mới với khung giờ khác.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-47'), 'user', 'Sạp nào bán hải sản?', 'product_search', UTC_TIMESTAMP() - INTERVAL 115 DAY
-FROM users u WHERE u.email = 'customer43@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp nào bán hải sản?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-47'), 'bot', 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.', NULL, UTC_TIMESTAMP() - INTERVAL 115 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer43@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Hải sản Phan Thiết và Cá khô Châu Đốc bán tại Chợ Bến Thành.');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-48'), 'user', 'Chợ Bến Thành bán gì?', 'market_info', UTC_TIMESTAMP() - INTERVAL 127 DAY
-FROM users u WHERE u.email = 'customer76@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành bán gì?');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-48'), 'bot', 'Chợ Bến Thành có nhiều sạp: trái cây, rau củ, hải sản, bánh ngọt...', NULL, UTC_TIMESTAMP() - INTERVAL 127 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer76@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Chợ Bến Thành có nhiều sạp: trái cây, rau củ, hải sản, bánh ngọt...');
-INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-49'), 'user', 'Tôi muốn mua gà ta', 'product_search', UTC_TIMESTAMP() - INTERVAL 34 DAY
-FROM users u WHERE u.email = 'customer67@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Tôi muốn mua gà ta');
 INSERT INTO chat_messages (user_id, session_key, role, message, intent, created_at)
-SELECT u.id, CONCAT('ext-sess-', u.id, '-49'), 'bot', 'Sạp Gà vịt Bình Dương bán gà ta nguyên con 160,000d/kg tại Chợ Bà Chiểu.', NULL, UTC_TIMESTAMP() - INTERVAL 34 DAY + INTERVAL 1 MINUTE
-FROM users u WHERE u.email = 'customer67@marketlink.vn'
+SELECT u.id, CONCAT('ext-sess-', u.id, '-49'), 'bot', 'Sạp Gà vịt Bình Dương bán gà ta nguyên con 160,000d/kg tại Chợ Bà Chiểu.', NULL, UTC_TIMESTAMP() - INTERVAL 17 DAY + INTERVAL 1 MINUTE
+FROM users u WHERE u.email = 'customer11@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM chat_messages cm WHERE cm.user_id = u.id AND cm.message = 'Sạp Gà vịt Bình Dương bán gà ta nguyên con 160,000d/kg tại Chợ Bà Chiểu.');
 
 -- ===== 10. NOTIFICATIONS =====
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 16 DAY
-FROM users u WHERE u.email = 'customer26@marketlink.vn'
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 29 DAY
+FROM users u WHERE u.email = 'customer5@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 108 DAY
-FROM users u WHERE u.email = 'customer56@marketlink.vn'
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 69 DAY
+FROM users u WHERE u.email = 'customer68@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 150 DAY
-FROM users u WHERE u.email = 'customer59@marketlink.vn'
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 164 DAY
+FROM users u WHERE u.email = 'customer52@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 61 DAY
-FROM users u WHERE u.email = 'customer106@marketlink.vn'
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 110 DAY
+FROM users u WHERE u.email = 'customer62@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 93 DAY
-FROM users u WHERE u.email = 'customer69@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 87 DAY
-FROM users u WHERE u.email = 'customer64@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 66 DAY
-FROM users u WHERE u.email = 'customer71@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 135 DAY
-FROM users u WHERE u.email = 'customer102@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 13 DAY
-FROM users u WHERE u.email = 'customer82@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 84 DAY
-FROM users u WHERE u.email = 'customer84@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 74 DAY
-FROM users u WHERE u.email = 'customer96@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 51 DAY
-FROM users u WHERE u.email = 'customer78@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 5 DAY
-FROM users u WHERE u.email = 'customer92@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 169 DAY
-FROM users u WHERE u.email = 'customer83@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 61 DAY
-FROM users u WHERE u.email = 'customer@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 145 DAY
-FROM users u WHERE u.email = 'customer61@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 32 DAY
-FROM users u WHERE u.email = 'customer34@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 42 DAY
-FROM users u WHERE u.email = 'customer17@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 70 DAY
-FROM users u WHERE u.email = 'customer57@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 69 DAY
-FROM users u WHERE u.email = 'customer29@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 45 DAY
-FROM users u WHERE u.email = 'customer48@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 28 DAY
-FROM users u WHERE u.email = 'customer104@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 151 DAY
-FROM users u WHERE u.email = 'customer24@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 69 DAY
-FROM users u WHERE u.email = 'customer8@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 168 DAY
-FROM users u WHERE u.email = 'customer109@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 22 DAY
-FROM users u WHERE u.email = 'customer42@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 142 DAY
-FROM users u WHERE u.email = 'customer97@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 11 DAY
-FROM users u WHERE u.email = 'customer94@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 118 DAY
-FROM users u WHERE u.email = 'customer23@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 1 DAY
-FROM users u WHERE u.email = 'customer40@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 102 DAY
-FROM users u WHERE u.email = 'customer73@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 150 DAY
-FROM users u WHERE u.email = 'customer9@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 167 DAY
-FROM users u WHERE u.email = 'customer101@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 52 DAY
-FROM users u WHERE u.email = 'customer38@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 103 DAY
-FROM users u WHERE u.email = 'customer107@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 96 DAY
-FROM users u WHERE u.email = 'customer65@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 94 DAY
-FROM users u WHERE u.email = 'customer90@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 4 DAY
-FROM users u WHERE u.email = 'customer10@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 78 DAY
-FROM users u WHERE u.email = 'customer76@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 56 DAY
-FROM users u WHERE u.email = 'customer33@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 118 DAY
-FROM users u WHERE u.email = 'customer60@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 155 DAY
-FROM users u WHERE u.email = 'customer91@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 75 DAY
-FROM users u WHERE u.email = 'customer49@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 28 DAY
-FROM users u WHERE u.email = 'customer21@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 51 DAY
-FROM users u WHERE u.email = 'customer25@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 58 DAY
-FROM users u WHERE u.email = 'customer4@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 37 DAY
-FROM users u WHERE u.email = 'customer20@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 170 DAY
-FROM users u WHERE u.email = 'customer27@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 106 DAY
-FROM users u WHERE u.email = 'customer44@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 46 DAY
-FROM users u WHERE u.email = 'customer66@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 28 DAY
-FROM users u WHERE u.email = 'customer70@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 83 DAY
-FROM users u WHERE u.email = 'customer67@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 105 DAY
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 26 DAY
 FROM users u WHERE u.email = 'customer53@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 8 DAY
-FROM users u WHERE u.email = 'customer6@marketlink.vn'
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 90 DAY
+FROM users u WHERE u.email = 'customer95@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 37 DAY
-FROM users u WHERE u.email = 'customer46@marketlink.vn'
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 17 DAY
+FROM users u WHERE u.email = 'customer11@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 12 DAY
-FROM users u WHERE u.email = 'customer79@marketlink.vn'
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 133 DAY
+FROM users u WHERE u.email = 'customer84@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 9 DAY
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 65 DAY
+FROM users u WHERE u.email = 'customer51@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 65 DAY
+FROM users u WHERE u.email = 'customer39@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 57 DAY
+FROM users u WHERE u.email = 'customer23@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 14 DAY
+FROM users u WHERE u.email = 'customer89@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 6 DAY
+FROM users u WHERE u.email = 'customer20@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 92 DAY
+FROM users u WHERE u.email = 'customer106@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 122 DAY
+FROM users u WHERE u.email = 'customer45@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 66 DAY
+FROM users u WHERE u.email = 'customer65@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 61 DAY
+FROM users u WHERE u.email = 'customer18@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 72 DAY
+FROM users u WHERE u.email = 'customer72@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 111 DAY
+FROM users u WHERE u.email = 'customer10@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 59 DAY
+FROM users u WHERE u.email = 'customer58@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 121 DAY
+FROM users u WHERE u.email = 'customer70@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 63 DAY
+FROM users u WHERE u.email = 'customer46@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 109 DAY
+FROM users u WHERE u.email = 'customer74@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 141 DAY
+FROM users u WHERE u.email = 'customer73@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 158 DAY
+FROM users u WHERE u.email = 'customer69@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 124 DAY
+FROM users u WHERE u.email = 'customer94@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 59 DAY
+FROM users u WHERE u.email = 'customer64@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 29 DAY
+FROM users u WHERE u.email = 'customer109@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 155 DAY
+FROM users u WHERE u.email = 'customer40@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 132 DAY
+FROM users u WHERE u.email = 'customer60@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 157 DAY
+FROM users u WHERE u.email = 'customer63@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 92 DAY
+FROM users u WHERE u.email = 'customer36@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 70 DAY
+FROM users u WHERE u.email = 'customer76@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 160 DAY
+FROM users u WHERE u.email = 'customer28@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 129 DAY
+FROM users u WHERE u.email = 'customer13@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 167 DAY
+FROM users u WHERE u.email = 'customer2@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 67 DAY
+FROM users u WHERE u.email = 'customer12@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 158 DAY
+FROM users u WHERE u.email = 'customer49@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 40 DAY
+FROM users u WHERE u.email = 'customer27@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 157 DAY
+FROM users u WHERE u.email = 'customer67@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 141 DAY
+FROM users u WHERE u.email = 'customer101@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 39 DAY
+FROM users u WHERE u.email = 'customer21@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 79 DAY
+FROM users u WHERE u.email = 'customer38@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 64 DAY
+FROM users u WHERE u.email = 'customer41@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 127 DAY
+FROM users u WHERE u.email = 'customer35@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 23 DAY
+FROM users u WHERE u.email = 'customer7@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 29 DAY
+FROM users u WHERE u.email = 'customer55@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 137 DAY
+FROM users u WHERE u.email = 'customer24@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 163 DAY
+FROM users u WHERE u.email = 'customer34@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 77 DAY
+FROM users u WHERE u.email = 'customer54@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 93 DAY
+FROM users u WHERE u.email = 'customer37@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 113 DAY
+FROM users u WHERE u.email = 'customer31@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 47 DAY
+FROM users u WHERE u.email = 'customer8@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 116 DAY
+FROM users u WHERE u.email = 'customer98@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 29 DAY
+FROM users u WHERE u.email = 'customer19@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 13 DAY
+FROM users u WHERE u.email = 'customer@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_accepted', 'Đơn hàng được chấp nhận', 'Sạp đã chấp nhận đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 21 DAY
 FROM users u WHERE u.email = 'customer105@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_accepted' AND n.message = 'Sạp đã chấp nhận đơn hàng của bạn.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 156 DAY
-FROM users u WHERE u.email = 'customer89@marketlink.vn'
+SELECT u.id, 'order_ready', 'Đơn hàng sẵn sàng', 'Đơn hàng đã sẵn sàng để nhận.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 157 DAY
+FROM users u WHERE u.email = 'customer90@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_ready' AND n.message = 'Đơn hàng đã sẵn sàng để nhận.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', true, UTC_TIMESTAMP() - INTERVAL 98 DAY
-FROM users u WHERE u.email = 'customer81@marketlink.vn'
+SELECT u.id, 'order_completed', 'Đơn hoàn tất', 'Đơn hàng đã hoàn tất. Hãy đánh giá!', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 155 DAY
+FROM users u WHERE u.email = 'customer85@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_completed' AND n.message = 'Đơn hàng đã hoàn tất. Hãy đánh giá!');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 166 DAY
-FROM users u WHERE u.email = 'customer32@marketlink.vn'
+SELECT u.id, 'order_declined', 'Đơn bị từ chối', 'Sạp đã từ chối đơn hàng của bạn.', '/customer/orders', false, UTC_TIMESTAMP() - INTERVAL 125 DAY
+FROM users u WHERE u.email = 'customer22@marketlink.vn'
 AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.kind = 'order_declined' AND n.message = 'Sạp đã từ chối đơn hàng của bạn.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9365.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 137 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6645.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 56 DAY
 FROM users u WHERE u.email = 'farmer@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8250.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7237.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1805.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 120 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6653.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 10 DAY
 FROM users u WHERE u.email = 'farmer@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8839.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8255.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #2720.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 154 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1247.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 29 DAY
 FROM users u WHERE u.email = 'farmer@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7097.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7495.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5255.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 45 DAY
-FROM users u WHERE u.email = 'farmer@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8466.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5496.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 71 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5556.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 4 DAY
 FROM users u WHERE u.email = 'farmer2@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9935.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #3013.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6272.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 91 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #3327.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 24 DAY
 FROM users u WHERE u.email = 'farmer2@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2518.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #6334.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8357.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 74 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1947.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 82 DAY
 FROM users u WHERE u.email = 'farmer2@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2554.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #1954.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #4780.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 59 DAY
-FROM users u WHERE u.email = 'farmer2@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2904.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #3071.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 48 DAY
-FROM users u WHERE u.email = 'farmer2@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #3773.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #4499.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 169 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8365.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 14 DAY
 FROM users u WHERE u.email = 'farmer3@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8054.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7996.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8358.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 149 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1949.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 127 DAY
 FROM users u WHERE u.email = 'farmer3@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7012.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #3606.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5122.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 94 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1036.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 93 DAY
 FROM users u WHERE u.email = 'farmer3@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #5251.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7691.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6330.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 92 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6639.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 148 DAY
 FROM users u WHERE u.email = 'farmer3@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9741.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7688.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1280.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 128 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8772.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 99 DAY
 FROM users u WHERE u.email = 'farmer3@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7887.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #4229.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #7821.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 132 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9526.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 156 DAY
 FROM users u WHERE u.email = 'farmer4@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #5806.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #6406.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5019.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 167 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1135.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 113 DAY
 FROM users u WHERE u.email = 'farmer4@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7832.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #1165.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1958.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 135 DAY
-FROM users u WHERE u.email = 'farmer4@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7200.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9733.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 151 DAY
-FROM users u WHERE u.email = 'farmer4@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8505.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #3204.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 147 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9916.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 83 DAY
 FROM users u WHERE u.email = 'farmer5@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #3490.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #1350.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9308.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 68 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6586.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 38 DAY
 FROM users u WHERE u.email = 'farmer5@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2661.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #4317.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #3615.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 51 DAY
-FROM users u WHERE u.email = 'farmer5@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #3303.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5765.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 98 DAY
-FROM users u WHERE u.email = 'farmer5@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9491.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8311.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 116 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6267.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 32 DAY
 FROM users u WHERE u.email = 'farmer6@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #6437.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7338.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9919.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 72 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1495.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 17 DAY
 FROM users u WHERE u.email = 'farmer6@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9941.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #1722.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6969.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 169 DAY
-FROM users u WHERE u.email = 'farmer6@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #5168.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #4385.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 159 DAY
-FROM users u WHERE u.email = 'farmer6@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8457.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8576.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 53 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #2805.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 146 DAY
 FROM users u WHERE u.email = 'farmer7@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7138.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8444.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9037.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 71 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9511.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 151 DAY
 FROM users u WHERE u.email = 'farmer7@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #5882.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #4060.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9666.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 81 DAY
-FROM users u WHERE u.email = 'farmer7@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8813.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5933.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 103 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6021.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 71 DAY
 FROM users u WHERE u.email = 'farmer8@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2955.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7288.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #2341.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 165 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5663.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 138 DAY
 FROM users u WHERE u.email = 'farmer8@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9667.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #4580.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9849.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 104 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6327.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 28 DAY
 FROM users u WHERE u.email = 'farmer8@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9324.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2269.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #4322.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 112 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #4271.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 135 DAY
 FROM users u WHERE u.email = 'farmer9@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #4863.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9103.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #7202.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 78 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #3526.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 145 DAY
 FROM users u WHERE u.email = 'farmer9@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #6413.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #3681.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8749.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 13 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5252.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 57 DAY
 FROM users u WHERE u.email = 'farmer9@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9050.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9849.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9951.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 104 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #4302.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 93 DAY
 FROM users u WHERE u.email = 'farmer10@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #3972.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #5191.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #2639.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 6 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #7218.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 152 DAY
 FROM users u WHERE u.email = 'farmer10@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #3661.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7354.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1734.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 21 DAY
-FROM users u WHERE u.email = 'farmer10@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #5531.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8908.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 60 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #2680.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 155 DAY
 FROM users u WHERE u.email = 'farmer11@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7501.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #6641.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9179.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 11 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #7115.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 40 DAY
 FROM users u WHERE u.email = 'farmer11@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #1832.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #3315.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9474.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 148 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #3215.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 52 DAY
 FROM users u WHERE u.email = 'farmer11@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #5031.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8942.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5112.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 154 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #3487.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 53 DAY
 FROM users u WHERE u.email = 'farmer12@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2012.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7786.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8218.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 33 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8482.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 51 DAY
 FROM users u WHERE u.email = 'farmer12@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9209.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #4316.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8613.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 148 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #3054.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 98 DAY
 FROM users u WHERE u.email = 'farmer12@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2931.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8729.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #7134.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 98 DAY
-FROM users u WHERE u.email = 'farmer12@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #4491.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5701.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 7 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #2690.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 10 DAY
 FROM users u WHERE u.email = 'farmer13@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #6424.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #1691.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1874.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 140 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6957.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 95 DAY
 FROM users u WHERE u.email = 'farmer13@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #7329.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #4009.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #2038.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 127 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1216.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 26 DAY
+FROM users u WHERE u.email = 'farmer13@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #8887.');
+INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #5709.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 27 DAY
 FROM users u WHERE u.email = 'farmer14@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #5774.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2719.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8834.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 67 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9446.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 100 DAY
 FROM users u WHERE u.email = 'farmer14@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #1136.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2601.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #1746.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 139 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #9977.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 42 DAY
 FROM users u WHERE u.email = 'farmer14@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #3675.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9184.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #6677.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 112 DAY
-FROM users u WHERE u.email = 'farmer15@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #5124.');
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #2936.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 9 DAY
+FROM users u WHERE u.email = 'farmer14@marketlink.vn'
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2718.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #3111.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 65 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #8845.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 87 DAY
 FROM users u WHERE u.email = 'farmer15@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #2580.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #9318.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #3982.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 157 DAY
+SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #2852.', '/farmer/orders', 1, UTC_TIMESTAMP() - INTERVAL 72 DAY
 FROM users u WHERE u.email = 'farmer15@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #1400.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #2179.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 139 DAY
-FROM users u WHERE u.email = 'farmer15@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #3241.');
-INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
-SELECT u.id, 'order_placed', 'Đơn hàng mới', 'Bạn có đơn hàng mới #3965.', '/farmer/orders', 0, UTC_TIMESTAMP() - INTERVAL 160 DAY
-FROM users u WHERE u.email = 'farmer15@marketlink.vn'
-AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #5401.');
+AND NOT EXISTS (SELECT 1 FROM notifications n WHERE n.user_id = u.id AND n.message = 'Bạn có đơn hàng mới #5089.');
 INSERT INTO notifications (user_id, kind, title, message, link, is_read, created_at)
 SELECT u.id, 'farmer_application', 'Đơn đăng ký Farmer mới', 'Trịnh Văn Tài đã nộp đơn đăng ký bán hàng.', '/admin/farmers', FALSE, UTC_TIMESTAMP() - INTERVAL 3 DAY
 FROM users u WHERE u.email = 'admin@marketlink.vn'
@@ -3105,57 +2974,3 @@ CROSS JOIN (SELECT 0 AS n UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT
             UNION ALL SELECT 10 UNION ALL SELECT 11) h
 WHERE fm.is_active = TRUE
   AND ADDTIME(od.pickup_start_time, SEC_TO_TIME((h.n + 1) * 3600)) <= od.pickup_end_time;
-
--- ===== 12. STRUCTURED ADDRESSES (FR-001, V20260927002) =====
--- The rows above still carry the old "N Street, <district>" text. Each old district maps to one ward of the
--- two-level units (01/07/2025) it now lies in; rows without a house number get a stand-in street. Only rows that
--- still have no parts are touched, so the block is safe to re-run. Values are computed into a temporary table first:
--- a multi-table UPDATE does not promise the order of its assignments, and `address` is both read and rewritten.
-DROP TEMPORARY TABLE IF EXISTS seed_address_parts;
-CREATE TEMPORARY TABLE seed_address_parts AS
-SELECT u.id,
-       w.province_code,
-       w.code AS ward_code,
-       CASE WHEN u.address REGEXP '^[0-9]+ '
-            THEN SUBSTRING(SUBSTRING_INDEX(u.address, ', ', 1),
-                           CHAR_LENGTH(SUBSTRING_INDEX(u.address, ' ', 1)) + 2)
-            WHEN u.role = 'admin' THEN 'Nguyễn Đình Chiểu'
-            ELSE 'Tỉnh lộ 8' END AS street_name,
-       CASE WHEN u.address REGEXP '^[0-9]+ '
-            THEN SUBSTRING_INDEX(u.address, ' ', 1)
-            ELSE CAST(100 + u.id AS CHAR) END AS address_line,
-       w.full_name AS ward_name,
-       p.full_name AS province_name
-FROM users u
-JOIN (SELECT 'Quận 1' AS district, '26740' AS ward_code, FALSE AS whole
-      UNION ALL SELECT 'Quận 3', '27154', FALSE
-      UNION ALL SELECT 'Quận 5', '27343', FALSE
-      UNION ALL SELECT 'Quận 7', '27487', FALSE
-      UNION ALL SELECT 'Quận 10', '27169', FALSE
-      UNION ALL SELECT 'Bình Thạnh', '26929', FALSE
-      UNION ALL SELECT 'Phú Nhuận', '27073', FALSE
-      UNION ALL SELECT 'Tân Bình', '27004', FALSE
-      UNION ALL SELECT 'Gò Vấp', '26884', FALSE
-      UNION ALL SELECT 'TP. Thủ Đức', '26824', FALSE
-      UNION ALL SELECT 'Tân Phú', '27031', FALSE
-      UNION ALL SELECT 'Bình Tân', '27442', FALSE
-      -- Whole-text matches: admin2, the pending farmer and the generated farmers' "TP. Hồ Chí Minh"
-      UNION ALL SELECT 'Quận 3, TP. Hồ Chí Minh', '27154', TRUE
-      UNION ALL SELECT 'Hóc Môn, TP. Hồ Chí Minh', '27559', TRUE
-      UNION ALL SELECT 'TP. Hồ Chí Minh', '27553', TRUE) d
-  ON (d.whole AND u.address = d.district)
-  OR (NOT d.whole AND u.address LIKE CONCAT('%, ', d.district))
-JOIN wards w ON w.code = d.ward_code
-JOIN provinces p ON p.code = w.province_code
-WHERE u.email LIKE '%@marketlink.vn' AND u.ward_code IS NULL;
-
-UPDATE users u
-JOIN seed_address_parts s ON s.id = u.id
-SET u.country_code  = 'VN',
-    u.province_code = s.province_code,
-    u.ward_code     = s.ward_code,
-    u.street_name   = s.street_name,
-    u.address_line  = s.address_line,
-    u.address       = CONCAT(s.address_line, ' ', s.street_name, ', ', s.ward_name, ', ', s.province_name);
-
-DROP TEMPORARY TABLE seed_address_parts;
